@@ -102,6 +102,9 @@ export async function POST(req: NextRequest) {
       return NextResponse.json({ error: "Invalid template" }, { status: 400 });
     }
 
+    console.log("开始处理图片，文件大小:", file.size);
+    console.log("ARK_API_ENDPOINT:", process.env.ARK_API_ENDPOINT);
+    console.log("ARK_API_KEY存在:", !!process.env.ARK_API_KEY);
     const arrayBuffer = await file.arrayBuffer();
     const imageBase64 = Buffer.from(arrayBuffer).toString("base64");
     const mimeType = file.type;
