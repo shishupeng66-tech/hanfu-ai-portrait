@@ -46,7 +46,7 @@ async function downloadImage(url: string): Promise<Buffer> {
 }
 
 async function generateSingleImage(prompt: string, imageBase64: string, mimeType: string): Promise<string | null> {
-  const response = await fetch("https://ark.cn-beijing.volces.com/api/v3/images/generations", {
+  const response = await fetch(process.env.ARK_API_ENDPOINT!, {
     method: "POST",
     headers: {
       "Content-Type": "application/json",
