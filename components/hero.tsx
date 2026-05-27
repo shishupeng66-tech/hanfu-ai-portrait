@@ -115,8 +115,7 @@ export const Hero = () => {
       >
         <Button
           as={LocaleLink}
-          href="/docs"
-          target="_blank"
+          href="/generate"
           rel="noopener noreferrer"
         >
           {t('cta.primary')}

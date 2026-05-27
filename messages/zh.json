@@ -1,9 +1,9 @@
 {
   "common": {
     "brand": {
-      "name": "SISTINE",
-      "tagline": "Sistine AI & Sistine Labs",
-      "copyright": "版权所有 © 2025 Sistine AI & Sistine Labs",
+      "name": "汉韵写真",
+      "tagline": "用AI生成精美汉服写真照片",
+      "copyright": "版权所有 © 2025 汉韵写真",
       "allRightsReserved": "保留所有权利"
     },
     "actions": {
@@ -64,42 +64,42 @@
     }
   },
   "hero": {
-    "badge": "⚡ 专为 Vibe Coding 打造的首款入门套件",
-    "title": "通过 Vibe Coding 将您的 AI SaaS 产品投入生产",
-    "description": "不懂编程？没问题。Sistine 加上 AI 编程助手，让您的 SaaS 创意在数小时内上线。您只需描述您的想法，即可交付用户真正喜爱的产品。",
+    "badge": "⚡ AI驱动的汉服写真生成器",
+    "title": "将您的照片转化为精美的汉服写真",
+    "description": "上传照片，选择汉服风格，几分钟内获得专业AI生成的写真照片。体验传统中国服饰之美与现代AI技术的完美结合。",
     "cta": {
-      "primary": "查看文档",
-      "secondary": "获取代码"
+      "primary": "立即体验",
+      "secondary": "了解更多"
     },
     "modal": {
-      "eyebrow": "源码获取",
-      "title": "请在课程社区获取源码",
-      "description": "Sistine Starter 的完整源码、更新说明和配套资料都放在课程社区里统一发放。",
-      "instruction": "如果你已经加入课程，点击下方链接即可在新窗口打开课程社区，获取代码与相关资料。",
-      "linkLabel": "前往课程社区",
-      "linkHint": "课程社区：https://scys.com/deepsea/2001/course",
+      "eyebrow": "开始创作",
+      "title": "创作您的第一张汉服写真",
+      "description": "注册即可解锁无限AI生成的汉服写真和高级功能。",
+      "instruction": "上传您的照片，让我们的AI将您变身成传统中国美人。",
+      "linkLabel": "立即注册",
+      "linkHint": "今天就开始您的汉服写真之旅",
       "close": "关闭"
     }
   },
   "features": {
-    "title": "Vibe Coding 成功所需的一切功能",
-    "subtitle": "告别在样板代码上浪费时间。专注于描述您的独特功能，Sistine 会为您处理好底层基础。借助 AI 加速产品交付。",
+    "title": "创作完美汉服写真所需的一切",
+    "subtitle": "上传照片，选择风格，让我们的AI为您创作精美的汉服写真。专业品质，轻松体验。",
     "items": {
       "aiOptimized": {
-        "title": "为 AI 辅助开发而生",
-        "description": "为 Cursor、Windsurf 和 Claude Code 等工具完美结构化。每个文件、每个组件都经过优化，便于 AI 理解和修改。"
+        "title": "先进AI技术",
+        "description": "采用专为汉服写真训练的尖端AI模型。每次都能获得高质量、逼真的效果。"
       },
       "zeroPipeline": {
-        "title": "从零到生产的完整流程",
-        "description": "身份验证、支付、数据库、部署——一切均已配置完毕。只需向您的 AI 助手发出指令，即可见证您的 SaaS 产品诞生。"
+        "title": "快速简便",
+        "description": "只需上传照片并选择风格。几分钟内获得专业汉服写真，无需摄影技巧。"
       },
       "nonTechnical": {
-        "title": "对非技术背景的创始人友好",
-        "description": "分不清 React 和 Rails？没关系。只要您能清晰地描述您的想法，就能成功交付一款 SaaS 产品。"
+        "title": "用户友好",
+        "description": "为每个人设计的简单界面。无需技术技能——只需您的照片和想象力。"
       },
       "productionGrade": {
-        "title": "从第一天起即达生产级别",
-        "description": "支持真实用户、真实支付、真实规模。基于 Next.js、PostgreSQL 和 Creem 构建——与价值数十亿美元公司使用的技术栈一致。"
+        "title": "高质量输出",
+        "description": "专业级写真，完美适用于社交媒体、个人资料或特殊场合。高分辨率下载。"
       }
     }
   },
@@ -266,42 +266,42 @@
   },
   "gridFeatures": {
     "aiReady": {
-      "title": "AI 就绪架构",
-      "description": "预配置聊天、图像和视频生成工作流，默认接入 Volcano Engine。填好密钥即可开始构建。"
+      "title": "AI驱动生成",
+      "description": "专为汉服写真训练的先进AI模型。逼真、高质量的效果。"
     },
     "creem": {
-      "title": "Creem 支付",
-      "description": "内置完整的计费系统，包括订阅、使用量跟踪和客户门户。"
+      "title": "多种风格",
+      "description": "选择各种汉服风格——唐代、明代、现代融合等。"
     },
     "auth": {
-      "title": "身份认证系统",
-      "description": "Better Auth 支持邮箱密码和 OAuth。会话管理和受保护路由已就绪。"
+      "title": "简单上传",
+      "description": "简单的照片上传流程。支持JPG、PNG等常见格式。"
     },
     "deploy": {
-      "title": "一键部署",
-      "description": "即刻部署到 Vercel、Railway 或任何平台。从第一天起即可投入生产。"
+      "title": "快速处理",
+      "description": "几分钟内获得您的汉服写真。无需等待，无需复杂设置。"
     },
     "typescript": {
-      "title": "TypeScript + Tailwind",
-      "description": "现代技术栈包括 Next.js 14、TypeScript、Tailwind CSS 和 shadcn/ui 组件。"
+      "title": "高分辨率",
+      "description": "高分辨率下载您的写真。完美适用于打印或社交媒体。"
     },
     "database": {
-      "title": "数据库 + ORM",
-      "description": "PostgreSQL 配合 Drizzle ORM。类型安全的查询和迁移已配置。"
+      "title": "隐私优先",
+      "description": "您的照片被安全处理。我们尊重您的隐私和数据。"
     },
     "seo": {
-      "title": "SEO 和营销",
-      "description": "元标签、Open Graph、站点地图和分析。为有机增长准备的一切。"
+      "title": "社交就绪",
+      "description": "完美尺寸适用于Instagram、Facebook、微信和其他社交平台。"
     },
     "vibeCoding": {
-      "title": "Vibe Coding 就绪",
-      "description": "针对 Cursor、Windsurf 和 Claude Code 进行了优化。AI 能理解每个组件。"
+      "title": "无限创意",
+      "description": "尝试不同的风格、背景和配饰。创造您完美的汉服造型。"
     }
   },
   "cta": {
-    "title": "准备好交付您的 AI SaaS 产品了吗？",
-    "description": "加入数百名开发者的行列，他们已经通过 Sistine 和 Vibe Coding 成功发布了自己的 SaaS 产品。",
-    "button": "获取代码"
+    "title": "准备好创作您的汉服写真了吗？",
+    "description": "加入数千名用户的行列，他们已经通过汉韵写真AI成功改造了自己的照片。",
+    "button": "立即开始"
   },
   "auth": {
     "login": {
@@ -709,9 +709,9 @@
     "title": "仪表盘",
     "welcome": "欢迎回来",
     "welcomeBonus": {
-      "title": "🎉 欢迎加入 Sistine!",
+      "title": "🎉 欢迎加入汉韵写真!",
       "message": "恭喜您成功注册！我们已为您的账户赠送 300 积分新人礼包。",
-      "description": "这些积分可用于体验我们的 AI 对话、图像生成、视频生成等功能。",
+      "description": "这些积分可用于创作精美的汉服写真。",
       "ctaButton": "立即体验",
       "dismissButton": "知道了"
     },
@@ -973,7 +973,7 @@
     ]
   },
   "footer": {
-    "tagline": "利用 AI 的力量，将您的 SaaS 创意转化为现实。",
+    "tagline": "用AI将您的照片转化为精美的汉服写真。",
     "product": {
       "title": "产品",
       "features": "功能",

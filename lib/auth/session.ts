@@ -96,5 +96,6 @@ export async function getActiveSessionUser(
     .where(eq(user.id, userId))
     .limit(1);
 
+  console.log("DB USER DEBUG:", JSON.stringify(dbUsers[0]));
   return resolveSessionAccess(dbUsers[0] ?? null, options);
 }

@@ -1,9 +1,9 @@
 {
   "common": {
     "brand": {
-      "name": "SISTINE",
-      "tagline": "Sistine AI & Sistine Labs",
-      "copyright": "Copyright © 2025 Sistine AI & Sistine Labs",
+      "name": "HanPortrait",
+      "tagline": "Generate stunning Hanfu portrait photos with AI",
+      "copyright": "Copyright © 2025 HanPortrait",
       "allRightsReserved": "All rights reserved"
     },
     "actions": {
@@ -64,42 +64,42 @@
     }
   },
   "hero": {
-    "badge": "⚡ The First Starter Built for Vibe Coding",
-    "title": "Vibe Code Your AI SaaS to Production",
-    "description": "No coding skills? Perfect. Sistine + AI coding assistants = Your SaaS idea live in hours. Just describe what you want. Ship what users love.",
+    "badge": "⚡ AI-Powered Hanfu Portrait Generator",
+    "title": "Transform Your Photos into Stunning Hanfu Portraits",
+    "description": "Upload your photo, choose a Hanfu style, and get a professional AI-generated portrait in minutes. Experience the beauty of traditional Chinese fashion with modern AI technology.",
     "cta": {
-      "primary": "View Docs",
-      "secondary": "Get Code"
+      "primary": "Try Now",
+      "secondary": "Learn More"
     },
     "modal": {
-      "eyebrow": "Code Access",
-      "title": "Get the source code from our course community",
-      "description": "The full Sistine Starter codebase, update notes, and companion materials are distributed inside our course community.",
-      "instruction": "If you're enrolled, open the course page below in a new tab to access the code, updates, and course resources.",
-      "linkLabel": "Open the course community",
-      "linkHint": "Course community: https://scys.com/deepsea/2001/course",
+      "eyebrow": "Get Started",
+      "title": "Create Your First Hanfu Portrait",
+      "description": "Sign up to unlock unlimited AI-generated Hanfu portraits and premium features.",
+      "instruction": "Upload your photo and let our AI transform you into a traditional Chinese beauty.",
+      "linkLabel": "Sign Up Now",
+      "linkHint": "Start your Hanfu portrait journey today",
       "close": "Close"
     }
   },
   "features": {
-    "title": "Everything You Need for Vibe Coding Success",
-    "subtitle": "Stop wasting time on boilerplate. Focus on describing your unique features while Sistine handles the foundation. Ship faster with AI.",
+    "title": "Everything You Need for Perfect Hanfu Portraits",
+    "subtitle": "Upload your photo, choose your style, and let our AI create stunning Hanfu portraits. Professional quality, effortless experience.",
     "items": {
       "aiOptimized": {
-        "title": "Built for AI-Assisted Development",
-        "description": "Perfectly structured for Cursor, Windsurf, and Claude Code. Every file, every component optimized for AI understanding and modification."
+        "title": "Advanced AI Technology",
+        "description": "Powered by cutting-edge AI models specifically trained for Hanfu portraits. High-quality, realistic results every time."
       },
       "zeroPipeline": {
-        "title": "Zero to Production Pipeline",
-        "description": "Authentication, payments, database, deployment - all configured. Just prompt your AI assistant and watch your SaaS come to life."
+        "title": "Fast & Easy",
+        "description": "Just upload your photo and select a style. Get professional Hanfu portraits in minutes, no photography skills required."
       },
       "nonTechnical": {
-        "title": "Non-Technical Founder Friendly",
-        "description": "Don't know React from Rails? Doesn't matter. If you can describe your idea clearly, you can ship a SaaS product."
+        "title": "User-Friendly",
+        "description": "Simple interface designed for everyone. No technical skills needed - just your photo and your imagination."
       },
       "productionGrade": {
-        "title": "Production-Grade from Day One",
-        "description": "Real users, real payments, real scale. Built on Next.js, PostgreSQL, and Creem - the same stack powering billion-dollar companies."
+        "title": "High-Quality Output",
+        "description": "Professional-grade portraits perfect for social media, profiles, or special occasions. Download in high resolution."
       }
     }
   },
@@ -266,42 +266,42 @@
   },
   "gridFeatures": {
     "aiReady": {
-      "title": "AI-Ready Architecture",
-      "description": "Pre-configured AI workflows for chat, image, and video generation, powered by Volcano Engine by default."
+      "title": "AI-Powered Generation",
+      "description": "Advanced AI models trained specifically for Hanfu portraits. Realistic, high-quality results."
     },
     "creem": {
-      "title": "Creem Payments",
-      "description": "Complete billing system with subscriptions, usage tracking, and customer portal built-in."
+      "title": "Multiple Styles",
+      "description": "Choose from various Hanfu styles - Tang dynasty, Ming dynasty, modern fusion, and more."
     },
     "auth": {
-      "title": "Authentication System",
-      "description": "Better Auth with email/password and OAuth. Session management and protected routes ready."
+      "title": "Easy Upload",
+      "description": "Simple photo upload process. Support for JPG, PNG, and other common formats."
     },
     "deploy": {
-      "title": "One-Click Deploy",
-      "description": "Deploy to Vercel, Railway, or any platform instantly. Production-ready from day one."
+      "title": "Fast Processing",
+      "description": "Get your Hanfu portrait in minutes. No waiting, no complicated setup."
     },
     "typescript": {
-      "title": "TypeScript + Tailwind",
-      "description": "Modern tech stack with Next.js 14, TypeScript, Tailwind CSS, and shadcn/ui components."
+      "title": "High Resolution",
+      "description": "Download your portraits in high resolution. Perfect for printing or social media."
     },
     "database": {
-      "title": "Database + ORM",
-      "description": "PostgreSQL with Drizzle ORM. Type-safe queries and migrations configured."
+      "title": "Privacy First",
+      "description": "Your photos are processed securely. We respect your privacy and data."
     },
     "seo": {
-      "title": "SEO & Marketing",
-      "description": "Meta tags, Open Graph, sitemap, and analytics. Everything for organic growth."
+      "title": "Social Ready",
+      "description": "Perfect sizes for Instagram, Facebook, WeChat, and other social platforms."
     },
     "vibeCoding": {
-      "title": "Vibe Coding Ready",
-      "description": "Optimized for Cursor, Windsurf, and Claude Code. AI understands every component."
+      "title": "Unlimited Creativity",
+      "description": "Try different styles, backgrounds, and accessories. Create your perfect Hanfu look."
     }
   },
   "cta": {
-    "title": "Ready to Ship Your AI SaaS?",
-    "description": "Join hundreds of developers who launched their SaaS products with Sistine and Vibe Coding.",
-    "button": "Get Code"
+    "title": "Ready to Create Your Hanfu Portrait?",
+    "description": "Join thousands of users who transformed their photos with HanPortrait AI.",
+    "button": "Get Started"
   },
   "auth": {
     "login": {
@@ -709,9 +709,9 @@
     "title": "Dashboard",
     "welcome": "Welcome back",
     "welcomeBonus": {
-      "title": "🎉 Welcome to Sistine!",
+      "title": "🎉 Welcome to HanPortrait!",
       "message": "Congratulations on your successful registration! We've added 300 credits welcome bonus to your account.",
-      "description": "Use these credits to try our AI chat, image generation, video generation, and more features.",
+      "description": "Use these credits to create beautiful Hanfu portraits with our AI.",
       "ctaButton": "Try Now",
       "dismissButton": "Got it"
     },
@@ -974,7 +974,7 @@
     ]
   },
   "footer": {
-    "tagline": "Transform your SaaS ideas into reality with the power of AI.",
+    "tagline": "Transform your photos into stunning Hanfu portraits with AI.",
     "product": {
       "title": "Product",
       "features": "Features",
