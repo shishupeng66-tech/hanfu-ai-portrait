@@ -65,6 +65,8 @@ async function generateSingleImage(prompt: string, imageBase64: string, mimeType
   });
 
   const data = await response.json();
+  console.log("BytePlus状态码:", response.status);
+  console.log("BytePlus返回:", JSON.stringify(data).substring(0, 500));
   if (!response.ok) {
     console.error("ARK API error:", JSON.stringify(data));
     return null;
