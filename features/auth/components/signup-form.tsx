@@ -1,6 +1,7 @@
 "use client";
 
 import * as React from "react";
+import { Turnstile } from "@marsidev/react-turnstile";
 import { useRouter } from "next/navigation";
 import Link from "next/link";
 import { useLocale, useTranslations } from 'next-intl';
@@ -24,6 +25,7 @@ export function SignupForm({ showGoogleAuth = true }: SignupFormProps) {
   const t = useTranslations('auth.signup');
   const [isLoading, setIsLoading] = React.useState(false);
   const [error, setError] = React.useState<string | null>(null);
+  const [turnstileToken, setTurnstileToken] = React.useState<string | null>(null);
 
   const form = useForm<SignupInput>({
     resolver: zodResolver(signupSchema),
@@ -38,6 +40,22 @@ export function SignupForm({ showGoogleAuth = true }: SignupFormProps) {
     try {
       setIsLoading(true);
       setError(null);
+
+      if (!turnstileToken) {
+        setError("请完成人机验证");
+        return;
+      }
+
+      // 后端验证Turnstile token
+      const verifyRes = await fetch("/api/auth/verify-turnstile", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ token: turnstileToken }),
+      });
+      if (!verifyRes.ok) {
+        setError("人机验证失败，请重试");
+        return;
+      }
 
       const { error } = await signUp.email({
         email: values.email,
@@ -130,6 +148,12 @@ export function SignupForm({ showGoogleAuth = true }: SignupFormProps) {
         placeholder={t('passwordPlaceholder')}
         component={Password}
         autoComplete="new-password"
+      />
+      <Turnstile
+        siteKey={process.env.NEXT_PUBLIC_TURNSTILE_SITE_KEY!}
+        onSuccess={setTurnstileToken}
+        onError={() => setTurnstileToken(null)}
+        onExpire={() => setTurnstileToken(null)}
       />
     </FormShell>
   );
