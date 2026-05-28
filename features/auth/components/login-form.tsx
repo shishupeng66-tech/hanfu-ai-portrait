@@ -24,6 +24,7 @@ export function LoginForm({ showGoogleAuth = true }: LoginFormProps) {
   const t = useTranslations('auth.login');
   const [isLoading, setIsLoading] = React.useState(false);
   const [error, setError] = React.useState<string | null>(null);
+  const [turnstileToken, setTurnstileToken] = React.useState<string | null>(null);
 
   const form = useForm<LoginInput>({
     resolver: zodResolver(loginSchema),
@@ -38,6 +39,10 @@ export function LoginForm({ showGoogleAuth = true }: LoginFormProps) {
       setIsLoading(true);
       setError(null);
 
+      if (!turnstileToken) {
+        setError("请完成人机验证");
+        return;
+      }
       const { error } = await signIn.email({
         email: values.email,
         password: values.password,
@@ -108,6 +113,12 @@ export function LoginForm({ showGoogleAuth = true }: LoginFormProps) {
         placeholder={t('passwordPlaceholder')}
         component={Password}
         autoComplete="current-password"
+      />
+      <Turnstile
+        siteKey={process.env.NEXT_PUBLIC_TURNSTILE_SITE_KEY!}
+        onSuccess={setTurnstileToken}
+        onError={() => setTurnstileToken(null)}
+        onExpire={() => setTurnstileToken(null)}
       />
       <div className="flex items-center justify-between">
         <Link href={`/${locale}/forgot-password`} className="text-sm font-normal text-muted-foreground hover:text-foreground">
