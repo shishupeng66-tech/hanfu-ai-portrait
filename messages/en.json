@@ -64,8 +64,8 @@
     }
   },
   "hero": {
-    "badge": "⚡ AI-Powered Hanfu Portrait Generator",
-    "title": "Transform Your Photos into Stunning Hanfu Portraits",
+    "badge": "AI-Powered Hanfu Portrait Studio",
+    "title": "Transform Into Hanfu Elegance with AI",
     "description": "Upload your photo, choose a Hanfu style, and get a professional AI-generated portrait in minutes. Experience the beauty of traditional Chinese fashion with modern AI technology.",
     "cta": {
       "primary": "Try Now",
@@ -79,6 +79,163 @@
       "linkLabel": "Sign Up Now",
       "linkHint": "Start your Hanfu portrait journey today",
       "close": "Close"
+    }
+  },
+  "hanfuHome": {
+    "hero": {
+      "badge": "AI-Powered Hanfu Portrait Studio",
+      "title": "Transform Into Hanfu Elegance with AI",
+      "subtitle": "Upload a photo, and let AI dress you in stunning traditional Chinese hanfu — no studio, no costume, just magic.",
+      "ctaPrimary": "Try Now — It's Free",
+      "ctaSecondary": "View Gallery",
+      "trustLabel1": "No watermark on paid plans",
+      "trustLabel2": "Ready in under 2 min",
+      "trustLabel3": "Cancel anytime"
+    },
+    "howItWorks": {
+      "title": "How It Works",
+      "subtitle": "Three simple steps to your perfect Hanfu portrait",
+      "step1": {
+        "title": "Upload Your Photo",
+        "description": "Share a clear portrait photo. Our AI works best with front-facing, well-lit images."
+      },
+      "step2": {
+        "title": "AI Magic",
+        "description": "Our AI transforms your photo into an elegant Hanfu portrait, preserving your facial features while adding authentic traditional styling."
+      },
+      "step3": {
+        "title": "Download & Share",
+        "description": "Get your high-resolution Hanfu portrait ready in minutes. Download, share on social media, or print it out."
+      }
+    },
+    "showcase": {
+      "title": "Explore Hanfu Styles",
+      "subtitle": "From the graceful Tang dynasty to the refined Ming dynasty — discover the beauty of every era",
+      "tang": {
+        "name": "Tang Dynasty",
+        "description": "Graceful and bold — flowing sleeves and vibrant colors"
+      },
+      "song": {
+        "name": "Song Dynasty",
+        "description": "Elegant simplicity — delicate patterns and refined lines"
+      },
+      "ming": {
+        "name": "Ming Dynasty",
+        "description": "Regal sophistication — intricate embroidery and stately forms"
+      },
+      "han": {
+        "name": "Han Dynasty",
+        "description": "Ancient nobility — classic silhouettes and timeless beauty"
+      }
+    },
+    "pricing": {
+      "title": "Choose Your Plan",
+      "subtitle": "Start free, upgrade when you're ready for more",
+      "free": {
+        "name": "Free Trial",
+        "price": "$0",
+        "period": "",
+        "description": "Try before you commit",
+        "feature1": "3 free generations",
+        "feature2": "Basic styles",
+        "feature3": "Standard resolution",
+        "feature4": "Watermark included",
+        "cta": "Start Free"
+      },
+      "starter": {
+        "name": "Starter",
+        "price": "$9.99",
+        "period": "/mo",
+        "description": "For hanfu enthusiasts",
+        "feature1": "100 generations/month",
+        "feature2": "All dynasty styles",
+        "feature3": "HD resolution",
+        "feature4": "No watermark",
+        "feature5": "Priority processing",
+        "cta": "Choose Starter"
+      },
+      "pro": {
+        "name": "Pro",
+        "price": "$29.99",
+        "period": "/mo",
+        "description": "For power users",
+        "feature1": "Unlimited generations",
+        "feature2": "All styles + exclusive",
+        "feature3": "4K resolution",
+        "feature4": "No watermark",
+        "feature5": "Fastest processing",
+        "feature6": "Commercial license",
+        "cta": "Choose Pro"
+      },
+      "footer": "See full pricing details",
+      "footerLink": "/pricing"
+    },
+    "testimonials": {
+      "title": "Loved by Hanfu Enthusiasts Worldwide",
+      "subtitle": "See what our users say about their HanPortrait experience",
+      "item1": {
+        "name": "Sophie Laurent",
+        "quote": "I've always been fascinated by Chinese culture. HanPortrait let me see myself in Tang dynasty hanfu — the result was breathtaking. My friends thought I had a professional photoshoot!",
+        "designation": "Photography Enthusiast, Paris"
+      },
+      "item2": {
+        "name": "Yuki Tanaka",
+        "quote": "The level of detail is incredible. The AI captured my face perfectly while giving me an authentic Ming dynasty look. I use these portraits for my social media profiles now.",
+        "designation": "Cosplayer, Tokyo"
+      },
+      "item3": {
+        "name": "Maria Garcia",
+        "quote": "I wanted to surprise my Chinese mother-in-law with a Hanfu portrait. She cried when she saw it. This app creates memories that cross cultures and generations.",
+        "designation": "Teacher, Barcelona"
+      },
+      "item4": {
+        "name": "Emma Williams",
+        "quote": "As someone who loves historical fashion, HanPortrait is a dream come true. Being able to try different dynasty styles without buying expensive costumes is incredible.",
+        "designation": "Fashion Designer, London"
+      },
+      "item5": {
+        "name": "Priya Sharma",
+        "quote": "The Tang dynasty portrait looked so elegant! I posted it on Instagram and got hundreds of comments asking where I got the costume. It's my new profile picture everywhere.",
+        "designation": "Content Creator, Mumbai"
+      },
+      "item6": {
+        "name": "Anna Mueller",
+        "quote": "I was skeptical at first, but the AI did an amazing job. The hanfu details look authentic, and my face looks natural. Already recommended it to all my friends!",
+        "designation": "Graduate Student, Berlin"
+      }
+    },
+    "faq": {
+      "title": "Frequently Asked Questions",
+      "subtitle": "Everything you need to know about HanPortrait",
+      "q1": {
+        "question": "What is HanPortrait?",
+        "answer": "HanPortrait is an AI-powered platform that transforms your photos into stunning traditional Chinese Hanfu portraits. Upload a photo, and our AI will dress you in authentic hanfu styles from various Chinese dynasties."
+      },
+      "q2": {
+        "question": "How does the AI generation work?",
+        "answer": "Our AI models are specifically trained on traditional Chinese hanfu aesthetics. When you upload a photo, the AI analyzes your facial features and generates a new portrait that preserves your likeness while dressing you in historically-inspired hanfu attire."
+      },
+      "q3": {
+        "question": "Is my photo data safe?",
+        "answer": "Yes, absolutely. Your privacy is our priority. Uploaded photos are processed securely and are not shared with third parties. You can delete your data at any time from your account settings."
+      },
+      "q4": {
+        "question": "How long does it take to generate a portrait?",
+        "answer": "Most portraits are generated in under 2 minutes. During peak times, it may take slightly longer, but you'll receive a notification when your portrait is ready."
+      },
+      "q5": {
+        "question": "What styles of hanfu are available?",
+        "answer": "We offer styles from the four major dynasties: Han, Tang, Song, and Ming. Each style reflects the authentic aesthetics, colors, and silhouettes of its era, with new styles being added regularly."
+      },
+      "q6": {
+        "question": "Can I use the portraits commercially?",
+        "answer": "Commercial usage rights are included with our Pro plan. For Free and Starter plans, generated portraits are for personal use only. Please refer to our Terms of Service for details."
+      }
+    },
+    "ctaFooter": {
+      "title": "Ready to See Yourself in Hanfu?",
+      "subtitle": "Join thousands who have discovered their Hanfu elegance. Your first 3 portraits are free.",
+      "cta": "Get Started Free"
     }
   },
   "features": {

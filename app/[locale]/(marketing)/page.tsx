@@ -1,15 +1,14 @@
-import { Container } from "@/components/container";
-import { Hero } from "@/components/hero";
-import { Background } from "@/components/background";
-import { Features } from "@/components/features";
-import { Companies } from "@/components/companies";
-import { GridFeatures } from "@/components/grid-features";
-import { Testimonials } from "@/components/testimonials";
-import { CTA } from "@/components/cta";
 import { Metadata } from "next";
 import { getTranslations } from 'next-intl/server';
 import type { Locale } from "@/i18n.config";
 import { generatePageMetadata } from "@/lib/metadata";
+import { HomeHero } from "@/components/home/hero";
+import { HomeHowItWorks } from "@/components/home/how-it-works";
+import { HomeShowcase } from "@/components/home/showcase";
+import { HomePricingPreview } from "@/components/home/pricing-preview";
+import { HomeTestimonials } from "@/components/home/testimonials";
+import { HomeFAQ } from "@/components/home/faq";
+import { HomeCTAFooter } from "@/components/home/cta-footer";
 
 export async function generateMetadata(
   props: {
@@ -35,22 +34,13 @@ export async function generateMetadata(
 export default function Home() {
   return (
     <div className="relative">
-      <div className="absolute inset-0 h-full w-full overflow-hidden ">
-        <Background />
-      </div>
-      <Container className="flex min-h-screen flex-col items-center justify-between ">
-        <Hero />
-        <Companies />
-        <Features />
-        <GridFeatures />
-        <Testimonials />
-      </Container>
-      <div className="relative">
-        <div className="absolute inset-0 h-full w-full overflow-hidden">
-          <Background />
-        </div>
-        <CTA />
-      </div>
+      <HomeHero />
+      <HomeHowItWorks />
+      <HomeShowcase />
+      <HomePricingPreview />
+      <HomeTestimonials />
+      <HomeFAQ />
+      <HomeCTAFooter />
     </div>
   );
 }
