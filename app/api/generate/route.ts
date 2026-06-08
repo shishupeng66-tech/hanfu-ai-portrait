@@ -49,7 +49,9 @@ async function downloadImage(url: string): Promise<Buffer> {
 }
 
 function getImageGenerationUrl() {
-  const apiUrl = volcanoEngineConfig.apiUrl.replace(/\/+$/, "");
+  const apiUrl = volcanoEngineConfig.apiUrl
+    .replace("https://ark.byteplus.com", "https://ark.ap-southeast.bytepluses.com")
+    .replace(/\/+$/, "");
   return apiUrl.endsWith("/images/generations")
     ? apiUrl
     : `${apiUrl}/images/generations`;
