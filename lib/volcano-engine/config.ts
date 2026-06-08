@@ -1,8 +1,8 @@
 import { VolcanoEngineConfig } from './types';
 
 export const volcanoEngineConfig: VolcanoEngineConfig = {
-  apiKey: process.env.VOLCANO_ENGINE_API_KEY || '',
-  apiUrl: process.env.VOLCANO_ENGINE_API_URL || 'https://ark.cn-beijing.volces.com/api/v3',
+  apiKey: process.env.VOLCANO_ENGINE_API_KEY || process.env.ARK_API_KEY || '',
+  apiUrl: process.env.VOLCANO_ENGINE_API_URL || process.env.ARK_API_ENDPOINT || 'https://ark.cn-beijing.volces.com/api/v3',
   // 使用豆包模型名称，无需创建端点
   textModel: 'doubao-1-5-thinking-pro-250415',  // 豆包 1.5 Thinking Pro 版本（正确的模型名）
   imageModel: 'doubao-seedream-4-5-i2i-251128',  // Seedream 4.5 图生图模型
@@ -11,10 +11,10 @@ export const volcanoEngineConfig: VolcanoEngineConfig = {
 
 export function validateConfig(): void {
   if (!volcanoEngineConfig.apiKey) {
-    throw new Error('VOLCANO_ENGINE_API_KEY is not configured');
+    throw new Error('VOLCANO_ENGINE_API_KEY or ARK_API_KEY is not configured');
   }
   if (!volcanoEngineConfig.apiUrl) {
-    throw new Error('VOLCANO_ENGINE_API_URL is not configured');
+    throw new Error('VOLCANO_ENGINE_API_URL or ARK_API_ENDPOINT is not configured');
   }
 }
 
