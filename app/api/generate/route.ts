@@ -48,8 +48,15 @@ async function downloadImage(url: string): Promise<Buffer> {
   return Buffer.from(arrayBuffer);
 }
 
+function getImageGenerationUrl() {
+  const apiUrl = volcanoEngineConfig.apiUrl.replace(/\/+$/, "");
+  return apiUrl.endsWith("/images/generations")
+    ? apiUrl
+    : `${apiUrl}/images/generations`;
+}
+
 async function generateSingleImage(prompt: string, imageBase64: string, mimeType: string): Promise<string | null> {
-  const response = await fetch(`${volcanoEngineConfig.apiUrl}/images/generations`, {
+  const response = await fetch(getImageGenerationUrl(), {
     method: "POST",
     headers: getHeaders(),
     body: JSON.stringify({
@@ -120,6 +127,7 @@ export async function POST(req: NextRequest) {
 
     console.log("开始处理图片，文件大小:", file.size);
     console.log("VOLCANO_ENGINE_API_URL:", volcanoEngineConfig.apiUrl);
+    console.log("VOLCANO_IMAGE_GENERATION_URL:", getImageGenerationUrl());
     console.log("VOLCANO_ENGINE_API_KEY exists:", !!volcanoEngineConfig.apiKey);
     const arrayBuffer = await file.arrayBuffer();
     const imageBase64 = Buffer.from(arrayBuffer).toString("base64");
