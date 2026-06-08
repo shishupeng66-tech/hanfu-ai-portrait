@@ -62,7 +62,7 @@ async function generateSingleImage(prompt: string, imageBase64: string, mimeType
     method: "POST",
     headers: getHeaders(),
     body: JSON.stringify({
-      model: "doubao-seedream-4-5-251128",
+      model: volcanoEngineConfig.imageModel,
       prompt,
       negative_prompt: defaultNegativePrompt,
       image: `data:${mimeType};base64,${imageBase64}`,
