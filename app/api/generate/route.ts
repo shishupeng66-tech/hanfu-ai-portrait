@@ -2,6 +2,7 @@ import { NextRequest, NextResponse } from "next/server";
 import { uploadToR2, generateImageKey } from "@/lib/r2";
 import { getActiveSessionUser } from "@/lib/auth/session";
 import { getErrorMessage } from "@/lib/error-utils";
+import { volcanoEngineConfig, getHeaders, validateConfig } from "@/lib/volcano-engine/config";
 
 const templates = {
   qipao: {
@@ -28,12 +29,14 @@ const templates = {
   tang: {
     name: "唐风红墙写真",
     shots: [
-      "以上传照片中的人物为原型，在完全保留人物原生面部特征、五官特点的基础上生成一张；比例3:4，不沿用原图服饰/发型/背景，一切以当前为准：唐风古风造型，梳繁复黑色高发髻，佩戴红金相间的华丽步摇、珠钗与流苏发饰，手持鎏金彩绘妖异面具，身着红黑撞色唐风齐胸襦裙，裙摆层叠垂坠且衣袂飘展，衣料有渐变红棕纹理，淡妆，慵懒侧身，右手举面具，神情清冷疏离，古色古香的中式红墙巷弄，飞檐翘角的木质古建筑，巷间悬挂红色灯笼，暮色时分的深蓝渐变天空，建筑旁有红色灯串装饰，强烈暖光胶片滤镜，逆光，四周暗光，朦胧滤镜，画质模糊，人物边缘虚化，虚影，烟雾缭绕，近景，怼脸，动感模糊，光影艺术，微距镜头，光晕氛围，轮廓光，强烈发丝光，强烈明暗对比，将人物轮廓勾勒出来，多重曝光，怪诞风格，冷艳美女，慵懒侧身，低角度仰拍镜头，衣料纹理清晰可见，面具鎏金彩绘细节精致，发丝丝缕分明，背景灯笼有光斑虚化散景效果，整体画面带复古暗调滤镜质感，建筑木质纹理与红墙质感真实，流苏发饰有轻微动态模糊。"
+      "严格保留输入照片中人物的真实身份、五官比例、脸型、肤色、眼睛颜色、气质和表情特征，不要换脸，不要改变人种，不要变成另一个人。只改变服装、发型、场景、灯光和古风写真风格。\n\n生成一张竖版 3:4 夜景古风汉服写真。整体风格为“夜灯鬼面汉服”：红黑金配色，现代唐风汉服灵感，红黑撞色齐胸襦裙，黑色透明轻纱外衫，红色、暗金、红棕渐变的层叠裙摆，红金相间的华丽步摇、珠钗、珍珠流苏发饰，鎏金彩绘妖异鬼面面具，中式红墙巷弄，飞檐翘角木质古建筑，红色灯笼，深蓝暮色天空，暖色逆光，强烈发丝轮廓光，浅景深，真实夜景人像摄影，复古电影胶片质感，神秘、冷艳、华丽、高级商业古风写真。\n\n人物是画面唯一主体，近景半身到七分身构图，人脸清晰，位于画面上三分之一。身体微微侧身，肩颈线条干净优雅，回眸看向镜头，神情清冷、安静、疏离但有美感。脸部保持清晰自然不过曝，保留真实皮肤纹理，妆容精致自然，红唇不过重。背景建筑、灯笼、灯串只作为氛围，柔和虚化，不要抢主体。\n\n面具作为“真容与假面”的视觉对照：人物真实的脸柔和、清晰、有高级美感；妖鬼面具华丽、神秘、有戏剧性。面具为小型鎏金彩绘妖异鬼面，红、金、黑配色，有尖角或牛角轮廓、夸张眉眼、金色雕花纹路、传统漆器和金属质感。面具靠近人物脸侧，与人物脸接近同一水平线，面具中心高度在嘴唇到下巴附近，位于脸颊旁或肩上方一点的位置，不要举到头顶，不要掉到胸口或腰部。面具与人脸形成左右呼应和视觉对比，但不能遮住五官，不能挡脸，不能比人脸更大。\n\n画面只允许一只手清晰可见。这只手自然托住面具侧下缘，手腕朝身体内侧自然微弯，手心朝向自己或朝向面具背面，用拇指和手指从面具背后与侧下缘轻轻托住面具。手、手腕和前臂必须连续自然，符合真实人体结构。不要展示另一只手，另一只手完全不进入画面。\n\n黑色轻纱、宽袖、发丝、流苏和裙摆由夜风自然吹动，形成轻盈飘逸的弧线，不要用手抓裙子，不要提裙摆。飘动主要出现在肩部外纱、袖缘、发丝、流苏和画面边缘，裙摆在下方自然展开，有真实布料层次和轻盈流动感，但不要遮住脸、手和身体主体。衣料有丝绸、薄纱、暗金织纹质感，纹理清晰。\n\n摄影语言：85mm 人像镜头效果，轻微低角度但不要夸张，人物清晰，背景虚化。光线从人物背后和侧后方勾勒发丝、肩部、发饰、面具边缘和飘动轻纱轮廓。画面要像真实相机拍摄的高级古风写真，不要插画感，不要塑料皮肤，不要过度AI滤镜。"
     ]
   }
 } as const;
 
 type TemplateKey = keyof typeof templates;
+
+const defaultNegativePrompt = "低质量，模糊，噪点，像素化，过度锐化，脸部变形，五官错位，换脸，不像本人，身份改变，人种改变，塑料脸，蜡像皮肤，过度磨皮，动漫脸，卡通脸，娃娃脸，AI感，CG感，游戏感，插画感，假皮肤，假布料，塑料布料，畸形身体，坏手，坏手指，多手指，少手指，融合手指，多余手臂，多余肢体，断肢，第二只手，另一只手，画面下方出现手，画面下方出现断手，腰部下方出现断手，胳膊断开，手臂没有连接身体，手臂凭空出现，肩膀和手臂不连接，肘部缺失，前臂错位，手腕外翻，手腕反折，手腕扭曲，折断的手腕，僵硬手腕，手抓裙子，手提裙摆，掂裙子，拽裙子，不自然手势，表情呆滞，游客照，证件照，站姿僵硬，现代衣服，现代首饰，西式礼服，哥特裙，和服，浴衣，错误汉服，服装凌乱，颜色跑偏，面具遮脸，面具挡住五官，面具比脸大，面具举到头顶，面具在头顶上方，面具在胸口，面具在腰部，面具位置太低，巨大面具，面具成为唯一主体，西式舞会眼罩，狐狸面具，可爱卡通面具，道具变形，袖子遮脸，裙摆遮脸，衣料遮住五官，背景过乱，灯笼压住人物，建筑抢主体，过曝，欠曝，脸部阴影太重，文字，水印，logo，抖音号，豆包AI生成，签名，数字";
 
 function isTemplateKey(key: FormDataEntryValue | null): key is TemplateKey {
   return typeof key === "string" && key in templates;
@@ -46,32 +49,47 @@ async function downloadImage(url: string): Promise<Buffer> {
 }
 
 async function generateSingleImage(prompt: string, imageBase64: string, mimeType: string): Promise<string | null> {
-  const response = await fetch(process.env.ARK_API_ENDPOINT!, {
+  const response = await fetch(`${volcanoEngineConfig.apiUrl}/images/generations`, {
     method: "POST",
-    headers: {
-      "Content-Type": "application/json",
-      "Authorization": `Bearer ${process.env.ARK_API_KEY}`,
-    },
+    headers: getHeaders(),
     body: JSON.stringify({
       model: "doubao-seedream-4-5-251128",
       prompt,
-      image: [`data:${mimeType};base64,${imageBase64}`],
-      ratio: "3:4",
-      size: "2K",
-      count: 1,
-      watermark: false,
+      negative_prompt: defaultNegativePrompt,
+      image: `data:${mimeType};base64,${imageBase64}`,
+      sequential_image_generation: "disabled",
       response_format: "url",
+      size: "3072x4096",
+      stream: false,
+      watermark: false,
+      denoising_strength: 0.35,
     }),
   });
 
-  const data = await response.json();
-  console.log("BytePlus状态码:", response.status);
-  console.log("BytePlus返回:", JSON.stringify(data).substring(0, 500));
+  const responseText = await response.text();
+  let data: unknown = responseText;
+  try {
+    data = JSON.parse(responseText);
+  } catch {
+    // Keep the raw body for providers that return plain-text errors.
+  }
+
+  console.log("BytePlus status:", response.status);
+  console.log("BytePlus response:", JSON.stringify(data).substring(0, 500));
+
   if (!response.ok) {
     console.error("ARK API error:", JSON.stringify(data));
     return null;
   }
-  return data?.data?.[0]?.url || null;
+
+  return (data as { data?: Array<{ url?: string }> })?.data?.[0]?.url || null;
+}
+
+function ensureGenerateConfig() {
+  validateConfig();
+  if (!volcanoEngineConfig.apiUrl) {
+    throw new Error("VOLCANO_ENGINE_API_URL is not configured");
+  }
 }
 
 export async function POST(req: NextRequest) {
@@ -81,9 +99,7 @@ export async function POST(req: NextRequest) {
       return NextResponse.json({ error: access.error }, { status: access.status });
     }
 
-    if (!process.env.ARK_API_KEY) {
-      return NextResponse.json({ error: "ARK_API_KEY is not configured" }, { status: 500 });
-    }
+    ensureGenerateConfig();
 
     const formData = await req.formData();
     const file = formData.get("image");
@@ -103,8 +119,8 @@ export async function POST(req: NextRequest) {
     }
 
     console.log("开始处理图片，文件大小:", file.size);
-    console.log("ARK_API_ENDPOINT:", process.env.ARK_API_ENDPOINT);
-    console.log("ARK_API_KEY存在:", !!process.env.ARK_API_KEY);
+    console.log("VOLCANO_ENGINE_API_URL:", volcanoEngineConfig.apiUrl);
+    console.log("VOLCANO_ENGINE_API_KEY exists:", !!volcanoEngineConfig.apiKey);
     const arrayBuffer = await file.arrayBuffer();
     const imageBase64 = Buffer.from(arrayBuffer).toString("base64");
     const mimeType = file.type;

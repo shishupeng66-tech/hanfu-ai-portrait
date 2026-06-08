@@ -15,6 +15,8 @@ type ImageGenerationOptions = {
   steps?: number;
   /** 人脸修复增强 */
   faceEnhance?: boolean;
+  /** 去噪强度，控制人脸保留程度，默认 0.65（范围 0-1） */
+  denoisingStrength?: number;
 };
 
 export async function generateImage(
@@ -30,6 +32,7 @@ export async function generateImage(
   const enablePromptOptimization = options?.promptOptimization !== false; // 默认开启
   const steps = options?.steps ?? 30;
   const faceEnhance = options?.faceEnhance !== false; // 默认开启
+  const denoisingStrength = options?.denoisingStrength ?? 0.65;
 
   const request: ImageGenerationRequest = {
     model,
@@ -37,12 +40,13 @@ export async function generateImage(
     image: images && images.length > 0 ? images : undefined,
     response_format: 'url',
     size,
-    width: 4096,
+    width: 3072,
     height: 4096,
     steps,
     cfg_scale: 8,
     image_guidance_scale: 1.2,
     face_enhance: faceEnhance,
+    denoising_strength: denoisingStrength,
     optimize_prompt_options: enablePromptOptimization
       ? { mode: 'standard' }
       : undefined,

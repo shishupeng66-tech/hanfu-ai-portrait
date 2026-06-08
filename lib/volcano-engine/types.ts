@@ -63,6 +63,7 @@ export interface ImageGenerationRequest {
   cfg_scale?: number;  // 提示词遵循度（推荐 8，默认 5）
   image_guidance_scale?: number;  // 人像参考图相似度（推荐 1.2）
   face_enhance?: boolean;  // 人脸修复增强
+  denoising_strength?: number;  // 去噪强度，控制人脸保留程度（推荐 0.65，范围 0-1）
   optimize_prompt_options?: {  // 提示词自动增强（对齐豆包 APP）
     mode: 'standard';  // standard 模式，质量更高（耗时增加约 20%）
   };
