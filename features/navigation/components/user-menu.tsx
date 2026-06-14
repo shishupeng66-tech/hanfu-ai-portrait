@@ -61,7 +61,7 @@ export function UserMenu() {
           href={`/${locale}/signup`}
           className="bg-primary text-primary-foreground text-sm px-4 py-1.5 rounded-full hover:opacity-90 transition-opacity"
         >
-          {t('common.actions.signUp')}
+          {t('common.actions.getStarted')}
         </Link>
       </div>
     );

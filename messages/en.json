@@ -36,6 +36,8 @@
   },
   "navigation": {
     "main": {
+      "styles": "Styles",
+      "examples": "Examples",
       "pricing": "Pricing",
       "blog": "Blog",
       "contact": "Contact",
@@ -83,14 +85,15 @@
   },
   "hanfuHome": {
     "hero": {
-      "badge": "AI-Powered Hanfu Portrait Studio",
-      "title": "Transform Into Hanfu Elegance with AI",
-      "subtitle": "Upload a photo, and let AI dress you in stunning traditional Chinese hanfu — no studio, no costume, just magic.",
-      "ctaPrimary": "Try Now — It's Free",
-      "ctaSecondary": "View Gallery",
-      "trustLabel1": "No watermark on paid plans",
-      "trustLabel2": "Ready in under 2 min",
-      "trustLabel3": "Cancel anytime"
+      "badge": "AI Hanfu Portrait Generator",
+      "title": "Professional Hanfu Portraits",
+      "titleNext": "Without the Photoshoot",
+      "subtitle": "Upload one photo. Choose a style. Get studio-quality Hanfu portraits in minutes.",
+      "ctaPrimary": "Create My Portrait",
+      "ctaSecondary": "See Examples",
+      "microcopy": "No costume. No studio. No trip to China.",
+      "mockupBefore": "Your Photo",
+      "mockupAfter": "Your Portrait"
     },
     "howItWorks": {
       "title": "How It Works",

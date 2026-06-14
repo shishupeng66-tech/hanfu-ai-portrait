@@ -2,7 +2,7 @@
 
 import { useState } from "react";
 
-import { useMotionValueEvent, useScroll, motion, AnimatePresence } from "framer-motion";
+import { motion, AnimatePresence } from "framer-motion";
 import { IoIosClose, IoIosMenu } from "react-icons/io";
 import Link from "next/link";
 import { ChevronRight, MessageSquare, Image as ImageIcon, Video } from "lucide-react";
@@ -32,26 +32,8 @@ export const MobileNavbar = () => {
   const t = useTranslations('navigation.main');
   const tCommon = useTranslations('common.actions');
 
-  const { scrollY } = useScroll();
-
-  const [showBackground, setShowBackground] = useState(false);
-
-  useMotionValueEvent(scrollY, "change", (value) => {
-    if (value > 100) {
-      setShowBackground(true);
-    } else {
-      setShowBackground(false);
-    }
-  });
-
   return (
-    <div
-      className={cn(
-        "flex justify-between bg-background items-center w-full rounded-full px-4 py-2 transition duration-200",
-        showBackground &&
-          "bg-secondary shadow-[0px_-2px_0px_0px_hsl(var(--muted)),0px_2px_0px_0px_hsl(var(--muted))]"
-      )}
-    >
+    <div className="flex justify-between items-center w-full px-4">
       <Logo />
       <IoIosMenu
         className="text-foreground h-6 w-6"

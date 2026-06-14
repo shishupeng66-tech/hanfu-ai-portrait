@@ -10,49 +10,47 @@ import { cn } from "@/lib/utils";
 
 const templates = [
   {
-    key: "qipao",
-    name: "新中式旗袍",
-    description: "琥珀暖光，低盘发，白玉耳坠，宣纸背景，5个镜头",
-    sampleClass: "from-amber-200 via-orange-100 to-yellow-100",
-    shots: 5,
-  },
-  {
-    key: "weijin",
-    name: "魏晋宋制汉服",
-    description: "清冷古风，竹筏水边，胶片质感，6个镜头",
-    sampleClass: "from-teal-200 via-emerald-100 to-slate-200",
-    shots: 6,
-  },
-  {
-    key: "tang",
-    name: "唐风红墙写真",
-    description: "红墙巷弄，鎏金面具，暮色逆光，1个镜头",
+    key: "nightLanternRedBlackHanfu",
+    name: "夜灯红黑汉服",
+    description: "红墙巷弄，暮色灯笼，红黑金汉服，4张套图",
     sampleClass: "from-red-700 via-red-500 to-amber-400",
-    shots: 1,
+    shots: 4,
+    trialCredits: 1,
+    setCredits: 4,
   },
 ] as const;
 
 type TemplateKey = (typeof templates)[number]["key"];
+type GenerationMode = "trial" | "set";
 
 type GenerateResponse = {
   imageUrls?: string[];
   templateName?: string;
   totalShots?: number;
+  creditsUsed?: number;
+  remainingCredits?: number;
   error?: string;
 };
 
 export default function GeneratePage() {
-  const [selectedTemplate, setSelectedTemplate] = useState<TemplateKey>("qipao");
+  const [selectedTemplate, setSelectedTemplate] = useState<TemplateKey>("nightLanternRedBlackHanfu");
   const [file, setFile] = useState<File | null>(null);
   const [previewUrl, setPreviewUrl] = useState<string | null>(null);
   const [resultUrls, setResultUrls] = useState<string[]>([]);
   const [error, setError] = useState<string | null>(null);
   const [isGenerating, setIsGenerating] = useState(false);
+  const [generationMode, setGenerationMode] = useState<GenerationMode>("trial");
+  const [trialCompletedTemplates, setTrialCompletedTemplates] = useState<Partial<Record<TemplateKey, boolean>>>({});
 
   const selectedTemplateName = useMemo(
     () => templates.find((t) => t.key === selectedTemplate)?.name,
     [selectedTemplate]
   );
+  const selectedTemplateConfig = templates.find((t) => t.key === selectedTemplate) || templates[0];
+  const hasCompletedTrial = Boolean(trialCompletedTemplates[selectedTemplate]);
+  const setCredits = hasCompletedTrial
+    ? Math.max(1, selectedTemplateConfig.setCredits - selectedTemplateConfig.trialCredits)
+    : selectedTemplateConfig.setCredits;
 
   function handleFileChange(event: ChangeEvent<HTMLInputElement>) {
     const nextFile = event.target.files?.[0] || null;
@@ -63,17 +61,22 @@ export default function GeneratePage() {
     setPreviewUrl(nextFile ? URL.createObjectURL(nextFile) : null);
   }
 
-  async function handleGenerate() {
+  async function handleGenerate(mode: GenerationMode) {
     if (!file) {
       setError("请先上传一张照片。");
       return;
     }
+    setGenerationMode(mode);
     setIsGenerating(true);
     setError(null);
     setResultUrls([]);
     const formData = new FormData();
     formData.append("image", file);
     formData.append("template", selectedTemplate);
+    formData.append("mode", mode);
+    if (mode === "set" && trialCompletedTemplates[selectedTemplate]) {
+      formData.append("trialAlreadyUsed", "true");
+    }
     try {
       const response = await fetch("/api/generate", {
         method: "POST",
@@ -87,6 +90,12 @@ export default function GeneratePage() {
         throw new Error("生成成功但没有返回图片。");
       }
       setResultUrls(data.imageUrls);
+      if (mode === "trial") {
+        setTrialCompletedTemplates(previous => ({
+          ...previous,
+          [selectedTemplate]: true,
+        }));
+      }
     } catch (err) {
       setError(err instanceof Error ? err.message : "生成失败，请稍后重试。");
     } finally {
@@ -151,16 +160,28 @@ export default function GeneratePage() {
               <div className="flex flex-col gap-3 sm:flex-row sm:items-center sm:justify-between">
                 <div>
                   <h2 className="text-2xl font-semibold text-card-foreground">3. 开始生成</h2>
-                  <p className="mt-1 text-sm text-muted-foreground">当前选择：{selectedTemplateName}</p>
+                  <p className="mt-1 text-sm text-muted-foreground">
+                    当前选择：{selectedTemplateName}，可先试 1 张，满意后再生成整套 4 张。
+                  </p>
                 </div>
-                <Button
-                  size="lg"
-                  onClick={handleGenerate}
-                  disabled={isGenerating || !file}
-                  className="disabled:cursor-not-allowed disabled:opacity-60"
-                >
-                  {isGenerating ? "生成中..." : "生成汉服写真"}
-                </Button>
+                <div className="flex flex-col gap-2 sm:flex-row">
+                  <Button
+                    size="lg"
+                    onClick={() => handleGenerate("trial")}
+                    disabled={isGenerating || !file}
+                    className="disabled:cursor-not-allowed disabled:opacity-60"
+                  >
+                    {isGenerating && generationMode === "trial" ? "试用生成中..." : "先试一张 · 1积分"}
+                  </Button>
+                  <Button
+                    size="lg"
+                    onClick={() => handleGenerate("set")}
+                    disabled={isGenerating || !file}
+                    className="disabled:cursor-not-allowed disabled:opacity-60"
+                  >
+                    {isGenerating && generationMode === "set" ? "整套生成中..." : `生成整套 · ${setCredits}积分`}
+                  </Button>
+                </div>
               </div>
               {error && (
                 <div className="mt-4 rounded-xl border border-red-500/30 bg-red-500/10 p-4 text-sm text-red-600">
@@ -189,7 +210,11 @@ export default function GeneratePage() {
               ) : (
                 <div className="flex min-h-[520px] items-center justify-center rounded-2xl border border-border bg-background/60">
                   <p className="text-center text-sm text-muted-foreground">
-                    {isGenerating ? "AI 正在生成所有镜头，请耐心等待..." : "生成后的图片会显示在这里"}
+                    {isGenerating
+                      ? generationMode === "trial"
+                        ? "AI 正在生成试用图，请耐心等待..."
+                        : "AI 正在生成整套写真，请耐心等待..."
+                      : "生成后的图片会显示在这里"}
                   </p>
                 </div>
               )}

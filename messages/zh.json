@@ -36,6 +36,8 @@
   },
   "navigation": {
     "main": {
+      "styles": "汉服风格",
+      "examples": "作品展示",
       "pricing": "定价",
       "blog": "博客",
       "contact": "联系我们",
@@ -83,14 +85,15 @@
   },
   "hanfuHome": {
     "hero": {
-      "badge": "AI汉服写真工作室",
-      "title": "用AI变身汉服佳人",
-      "subtitle": "上传一张照片，让AI为您穿上华丽的中国传统汉服——无需影棚，无需服装，只需一点魔法。",
-      "ctaPrimary": "免费体验 — 立即开始",
-      "ctaSecondary": "浏览作品",
-      "trustLabel1": "付费计划无水印",
-      "trustLabel2": "2分钟内生成",
-      "trustLabel3": "随时可取消"
+      "badge": "AI 汉服写真生成器",
+      "title": "专业级汉服写真",
+      "titleNext": "无需影棚拍摄",
+      "subtitle": "上传照片，选择风格，几分钟即可获得影棚级汉服写真。",
+      "ctaPrimary": "创作我的写真",
+      "ctaSecondary": "查看示例",
+      "microcopy": "无需服装，无需影棚，无需来中国。",
+      "mockupBefore": "您的照片",
+      "mockupAfter": "您的写真"
     },
     "howItWorks": {
       "title": "三步完成",

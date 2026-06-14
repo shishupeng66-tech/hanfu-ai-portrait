@@ -5,7 +5,7 @@ export const volcanoEngineConfig: VolcanoEngineConfig = {
   apiUrl: process.env.VOLCANO_ENGINE_API_URL || process.env.ARK_API_ENDPOINT || 'https://ark.cn-beijing.volces.com/api/v3',
   // 使用模型 ID 或控制台创建的 Endpoint ID。
   textModel: 'doubao-1-5-thinking-pro-250415',  // 豆包 1.5 Thinking Pro 版本（正确的模型名）
-  imageModel: process.env.VOLCANO_ENGINE_IMAGE_MODEL || process.env.ARK_IMAGE_MODEL || 'seedream-4-5-251128',
+  imageModel: process.env.VOLCANO_ENGINE_IMAGE_MODEL || process.env.ARK_IMAGE_MODEL || 'doubao-seedream-4-5-251128',
   videoModel: 'doubao-seedance-1-0-pro-250528',  // Seedance Pro 视频生成模型
 };
 

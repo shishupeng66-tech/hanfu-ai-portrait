@@ -1,4 +1,16 @@
 import { NextRequest, NextResponse } from "next/server";
+import { randomUUID } from "crypto";
+import { eq } from "drizzle-orm";
+
+import { createCreditCompensation } from "@/lib/credit-compensation";
+import { canUserAfford, deductCredits } from "@/lib/credits";
+import { db } from "@/lib/db";
+import { generationHistory } from "@/lib/db/schema";
+import {
+  isPortraitGenerationMode,
+  isPortraitTemplateKey,
+  portraitTemplates,
+} from "@/lib/portrait-templates";
 import { uploadToR2, generateImageKey } from "@/lib/r2";
 import { getActiveSessionUser } from "@/lib/auth/session";
 import { getErrorMessage } from "@/lib/error-utils";
@@ -34,13 +46,11 @@ const templates = {
   }
 } as const;
 
-type TemplateKey = keyof typeof templates;
-
 const defaultNegativePrompt = "低质量，模糊，噪点，像素化，过度锐化，脸部变形，五官错位，换脸，不像本人，身份改变，人种改变，塑料脸，蜡像皮肤，过度磨皮，动漫脸，卡通脸，娃娃脸，AI感，CG感，游戏感，插画感，假皮肤，假布料，塑料布料，畸形身体，坏手，坏手指，多手指，少手指，融合手指，多余手臂，多余肢体，断肢，第二只手，另一只手，画面下方出现手，画面下方出现断手，腰部下方出现断手，胳膊断开，手臂没有连接身体，手臂凭空出现，肩膀和手臂不连接，肘部缺失，前臂错位，手腕外翻，手腕反折，手腕扭曲，折断的手腕，僵硬手腕，手抓裙子，手提裙摆，掂裙子，拽裙子，不自然手势，表情呆滞，游客照，证件照，站姿僵硬，现代衣服，现代首饰，西式礼服，哥特裙，和服，浴衣，错误汉服，服装凌乱，颜色跑偏，面具遮脸，面具挡住五官，面具比脸大，面具举到头顶，面具在头顶上方，面具在胸口，面具在腰部，面具位置太低，巨大面具，面具成为唯一主体，西式舞会眼罩，狐狸面具，可爱卡通面具，道具变形，袖子遮脸，裙摆遮脸，衣料遮住五官，背景过乱，灯笼压住人物，建筑抢主体，过曝，欠曝，脸部阴影太重，文字，水印，logo，抖音号，豆包AI生成，签名，数字";
-
-function isTemplateKey(key: FormDataEntryValue | null): key is TemplateKey {
-  return typeof key === "string" && key in templates;
-}
+// Keep the legacy inline templates reachable for prompt reference while the live
+// product flow reads from lib/portrait-templates.ts.
+void templates;
+void defaultNegativePrompt;
 
 async function downloadImage(url: string): Promise<Buffer> {
   const response = await fetch(url);
@@ -57,16 +67,36 @@ function getImageGenerationUrl() {
     : `${apiUrl}/images/generations`;
 }
 
-async function generateSingleImage(prompt: string, imageBase64: string, mimeType: string): Promise<string | null> {
+async function generatePortraitImages({
+  prompt,
+  negativePrompt,
+  imageBase64,
+  mimeType,
+  maxImages,
+}: {
+  prompt: string;
+  negativePrompt: string;
+  imageBase64: string;
+  mimeType: string;
+  maxImages: number;
+}): Promise<string[]> {
+  const isSet = maxImages > 1;
   const response = await fetch(getImageGenerationUrl(), {
     method: "POST",
     headers: getHeaders(),
     body: JSON.stringify({
       model: volcanoEngineConfig.imageModel,
       prompt,
-      negative_prompt: defaultNegativePrompt,
+      negative_prompt: negativePrompt,
       image: `data:${mimeType};base64,${imageBase64}`,
-      sequential_image_generation: "disabled",
+      sequential_image_generation: isSet ? "auto" : "disabled",
+      ...(isSet
+        ? {
+            sequential_image_generation_options: {
+              max_images: maxImages,
+            },
+          }
+        : {}),
       response_format: "url",
       size: "3072x4096",
       stream: false,
@@ -83,15 +113,18 @@ async function generateSingleImage(prompt: string, imageBase64: string, mimeType
     // Keep the raw body for providers that return plain-text errors.
   }
 
-  console.log("BytePlus status:", response.status);
-  console.log("BytePlus response:", JSON.stringify(data).substring(0, 500));
+  console.log("ARK image status:", response.status);
+  console.log("ARK image response:", JSON.stringify(data).substring(0, 500));
 
   if (!response.ok) {
-    console.error("ARK API error:", JSON.stringify(data));
-    return null;
+    throw new Error(`ARK API error: ${JSON.stringify(data)}`);
   }
 
-  return (data as { data?: Array<{ url?: string }> })?.data?.[0]?.url || null;
+  return (
+    (data as { data?: Array<{ url?: string }> }).data
+      ?.map(item => item.url)
+      .filter((url): url is string => Boolean(url)) || []
+  );
 }
 
 function ensureGenerateConfig() {
@@ -113,6 +146,9 @@ export async function POST(req: NextRequest) {
     const formData = await req.formData();
     const file = formData.get("image");
     const templateKey = formData.get("template");
+    const modeEntry = formData.get("mode");
+    const trialAlreadyUsed = formData.get("trialAlreadyUsed") === "true";
+    const mode = isPortraitGenerationMode(modeEntry) ? modeEntry : "set";
 
     if (!(file instanceof File)) {
       return NextResponse.json({ error: "Image is required" }, { status: 400 });
@@ -123,7 +159,7 @@ export async function POST(req: NextRequest) {
     if (file.size > 10 * 1024 * 1024) {
       return NextResponse.json({ error: "Image must be smaller than 10MB" }, { status: 400 });
     }
-    if (!isTemplateKey(templateKey)) {
+    if (!isPortraitTemplateKey(templateKey)) {
       return NextResponse.json({ error: "Invalid template" }, { status: 400 });
     }
 
@@ -135,38 +171,137 @@ export async function POST(req: NextRequest) {
     const imageBase64 = Buffer.from(arrayBuffer).toString("base64");
     const mimeType = file.type;
 
-    const template = templates[templateKey];
-    const shots = template.shots;
-
     const userId = access.user.id;
-    const generatedUrls = await Promise.all(
-      shots.map(prompt => generateSingleImage(prompt, imageBase64, mimeType))
-    );
+    const template = portraitTemplates[templateKey];
+    const generationRequest = mode === "trial" ? template.trialRequest : template.setRequest;
+    const creditsNeeded =
+      mode === "trial"
+        ? template.trialCredits
+        : Math.max(1, template.setCredits - (trialAlreadyUsed ? template.trialCredits : 0));
 
-    const imageUrls = await Promise.all(
-      generatedUrls.map(async (url, index) => {
-        if (!url) return null;
-        try {
-          const buffer = await downloadImage(url);
-          const key = generateImageKey(userId, `-${index}`);
-          return await uploadToR2(buffer, key, "image/jpeg");
-        } catch {
-          return url;
-        }
-      })
-    );
+    const hasCredits = await canUserAfford(userId, creditsNeeded);
+    if (!hasCredits) {
+      return NextResponse.json(
+        {
+          error: "Insufficient credits",
+          creditsNeeded,
+          remainingCredits: 0,
+        },
+        { status: 402 }
+      );
+    }
 
-    const validUrls = imageUrls.filter(Boolean) as string[];
+    const historyId = randomUUID();
+    await db.insert(generationHistory).values({
+      id: historyId,
+      userId,
+      type: "image",
+      prompt: generationRequest.prompt,
+      status: "processing",
+      creditsUsed: creditsNeeded,
+      metadata: JSON.stringify({
+        templateKey,
+        templateName: template.name,
+        mode,
+        maxImages: generationRequest.maxImages,
+        trialAlreadyUsed,
+        creditsNeeded,
+      }),
+    });
 
-    if (validUrls.length === 0) {
-      return NextResponse.json({ error: "No images generated" }, { status: 500 });
+    const deductResult = await deductCredits(userId, creditsNeeded, "portrait_generation", historyId);
+    if (!deductResult.success) {
+      await db
+        .update(generationHistory)
+        .set({ status: "failed", error: deductResult.error, updatedAt: new Date() })
+        .where(eq(generationHistory.id, historyId));
+
+      return NextResponse.json(
+        {
+          error: deductResult.error || "Failed to deduct credits",
+          remainingCredits: deductResult.remainingCredits,
+        },
+        { status: 402 }
+      );
+    }
+
+    const compensation = createCreditCompensation({
+      userId,
+      amount: creditsNeeded,
+      reason: "image_generation_refund",
+      referenceId: historyId,
+    });
+
+    let validUrls: string[] = [];
+    try {
+      const generatedUrls = await generatePortraitImages({
+        prompt: generationRequest.prompt,
+        negativePrompt: generationRequest.negativePrompt,
+        imageBase64,
+        mimeType,
+        maxImages: generationRequest.maxImages,
+      });
+
+      const imageUrls = await Promise.all(
+        generatedUrls.map(async (url, index) => {
+          try {
+            const buffer = await downloadImage(url);
+            const key = generateImageKey(userId, `-${index}`);
+            return await uploadToR2(buffer, key, "image/jpeg");
+          } catch {
+            return url;
+          }
+        })
+      );
+
+      validUrls = imageUrls.filter(Boolean) as string[];
+
+      if (validUrls.length === 0) {
+        throw new Error("No images generated");
+      }
+
+      await db
+        .update(generationHistory)
+        .set({
+          status: "completed",
+          resultUrl: validUrls[0],
+          updatedAt: new Date(),
+          metadata: JSON.stringify({
+            templateKey,
+            templateName: template.name,
+            mode,
+            maxImages: generationRequest.maxImages,
+            trialAlreadyUsed,
+            creditsNeeded,
+            imageUrls: validUrls,
+          }),
+        })
+        .where(eq(generationHistory.id, historyId));
+
+      compensation.settle();
+    } catch (generationError) {
+      await compensation.compensate();
+      await db
+        .update(generationHistory)
+        .set({
+          status: "failed",
+          error: getErrorMessage(generationError, "Failed to generate portrait"),
+          updatedAt: new Date(),
+        })
+        .where(eq(generationHistory.id, historyId));
+
+      throw generationError;
     }
 
     return NextResponse.json({
+      id: historyId,
       imageUrls: validUrls,
       templateName: template.name,
       templateKey,
-      totalShots: shots.length,
+      mode,
+      totalShots: generationRequest.maxImages,
+      creditsUsed: creditsNeeded,
+      remainingCredits: deductResult.remainingCredits,
     });
 
   } catch (error: unknown) {

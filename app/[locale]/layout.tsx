@@ -46,12 +46,7 @@ export default async function LocaleLayout(
         )}
         suppressHydrationWarning
       >
-        <ThemeProvider
-          attribute="class"
-          enableSystem
-          disableTransitionOnChange
-          defaultTheme="light"
-        >
+        <ThemeProvider>
           <NextIntlClientProvider locale={locale} messages={messages}>
             {children}
             <Toaster position="top-right" richColors />
