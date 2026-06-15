@@ -29,6 +29,8 @@ export function HomeHero() {
       description="Upload one photo. Choose a style. Get studio-quality Hanfu portraits in minutes."
       ctaText="Create My Portrait"
       images={HANFU_IMAGES}
+      // Change the number to switch: hero-bg-1.png, hero-bg-2.png, hero-bg-3.png
+      backgroundImage="/images/hero-bg/hero-bg-10.png"
     />
   );
 }

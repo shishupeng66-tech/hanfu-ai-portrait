@@ -21,50 +21,43 @@ interface NavBarItemWithDropdownProps {
 }
 
 const iconMap = {
-  MessageSquare: MessageSquare,
-  Image: Image,
-  Video: Video,
+  MessageSquare,
+  Image,
+  Video,
 };
 
 export function NavBarItemWithDropdown({
   href,
   target,
   subItems,
-  children
+  children,
 }: NavBarItemWithDropdownProps) {
-  const t = useTranslations('navigation.main');
+  const t = useTranslations("navigation.main");
   const [isOpen, setIsOpen] = useState(false);
-  const dropdownRef = useRef<HTMLDivElement>(null);
-  const timeoutRef = useRef<NodeJS.Timeout>(undefined);
+  const timeoutRef = useRef<NodeJS.Timeout | null>(null);
 
   useEffect(() => {
     return () => {
-      if (timeoutRef.current) {
-        clearTimeout(timeoutRef.current);
-      }
+      if (timeoutRef.current) clearTimeout(timeoutRef.current);
     };
   }, []);
 
   const handleMouseEnter = () => {
-    if (timeoutRef.current) {
-      clearTimeout(timeoutRef.current);
-    }
+    if (timeoutRef.current) clearTimeout(timeoutRef.current);
     setIsOpen(true);
   };
 
   const handleMouseLeave = () => {
-    timeoutRef.current = setTimeout(() => {
-      setIsOpen(false);
-    }, 150);
+    timeoutRef.current = setTimeout(() => setIsOpen(false), 150);
   };
 
-  if (!subItems || subItems.length === 0) {
+  if (!subItems?.length) {
     return (
       <Link
         href={href}
         target={target}
         rel={target === "_blank" ? "noopener noreferrer" : undefined}
-        className="px-4 py-2 rounded-lg text-sm font-medium text-muted-foreground hover:bg-hover transition-colors"
+        className="rounded-lg px-4 py-2 text-sm font-medium text-[#F7F2EA]/85 transition-colors hover:bg-white/10 hover:text-white"
       >
         {children}
       </Link>
@@ -72,37 +65,25 @@ export function NavBarItemWithDropdown({
   }
 
   return (
-    <div
-      className="relative"
-      onMouseEnter={handleMouseEnter}
-      onMouseLeave={handleMouseLeave}
-    >
+    <div className="relative" onMouseEnter={handleMouseEnter} onMouseLeave={handleMouseLeave}>
       <button
         className={cn(
-          "px-4 py-2 rounded-lg text-sm font-medium flex items-center gap-1 transition-colors",
-          isOpen
-            ? "bg-accent text-foreground"
-            : "text-muted-foreground hover:bg-hover"
+          "flex items-center gap-1 rounded-lg px-4 py-2 text-sm font-medium transition-colors",
+          isOpen ? "bg-white/15 text-white" : "text-[#F7F2EA]/85 hover:bg-white/10 hover:text-white"
         )}
       >
         {children}
-        <ChevronDown
-          className={cn(
-            "w-3 h-3 transition-transform duration-200",
-            isOpen && "rotate-180"
-          )}
-        />
+        <ChevronDown className={cn("h-3 w-3 transition-transform duration-200", isOpen && "rotate-180")} />
       </button>
 
       <AnimatePresence>
         {isOpen && (
           <motion.div
-            ref={dropdownRef}
-            initial={{ opacity: 0, y: -10 }}
+            initial={{ opacity: 0, y: -8 }}
             animate={{ opacity: 1, y: 0 }}
-            exit={{ opacity: 0, y: -10 }}
+            exit={{ opacity: 0, y: -8 }}
             transition={{ duration: 0.15 }}
-            className="absolute left-0 mt-1 w-48 bg-popover rounded-lg shadow-navbar border border-border overflow-hidden z-50"
+            className="absolute left-0 z-50 mt-1 w-48 overflow-hidden rounded-lg border border-white/10 bg-[#0E0E0E] shadow-lg"
           >
             <div className="py-2">
               {subItems.map((subItem) => {
@@ -112,12 +93,10 @@ export function NavBarItemWithDropdown({
                   <Link
                     key={subItem.key}
                     href={subItem.href}
-                    className="flex items-center gap-3 px-4 py-2.5 text-sm text-muted-foreground hover:bg-hover transition-colors"
+                    className="flex items-center gap-3 px-4 py-2.5 text-sm text-white/70 transition-colors hover:bg-white/10 hover:text-white"
                     onClick={() => setIsOpen(false)}
                   >
-                    {IconComponent && (
-                      <IconComponent className="w-4 h-4 text-muted-foreground" />
-                    )}
+                    {IconComponent ? <IconComponent className="h-4 w-4 text-white/45" /> : null}
                     <span>{t(subItem.key)}</span>
                   </Link>
                 );

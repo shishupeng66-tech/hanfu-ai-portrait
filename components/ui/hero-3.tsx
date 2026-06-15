@@ -1,121 +1,118 @@
 "use client";
 
 import React from "react";
+import Image from "next/image";
 import { motion } from "framer-motion";
 import { cn } from "@/lib/utils";
 
-// Props interface for the component
 interface AnimatedMarqueeHeroProps {
   tagline: string;
   title: React.ReactNode;
   description: string;
   ctaText: string;
   images: string[];
+  backgroundImage?: string;
   className?: string;
 }
 
-// Reusable Button component styled like in the image
+const fadeIn = {
+  hidden: { opacity: 0, y: 10 },
+  show: {
+    opacity: 1,
+    y: 0,
+    transition: { type: "spring", stiffness: 100, damping: 20 },
+  },
+};
+
 const ActionButton = ({ children }: { children: React.ReactNode }) => (
   <motion.button
-    whileHover={{ scale: 1.05 }}
-    whileTap={{ scale: 0.95 }}
-    className="mt-8 px-8 py-3 rounded-full bg-red-500 text-white font-semibold shadow-lg transition-colors hover:bg-red-600 focus:outline-none focus:ring-2 focus:ring-red-400 focus:ring-opacity-75"
+    whileHover={{ scale: 1.04 }}
+    whileTap={{ scale: 0.97 }}
+    className="rounded-full bg-[#B7352D] px-8 py-3 font-semibold text-[#FFF8F0] shadow-md shadow-black/20 transition-colors hover:bg-[#9F2D27] focus:outline-none focus:ring-2 focus:ring-[#B7352D]/75"
   >
     {children}
   </motion.button>
 );
 
-// The main hero component
 export const AnimatedMarqueeHero: React.FC<AnimatedMarqueeHeroProps> = ({
   tagline,
   title,
   description,
   ctaText,
   images,
+  backgroundImage,
   className,
 }) => {
-  // Animation variants for the text content
-  const FADE_IN_ANIMATION_VARIANTS = {
-    hidden: { opacity: 0, y: 10 },
-    show: { opacity: 1, y: 0, transition: { type: "spring", stiffness: 100, damping: 20 } },
-  };
-
-  // Duplicate images for a seamless loop
   const duplicatedImages = [...images, ...images];
 
   return (
     <section
       className={cn(
-        "relative w-full min-h-[calc(100vh-80px)] overflow-hidden bg-background flex flex-col items-center justify-start text-center px-4",
+        "relative flex min-h-screen w-full flex-col items-center justify-start overflow-hidden px-4 text-center",
         className
       )}
     >
-      <div className="z-10 flex flex-col items-center pt-[100px] md:pt-[140px]">
-        {/* Tagline */}
+      <div className="pointer-events-none absolute inset-0 -z-10 overflow-hidden bg-[#030604]">
+        {backgroundImage ? (
+          <Image
+            src={backgroundImage}
+            alt=""
+            aria-hidden="true"
+            fill
+            priority
+            sizes="100vw"
+            className="object-cover"
+          />
+        ) : null}
+        {/* Minimal top scrim for title readability */}
+        <div className="absolute inset-x-0 top-0 h-[55%] bg-gradient-to-b from-black/30 via-black/10 to-transparent" />
+        {/* Bottom fade for marquee transition */}
+        <div className="absolute inset-x-0 bottom-0 h-[25%] bg-gradient-to-t from-[#030604]/70 to-transparent" />
+      </div>
+
+      <div className="z-10 flex flex-col items-center pt-[96px] md:pt-[124px]">
         <motion.div
           initial="hidden"
           animate="show"
-          variants={FADE_IN_ANIMATION_VARIANTS}
-          className="mb-4 inline-block rounded-full border border-border bg-card/50 px-4 py-1.5 text-sm font-medium text-muted-foreground backdrop-blur-sm"
+          variants={fadeIn}
+          className="mb-4 inline-block rounded-full border border-white/10 bg-white/5 px-4 py-1.5 text-sm font-medium text-[#C9A45C] backdrop-blur-sm"
         >
           {tagline}
         </motion.div>
 
-        {/* Main Title */}
         <motion.h1
           initial="hidden"
           animate="show"
-          variants={{
-            hidden: {},
-            show: {
-              transition: {
-                staggerChildren: 0.1,
-              },
-            },
-          }}
-          className="text-5xl md:text-7xl font-bold tracking-tighter text-foreground"
+          variants={fadeIn}
+          className="max-w-6xl text-5xl font-bold tracking-tighter text-[#F7F2EA] md:text-7xl"
         >
-          {typeof title === 'string' ? (
-            title.split(" ").map((word, i) => (
-              <motion.span
-                key={i}
-                variants={FADE_IN_ANIMATION_VARIANTS}
-                className="inline-block"
-              >
-                {word}&nbsp;
-              </motion.span>
-            ))
-          ) : (
-            title
-          )}
+          {title}
         </motion.h1>
 
-        {/* Description */}
         <motion.p
           initial="hidden"
           animate="show"
-          variants={FADE_IN_ANIMATION_VARIANTS}
-          transition={{ delay: 0.5 }}
-          className="mt-6 max-w-xl text-lg text-muted-foreground"
+          variants={fadeIn}
+          transition={{ delay: 0.15 }}
+          className="mt-5 max-w-xl text-lg leading-8 text-[#A8A29E]"
         >
           {description}
         </motion.p>
 
-        {/* Call to Action Button */}
         <motion.div
           initial="hidden"
           animate="show"
-          variants={FADE_IN_ANIMATION_VARIANTS}
-          transition={{ delay: 0.6 }}
+          variants={fadeIn}
+          transition={{ delay: 0.2 }}
+          className="mt-7"
         >
           <ActionButton>{ctaText}</ActionButton>
         </motion.div>
       </div>
 
-      {/* Animated Image Marquee */}
-      <div className="absolute bottom-0 left-0 w-full h-1/3 md:h-2/5 [mask-image:linear-gradient(to_bottom,transparent,black_20%,black_80%,transparent)]">
+      <div className="w-full mt-8 md:mt-10 pb-6 md:pb-8 [mask-image:linear-gradient(to_bottom,transparent,black_8%,black_92%,transparent)]">
         <motion.div
-          className="flex gap-4"
+          className="flex gap-3 md:gap-4"
           animate={{
             x: ["-100%", "0%"],
             transition: {
@@ -127,16 +124,15 @@ export const AnimatedMarqueeHero: React.FC<AnimatedMarqueeHeroProps> = ({
         >
           {duplicatedImages.map((src, index) => (
             <div
-              key={index}
-              className="relative aspect-[3/4] h-48 md:h-64 flex-shrink-0"
-              style={{
-                rotate: `${(index % 2 === 0 ? -2 : 5)}deg`,
-              }}
+              key={src + "-" + index}
+              className="relative aspect-[3/4] h-48 flex-shrink-0 md:h-[320px]"
             >
-              <img
+              <Image
                 src={src}
-                alt={`Showcase image ${index + 1}`}
-                className="w-full h-full object-cover rounded-2xl shadow-md"
+                alt={"Hanfu portrait example " + (index + 1)}
+                fill
+                sizes="(min-width: 768px) 240px, 144px"
+                className="rounded-2xl border border-white/10 object-cover shadow-xl shadow-black/30"
               />
             </div>
           ))}

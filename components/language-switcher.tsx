@@ -71,10 +71,10 @@ export function LanguageSwitcher() {
         onClick={() => setIsOpen(!isOpen)}
         className={cn(
           "flex items-center gap-2 px-3 py-1.5 text-sm rounded-full transition-all duration-200",
-          "border border-border",
-          "bg-popover text-popover-foreground",
-          "hover:bg-hover",
-          "focus:outline-none focus:ring-2 focus:ring-ring focus:ring-offset-2"
+          "border border-white/12",
+          "bg-white/8 text-white",
+          "hover:bg-white/15",
+          "focus:outline-none focus:ring-2 focus:ring-[#B7352D] focus:ring-opacity-50"
         )}
         aria-expanded={isOpen}
         aria-haspopup="true"
@@ -95,8 +95,8 @@ export function LanguageSwitcher() {
         <div
           className={cn(
             "absolute right-0 mt-2 py-1 min-w-[150px]",
-            "bg-popover text-popover-foreground",
-            "border border-border",
+            "bg-[#0E0E0E] text-white",
+            "border border-white/12",
             "rounded-lg shadow-lg",
             "animate-in fade-in-0 zoom-in-95",
             "z-50"
@@ -112,20 +112,20 @@ export function LanguageSwitcher() {
                 onClick={() => switchLocale(loc)}
                 className={cn(
                   "flex items-center justify-between w-full px-3 py-2 text-sm",
-                  "hover:bg-hover",
+                  "hover:bg-white/10",
                   "transition-colors duration-150",
-                  isActive && "bg-accent text-accent-foreground"
+                  isActive && "bg-white/15 text-white"
                 )}
                 role="menuitem"
               >
                 <span className={cn(
                   "font-medium",
-                  isActive ? "text-accent-foreground" : "text-muted-foreground"
+                  isActive ? "text-white" : "text-white/60"
                 )}>
                   {localeNames[loc]}
                 </span>
                 {isActive && (
-                  <Check className="w-4 h-4 text-primary" />
+                  <Check className="w-4 h-4 text-white/80" />
                 )}
               </button>
             );

@@ -7,9 +7,7 @@ import { IoIosClose, IoIosMenu } from "react-icons/io";
 import Link from "next/link";
 import { ChevronRight, MessageSquare, Image as ImageIcon, Video } from "lucide-react";
 
-import { Button } from "@/components/button";
 import { Logo } from "@/components/Logo";
-import { ModeToggle } from "@/components/mode-toggle";
 import { LanguageSwitcher } from "@/components/language-switcher";
 import { useSession, signOut } from "@/lib/auth-client";
 import { useRouter } from "next/navigation";
@@ -36,20 +34,19 @@ export const MobileNavbar = () => {
     <div className="flex justify-between items-center w-full px-4">
       <Logo />
       <IoIosMenu
-        className="text-foreground h-6 w-6"
+        className="text-white h-6 w-6"
         onClick={() => setOpen(!open)}
       />
       {open && (
-        <div className="fixed inset-0 bg-background z-50 flex flex-col items-start justify-start pt-4 text-xl text-muted-foreground transition duration-200">
-          <div className="flex items-center justify-between w-full px-5 pb-4 border-b border-border">
+        <div className="fixed inset-0 bg-[#0A0A0A] z-50 flex flex-col items-start justify-start pt-4 text-xl text-white/60 transition duration-200">
+          <div className="flex items-center justify-between w-full px-5 pb-4 border-b border-white/10">
             <Logo />
-            <div className="flex items-center gap-2">
-              <ModeToggle />
+            <div className="flex items-center">
               <button
                 onClick={() => setOpen(!open)}
-                className="p-1.5 rounded-lg hover:bg-accent transition-colors"
+                className="p-1.5 rounded-lg hover:bg-white/10 transition-colors"
               >
-                <IoIosClose className="h-7 w-7 text-foreground" />
+                <IoIosClose className="h-7 w-7 text-white" />
               </button>
             </div>
           </div>
@@ -68,16 +65,16 @@ export const MobileNavbar = () => {
                       }}
                       className="flex items-center justify-between w-full gap-3 group py-2"
                     >
-                      <span className="text-xl text-foreground font-semibold">
+                      <span className="text-xl text-white font-semibold">
                         {t(navItem.key)}
                       </span>
                       <div className="flex items-center gap-2">
-                        <span className="text-xs text-muted-foreground font-medium px-2 py-0.5 bg-muted rounded-full">
+                        <span className="text-xs text-white/50 font-medium px-2 py-0.5 bg-white/10 rounded-full">
                           {navItem.subItems.length}
                         </span>
                         <ChevronRight
                           className={cn(
-                            "w-5 h-5 text-muted-foreground transition-transform duration-200",
+                            "w-5 h-5 text-white/50 transition-transform duration-200",
                             expandedItems.includes(navItem.key) && "rotate-90"
                           )}
                         />
@@ -92,7 +89,7 @@ export const MobileNavbar = () => {
                           transition={{ duration: 0.25, ease: "easeOut" }}
                           className="overflow-hidden"
                         >
-                          <div className="ml-1 mt-2 space-y-0.5 bg-secondary rounded-2xl p-2 border border-border">
+                          <div className="ml-1 mt-2 space-y-0.5 bg-white/5 rounded-2xl p-2 border border-white/10">
                             {navItem.subItems.map((subItem, index) => {
                               const IconComponent = subItem.icon ? iconMap[subItem.icon as keyof typeof iconMap] : null;
                               return (
@@ -105,14 +102,14 @@ export const MobileNavbar = () => {
                                   <Link
                                     href={`/${locale}${subItem.href}`}
                                     onClick={() => setOpen(false)}
-                                    className="flex items-center gap-3 py-3 px-3 rounded-xl hover:bg-accent transition-all duration-150 active:scale-[0.98]"
+                                    className="flex items-center gap-3 py-3 px-3 rounded-xl hover:bg-white/10 transition-all duration-150 active:scale-[0.98]"
                                   >
                                     {IconComponent && (
-                                      <div className="flex-shrink-0 w-9 h-9 flex items-center justify-center bg-muted rounded-lg shadow-sm">
-                                        <IconComponent className="w-4.5 h-4.5 text-foreground" />
+                                      <div className="flex-shrink-0 w-9 h-9 flex items-center justify-center bg-white/10 rounded-lg">
+                                        <IconComponent className="w-4.5 h-4.5 text-white/80" />
                                       </div>
                                     )}
-                                    <span className="text-[15px] font-medium text-foreground">
+                                    <span className="text-[15px] font-medium text-white/80">
                                       {t(subItem.key)}
                                     </span>
                                   </Link>
@@ -132,7 +129,7 @@ export const MobileNavbar = () => {
                     rel={navItem.target === "_blank" ? "noopener noreferrer" : undefined}
                     className="relative block w-full py-2 hover:opacity-70 transition-opacity"
                   >
-                    <span className="block text-xl text-foreground font-semibold">
+                    <span className="block text-xl text-white font-semibold">
                       {t(navItem.key)}
                     </span>
                   </Link>
@@ -140,19 +137,19 @@ export const MobileNavbar = () => {
               </div>
             ))}
           </div>
-          <div className="flex flex-col w-full items-start gap-4 px-6 py-5 border-t border-border bg-secondary">
+          <div className="flex flex-col w-full items-start gap-4 px-6 py-5 border-t border-white/10 bg-black/20">
             <div className="w-full">
               <LanguageSwitcher />
             </div>
             {session.data?.user ? (
               <>
                 <div className="flex flex-col gap-2 w-full">
-                  <div className="pb-3 mb-2 border-b border-border">
-                    <p className="text-[15px] font-semibold text-foreground">
+                  <div className="pb-3 mb-2 border-b border-white/10">
+                    <p className="text-[15px] font-semibold text-white">
                       {session.data.user.name || session.data.user.email}
                     </p>
                     {session.data.user.name && (
-                      <p className="text-sm text-muted-foreground mt-1">
+                      <p className="text-sm text-white/50 mt-1">
                         {session.data.user.email}
                       </p>
                     )}
@@ -160,21 +157,21 @@ export const MobileNavbar = () => {
                   <Link
                     href={`/${locale}/dashboard`}
                     onClick={() => setOpen(false)}
-                    className="text-[15px] font-medium text-muted-foreground py-2 hover:text-foreground transition-colors"
+                    className="text-[15px] font-medium text-white/60 py-2 hover:text-white transition-colors"
                   >
                     {t('dashboard')}
                   </Link>
                   <Link
                     href={`/${locale}/settings`}
                     onClick={() => setOpen(false)}
-                    className="text-[15px] font-medium text-muted-foreground py-2 hover:text-foreground transition-colors"
+                    className="text-[15px] font-medium text-white/60 py-2 hover:text-white transition-colors"
                   >
                     {t('settings')}
                   </Link>
                   <Link
                     href={`/${locale}/profile`}
                     onClick={() => setOpen(false)}
-                    className="text-[15px] font-medium text-muted-foreground py-2 hover:text-foreground transition-colors"
+                    className="text-[15px] font-medium text-white/60 py-2 hover:text-white transition-colors"
                   >
                     {t('profile')}
                   </Link>
@@ -185,7 +182,7 @@ export const MobileNavbar = () => {
                       router.push("/");
                       router.refresh();
                     }}
-                    className="text-[15px] font-medium text-destructive py-2 text-left hover:opacity-80 transition-opacity"
+                    className="text-[15px] font-medium text-[#B7352D] py-2 text-left hover:opacity-80 transition-opacity"
                   >
                     {tCommon('signOut')}
                   </button>
@@ -193,23 +190,20 @@ export const MobileNavbar = () => {
               </>
             ) : (
               <div className="flex flex-col gap-2.5 w-full">
-                <Button
-                  as={Link}
+                <Link
                   href={`/${locale}/signup`}
                   onClick={() => setOpen(false)}
-                  className="w-full justify-center"
+                  className="w-full block text-center rounded-full bg-[#B7352D] hover:bg-[#9F2D27] text-white px-4 py-2.5 text-base font-semibold transition-colors"
                 >
                   {tCommon('signUp')}
-                </Button>
-                <Button
-                  variant="simple"
-                  as={Link}
+                </Link>
+                <Link
                   href={`/${locale}/login`}
                   onClick={() => setOpen(false)}
-                  className="w-full justify-center"
+                  className="w-full block text-center rounded-full text-white/60 hover:text-white px-4 py-2.5 text-base font-medium transition-colors"
                 >
                   {tCommon('signIn')}
-                </Button>
+                </Link>
               </div>
             )}
           </div>

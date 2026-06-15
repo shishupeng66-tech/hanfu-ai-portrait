@@ -21,14 +21,14 @@ export function NavBarItem({
   className,
 }: Props) {
   const pathname = usePathname();
+  const isActive = active || (href !== "/" && pathname?.includes(href));
 
   return (
     <LocaleLink
       href={href}
       className={cn(
-        "flex items-center justify-center text-sm leading-[110%] px-4 py-2 rounded-md hover:bg-hover text-muted-foreground",
-        (active || pathname?.includes(href)) &&
-          "bg-accent text-foreground",
+        "flex items-center justify-center rounded-md px-4 py-2 text-sm font-medium leading-[110%] text-[#F7F2EA]/85 transition-colors hover:bg-white/10 hover:text-white",
+        isActive && "bg-white/10 text-white",
         className
       )}
       target={target}

@@ -3,7 +3,6 @@
 import { useTranslations } from "next-intl";
 
 import { Logo } from "@/components/Logo";
-import { ModeToggle } from "@/components/mode-toggle";
 import { LanguageSwitcher } from "@/components/language-switcher";
 import { marketingNavigationKeys } from "@/features/navigation/config";
 
@@ -15,10 +14,10 @@ export const DesktopNavbar = () => {
   const t = useTranslations("navigation.main");
 
   return (
-    <div className="flex w-full items-center justify-between px-4">
+    <div className="flex w-full items-center justify-between">
       <div className="flex flex-row items-center gap-2">
         <Logo />
-        <div className="flex items-center gap-1.5">
+        <div className="flex items-center gap-2">
           {marketingNavigationKeys.map((item) =>
             item.subItems ? (
               <NavBarItemWithDropdown
@@ -37,9 +36,8 @@ export const DesktopNavbar = () => {
           )}
         </div>
       </div>
-      <div className="flex items-center space-x-2">
+      <div className="flex items-center gap-3">
         <LanguageSwitcher />
-        <ModeToggle />
         <UserMenu />
       </div>
     </div>
