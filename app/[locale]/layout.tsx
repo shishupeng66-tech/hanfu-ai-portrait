@@ -9,6 +9,16 @@ import { Toaster } from "sonner";
 import Analytics from "@/src/analytics/analytics";
 import "../globals.css";
 
+export const metadata = {
+  icons: {
+    icon: [
+      { url: "/icon-192.png", sizes: "192x192", type: "image/png" },
+      { url: "/icon-512.png", sizes: "512x512", type: "image/png" },
+    ],
+    apple: "/apple-touch-icon.png",
+  },
+};
+
 export default async function LocaleLayout(
   props: {
     children: React.ReactNode;
@@ -39,6 +49,9 @@ export default async function LocaleLayout(
       data-scroll-behavior="smooth"
       suppressHydrationWarning
     >
+      <head>
+        <link rel="icon" href="/brand/logo-mark.png" sizes="any" />
+      </head>
       <body
         className={cn(
           GeistSans.className,

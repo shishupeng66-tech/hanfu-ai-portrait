@@ -8,7 +8,7 @@ import { cn } from "@/lib/utils";
 interface AnimatedMarqueeHeroProps {
   tagline: string;
   title: React.ReactNode;
-  description: string;
+  description: React.ReactNode;
   ctaText: string;
   images: string[];
   backgroundImage?: string;
@@ -26,9 +26,9 @@ const fadeIn = {
 
 const ActionButton = ({ children }: { children: React.ReactNode }) => (
   <motion.button
-    whileHover={{ scale: 1.04 }}
+    whileHover={{ y: -2 }}
     whileTap={{ scale: 0.97 }}
-    className="rounded-full bg-[#B7352D] px-8 py-3 font-semibold text-[#FFF8F0] shadow-md shadow-black/20 transition-colors hover:bg-[#9F2D27] focus:outline-none focus:ring-2 focus:ring-[#B7352D]/75"
+    className="h-14 rounded-full bg-[#C83A32] px-9 text-base font-semibold text-[#FFF7EC] shadow-[0_0_28px_rgba(200,58,50,0.28)] transition-[background-color,box-shadow,transform] duration-200 hover:bg-[#D7463E] hover:shadow-[0_0_34px_rgba(200,58,50,0.42)] focus:outline-none focus:ring-2 focus:ring-[#E8C27A]/60 focus:ring-offset-2 focus:ring-offset-[#030604]"
   >
     {children}
   </motion.button>
@@ -70,12 +70,12 @@ export const AnimatedMarqueeHero: React.FC<AnimatedMarqueeHeroProps> = ({
         <div className="absolute inset-x-0 bottom-0 h-[25%] bg-gradient-to-t from-[#030604]/70 to-transparent" />
       </div>
 
-      <div className="z-10 flex flex-col items-center pt-[96px] md:pt-[124px]">
+      <div className="z-10 flex flex-col items-center px-5 pt-[104px] md:pt-[128px]">
         <motion.div
           initial="hidden"
           animate="show"
           variants={fadeIn}
-          className="mb-4 inline-block rounded-full border border-white/10 bg-white/5 px-4 py-1.5 text-sm font-medium text-[#C9A45C] backdrop-blur-sm"
+          className="mb-6 inline-block rounded-full border border-[#E8C27A]/35 bg-[rgba(120,35,30,0.35)] px-3.5 py-2 text-sm font-medium text-[#E8C27A] backdrop-blur-sm md:text-[15px]"
         >
           {tagline}
         </motion.div>
@@ -84,7 +84,7 @@ export const AnimatedMarqueeHero: React.FC<AnimatedMarqueeHeroProps> = ({
           initial="hidden"
           animate="show"
           variants={fadeIn}
-          className="max-w-6xl text-5xl font-bold tracking-tighter text-[#F7F2EA] md:text-7xl"
+          className="w-full max-w-[1180px] text-[42px] font-bold leading-[1.05] tracking-[-0.03em] text-[#FFF7EC] sm:text-5xl md:text-[64px] md:leading-none lg:text-[68px] xl:text-[72px]"
         >
           {title}
         </motion.h1>
@@ -94,7 +94,7 @@ export const AnimatedMarqueeHero: React.FC<AnimatedMarqueeHeroProps> = ({
           animate="show"
           variants={fadeIn}
           transition={{ delay: 0.15 }}
-          className="mt-5 max-w-xl text-lg leading-8 text-[#A8A29E]"
+          className="mt-6 max-w-[720px] text-base leading-7 text-[rgba(255,247,236,0.72)] md:text-[19px] md:leading-8"
         >
           {description}
         </motion.p>
@@ -104,13 +104,13 @@ export const AnimatedMarqueeHero: React.FC<AnimatedMarqueeHeroProps> = ({
           animate="show"
           variants={fadeIn}
           transition={{ delay: 0.2 }}
-          className="mt-7"
+          className="mt-8"
         >
           <ActionButton>{ctaText}</ActionButton>
         </motion.div>
       </div>
 
-      <div className="w-full mt-8 md:mt-10 pb-6 md:pb-8 [mask-image:linear-gradient(to_bottom,transparent,black_8%,black_92%,transparent)]">
+      <div className="mt-8 w-full pb-6 [mask-image:linear-gradient(to_bottom,transparent,black_8%,black_92%,transparent)] md:mt-10 md:pb-8">
         <motion.div
           className="flex gap-3 md:gap-4"
           animate={{

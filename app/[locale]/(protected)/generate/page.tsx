@@ -198,7 +198,16 @@ export default function GeneratePage() {
                   <div key={index} className="relative overflow-hidden rounded-xl border border-border">
                     <Image src={url} alt={`写真镜头 ${index + 1}`} width={400} height={600} className="w-full object-cover" unoptimized />
                     
-                      <a href={url}
+                    {/* Watermark */}
+                    <div className="absolute bottom-2 left-2 opacity-20" style={{ width: '5%', minWidth: '20px' }}>
+                      <img
+                        src="/brand/logo-mark.png"
+                        alt="HanPortrait Watermark"
+                        className="w-full h-auto object-contain"
+                      />
+                    </div>
+                    
+                    <a href={url}
                       target="_blank"
                       rel="noreferrer"
                       className="absolute bottom-2 right-2 rounded-lg bg-black/50 px-3 py-1 text-xs text-white hover:bg-black/70"
@@ -209,13 +218,27 @@ export default function GeneratePage() {
                 ))
               ) : (
                 <div className="flex min-h-[520px] items-center justify-center rounded-2xl border border-border bg-background/60">
-                  <p className="text-center text-sm text-muted-foreground">
-                    {isGenerating
-                      ? generationMode === "trial"
-                        ? "AI 正在生成试用图，请耐心等待..."
-                        : "AI 正在生成整套写真，请耐心等待..."
-                      : "生成后的图片会显示在这里"}
-                  </p>
+                  {isGenerating ? (
+                    <div className="flex flex-col items-center gap-4">
+                      <div className="relative">
+                        <img
+                          src="/brand/logo-mark.png"
+                          alt="HanPortrait Logo"
+                          className="h-16 w-16 object-contain drop-shadow-[0_0_12px_rgba(232,194,122,0.4)] animate-breathing"
+                        />
+                        <div className="absolute inset-0 rounded-full bg-gradient-to-r from-[#E8C27A]/20 to-[#B7352D]/20 blur-[3px]"></div>
+                      </div>
+                      <p className="text-center text-sm text-muted-foreground">
+                        {generationMode === "trial"
+                          ? "AI 正在生成试用图，请耐心等待..."
+                          : "AI 正在生成整套写真，请耐心等待..."}
+                      </p>
+                    </div>
+                  ) : (
+                    <p className="text-center text-sm text-muted-foreground">
+                      生成后的图片会显示在这里
+                    </p>
+                  )}
                 </div>
               )}
             </div>

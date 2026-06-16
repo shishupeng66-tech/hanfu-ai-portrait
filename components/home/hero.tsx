@@ -18,16 +18,15 @@ const HANFU_IMAGES = [
 export function HomeHero() {
   return (
     <AnimatedMarqueeHero
-      tagline="AI Hanfu Portrait Generator"
+      tagline="AI Hanfu Portraits From One Photo"
       title={
         <>
-          Professional Hanfu Portraits
-          <br />
-          Without the Photoshoot
+          <span>Professional Hanfu Portraits </span>
+          <span className="text-[#E8C27A]">Without the Photoshoot</span>
         </>
       }
-      description="Upload one photo. Choose a style. Get studio-quality Hanfu portraits in minutes."
-      ctaText="Create My Portrait"
+      description="One photo. No costume. No studio. No trip to China."
+      ctaText="Create My Hanfu Portrait"
       images={HANFU_IMAGES}
       // Change the number to switch: hero-bg-1.png, hero-bg-2.png, hero-bg-3.png
       backgroundImage="/images/hero-bg/hero-bg-10.png"

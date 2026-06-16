@@ -15,7 +15,11 @@ import {
   IconSettings,
 } from "@tabler/icons-react";
 
-export function UserMenu() {
+type UserMenuProps = {
+  variant?: "default" | "navbar";
+};
+
+export function UserMenu({ variant = "default" }: UserMenuProps) {
   const session = useSession();
   const router = useRouter();
   const locale = useLocale();
@@ -49,6 +53,17 @@ export function UserMenu() {
   }
 
   if (!session.data?.user) {
+    if (variant === "navbar") {
+      return (
+        <Link
+          href={`/${locale}/login`}
+          className="rounded-full border border-[#E8C27A]/[0.24] bg-[#FFF7EC]/[0.055] px-5 py-2.5 text-sm font-semibold leading-none text-[#FFF7EC] transition-all duration-200 hover:-translate-y-px hover:border-[#E8C27A]/[0.40] hover:bg-[#E8C27A]/10 hover:text-[#E8C27A]"
+        >
+          Login
+        </Link>
+      );
+    }
+
     return (
       <div className="flex items-center gap-2">
         <Link

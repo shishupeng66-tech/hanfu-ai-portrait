@@ -165,7 +165,7 @@ export function HomeShowcase() {
   ];
 
   return (
-    <section className="relative py-20 md:py-32 overflow-hidden">
+    <section id="hanfu-styles" className="relative py-20 md:py-32 overflow-hidden">
       {/* Background gradient */}
       <div className="absolute inset-0 bg-gradient-to-b from-transparent via-[#0F6E56]/3 to-transparent dark:via-[#0F6E56]/5 pointer-events-none" />
 
