@@ -65,60 +65,92 @@ export const MiniNavbar = () => {
               <img
                 src="/brand/logo-mark.png"
                 alt="HanPortrait Logo"
-                className="h-8 w-8 object-contain drop-shadow-[0_0_8px_rgba(232,194,122,0.3)]"
+                className="h-10 w-10 object-contain drop-shadow-[0_0_8px_rgba(232,194,122,0.3)]"
               />
               <div className="absolute inset-0 rounded-full bg-gradient-to-r from-[#E8C27A]/10 to-[#B7352D]/10 blur-[2px]"></div>
             </div>
-            <span>HanPortrait</span>
+            <span>
+              <span style={{ color: "#FFF7EC" }}>Han</span>
+              <span style={{ 
+                background: "linear-gradient(90deg, #E8C27A 0%, #C99A3C 100%)",
+                WebkitBackgroundClip: "text",
+                WebkitTextFillColor: "transparent",
+                backgroundClip: "text"
+              }}>Portrait</span>
+            </span>
           </LocaleLink>
 
           {/* Navigation Links */}
-          <nav className="flex items-center gap-9 ml-8" aria-label="Primary navigation">
+          <nav className="flex items-center gap-4 ml-8" aria-label="Primary navigation">
             <LocaleLink
               href="/#hanfu-styles"
-              className="transition-colors duration-200"
+              className="flex items-center justify-center rounded-full px-5 py-2 transition-all duration-200"
               style={{
                 color: "rgba(255, 247, 236, 0.78)",
                 fontSize: "14px",
                 fontWeight: 600,
                 letterSpacing: "0.01em",
+                background: "rgba(28, 16, 16, 0.5)",
+                border: "1px solid rgba(232, 194, 122, 0.15)",
               }}
-              onMouseEnter={(e) => (e.currentTarget.style.color = "#E8C27A")}
-              onMouseLeave={(e) =>
-                (e.currentTarget.style.color = "rgba(255, 247, 236, 0.78)")
-              }
+              onMouseEnter={(e) => {
+                e.currentTarget.style.background = "rgba(35, 20, 20, 0.6)";
+                e.currentTarget.style.borderColor = "rgba(232, 194, 122, 0.4)";
+                e.currentTarget.style.color = "#E8C27A";
+              }}
+              onMouseLeave={(e) => {
+                e.currentTarget.style.background = "rgba(28, 16, 16, 0.5)";
+                e.currentTarget.style.borderColor = "rgba(232, 194, 122, 0.15)";
+                e.currentTarget.style.color = "rgba(255, 247, 236, 0.78)";
+              }}
             >
               Hanfu Styles
             </LocaleLink>
             <LocaleLink
               href="/#how-it-works"
-              className="transition-colors duration-200"
+              className="flex items-center justify-center rounded-full px-5 py-2 transition-all duration-200"
               style={{
                 color: "rgba(255, 247, 236, 0.78)",
                 fontSize: "14px",
                 fontWeight: 600,
                 letterSpacing: "0.01em",
+                background: "rgba(28, 16, 16, 0.5)",
+                border: "1px solid rgba(232, 194, 122, 0.15)",
               }}
-              onMouseEnter={(e) => (e.currentTarget.style.color = "#E8C27A")}
-              onMouseLeave={(e) =>
-                (e.currentTarget.style.color = "rgba(255, 247, 236, 0.78)")
-              }
+              onMouseEnter={(e) => {
+                e.currentTarget.style.background = "rgba(35, 20, 20, 0.6)";
+                e.currentTarget.style.borderColor = "rgba(232, 194, 122, 0.4)";
+                e.currentTarget.style.color = "#E8C27A";
+              }}
+              onMouseLeave={(e) => {
+                e.currentTarget.style.background = "rgba(28, 16, 16, 0.5)";
+                e.currentTarget.style.borderColor = "rgba(232, 194, 122, 0.15)";
+                e.currentTarget.style.color = "rgba(255, 247, 236, 0.78)";
+              }}
             >
               How It Works
             </LocaleLink>
             <LocaleLink
               href="/pricing"
-              className="transition-colors duration-200"
+              className="flex items-center justify-center rounded-full px-5 py-2 transition-all duration-200"
               style={{
                 color: "rgba(255, 247, 236, 0.78)",
                 fontSize: "14px",
                 fontWeight: 600,
                 letterSpacing: "0.01em",
+                background: "rgba(28, 16, 16, 0.5)",
+                border: "1px solid rgba(232, 194, 122, 0.15)",
               }}
-              onMouseEnter={(e) => (e.currentTarget.style.color = "#E8C27A")}
-              onMouseLeave={(e) =>
-                (e.currentTarget.style.color = "rgba(255, 247, 236, 0.78)")
-              }
+              onMouseEnter={(e) => {
+                e.currentTarget.style.background = "rgba(35, 20, 20, 0.6)";
+                e.currentTarget.style.borderColor = "rgba(232, 194, 122, 0.4)";
+                e.currentTarget.style.color = "#E8C27A";
+              }}
+              onMouseLeave={(e) => {
+                e.currentTarget.style.background = "rgba(28, 16, 16, 0.5)";
+                e.currentTarget.style.borderColor = "rgba(232, 194, 122, 0.15)";
+                e.currentTarget.style.color = "rgba(255, 247, 236, 0.78)";
+              }}
             >
               Pricing
             </LocaleLink>
