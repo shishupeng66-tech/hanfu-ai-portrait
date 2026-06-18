@@ -2,6 +2,7 @@ import { Metadata } from "next";
 import { getTranslations } from 'next-intl/server';
 import type { Locale } from "@/i18n.config";
 import { generatePageMetadata } from "@/lib/metadata";
+import { NavBar } from "@/features/navigation/components/navbar";
 import { HomeHero } from "@/components/home/hero";
 import { HomeHowItWorks } from "@/components/home/how-it-works";
 import { HomeShowcase } from "@/components/home/showcase";
@@ -34,6 +35,7 @@ export async function generateMetadata(
 export default function Home() {
   return (
     <div className="relative">
+      <NavBar />
       <HomeHero />
       <HomeHowItWorks />
       <HomeShowcase />

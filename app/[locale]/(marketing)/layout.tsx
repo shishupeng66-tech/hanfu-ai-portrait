@@ -1,5 +1,4 @@
 import type { Metadata } from "next";
-import { NavBar } from "@/features/navigation/components/navbar";
 import { Footer } from "@/components/footer";
 import { getTranslations } from 'next-intl/server';
 import type { Locale } from "@/i18n.config";
@@ -28,7 +27,6 @@ export default function RootLayout({
 }>) {
   return (
     <main>
-      <NavBar />
       {children}
       <Footer />
     </main>

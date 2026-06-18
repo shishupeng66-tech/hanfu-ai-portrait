@@ -1164,5 +1164,92 @@
       "placeholder": "输入您的邮箱",
       "subscribe": "订阅"
     }
+  },
+  "studio": {
+    "title": "创作您的汉服写真",
+    "subtitle": "上传一张清晰正脸照，选择风格，生成您的 AI 汉服写真。",
+    "credits": "积分: 12",
+    "login": "登录",
+    "sidebar": {
+      "create": "创作",
+      "generatePortrait": "生成写真",
+      "styleTemplates": "风格模板",
+      "myGallery": "我的作品",
+      "hanfuStyles": "汉服风格",
+      "tangGlamour": "盛唐金影",
+      "songElegance": "宋韵清雅",
+      "qinHanNoir": "秦汉玄色",
+      "bluePorcelain": "青花瓷",
+      "modernQipao": "现代旗袍",
+      "dunhuangMuse": "敦煌飞天",
+      "enhance": "增强",
+      "upscale": "高清放大",
+      "regenerate": "重新生成",
+      "faceRestore": "面部优化",
+      "account": "账户",
+      "credits": "积分套餐",
+      "history": "生成历史"
+    }
+  },
+  "generate": {
+    "title": "创作您的汉服写真",
+    "subtitle": "上传一张清晰正脸照，选择风格，生成您的 AI 汉服写真。",
+    "credits": "积分: 12",
+    "uploadCard": {
+      "title": "上传面部照片",
+      "cta": "点击上传照片",
+      "hint": "支持 JPG、PNG、WebP 格式"
+    },
+    "previewCard": {
+      "title": "作品预览",
+      "placeholder": "您的汉服写真将在这里显示",
+      "loading": "AI 正在生成您的汉服写真..."
+    },
+    "styleTemplates": {
+      "title": "风格模板",
+      "generateButton": "生成写真",
+      "generating": "生成中..."
+    },
+    "styles": {
+      "redLantern": {
+        "name": "夜灯红黑汉服",
+        "description": "红墙巷灯、黑金汉服、电影感夜景"
+      },
+      "tangGlamour": {
+        "name": "盛唐金影",
+        "description": "华丽唐风、金色发饰、宫廷写真"
+      },
+      "songElegance": {
+        "name": "宋韵清雅",
+        "description": "清冷淡雅、留白构图、宋式妆造"
+      },
+      "qinHanNoir": {
+        "name": "秦汉玄色",
+        "description": "玄色大袖、古意庄重、黑金氛围"
+      },
+      "bluePorcelain": {
+        "name": "青花瓷",
+        "description": "青花纹样、新中式融合、清透色调"
+      },
+      "modernQipao": {
+        "name": "现代旗袍",
+        "description": "东方复古、现代剪裁、优雅肖像"
+      },
+      "dunhuangMuse": {
+        "name": "敦煌飞天",
+        "description": "敦煌灵感、金色壁画、飞天意境"
+      }
+    }
+  },
+  "brand": {
+    "name": "汉韵写真"
+  },
+  "nav": {
+    "templates": "模板",
+    "guide": "指南",
+    "pricing": "价格",
+    "hanfuStyles": "模板",
+    "howItWorks": "指南",
+    "login": "登录"
   }
 }

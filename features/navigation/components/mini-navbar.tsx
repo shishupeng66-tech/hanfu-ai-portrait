@@ -23,7 +23,7 @@ export const MiniNavbar = () => {
   }, []);
 
   return (
-    <header className="fixed left-1/2 top-6 z-50 -translate-x-1/2">
+    <header className="fixed left-1/2 z-50 -translate-x-1/2" style={{ top: 13 }}>
       <div
         className={cn(
           "transition-all duration-500 ease-out",
@@ -35,10 +35,10 @@ export const MiniNavbar = () => {
         <nav
           className="flex items-center gap-8"
           style={{
-            height: "64px",
-            minWidth: "760px",
+            height: "54px",
+            minWidth: "1180px",
             width: "auto",
-            maxWidth: "900px",
+            maxWidth: "1180px",
             borderRadius: "999px",
             padding: "0 18px 0 26px",
             background: "rgba(28, 16, 16, 0.72)",
@@ -53,7 +53,7 @@ export const MiniNavbar = () => {
           <LocaleLink
             href="/"
             className="flex items-center gap-3 whitespace-nowrap transition-colors duration-200 hover:text-[#FFF7EC]"
-            aria-label="HanPortrait home"
+            aria-label="Han Portrait home"
             style={{
               color: "#FFF7EC",
               fontSize: "16px",
@@ -64,7 +64,7 @@ export const MiniNavbar = () => {
             <div className="relative">
               <img
                 src="/brand/logo-mark.png"
-                alt="HanPortrait Logo"
+                alt="Han Portrait Logo"
                 className="h-10 w-10 object-contain drop-shadow-[0_0_8px_rgba(232,194,122,0.3)]"
               />
               <div className="absolute inset-0 rounded-full bg-gradient-to-r from-[#E8C27A]/10 to-[#B7352D]/10 blur-[2px]"></div>
@@ -104,7 +104,7 @@ export const MiniNavbar = () => {
                 e.currentTarget.style.color = "rgba(255, 247, 236, 0.78)";
               }}
             >
-              Hanfu Styles
+              Templates <span style={{ marginLeft: "6px", opacity: 0.55 }}>⌄</span>
             </LocaleLink>
             <LocaleLink
               href="/#how-it-works"
@@ -128,10 +128,10 @@ export const MiniNavbar = () => {
                 e.currentTarget.style.color = "rgba(255, 247, 236, 0.78)";
               }}
             >
-              How It Works
+              Guide <span style={{ marginLeft: "6px", opacity: 0.55 }}>⌄</span>
             </LocaleLink>
             <LocaleLink
-              href="/pricing"
+              href="/#pricing"
               className="flex items-center justify-center rounded-full px-5 py-2 transition-all duration-200"
               style={{
                 color: "rgba(255, 247, 236, 0.78)",
@@ -152,12 +152,27 @@ export const MiniNavbar = () => {
                 e.currentTarget.style.color = "rgba(255, 247, 236, 0.78)";
               }}
             >
-              Pricing
+              Pricing <span style={{ marginLeft: "6px", opacity: 0.55 }}>⌄</span>
             </LocaleLink>
           </nav>
 
           {/* Right side: Language switcher and Login */}
           <div className="ml-auto flex items-center gap-3">
+            <div
+              className="flex items-center justify-center"
+              style={{
+                height: "38px",
+                padding: "0 18px",
+                borderRadius: "999px",
+                fontSize: "14px",
+                fontWeight: 600,
+                color: "#FFF7EC",
+                background: "rgba(232, 194, 122, 0.08)",
+                border: "1px solid rgba(232, 194, 122, 0.22)",
+              }}
+            >
+              Credits: <span style={{ color: "#E8C27A", marginLeft: "4px" }}>12</span>
+            </div>
             <LanguageSwitcher variant="navbarIcon" />
             <Link
               href={`/${locale}/login`}

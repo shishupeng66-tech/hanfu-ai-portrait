@@ -1,9 +1,179 @@
 {
+  "brand": {
+    "name": "Han Portrait",
+    "first": "Han",
+    "second": "Portrait"
+  },
+  "brandName": "Han Portrait",
+  "brandSubtitle": "AI Hanfu Studio",
+  "nav": {
+    "templates": "Templates",
+    "guide": "Guide",
+    "pricing": "Pricing",
+    "credits": "Credits: 12",
+    "login": "Login",
+    "templatesDropdown": {
+      "tang": "Tang",
+      "song": "Song",
+      "qinhan": "Qin Han",
+      "newchinese": "New Chinese",
+      "dunhuang": "Dunhuang",
+      "tangSubmenu": {
+        "tangGlamour": "Tang Glamour",
+        "redPalace": "Red Palace Night",
+        "peonyCourt": "Peony Court",
+        "huXuan": "Hu Xuan Dancer"
+      },
+      "songSubmenu": {
+        "songElegance": "Song Elegance",
+        "mistyAlley": "Misty Alley",
+        "teaRoom": "Tea Room Minimal",
+        "latticeMuse": "Lattice Window Muse"
+      },
+      "qinhanSubmenu": {
+        "qinHanNoir": "Qin Han Noir",
+        "blackGold": "Black Gold Robe",
+        "hanPalace": "Han Palace Steps",
+        "bambooScroll": "Bamboo Scroll"
+      },
+      "newchineseSubmenu": {
+        "bluePorcelain": "Blue Porcelain",
+        "modernQipao": "Modern Qipao",
+        "inkGarden": "Ink Garden",
+        "orientalVintage": "Oriental Vintage"
+      },
+      "dunhuangSubmenu": {
+        "dunhuangMuse": "Dunhuang Muse",
+        "lotusMandala": "Lotus Mandala",
+        "goldenMural": "Golden Mural",
+        "moonlitDesert": "Moonlit Desert"
+      }
+    },
+    "guideDropdown": {
+      "upload": "Upload",
+      "choose": "Choose",
+      "generate": "Generate",
+      "download": "Download"
+    },
+    "pricingDropdown": {
+      "free": "Free Trial",
+      "credits": "Credit Packs",
+      "membership": "Membership"
+    }
+  },
+  "hero": {
+    "badge": "AI-Powered Hanfu Portrait Studio",
+    "titleLine1": "Professional Hanfu Portraits",
+    "titleLine2": "Without the Photoshoot",
+    "subtitle": "Upload one photo. Choose a style. Get studio-quality Hanfu portraits in minutes.",
+    "cta": "Create My Portrait"
+  },
+  "studio": {
+    "title": "Create Your Hanfu Portrait",
+    "subtitle": "Upload one clear face photo, choose a style, and generate your AI Hanfu portrait.",
+    "credits": "Credits: 12",
+    "login": "Login",
+    "sidebar": {
+      "create": "Create",
+      "generatePortrait": "Generate Portrait",
+      "styleTemplates": "Style Templates",
+      "myGallery": "My Gallery",
+      "hanfuStyles": "Hanfu Styles",
+      "tangGlamour": "Tang Glamour",
+      "songElegance": "Song Elegance",
+      "qinHanNoir": "Qin Han Noir",
+      "bluePorcelain": "Blue Porcelain",
+      "modernQipao": "Modern Qipao",
+      "dunhuangMuse": "Dunhuang Muse",
+      "enhance": "Enhance",
+      "upscale": "Upscale",
+      "regenerate": "Regenerate",
+      "faceRestore": "Face Restore",
+      "account": "Account",
+      "credits": "Credits",
+      "history": "History"
+    }
+  },
+  "generate": {
+    "title": "Create Your Hanfu Portrait",
+    "subtitle": "Upload one clear face photo, choose a style, and generate your AI Hanfu portrait.",
+    "credits": "Credits: 12",
+    "uploadCard": {
+      "title": "Upload Face Photo",
+      "cta": "Click to upload photo",
+      "hint": "Supports JPG, PNG, WebP"
+    },
+    "previewCard": {
+      "title": "Portrait Preview",
+      "placeholder": "Your Hanfu portrait will appear here",
+      "loading": "AI is generating your Hanfu portrait..."
+    },
+    "styleTemplates": {
+      "title": "Style Templates",
+      "generateButton": "Generate Portrait",
+      "generating": "Generating..."
+    },
+    "styles": {
+      "redLantern": {
+        "name": "Red Lantern Hanfu",
+        "description": "Red wall alleys, twilight lanterns"
+      },
+      "tangGlamour": {
+        "name": "Tang Glamour",
+        "description": "Gorgeous Tang dynasty style"
+      },
+      "songElegance": {
+        "name": "Song Elegance",
+        "description": "Subtle and elegant Song style"
+      },
+      "qinHanNoir": {
+        "name": "Qin Han Noir",
+        "description": "Ancient Qin Han elegance"
+      },
+      "bluePorcelain": {
+        "name": "Blue Porcelain",
+        "description": "Classic blue and white porcelain"
+      },
+      "modernQipao": {
+        "name": "Modern Qipao",
+        "description": "Modern take on traditional Qipao"
+      },
+      "dunhuangMuse": {
+        "name": "Dunhuang Muse",
+        "description": "Dunhuang art inspired style"
+      }
+    },
+    "sidebar": {
+      "create": "Create",
+      "generatePortrait": "Generate Portrait",
+      "styleTemplates": "Style Templates",
+      "myGallery": "My Gallery",
+      "hanfuStyles": "Hanfu Styles",
+      "tangGlamour": "Tang Glamour",
+      "songElegance": "Song Elegance",
+      "qinHanNoir": "Qin Han Noir",
+      "bluePorcelain": "Blue Porcelain",
+      "modernQipao": "Modern Qipao",
+      "dunhuangMuse": "Dunhuang Muse",
+      "enhance": "Enhance",
+      "upscale": "Upscale",
+      "regenerate": "Regenerate",
+      "faceRestore": "Face Restore",
+      "account": "Account",
+      "credits": "Credits",
+      "history": "History"
+    },
+    "errors": {
+      "uploadRequired": "Please upload a clear face photo.",
+      "generationFailed": "Generation failed. Please try again later.",
+      "noResult": "Generation succeeded but no images returned."
+    }
+  },
   "common": {
     "brand": {
-      "name": "HanPortrait",
+      "name": "Han Portrait",
       "tagline": "Generate stunning Hanfu portrait photos with AI",
-      "copyright": "Copyright © 2025 HanPortrait",
+      "copyright": "Copyright © 2025 Han Portrait",
       "allRightsReserved": "All rights reserved"
     },
     "actions": {
@@ -171,7 +341,8 @@
         "cta": "Choose Pro"
       },
       "footer": "See full pricing details",
-      "footerLink": "/pricing"
+      "footerLink": "/pricing",
+      "popular": "Popular"
     },
     "testimonials": {
       "title": "Loved by Hanfu Enthusiasts Worldwide",
@@ -238,7 +409,8 @@
     "ctaFooter": {
       "title": "Ready to See Yourself in Hanfu?",
       "subtitle": "Join thousands who have discovered their Hanfu elegance. Your first 3 portraits are free.",
-      "cta": "Get Started Free"
+      "cta": "Get Started Free",
+      "trustNote": "No credit card required. Free forever plan available."
     }
   },
   "features": {

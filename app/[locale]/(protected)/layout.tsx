@@ -1,7 +1,6 @@
 import { headers } from "next/headers";
 import { redirect } from "next/navigation";
 import { EmailVerifiedGuard } from "@/features/auth/components/email-verified-guard";
-import { NavBar } from "@/features/navigation/components/navbar";
 import { getActiveSessionUser } from "@/lib/auth/session";
 
 export default async function ProtectedLayout(
@@ -28,7 +27,6 @@ export default async function ProtectedLayout(
   return (
     <EmailVerifiedGuard requireEmailVerification={true}>
       <main className="min-h-screen">
-        <NavBar />
         {children}
       </main>
     </EmailVerifiedGuard>

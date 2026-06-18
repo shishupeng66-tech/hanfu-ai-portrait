@@ -6,5 +6,5 @@ export const localePrefix = 'as-needed';
 
 export const localeNames: Record<Locale, string> = {
   en: 'English',
-  zh: '中文'
+  zh: '简体中文'
 };

@@ -89,7 +89,7 @@ export function HomeCTAFooter() {
 
             {/* Trust note */}
             <p className="mt-6 text-sm text-white/50">
-              No credit card required. Free forever plan available.
+              {t("trustNote")}
             </p>
           </motion.div>
         </div>

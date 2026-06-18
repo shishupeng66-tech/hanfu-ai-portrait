@@ -7,49 +7,76 @@ import Link from "next/link";
 
 export const DesktopNavbar = () => {
   const locale = useLocale();
+  const isZh = locale === "zh";
+
+  const brandName = isZh ? "汉韵写真" : "Han Portrait";
+
+  const navItems = [
+    {
+      label: isZh ? "模板" : "Templates",
+      href: "/#hanfu-styles",
+    },
+    {
+      label: isZh ? "指南" : "Guide",
+      href: "/#how-it-works",
+    },
+    {
+      label: isZh ? "价格" : "Pricing",
+      href: "/#pricing",
+    },
+  ];
 
   return (
-    <header className="fixed inset-x-0 top-0 z-50 h-20 bg-gradient-to-b from-[rgba(12,8,8,0.62)] to-[rgba(12,8,8,0)]">
-      <div className="mx-auto flex h-full max-w-[1280px] items-center justify-between px-12">
-        <div className="flex items-center">
-          <LocaleLink
-            href="/"
-            className="flex items-center gap-2 whitespace-nowrap text-base font-bold text-[#FFF7EC] transition-colors duration-200 hover:text-[#FFF7EC]"
-            aria-label="HanPortrait home"
-          >
-            <span className="text-[#E8C27A]">✦</span>
-            <span>HanPortrait</span>
-          </LocaleLink>
-        </div>
+    <header className="fixed inset-x-0 top-[18px] z-50 pointer-events-none">
+      <div className="mx-auto flex h-[54px] w-[min(1180px,calc(100vw-64px))] items-center rounded-full border border-[#E8C27A]/20 bg-[#160E0B]/75 px-6 shadow-[0_18px_60px_rgba(0,0,0,0.28)] backdrop-blur-xl pointer-events-auto">
+        <LocaleLink
+          href="/"
+          className="flex shrink-0 items-center gap-3 whitespace-nowrap text-[18px] font-semibold tracking-[-0.02em] text-[#FFF7EC] transition-colors duration-200 hover:text-[#E8C27A]"
+          aria-label={`${brandName} home`}
+        >
+          <img
+            src="/brand/logo-mark.png"
+            alt={brandName}
+            className="h-8 w-8 object-contain"
+          />
+          {isZh ? (
+            <span className="text-[#E8C27A]">{brandName}</span>
+          ) : (
+            <span>
+              <span className="text-[#FFF7EC]">Han</span>
+              <span className="text-[#E8C27A]"> Portrait</span>
+            </span>
+          )}
+        </LocaleLink>
 
-        <nav className="flex items-center gap-10" aria-label="Primary navigation">
-          <LocaleLink
-            href="/#hanfu-styles"
-            className="text-sm font-medium text-[#FFF7EC]/[0.58] transition-colors duration-200 hover:text-[#E8C27A]"
-          >
-            Hanfu Styles
-          </LocaleLink>
-          <LocaleLink
-            href="/#how-it-works"
-            className="text-sm font-medium text-[#FFF7EC]/[0.58] transition-colors duration-200 hover:text-[#E8C27A]"
-          >
-            How It Works
-          </LocaleLink>
-          <LocaleLink
-            href="/pricing"
-            className="text-sm font-medium text-[#FFF7EC]/[0.58] transition-colors duration-200 hover:text-[#E8C27A]"
-          >
-            Pricing
-          </LocaleLink>
+        <nav className="ml-10 flex items-center gap-3" aria-label="Primary navigation">
+          {navItems.map((item) => (
+            <LocaleLink
+              key={item.label}
+              href={item.href}
+              className="group inline-flex h-9 items-center gap-1.5 rounded-full px-3 text-[15px] font-medium text-[#FFF7EC]/70 transition-colors duration-200 hover:bg-[#FFF7EC]/[0.06] hover:text-[#FFF7EC]"
+            >
+              <span>{item.label}</span>
+              <span className="text-xs text-[#FFF7EC]/40 transition-colors duration-200 group-hover:text-[#E8C27A]">
+                ˅
+              </span>
+            </LocaleLink>
+          ))}
         </nav>
 
-        <div className="flex items-center gap-3">
+        <div className="ml-auto flex items-center gap-3">
+          <div className="inline-flex h-10 items-center rounded-full border border-[#E8C27A]/20 bg-[#E8C27A]/[0.07] px-4 text-sm font-medium text-[#FFF7EC]">
+            {isZh ? "积分:" : "Credits:"}
+            <span className="ml-1 text-[#E8C27A]">12</span>
+          </div>
+
           <LanguageSwitcher variant="navbarIcon" />
+
           <Link
             href={`/${locale}/login`}
-            className="rounded-full border border-[#E8C27A]/[0.24] bg-[#FFF7EC]/[0.06] px-5 py-2.5 text-sm font-semibold leading-none text-[#FFF7EC] transition-all duration-200 hover:border-[#E8C27A]/[0.42] hover:bg-[#E8C27A]/10 hover:text-[#E8C27A]"
+            className="inline-flex h-10 items-center rounded-full border border-[#E8C27A]/20 bg-[#FFF7EC]/[0.05] px-5 text-sm font-semibold text-[#FFF7EC] transition-colors duration-200 hover:border-[#E8C27A]/40 hover:bg-[#E8C27A]/10 hover:text-[#E8C27A]"
           >
-            Login
+            {isZh ? "登录" : "Login"}
           </Link>
         </div>
       </div>

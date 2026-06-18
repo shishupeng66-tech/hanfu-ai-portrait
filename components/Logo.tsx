@@ -9,14 +9,14 @@ export const Logo = () => {
       <div className="flex h-10 w-10 flex-shrink-0 items-center justify-center overflow-hidden rounded-full bg-[#F7F2EA] ring-1 ring-white/20">
         <Image
           src="/brand/logo-temp.jpg"
-          alt="HanPortrait"
+          alt="Han Portrait"
           width={44}
           height={44}
           className="scale-125 object-cover object-[50%_22%]"
           unoptimized
         />
       </div>
-      <span className="text-sm font-semibold text-[#F7F2EA]">HanPortrait</span>
+      <span className="text-sm font-semibold text-[#F7F2EA]">Han Portrait</span>
     </Link>
   );
 };

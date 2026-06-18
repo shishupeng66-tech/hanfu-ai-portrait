@@ -8,7 +8,7 @@ export const analyticsConfig = {
 };
 
 export const websiteConfig = {
-  appName: "HanPortrait",
-  docsName: "HanPortrait Docs",
+  appName: "Han Portrait",
+  docsName: "Han Portrait Docs",
   appUrl: (process.env.NEXT_PUBLIC_APP_URL || DEFAULT_APP_URL).trim(),
 };

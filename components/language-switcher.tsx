@@ -5,7 +5,7 @@ import { useRouter, usePathname } from 'next/navigation';
 import { locales, localeNames } from '@/i18n.config';
 import type { Locale } from '@/i18n.config';
 import { useState, useRef, useEffect } from 'react';
-import { ChevronDown, Globe2, Check, Languages } from 'lucide-react';
+import { Globe2, Check } from 'lucide-react';
 import { cn } from '@/lib/utils';
 
 type LanguageSwitcherProps = {
@@ -75,7 +75,7 @@ export function LanguageSwitcher({ variant = "default" }: LanguageSwitcherProps)
         onClick={() => setIsOpen(!isOpen)}
         className={cn(
           variant === "navbarIcon"
-            ? "flex h-[38px] w-[38px] items-center justify-center rounded-full border border-[#E8C27A]/[0.16] bg-[#FFF7EC]/[0.055] text-[#FFF7EC]/[0.78] transition-all duration-200 hover:border-[#E8C27A]/[0.28] hover:bg-[#E8C27A]/10 hover:text-[#E8C27A] focus:outline-none focus:ring-2 focus:ring-[#E8C27A]/30"
+            ? "flex h-[42px] w-[42px] items-center justify-center rounded-full border border-[rgba(232,194,122,0.14)] bg-[rgba(255,247,236,0.04)] transition-all duration-200 hover:border-[rgba(232,194,122,0.28)] hover:bg-[rgba(232,194,122,0.10)] focus:outline-none focus:ring-2 focus:ring-[rgba(232,194,122,0.30)]"
             : "flex items-center gap-2 px-3 py-1.5 text-sm rounded-full transition-all duration-200 border border-white/12 bg-white/8 text-white hover:bg-white/15 focus:outline-none focus:ring-2 focus:ring-[#B7352D] focus:ring-opacity-50"
         )}
         aria-expanded={isOpen}
@@ -83,17 +83,11 @@ export function LanguageSwitcher({ variant = "default" }: LanguageSwitcherProps)
         aria-label="Select language"
       >
         {variant === "navbarIcon" ? (
-          <Languages className="h-4 w-4" />
+          <Globe2 className="h-5 w-5" style={{ color: 'rgba(255,247,236,0.78)' }} />
         ) : (
           <>
             <Globe2 className="w-4 h-4" />
             <span className="font-medium">{localeNames[locale as Locale]}</span>
-            <ChevronDown
-              className={cn(
-                "w-3 h-3 transition-transform duration-200",
-                isOpen && "rotate-180"
-              )}
-            />
           </>
         )}
       </button>
@@ -102,12 +96,9 @@ export function LanguageSwitcher({ variant = "default" }: LanguageSwitcherProps)
       {isOpen && (
         <div
           className={cn(
-            "absolute right-0 mt-2 py-1 min-w-[150px]",
-            variant === "navbarIcon"
-              ? "rounded-xl border border-[#E8C27A]/[0.18] bg-[rgba(20,12,12,0.92)] text-[#FFF7EC] shadow-[0_18px_50px_rgba(0,0,0,0.32)] backdrop-blur-[18px]"
-              : "bg-[#0E0E0E] text-white border border-white/12 rounded-lg shadow-lg",
-            "animate-in fade-in-0 zoom-in-95",
-            "z-50"
+            "absolute right-0 mt-2 p-2 w-[170px] z-[60]",
+            "rounded-[16px] border border-[rgba(232,194,122,0.16)] bg-[rgba(28,16,14,0.96)] text-[#FFF7EC] shadow-[0_24px_80px_rgba(0,0,0,0.35)] backdrop-blur-[18px]",
+            "animate-in fade-in-0 zoom-in-95"
           )}
           role="menu"
           aria-orientation="vertical"
@@ -119,21 +110,17 @@ export function LanguageSwitcher({ variant = "default" }: LanguageSwitcherProps)
                 key={loc}
                 onClick={() => switchLocale(loc)}
                 className={cn(
-                  "flex items-center justify-between w-full px-3 py-2 text-sm",
-                  variant === "navbarIcon" ? "hover:bg-[#E8C27A]/10" : "hover:bg-white/10",
-                  "transition-colors duration-150",
-                  isActive && (variant === "navbarIcon" ? "bg-[#E8C27A]/10 text-[#E8C27A]" : "bg-white/15 text-white")
+                  "flex items-center justify-between w-full px-3 py-2.5 h-[40px] rounded-[10px] text-sm font-medium",
+                  isActive ? "text-[#E8C27A]" : "text-[rgba(255,247,236,0.72)] hover:bg-[rgba(232,194,122,0.10)] hover:text-[#FFF7EC]",
+                  "transition-colors duration-150"
                 )}
                 role="menuitem"
               >
-                <span className={cn(
-                  "font-medium",
-                  isActive ? (variant === "navbarIcon" ? "text-[#E8C27A]" : "text-white") : (variant === "navbarIcon" ? "text-[#FFF7EC]/65" : "text-white/60")
-                )}>
-                  {localeNames[loc]}
+                <span>
+                  {loc === 'zh' ? '简体中文' : 'English'}
                 </span>
                 {isActive && (
-                  <Check className={cn("w-4 h-4", variant === "navbarIcon" ? "text-[#E8C27A]" : "text-white/80")} />
+                  <Check className="w-4 h-4 text-[#E8C27A]" />
                 )}
               </button>
             );
