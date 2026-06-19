@@ -3,7 +3,6 @@
 import Image from "next/image";
 import { ChangeEvent, useState, useMemo } from "react";
 import { cn } from "@/lib/utils";
-import { LanguageSwitcher } from "@/components/language-switcher";
 import Link from "next/link";
 import { useLocale, useTranslations } from "next-intl";
 import { LocaleLink } from "@/components/locale-link";
@@ -344,25 +343,36 @@ export default function GeneratePage() {
       >
         {/* Brand Area */}
         <div
-          className="flex items-center gap-3 px-4 py-5 border-b"
-          style={{ borderColor: "rgba(232, 194, 122, 0.10)" }}
+          className="flex items-center px-5 border-b"
+          style={{
+            height: 72,
+            borderColor: "rgba(232, 194, 122, 0.10)",
+          }}
         >
           <LocaleLink
             href="/"
-            className="flex items-center gap-3 flex-1 min-w-0"
+            className="flex items-center flex-1 min-w-0"
+            style={{ gap: 12 }}
           >
             <img
               src="/brand/logo-mark.png"
               alt="Han Portrait Logo"
-              className="h-9 w-9 object-contain flex-shrink-0"
+              className="object-contain flex-shrink-0"
+              style={{ height: 38, width: 38 }}
             />
             {!sidebarCollapsed && (
               locale === "zh" ? (
-                <span className="text-base font-semibold tracking-[-0.01em] truncate" style={{ color: "#E8C27A" }}>
+                <span
+                  className="font-bold tracking-[-0.01em] truncate"
+                  style={{ fontSize: 19, color: "#E8C27A" }}
+                >
                   {tGeneral("brand.name")}
                 </span>
               ) : (
-                <div className="text-base font-semibold tracking-[-0.01em] truncate">
+                <div
+                  className="font-bold tracking-[-0.01em] truncate"
+                  style={{ fontSize: 19 }}
+                >
                   <span className="text-[#FFF7EC]">{tGeneral("brand.first")}</span>
                   <span className="text-[#E8C27A]"> {tGeneral("brand.second")}</span>
                 </div>
@@ -626,7 +636,7 @@ export default function GeneratePage() {
       >
         {/* Top Bar */}
         <div
-          className="flex items-center justify-between px-8 py-6 border-b"
+          className="px-8 py-6 border-b"
           style={{ borderColor: "rgba(232, 194, 122, 0.12)" }}
         >
           <div>
@@ -642,36 +652,6 @@ export default function GeneratePage() {
             >
               {tStudio("subtitle")}
             </p>
-          </div>
-          <div className="flex items-center gap-4">
-            <button
-              type="button"
-              className="px-4 py-2 rounded-full text-sm font-semibold transition-all"
-              style={{
-                color: "#FFF7EC",
-                background: "rgba(255, 247, 236, 0.06)",
-                border: "1px solid rgba(232, 194, 122, 0.26)",
-              }}
-            >
-              {tStudio("credits")}
-            </button>
-            <LanguageSwitcher variant="navbarIcon" />
-            <Link
-              href={`/${locale}/login`}
-              className="flex items-center justify-center transition-all duration-200"
-              style={{
-                height: "38px",
-                padding: "0 18px",
-                borderRadius: "999px",
-                fontSize: "14px",
-                fontWeight: "600",
-                color: "#FFF7EC",
-                background: "rgba(255, 247, 236, 0.06)",
-                border: "1px solid rgba(232, 194, 122, 0.26)",
-              }}
-            >
-              {tStudio("login")}
-            </Link>
           </div>
         </div>
 
