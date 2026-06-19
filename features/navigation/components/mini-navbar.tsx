@@ -151,7 +151,6 @@ export const MiniNavbar = () => {
               }}
             >
               {isZh ? "模板" : "Templates"}
-              <span style={{ marginLeft: 6, opacity: 0.55 }}>⌄</span>
             </LocaleLink>
             <LocaleLink
               href="/#how-it-works"
@@ -176,7 +175,6 @@ export const MiniNavbar = () => {
               }}
             >
               {isZh ? "指南" : "Guide"}
-              <span style={{ marginLeft: 6, opacity: 0.55 }}>⌄</span>
             </LocaleLink>
             <LocaleLink
               href="/#pricing"
@@ -201,7 +199,6 @@ export const MiniNavbar = () => {
               }}
             >
               {isZh ? "价格" : "Pricing"}
-              <span style={{ marginLeft: 6, opacity: 0.55 }}>⌄</span>
             </LocaleLink>
           </nav>
 
