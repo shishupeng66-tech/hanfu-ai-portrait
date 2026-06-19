@@ -229,33 +229,7 @@ export const MiniNavbar = () => {
             {isLoggedIn ? (
               <>
                 {/* Language switcher */}
-                <div
-                  className="rounded-full transition-all duration-200"
-                  style={{
-                    background:
-                      "linear-gradient(180deg, rgba(255, 247, 236, 0.075), rgba(24, 14, 12, 0.42))",
-                    border: "1px solid rgba(232, 194, 122, 0.24)",
-                    boxShadow:
-                      "0 8px 20px rgba(0, 0, 0, 0.22), inset 0 1px 0 rgba(255, 247, 236, 0.08)",
-                    backdropFilter: "blur(14px)",
-                  }}
-                  onMouseEnter={(e) => {
-                    e.currentTarget.style.background =
-                      "linear-gradient(180deg, rgba(232, 194, 122, 0.12), rgba(35, 18, 13, 0.50))";
-                    e.currentTarget.style.borderColor = "rgba(232, 194, 122, 0.38)";
-                    e.currentTarget.style.boxShadow =
-                      "0 10px 24px rgba(0, 0, 0, 0.26), inset 0 1px 0 rgba(255, 247, 236, 0.12)";
-                  }}
-                  onMouseLeave={(e) => {
-                    e.currentTarget.style.background =
-                      "linear-gradient(180deg, rgba(255, 247, 236, 0.075), rgba(24, 14, 12, 0.42))";
-                    e.currentTarget.style.borderColor = "rgba(232, 194, 122, 0.24)";
-                    e.currentTarget.style.boxShadow =
-                      "0 8px 20px rgba(0, 0, 0, 0.22), inset 0 1px 0 rgba(255, 247, 236, 0.08)";
-                  }}
-                >
-                  <LanguageSwitcher variant="navbarIcon" />
-                </div>
+                <LanguageSwitcher variant="navbarIcon" />
 
                 {/* Credits pill */}
                 <CreditsBadge credits={12} locale={locale} />
@@ -268,40 +242,31 @@ export const MiniNavbar = () => {
                       e.stopPropagation();
                       setIsMenuOpen((v) => !v);
                     }}
-                    className="flex items-center justify-center transition-all duration-200"
+                    className="flex items-center justify-center bg-[linear-gradient(180deg,rgba(54,32,22,0.34),rgba(26,13,10,0.28))] transition-colors duration-200 hover:bg-[linear-gradient(180deg,rgba(118,72,32,0.34),rgba(82,32,24,0.34))]"
                     style={{
-                      height: 40,
-                      width: 40,
+                      height: 48,
+                      width: 48,
                       borderRadius: "999px",
-                      fontSize: "14px",
-                      fontWeight: 500,
-                      color: "#FFF7EC",
-                      background:
-                        "linear-gradient(145deg, rgba(177, 52, 42, 0.92), rgba(91, 43, 26, 0.92))",
-                      border: "1px solid rgba(232, 194, 122, 0.36)",
-                      boxShadow:
-                        "0 8px 20px rgba(0, 0, 0, 0.24), inset 0 1px 0 rgba(255, 247, 236, 0.12)",
-                      backdropFilter: "blur(14px)",
+                      backdropFilter: "blur(18px)",
                       cursor: "pointer",
-                      overflow: "hidden",
-                    }}
-                    onMouseEnter={(e) => {
-                      e.currentTarget.style.background =
-                        "linear-gradient(145deg, rgba(199, 69, 52, 0.96), rgba(112, 58, 30, 0.96))";
-                      e.currentTarget.style.borderColor = "rgba(232, 194, 122, 0.54)";
-                      e.currentTarget.style.boxShadow =
-                        "0 10px 24px rgba(0, 0, 0, 0.28), inset 0 1px 0 rgba(255, 247, 236, 0.16)";
-                    }}
-                    onMouseLeave={(e) => {
-                      e.currentTarget.style.background =
-                        "linear-gradient(145deg, rgba(177, 52, 42, 0.92), rgba(91, 43, 26, 0.92))";
-                      e.currentTarget.style.borderColor = "rgba(232, 194, 122, 0.36)";
-                      e.currentTarget.style.boxShadow =
-                        "0 8px 20px rgba(0, 0, 0, 0.24), inset 0 1px 0 rgba(255, 247, 236, 0.12)";
                     }}
                     title={displayName || ""}
                   >
-                    {initial}
+                    <span
+                      className="flex items-center justify-center"
+                      style={{
+                        height: 38,
+                        width: 38,
+                        borderRadius: "999px",
+                        fontSize: "14px",
+                        fontWeight: 600,
+                        color: "#FFF7EC",
+                        background:
+                          "linear-gradient(135deg, rgba(203, 61, 48, 0.96), rgba(147, 88, 35, 0.96))",
+                      }}
+                    >
+                      {initial}
+                    </span>
                   </button>
 
                   {/* Dropdown menu */}
@@ -313,12 +278,12 @@ export const MiniNavbar = () => {
                         top: "calc(100% + 10px)",
                         width: 268,
                         background:
-                          "linear-gradient(145deg, rgba(28, 15, 12, 0.98), rgba(18, 10, 10, 0.98) 52%, rgba(43, 14, 14, 0.96))",
-                        border: "1px solid rgba(232, 194, 122, 0.22)",
+                          "linear-gradient(145deg, rgba(31, 16, 13, 0.74), rgba(18, 10, 10, 0.68) 54%, rgba(44, 15, 15, 0.66))",
+                        border: "1px solid rgba(232, 194, 122, 0.12)",
                         borderRadius: 20,
                         boxShadow:
-                          "0 24px 70px rgba(0, 0, 0, 0.48), 0 10px 26px rgba(35, 8, 8, 0.34)",
-                        backdropFilter: "blur(18px)",
+                          "0 28px 80px rgba(0, 0, 0, 0.42), 0 12px 30px rgba(35, 8, 8, 0.20), inset 0 1px 0 rgba(255, 247, 236, 0.05)",
+                        backdropFilter: "blur(28px) saturate(1.15)",
                         padding: 9,
                       }}
                     >
@@ -328,9 +293,9 @@ export const MiniNavbar = () => {
                         style={{
                           borderRadius: 15,
                           background:
-                            "linear-gradient(135deg, rgba(232, 194, 122, 0.075), rgba(128, 28, 28, 0.10))",
-                          border: "1px solid rgba(232, 194, 122, 0.16)",
-                          boxShadow: "inset 0 1px 0 rgba(255, 247, 236, 0.035)",
+                            "linear-gradient(135deg, rgba(232, 194, 122, 0.065), rgba(128, 28, 28, 0.075))",
+                          border: "1px solid rgba(232, 194, 122, 0.10)",
+                          boxShadow: "inset 0 1px 0 rgba(255, 247, 236, 0.04)",
                         }}
                       >
                         <div
@@ -371,14 +336,15 @@ export const MiniNavbar = () => {
                         <Link
                           href={`/${locale}/settings`}
                           onClick={() => setIsMenuOpen(false)}
-                          className="flex items-center gap-3 px-3 py-2.5 rounded-xl text-sm font-medium transition-all duration-200"
+                          className="group relative flex items-center gap-3 overflow-hidden px-3 py-2.5 rounded-xl text-sm font-medium transition-all duration-200"
                           style={{
                             color: "rgba(255, 247, 236, 0.74)",
                             border: "1px solid transparent",
                           }}
                           onMouseEnter={(e) => {
-                            e.currentTarget.style.background = "rgba(232, 194, 122, 0.075)";
-                            e.currentTarget.style.borderColor = "rgba(232, 194, 122, 0.10)";
+                            e.currentTarget.style.background =
+                              "linear-gradient(90deg, rgba(232, 194, 122, 0.16), rgba(232, 194, 122, 0.055))";
+                            e.currentTarget.style.borderColor = "rgba(232, 194, 122, 0.08)";
                             e.currentTarget.style.color = "rgba(255, 247, 236, 0.96)";
                           }}
                           onMouseLeave={(e) => {
@@ -387,6 +353,7 @@ export const MiniNavbar = () => {
                             e.currentTarget.style.color = "rgba(255, 247, 236, 0.74)";
                           }}
                         >
+                          <span className="pointer-events-none absolute left-1.5 top-1/2 h-5 w-[2px] -translate-y-1/2 rounded-full bg-[#E8C27A] opacity-0 transition-opacity duration-200 group-hover:opacity-100" />
                           <Settings size={16} strokeWidth={1.8} style={{ width: 18, flexShrink: 0 }} />
                           {isZh ? "设置" : "Settings"}
                         </Link>
@@ -394,14 +361,15 @@ export const MiniNavbar = () => {
                         <Link
                           href={`/${locale}/credits`}
                           onClick={() => setIsMenuOpen(false)}
-                          className="flex items-center gap-3 px-3 py-2.5 rounded-xl text-sm font-medium transition-all duration-200"
+                          className="group relative flex items-center gap-3 overflow-hidden px-3 py-2.5 rounded-xl text-sm font-medium transition-all duration-200"
                           style={{
                             color: "rgba(255, 247, 236, 0.74)",
                             border: "1px solid transparent",
                           }}
                           onMouseEnter={(e) => {
-                            e.currentTarget.style.background = "rgba(232, 194, 122, 0.075)";
-                            e.currentTarget.style.borderColor = "rgba(232, 194, 122, 0.10)";
+                            e.currentTarget.style.background =
+                              "linear-gradient(90deg, rgba(232, 194, 122, 0.16), rgba(232, 194, 122, 0.055))";
+                            e.currentTarget.style.borderColor = "rgba(232, 194, 122, 0.08)";
                             e.currentTarget.style.color = "rgba(255, 247, 236, 0.96)";
                           }}
                           onMouseLeave={(e) => {
@@ -410,6 +378,7 @@ export const MiniNavbar = () => {
                             e.currentTarget.style.color = "rgba(255, 247, 236, 0.74)";
                           }}
                         >
+                          <span className="pointer-events-none absolute left-1.5 top-1/2 h-5 w-[2px] -translate-y-1/2 rounded-full bg-[#E8C27A] opacity-0 transition-opacity duration-200 group-hover:opacity-100" />
                           <ReceiptText size={16} strokeWidth={1.8} style={{ width: 18, flexShrink: 0 }} />
                           {isZh ? "积分明细" : "Credit History"}
                         </Link>
@@ -417,14 +386,15 @@ export const MiniNavbar = () => {
                         <Link
                           href={`/${locale}/generate`}
                           onClick={() => setIsMenuOpen(false)}
-                          className="flex items-center gap-3 px-3 py-2.5 rounded-xl text-sm font-medium transition-all duration-200"
+                          className="group relative flex items-center gap-3 overflow-hidden px-3 py-2.5 rounded-xl text-sm font-medium transition-all duration-200"
                           style={{
                             color: "rgba(255, 247, 236, 0.74)",
                             border: "1px solid transparent",
                           }}
                           onMouseEnter={(e) => {
-                            e.currentTarget.style.background = "rgba(232, 194, 122, 0.075)";
-                            e.currentTarget.style.borderColor = "rgba(232, 194, 122, 0.10)";
+                            e.currentTarget.style.background =
+                              "linear-gradient(90deg, rgba(232, 194, 122, 0.16), rgba(232, 194, 122, 0.055))";
+                            e.currentTarget.style.borderColor = "rgba(232, 194, 122, 0.08)";
                             e.currentTarget.style.color = "rgba(255, 247, 236, 0.96)";
                           }}
                           onMouseLeave={(e) => {
@@ -433,6 +403,7 @@ export const MiniNavbar = () => {
                             e.currentTarget.style.color = "rgba(255, 247, 236, 0.74)";
                           }}
                         >
+                          <span className="pointer-events-none absolute left-1.5 top-1/2 h-5 w-[2px] -translate-y-1/2 rounded-full bg-[#E8C27A] opacity-0 transition-opacity duration-200 group-hover:opacity-100" />
                           <Images size={16} strokeWidth={1.8} style={{ width: 18, flexShrink: 0 }} />
                           {isZh ? "我的作品" : "My Gallery"}
                         </Link>
@@ -449,23 +420,25 @@ export const MiniNavbar = () => {
                         <button
                           type="button"
                           onClick={handleSignOut}
-                          className="flex items-center gap-3 px-3 py-2.5 rounded-xl text-sm font-medium transition-all duration-200 text-left w-full"
+                          className="group relative flex items-center gap-3 overflow-hidden px-3 py-2.5 rounded-xl text-sm font-medium transition-all duration-200 text-left w-full"
                           style={{
                             color: "rgba(255, 139, 128, 0.90)",
-                            background: "rgba(180, 39, 32, 0.075)",
-                            border: "1px solid rgba(255, 105, 94, 0.14)",
+                            background: "rgba(180, 39, 32, 0.055)",
+                            border: "1px solid rgba(255, 105, 94, 0.10)",
                           }}
                           onMouseEnter={(e) => {
-                            e.currentTarget.style.background = "rgba(190, 45, 38, 0.14)";
-                            e.currentTarget.style.borderColor = "rgba(255, 105, 94, 0.24)";
+                            e.currentTarget.style.background =
+                              "linear-gradient(90deg, rgba(232, 194, 122, 0.12), rgba(190, 45, 38, 0.12))";
+                            e.currentTarget.style.borderColor = "rgba(232, 194, 122, 0.10)";
                             e.currentTarget.style.color = "rgba(255, 166, 156, 0.98)";
                           }}
                           onMouseLeave={(e) => {
-                            e.currentTarget.style.background = "rgba(180, 39, 32, 0.075)";
-                            e.currentTarget.style.borderColor = "rgba(255, 105, 94, 0.14)";
+                            e.currentTarget.style.background = "rgba(180, 39, 32, 0.055)";
+                            e.currentTarget.style.borderColor = "rgba(255, 105, 94, 0.10)";
                             e.currentTarget.style.color = "rgba(255, 139, 128, 0.90)";
                           }}
                         >
+                          <span className="pointer-events-none absolute left-1.5 top-1/2 h-5 w-[2px] -translate-y-1/2 rounded-full bg-[#E8C27A] opacity-0 transition-opacity duration-200 group-hover:opacity-100" />
                           <LogOut size={16} strokeWidth={1.8} style={{ width: 18, flexShrink: 0 }} />
                           {isZh ? "退出登录" : "Log out"}
                         </button>
@@ -477,33 +450,7 @@ export const MiniNavbar = () => {
             ) : (
               <>
                 {/* Language switcher */}
-                <div
-                  className="rounded-full transition-all duration-200"
-                  style={{
-                    background:
-                      "linear-gradient(180deg, rgba(255, 247, 236, 0.075), rgba(24, 14, 12, 0.42))",
-                    border: "1px solid rgba(232, 194, 122, 0.24)",
-                    boxShadow:
-                      "0 8px 20px rgba(0, 0, 0, 0.22), inset 0 1px 0 rgba(255, 247, 236, 0.08)",
-                    backdropFilter: "blur(14px)",
-                  }}
-                  onMouseEnter={(e) => {
-                    e.currentTarget.style.background =
-                      "linear-gradient(180deg, rgba(232, 194, 122, 0.12), rgba(35, 18, 13, 0.50))";
-                    e.currentTarget.style.borderColor = "rgba(232, 194, 122, 0.38)";
-                    e.currentTarget.style.boxShadow =
-                      "0 10px 24px rgba(0, 0, 0, 0.26), inset 0 1px 0 rgba(255, 247, 236, 0.12)";
-                  }}
-                  onMouseLeave={(e) => {
-                    e.currentTarget.style.background =
-                      "linear-gradient(180deg, rgba(255, 247, 236, 0.075), rgba(24, 14, 12, 0.42))";
-                    e.currentTarget.style.borderColor = "rgba(232, 194, 122, 0.24)";
-                    e.currentTarget.style.boxShadow =
-                      "0 8px 20px rgba(0, 0, 0, 0.22), inset 0 1px 0 rgba(255, 247, 236, 0.08)";
-                  }}
-                >
-                  <LanguageSwitcher variant="navbarIcon" />
-                </div>
+                <LanguageSwitcher variant="navbarIcon" />
 
                 {/* Login button */}
                 <Link

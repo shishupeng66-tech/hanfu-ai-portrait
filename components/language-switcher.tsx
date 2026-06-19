@@ -5,7 +5,7 @@ import { useRouter, usePathname } from 'next/navigation';
 import { locales, localeNames } from '@/i18n.config';
 import type { Locale } from '@/i18n.config';
 import { useState, useRef, useEffect } from 'react';
-import { Globe2, Check } from 'lucide-react';
+import { Globe2, Check, Sparkles } from 'lucide-react';
 import { cn } from '@/lib/utils';
 
 type LanguageSwitcherProps = {
@@ -75,7 +75,7 @@ export function LanguageSwitcher({ variant = "default" }: LanguageSwitcherProps)
         onClick={() => setIsOpen(!isOpen)}
         className={cn(
           variant === "navbarIcon"
-            ? "flex h-[42px] w-[42px] items-center justify-center rounded-full border border-[rgba(232,194,122,0.14)] bg-[rgba(255,247,236,0.04)] transition-all duration-200 hover:border-[rgba(232,194,122,0.28)] hover:bg-[rgba(232,194,122,0.10)] focus:outline-none focus:ring-2 focus:ring-[rgba(232,194,122,0.30)]"
+            ? "group flex h-[42px] w-[42px] items-center justify-center bg-transparent transition-colors duration-200 focus:outline-none"
             : "flex items-center gap-2 px-3 py-1.5 text-sm rounded-full transition-all duration-200 border border-white/12 bg-white/8 text-white hover:bg-white/15 focus:outline-none focus:ring-2 focus:ring-[#B7352D] focus:ring-opacity-50"
         )}
         aria-expanded={isOpen}
@@ -83,7 +83,7 @@ export function LanguageSwitcher({ variant = "default" }: LanguageSwitcherProps)
         aria-label="Select language"
       >
         {variant === "navbarIcon" ? (
-          <Globe2 className="h-5 w-5" style={{ color: 'rgba(255,247,236,0.78)' }} />
+          <Sparkles className="h-[18px] w-[18px] text-[rgba(232,194,122,0.58)] transition-colors duration-200 group-hover:text-[rgba(255,247,236,0.86)]" />
         ) : (
           <>
             <Globe2 className="w-4 h-4" />
