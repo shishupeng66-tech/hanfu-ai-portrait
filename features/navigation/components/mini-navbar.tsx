@@ -8,6 +8,7 @@ import Link from "next/link";
 import { useRouter } from "next/navigation";
 import { cn } from "@/lib/utils";
 import { useSession, signOut } from "@/lib/auth-client";
+import { CreditsBadge } from "@/components/ui/credits-badge";
 
 export const MiniNavbar = () => {
   const locale = useLocale();
@@ -210,22 +211,7 @@ export const MiniNavbar = () => {
                 <LanguageSwitcher variant="navbarIcon" />
 
                 {/* Credits pill */}
-                <div
-                  className="flex items-center justify-center"
-                  style={{
-                    height: 38,
-                    padding: "0 16px",
-                    borderRadius: "999px",
-                    fontSize: "14px",
-                    fontWeight: 500,
-                    color: "#FFF7EC",
-                    background: "rgba(232, 194, 122, 0.08)",
-                    border: "1px solid rgba(232, 194, 122, 0.20)",
-                  }}
-                >
-                  {isZh ? "积分: " : "Credits: "}
-                  <span style={{ color: "#E8C27A", marginLeft: 2 }}>12</span>
-                </div>
+                <CreditsBadge credits={12} locale={locale} />
 
                 {/* Avatar + dropdown */}
                 <div className="relative" ref={menuRef}>
