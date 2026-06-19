@@ -21,7 +21,9 @@ export default async function ProtectedLayout(
 
   const access = await getActiveSessionUser(await headers());
   if (!access.ok) {
-    redirect(`/${locale}/login`);
+    // Redirect to login with callbackUrl so users come back after signing in
+    const callbackPath = `/${locale}/generate`;
+    redirect(`/${locale}/login?callbackUrl=${encodeURIComponent(callbackPath)}`);
   }
 
   return (

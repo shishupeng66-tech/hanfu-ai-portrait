@@ -6,6 +6,7 @@ import { cn } from "@/lib/utils";
 import Link from "next/link";
 import { useLocale, useTranslations } from "next-intl";
 import { LocaleLink } from "@/components/locale-link";
+import { useSession } from "@/lib/auth-client";
 
 type StyleTemplate = {
   id: string;
@@ -162,8 +163,10 @@ export default function GeneratePage() {
   const [resultUrls, setResultUrls] = useState<string[]>([]);
   const [error, setError] = useState<string | null>(null);
   const [isGenerating, setIsGenerating] = useState(false);
-  // Mock: logged-out state for now. The real session can wire in later.
-  const [isLoggedIn, _setIsLoggedIn] = useState(false);
+
+  // Real auth session from better-auth
+  const session = useSession();
+  const isLoggedIn = !!session.data?.user;
 
   // Style templates data
   const styleTemplates: StyleTemplate[] = useMemo(
@@ -550,7 +553,7 @@ export default function GeneratePage() {
 
               <div
                 className="relative group/avatar"
-                title={sidebarCollapsed ? tStudio("login") : undefined}
+                title={sidebarCollapsed ? (session.data?.user?.name || session.data?.user?.email || "") : undefined}
               >
                 <div
                   className="h-10 w-10 rounded-full flex items-center justify-center text-sm font-semibold cursor-pointer"
@@ -560,7 +563,7 @@ export default function GeneratePage() {
                     border: "1px solid rgba(232, 194, 122, 0.32)",
                   }}
                 >
-                  <Icon name="image-grid" className="h-[18px] w-[18px]" />
+                  {(session.data?.user?.name || session.data?.user?.email || "?").charAt(0).toUpperCase()}
                 </div>
                 {sidebarCollapsed && (
                   <div
@@ -571,7 +574,7 @@ export default function GeneratePage() {
                       border: "1px solid rgba(232, 194, 122, 0.22)",
                     }}
                   >
-                    {tStudio("login")}
+                    {session.data?.user?.name || session.data?.user?.email || ""}
                   </div>
                 )}
               </div>
