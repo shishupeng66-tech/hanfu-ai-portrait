@@ -5,6 +5,7 @@ import Image from "next/image";
 import { useParams, useRouter } from "next/navigation";
 import { motion } from "framer-motion";
 import { cn } from "@/lib/utils";
+import { useSession } from "@/lib/auth-client";
 
 interface AnimatedMarqueeHeroProps {
   tagline: string;
@@ -28,14 +29,24 @@ const fadeIn = {
 const ActionButton = ({ children }: { children: React.ReactNode }) => {
   const router = useRouter();
   const params = useParams();
+  const session = useSession();
   const locale = typeof params?.locale === "string" ? params.locale : "en";
+  const isLoggedIn = !!session.data?.user;
+
+  const handleClick = () => {
+    if (isLoggedIn) {
+      router.push(`/${locale}/generate`);
+    } else {
+      router.push(`/${locale}/login?callbackUrl=/${locale}/generate`);
+    }
+  };
 
   return (
     <motion.button
       type="button"
       whileHover={{ y: -2 }}
       whileTap={{ scale: 0.97 }}
-      onClick={() => router.push(`/${locale}/generate`)}
+      onClick={handleClick}
       className="h-14 cursor-pointer rounded-full bg-[#C83A32] px-9 text-base font-semibold text-[#FFF7EC] shadow-[0_0_28px_rgba(200,58,50,0.28)] transition-[background-color,box-shadow,transform] duration-200 hover:bg-[#D7463E] hover:shadow-[0_0_34px_rgba(200,58,50,0.42)] focus:outline-none focus:ring-2 focus:ring-[#E8C27A]/60 focus:ring-offset-2 focus:ring-offset-[#030604]"
     >
       {children}

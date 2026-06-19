@@ -1,7 +1,7 @@
 "use client";
 
 import * as React from "react";
-import { useRouter } from "next/navigation";
+import { useRouter, useSearchParams } from "next/navigation";
 import Link from "next/link";
 import { useLocale, useTranslations } from 'next-intl';
 import { zodResolver } from "@hookform/resolvers/zod";
@@ -20,10 +20,15 @@ interface LoginFormProps {
 
 export function LoginForm({ showGoogleAuth = true }: LoginFormProps) {
   const router = useRouter();
+  const searchParams = useSearchParams();
   const locale = useLocale();
   const t = useTranslations('auth.login');
   const [isLoading, setIsLoading] = React.useState(false);
   const [error, setError] = React.useState<string | null>(null);
+
+  // Safe callbackUrl: must be an internal path starting with "/"
+  const rawCallback = searchParams.get("callbackUrl") || "";
+  const callbackUrl = rawCallback.startsWith("/") ? rawCallback : `/${locale}`;
 
   const form = useForm<LoginInput>({
     resolver: zodResolver(loginSchema),
@@ -48,7 +53,8 @@ export function LoginForm({ showGoogleAuth = true }: LoginFormProps) {
         return;
       }
 
-      router.push(`/${locale}/`);
+      router.refresh();
+      router.replace(callbackUrl);
     } catch {
       setError(t('errors.loginFailed'));
     } finally {
@@ -61,7 +67,7 @@ export function LoginForm({ showGoogleAuth = true }: LoginFormProps) {
       setIsLoading(true);
       await signIn.social({
         provider: "google",
-        callbackURL: "/",
+        callbackURL: callbackUrl,
       });
     } catch {
       setError(t('errors.googleLoginFailed'));
