@@ -16,6 +16,137 @@ type StyleTemplate = {
   previewUrl: string;
 };
 
+type SidebarCategory =
+  | "my-gallery"
+  | "popular"
+  | "trending"
+  | "new"
+  | "curated"
+  | "tang"
+  | "song"
+  | "yuan"
+  | "ming"
+  | "qing"
+  | "republican"
+  | "new-chinese";
+
+const SIDEBAR_EXPANDED_WIDTH = 260;
+const SIDEBAR_COLLAPSED_WIDTH = 82;
+
+// Simple inline SVG icon component (no external deps needed)
+function Icon({ name, className, style }: { name: string; className?: string; style?: React.CSSProperties }) {
+  const icons: Record<string, React.ReactNode> = {
+    // Works / gallery
+    "image-grid": (
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round">
+        <rect x="3" y="3" width="7" height="7" rx="1.5" />
+        <rect x="14" y="3" width="7" height="7" rx="1.5" />
+        <rect x="3" y="14" width="7" height="7" rx="1.5" />
+        <rect x="14" y="14" width="7" height="7" rx="1.5" />
+      </svg>
+    ),
+    // Popular / fire
+    "flame": (
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round">
+        <path d="M8.5 14.5A2.5 2.5 0 0 0 11 17c1.38 0 2.5-1.12 2.5-2.5 0-1.2-.7-2-1.5-3-1.4-1.7-2-2.5-2-4 0-1.3.6-2.4 1.5-3-.5 1.5.5 3 2 4" />
+        <path d="M12 22s6-3.5 6-9a6 6 0 0 0-12 0c0 5.5 6 9 6 9Z" />
+      </svg>
+    ),
+    // Trending / up arrow
+    "trending-up": (
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round">
+        <polyline points="3 17 9 11 13 15 21 7" />
+        <polyline points="14 7 21 7 21 14" />
+      </svg>
+    ),
+    // New / sparkle
+    "sparkles": (
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round">
+        <path d="M12 3v4M12 17v4M3 12h4M17 12h4M5.6 5.6l2.8 2.8M15.6 15.6l2.8 2.8M5.6 18.4l2.8-2.8M15.6 8.4l2.8-2.8" />
+      </svg>
+    ),
+    // Curated / crown
+    "crown": (
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round">
+        <path d="M2 19h20l-1.5-11L16 11l-4-7-4 7L3.5 8 2 19Z" />
+      </svg>
+    ),
+    // Tang — 唐 style ornament
+    "tang": (
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round">
+        <circle cx="12" cy="12" r="9" />
+        <path d="M12 3v18M3 12h18" />
+        <circle cx="12" cy="12" r="4" />
+      </svg>
+    ),
+    // Song — elegant moon
+    "song": (
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round">
+        <path d="M21 12.8A9 9 0 1 1 11.2 3a7 7 0 0 0 9.8 9.8Z" />
+      </svg>
+    ),
+    // Yuan — bow / archer
+    "yuan": (
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round">
+        <path d="M12 2c-4 3-7 7-7 12a7 7 0 0 0 14 0c0-5-3-9-7-12Z" />
+        <path d="M12 9v6" />
+      </svg>
+    ),
+    // Ming — gate / palace
+    "ming": (
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round">
+        <path d="M3 21h18" />
+        <path d="M5 21V10l7-5 7 5v11" />
+        <path d="M9 21v-6h6v6" />
+      </svg>
+    ),
+    // Qing — dragon scale / coin
+    "qing": (
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round">
+        <circle cx="12" cy="12" r="9" />
+        <path d="M12 7v10M9 10l6 4M15 10l-6 4" />
+      </svg>
+    ),
+    // Republican — retro frame
+    "republican": (
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round">
+        <rect x="3" y="4" width="18" height="16" rx="1" />
+        <path d="M3 9h18M8 4v5M16 4v5" />
+      </svg>
+    ),
+    // New Chinese — modern brush
+    "new-chinese": (
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round">
+        <path d="M4 20c4 0 8-2 12-6s6-8 6-12" />
+        <path d="M20 4l-4 4" />
+        <path d="M16 8l2 2" />
+      </svg>
+    ),
+    // Credits / coin
+    "coins": (
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round">
+        <circle cx="8" cy="8" r="6" />
+        <path d="M14 14c3 1 6 0 6-3M10 10c2 1 4 0 4-2" />
+        <path d="M8 18c-3 0-5-2-5-5" />
+      </svg>
+    ),
+    // Collapse / chevron left
+    "chevron-left": (
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+        <polyline points="15 18 9 12 15 6" />
+      </svg>
+    ),
+    // Expand / chevron right
+    "chevron-right": (
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+        <polyline points="9 18 15 12 9 6" />
+      </svg>
+    ),
+  };
+
+  return <div className={className} style={style}>{icons[name] ?? null}</div>;
+}
+
 export default function GeneratePage() {
   const locale = useLocale();
   const t = useTranslations("generate");
@@ -23,13 +154,17 @@ export default function GeneratePage() {
   const tGeneral = useTranslations();
 
   // State management
-  const [selectedStyle, setSelectedStyle] = useState<string>("all");
+  const [sidebarCollapsed, setSidebarCollapsed] = useState(false);
+  const [selectedCategory, setSelectedCategory] = useState<SidebarCategory>("popular");
+  const [selectedStyle, _setSelectedStyle] = useState<string>("all");
   const [selectedTemplate, setSelectedTemplate] = useState<string>("tangGlamour");
   const [file, setFile] = useState<File | null>(null);
   const [previewUrl, setPreviewUrl] = useState<string | null>(null);
   const [resultUrls, setResultUrls] = useState<string[]>([]);
   const [error, setError] = useState<string | null>(null);
   const [isGenerating, setIsGenerating] = useState(false);
+  // Mock: logged-out state for now. The real session can wire in later.
+  const [isLoggedIn, _setIsLoggedIn] = useState(false);
 
   // Style templates data
   const styleTemplates: StyleTemplate[] = useMemo(
@@ -88,43 +223,70 @@ export default function GeneratePage() {
     return styleTemplates.filter((template) => template.key === selectedStyle);
   }, [selectedStyle, styleTemplates]);
 
-  // Menu items configuration
-  const menuItems = useMemo(() => [
-    {
-      group: tStudio("sidebar.create"),
-      items: [
-        { id: "generatePortrait", label: tStudio("sidebar.generatePortrait"), active: true },
-        { id: "styleTemplates", label: tStudio("sidebar.styleTemplates"), disabled: false },
-        { id: "myGallery", label: tStudio("sidebar.myGallery"), disabled: true },
-      ],
-    },
-    {
-      group: tStudio("sidebar.hanfuStyles"),
-      items: [
-        { id: "tangGlamour", label: tStudio("sidebar.tangGlamour"), active: selectedStyle === "tangGlamour" },
-        { id: "songElegance", label: tStudio("sidebar.songElegance"), active: selectedStyle === "songElegance" },
-        { id: "qinHanNoir", label: tStudio("sidebar.qinHanNoir"), active: selectedStyle === "qinHanNoir" },
-        { id: "bluePorcelain", label: tStudio("sidebar.bluePorcelain"), active: selectedStyle === "bluePorcelain" },
-        { id: "modernQipao", label: tStudio("sidebar.modernQipao"), active: selectedStyle === "modernQipao" },
-        { id: "dunhuangMuse", label: tStudio("sidebar.dunhuangMuse"), active: selectedStyle === "dunhuangMuse" },
-      ],
-    },
-    {
-      group: tStudio("sidebar.enhance"),
-      items: [
-        { id: "upscale", label: tStudio("sidebar.upscale"), disabled: true },
-        { id: "regenerate", label: tStudio("sidebar.regenerate"), disabled: true },
-        { id: "faceRestore", label: tStudio("sidebar.faceRestore"), disabled: true },
-      ],
-    },
-    {
-      group: tStudio("sidebar.account"),
-      items: [
-        { id: "credits", label: tStudio("sidebar.credits"), disabled: false },
-        { id: "history", label: tStudio("sidebar.history"), disabled: true },
-      ],
-    },
-  ], [tStudio, selectedStyle]);
+  // Sidebar groups configuration
+  const sidebarGroups = useMemo(
+    () => [
+      {
+        groupKey: "works",
+        title: tStudio("sidebar.works"),
+        items: [
+          {
+            id: "my-gallery" as const,
+            label: tStudio("sidebar.myGallery"),
+            icon: "image-grid",
+          },
+        ],
+      },
+      {
+        groupKey: "templates",
+        title: tStudio("sidebar.templates"),
+        items: [
+          {
+            id: "popular" as const,
+            label: tStudio("sidebar.popular"),
+            icon: "flame",
+          },
+          {
+            id: "trending" as const,
+            label: tStudio("sidebar.trending"),
+            icon: "trending-up",
+          },
+          {
+            id: "new" as const,
+            label: tStudio("sidebar.new"),
+            icon: "sparkles",
+          },
+          {
+            id: "curated" as const,
+            label: tStudio("sidebar.curated"),
+            icon: "crown",
+          },
+        ],
+      },
+      {
+        groupKey: "era",
+        title: tStudio("sidebar.era"),
+        items: [
+          { id: "tang" as const, label: tStudio("sidebar.tang"), icon: "tang" },
+          { id: "song" as const, label: tStudio("sidebar.song"), icon: "song" },
+          { id: "yuan" as const, label: tStudio("sidebar.yuan"), icon: "yuan" },
+          { id: "ming" as const, label: tStudio("sidebar.ming"), icon: "ming" },
+          { id: "qing" as const, label: tStudio("sidebar.qing"), icon: "qing" },
+          {
+            id: "republican" as const,
+            label: tStudio("sidebar.republican"),
+            icon: "republican",
+          },
+          {
+            id: "new-chinese" as const,
+            label: tStudio("sidebar.newChinese"),
+            icon: "new-chinese",
+          },
+        ],
+      },
+    ],
+    [tStudio]
+  );
 
   // Handle file upload
   function handleFileChange(event: ChangeEvent<HTMLInputElement>) {
@@ -173,82 +335,294 @@ export default function GeneratePage() {
     <div className="flex min-h-screen">
       {/* Left Sidebar */}
       <aside
-        className="fixed left-0 top-0 h-screen w-[260px] z-40 flex flex-col border-r overflow-hidden"
+        className="fixed left-0 top-0 h-screen z-40 flex flex-col border-r transition-[width] duration-300 ease-out"
         style={{
+          width: sidebarCollapsed ? SIDEBAR_COLLAPSED_WIDTH : SIDEBAR_EXPANDED_WIDTH,
           background: "#241812",
           borderColor: "rgba(232, 194, 122, 0.12)",
         }}
       >
         {/* Brand Area */}
-        <LocaleLink
-          href="/"
-          className="flex items-center gap-3 px-5 py-6 border-b cursor-pointer"
+        <div
+          className="flex items-center gap-3 px-4 py-5 border-b"
           style={{ borderColor: "rgba(232, 194, 122, 0.10)" }}
         >
-          <img
-            src="/brand/logo-mark.png"
-            alt="Han Portrait Logo"
-            className="h-9 w-9 object-contain"
-          />
-          {locale === "zh" ? (
-            <span className="text-lg font-semibold tracking-[-0.01em]" style={{ color: "#E8C27A" }}>
-              {tGeneral("brand.name")}
-            </span>
-          ) : (
-            <div className="text-lg font-semibold tracking-[-0.01em]">
-              <span className="text-[#FFF7EC]">{tGeneral("brand.first")}</span>
-              <span className="text-[#E8C27A]"> {tGeneral("brand.second")}</span>
-            </div>
-          )}
-        </LocaleLink>
+          <LocaleLink
+            href="/"
+            className="flex items-center gap-3 flex-1 min-w-0"
+          >
+            <img
+              src="/brand/logo-mark.png"
+              alt="Han Portrait Logo"
+              className="h-9 w-9 object-contain flex-shrink-0"
+            />
+            {!sidebarCollapsed && (
+              locale === "zh" ? (
+                <span className="text-base font-semibold tracking-[-0.01em] truncate" style={{ color: "#E8C27A" }}>
+                  {tGeneral("brand.name")}
+                </span>
+              ) : (
+                <div className="text-base font-semibold tracking-[-0.01em] truncate">
+                  <span className="text-[#FFF7EC]">{tGeneral("brand.first")}</span>
+                  <span className="text-[#E8C27A]"> {tGeneral("brand.second")}</span>
+                </div>
+              )
+            )}
+          </LocaleLink>
 
-        {/* Menu Scroll Area */}
-        <div className="flex-1 overflow-y-auto p-4">
-          {menuItems.map((group) => (
-            <div key={group.group} className="mb-6">
-              <h3
-                className="text-xs font-semibold uppercase tracking-wider mb-3 px-3"
-                style={{ color: "rgba(255, 247, 236, 0.42)" }}
-              >
-                {group.group}
-              </h3>
+          {/* Collapse / Expand button */}
+          <button
+            type="button"
+            onClick={() => setSidebarCollapsed((v) => !v)}
+            className="flex-shrink-0 h-8 w-8 rounded-lg flex items-center justify-center transition-colors"
+            style={{
+              color: "rgba(255, 247, 236, 0.62)",
+              background: "rgba(255, 247, 236, 0.04)",
+            }}
+            onMouseEnter={(e) => {
+              e.currentTarget.style.background = "rgba(215, 70, 62, 0.15)";
+              e.currentTarget.style.color = "#E8C27A";
+            }}
+            onMouseLeave={(e) => {
+              e.currentTarget.style.background = "rgba(255, 247, 236, 0.04)";
+              e.currentTarget.style.color = "rgba(255, 247, 236, 0.62)";
+            }}
+            title={sidebarCollapsed ? (locale === "zh" ? "展开" : "Expand") : (locale === "zh" ? "收起" : "Collapse")}
+          >
+            <Icon name={sidebarCollapsed ? "chevron-right" : "chevron-left"} className="h-[18px] w-[18px]" />
+          </button>
+        </div>
+
+        {/* Menu Scroll Area — hide scrollbar visually, keep scroll ability */}
+        <div
+          className="flex-1 overflow-y-auto px-3 py-4"
+          style={{
+            scrollbarWidth: "none",
+            msOverflowStyle: "none",
+          }}
+        >
+          <style jsx>{`
+            div::-webkit-scrollbar {
+              display: none;
+            }
+          `}</style>
+
+          {sidebarGroups.map((group) => (
+            <div key={group.groupKey} className="mb-5 last:mb-0">
+              {!sidebarCollapsed && (
+                <h3
+                  className="text-[11px] font-semibold uppercase tracking-[0.12em] mb-2.5 px-3"
+                  style={{ color: "rgba(255, 247, 236, 0.38)" }}
+                >
+                  {group.title}
+                </h3>
+              )}
+              {sidebarCollapsed && (
+                <div className="flex justify-center mb-2.5">
+                  <div
+                    className="w-6 h-px"
+                    style={{ background: "rgba(255, 247, 236, 0.10)" }}
+                  />
+                </div>
+              )}
               <div className="space-y-1">
-                {group.items.map((item) => (
-                  <button
-                    key={item.id}
-                    type="button"
-                    disabled={item.disabled}
-                    onClick={() => {
-                      // If it's a style item, filter templates
-                      if (["tangGlamour", "songElegance", "qinHanNoir", "bluePorcelain", "modernQipao", "dunhuangMuse"].includes(item.id)) {
-                        setSelectedStyle(item.id);
-                      }
-                    }}
-                    className={cn(
-                      "w-full text-left px-4 py-3 rounded-xl text-sm font-medium transition-all duration-200 flex items-center",
-                      item.active
-                        ? "text-[#E8C27A] border border-[rgba(232,194,122,0.28)]"
-                        : item.disabled
-                        ? "text-[rgba(255,247,236,0.28)] cursor-not-allowed"
-                        : "text-[rgba(255,247,236,0.62)] hover:text-[#E8C27A] hover:bg-[rgba(232,194,122,0.05)]"
-                    )}
-                    style={{
-                      background: item.active ? "rgba(200, 58, 50, 0.18)" : "transparent",
-                    }}
-                  >
-                    {item.label}
-                  </button>
-                ))}
+                {group.items.map((item) => {
+                  const isActive = selectedCategory === item.id;
+                  return (
+                    <div key={item.id} className="relative group/navitem">
+                      <button
+                        type="button"
+                        onClick={() => setSelectedCategory(item.id)}
+                        className={cn(
+                          "w-full rounded-xl text-sm font-medium transition-all duration-200 flex items-center",
+                          sidebarCollapsed
+                            ? "justify-center h-11 w-11 mx-auto"
+                            : "px-3.5 py-2.5 gap-3"
+                        )}
+                        style={{
+                          background: isActive ? "rgba(200, 58, 50, 0.22)" : "transparent",
+                          color: isActive
+                            ? "#E8C27A"
+                            : "rgba(255, 247, 236, 0.68)",
+                          border: isActive
+                            ? "1px solid rgba(232, 194, 122, 0.32)"
+                            : "1px solid transparent",
+                          boxShadow: isActive
+                            ? "inset 0 0 0 1px rgba(232, 194, 122, 0.08)"
+                            : "none",
+                        }}
+                        onMouseEnter={(e) => {
+                          if (!isActive) {
+                            e.currentTarget.style.background = "rgba(215, 70, 62, 0.10)";
+                            e.currentTarget.style.color = "#E8C27A";
+                          }
+                        }}
+                        onMouseLeave={(e) => {
+                          if (!isActive) {
+                            e.currentTarget.style.background = "transparent";
+                            e.currentTarget.style.color = "rgba(255, 247, 236, 0.68)";
+                          }
+                        }}
+                      >
+                        <Icon name={item.icon} className="h-[20px] w-[20px] flex-shrink-0" />
+                        {!sidebarCollapsed && (
+                          <span className="truncate leading-none">{item.label}</span>
+                        )}
+                      </button>
+
+                      {/* Collapsed tooltip */}
+                      {sidebarCollapsed && (
+                        <div
+                          className="absolute left-full top-1/2 -translate-y-1/2 ml-2 px-2.5 py-1.5 rounded-lg text-xs font-medium whitespace-nowrap opacity-0 pointer-events-none group-hover/navitem:opacity-100 transition-opacity z-50"
+                          style={{
+                            background: "#2A1C15",
+                            color: "#E8C27A",
+                            border: "1px solid rgba(232, 194, 122, 0.22)",
+                            boxShadow: "0 4px 16px rgba(0, 0, 0, 0.35)",
+                          }}
+                        >
+                          {item.label}
+                        </div>
+                      )}
+                    </div>
+                  );
+                })}
               </div>
             </div>
           ))}
+        </div>
+
+        {/* Bottom Area — fixed at bottom */}
+        <div
+          className="flex-shrink-0 border-t px-3 py-4"
+          style={{ borderColor: "rgba(232, 194, 122, 0.10)" }}
+        >
+          {isLoggedIn ? (
+            <div
+              className={cn(
+                "flex items-center gap-3",
+                sidebarCollapsed ? "justify-center" : "px-2"
+              )}
+            >
+              {sidebarCollapsed ? (
+                <div className="relative group/credits">
+                  <div
+                    className="h-11 w-11 rounded-full flex items-center justify-center"
+                    style={{
+                      background: "rgba(232, 194, 122, 0.10)",
+                      border: "1px solid rgba(232, 194, 122, 0.22)",
+                    }}
+                  >
+                    <Icon name="coins" className="h-[20px] w-[20px]" style={{ color: "#E8C27A" }} />
+                  </div>
+                  <div
+                    className="absolute left-full top-1/2 -translate-y-1/2 ml-2 px-2.5 py-1.5 rounded-lg text-xs font-medium whitespace-nowrap opacity-0 pointer-events-none group-hover/credits:opacity-100 transition-opacity z-50"
+                    style={{
+                      background: "#2A1C15",
+                      color: "#E8C27A",
+                      border: "1px solid rgba(232, 194, 122, 0.22)",
+                    }}
+                  >
+                    {tStudio("credits")}
+                  </div>
+                </div>
+              ) : (
+                <div
+                  className="flex items-center gap-2 px-3 py-2 rounded-xl"
+                  style={{ background: "rgba(232, 194, 122, 0.06)" }}
+                >
+                  <Icon name="coins" className="h-[18px] w-[18px]" style={{ color: "#E8C27A" }} />
+                  <span className="text-sm font-medium" style={{ color: "#E8C27A" }}>
+                    {tStudio("credits")}
+                  </span>
+                </div>
+              )}
+
+              <div
+                className="relative group/avatar"
+                title={sidebarCollapsed ? tStudio("login") : undefined}
+              >
+                <div
+                  className="h-10 w-10 rounded-full flex items-center justify-center text-sm font-semibold cursor-pointer"
+                  style={{
+                    background: "linear-gradient(135deg, #C83A32, #8B2820)",
+                    color: "#E8C27A",
+                    border: "1px solid rgba(232, 194, 122, 0.32)",
+                  }}
+                >
+                  <Icon name="image-grid" className="h-[18px] w-[18px]" />
+                </div>
+                {sidebarCollapsed && (
+                  <div
+                    className="absolute left-full top-1/2 -translate-y-1/2 ml-2 px-2.5 py-1.5 rounded-lg text-xs font-medium whitespace-nowrap opacity-0 pointer-events-none group-hover/avatar:opacity-100 transition-opacity z-50"
+                    style={{
+                      background: "#2A1C15",
+                      color: "#E8C27A",
+                      border: "1px solid rgba(232, 194, 122, 0.22)",
+                    }}
+                  >
+                    {tStudio("login")}
+                  </div>
+                )}
+              </div>
+            </div>
+          ) : (
+            <div className={sidebarCollapsed ? "flex justify-center" : "px-2"}>
+              {sidebarCollapsed ? (
+                <div className="relative group/loginbtn">
+                  <Link
+                    href={`/${locale}/login`}
+                    className="h-11 w-11 rounded-full flex items-center justify-center"
+                    style={{
+                      background: "#C83A32",
+                      color: "#FFF7EC",
+                    }}
+                  >
+                    <Icon name="image-grid" className="h-[20px] w-[20px]" />
+                  </Link>
+                  <div
+                    className="absolute left-full top-1/2 -translate-y-1/2 ml-2 px-2.5 py-1.5 rounded-lg text-xs font-medium whitespace-nowrap opacity-0 pointer-events-none group-hover/loginbtn:opacity-100 transition-opacity z-50"
+                    style={{
+                      background: "#2A1C15",
+                      color: "#E8C27A",
+                      border: "1px solid rgba(232, 194, 122, 0.22)",
+                    }}
+                  >
+                    {tStudio("login")}
+                  </div>
+                </div>
+              ) : (
+                <div className="space-y-2.5">
+                  <Link
+                    href={`/${locale}/login`}
+                    className="w-full h-10 rounded-full flex items-center justify-center text-sm font-semibold transition-all hover:scale-[1.02]"
+                    style={{
+                      background: "#C83A32",
+                      color: "#FFF7EC",
+                    }}
+                  >
+                    {tStudio("login")}
+                  </Link>
+                  <p
+                    className="text-center text-xs leading-relaxed px-2"
+                    style={{ color: "rgba(255, 247, 236, 0.42)" }}
+                  >
+                    {tStudio("sidebar.saveAfterLogin")}
+                  </p>
+                </div>
+              )}
+            </div>
+          )}
         </div>
       </aside>
 
       {/* Right Main Workspace */}
       <main
-        className="ml-[260px] flex-1 min-h-screen"
-        style={{ background: "#1B120E" }}
+        className="flex-1 min-h-screen transition-[margin] duration-300 ease-out"
+        style={{
+          marginLeft: sidebarCollapsed ? SIDEBAR_COLLAPSED_WIDTH : SIDEBAR_EXPANDED_WIDTH,
+          background: "#1B120E",
+        }}
       >
         {/* Top Bar */}
         <div
