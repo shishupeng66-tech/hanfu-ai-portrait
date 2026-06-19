@@ -9,6 +9,7 @@ import { useRouter } from "next/navigation";
 import { cn } from "@/lib/utils";
 import { useSession, signOut } from "@/lib/auth-client";
 import { CreditsBadge } from "@/components/ui/credits-badge";
+import { Images, LogOut, ReceiptText, Settings } from "lucide-react";
 
 export const MiniNavbar = () => {
   const locale = useLocale();
@@ -348,7 +349,7 @@ export const MiniNavbar = () => {
                             e.currentTarget.style.color = "rgba(255, 247, 236, 0.74)";
                           }}
                         >
-                          <span style={{ width: 18, textAlign: "center", opacity: 0.58 }}>⚙</span>
+                          <Settings size={16} strokeWidth={1.8} style={{ width: 18, flexShrink: 0 }} />
                           {isZh ? "设置" : "Settings"}
                         </Link>
 
@@ -371,7 +372,7 @@ export const MiniNavbar = () => {
                             e.currentTarget.style.color = "rgba(255, 247, 236, 0.74)";
                           }}
                         >
-                          <span style={{ width: 18, textAlign: "center", opacity: 0.58 }}>◉</span>
+                          <ReceiptText size={16} strokeWidth={1.8} style={{ width: 18, flexShrink: 0 }} />
                           {isZh ? "积分明细" : "Credit History"}
                         </Link>
 
@@ -394,7 +395,7 @@ export const MiniNavbar = () => {
                             e.currentTarget.style.color = "rgba(255, 247, 236, 0.74)";
                           }}
                         >
-                          <span style={{ width: 18, textAlign: "center", opacity: 0.58 }}>▧</span>
+                          <Images size={16} strokeWidth={1.8} style={{ width: 18, flexShrink: 0 }} />
                           {isZh ? "我的作品" : "My Gallery"}
                         </Link>
 
@@ -427,7 +428,7 @@ export const MiniNavbar = () => {
                             e.currentTarget.style.color = "rgba(255, 139, 128, 0.90)";
                           }}
                         >
-                          <span style={{ width: 18, textAlign: "center", opacity: 0.78 }}>↩</span>
+                          <LogOut size={16} strokeWidth={1.8} style={{ width: 18, flexShrink: 0 }} />
                           {isZh ? "退出登录" : "Log out"}
                         </button>
                       </div>
