@@ -1,22 +1,21 @@
 {
-  "name": "sistine-starter-vibe-to-production",
+  "name": "hanfu-ai-portrait",
   "version": "0.1.0",
-  "description": "The first AI SaaS starter built for vibe coding. Ship production-ready AI SaaS using Cursor, Claude Code, or Windsurf.",
+  "description": "AI Hanfu portrait generator for creating studio-quality Hanfu portraits from a single photo.",
   "private": true,
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/Idea-To-Business/sistine-starter-vibe-to-production.git"
+    "url": "git+https://github.com/shishupeng66-tech/hanfu-ai-portrait.git"
   },
   "keywords": [
-    "vibe-coding",
+    "ai-hanfu",
+    "hanfu",
+    "portrait",
+    "ai-portrait",
     "ai-saas",
-    "nextjs",
-    "starter",
-    "cursor",
-    "claude-code",
-    "windsurf"
+    "nextjs"
   ],
-  "author": "Sistine AI & Sistine Labs",
+  "author": "shishupeng66-tech",
   "license": "MIT",
   "scripts": {
     "predev": "pnpm run sync:fumadocs-style",
