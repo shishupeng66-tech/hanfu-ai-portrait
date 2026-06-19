@@ -254,22 +254,26 @@ export const MiniNavbar = () => {
                       onClick={(e) => e.stopPropagation()}
                       style={{
                         top: "calc(100% + 10px)",
-                        width: 280,
-                        background: "rgba(24, 16, 13, 0.96)",
-                        border: "1px solid rgba(232, 194, 122, 0.18)",
-                        borderRadius: 18,
-                        boxShadow: "0 20px 60px rgba(0, 0, 0, 0.38)",
+                        width: 268,
+                        background:
+                          "linear-gradient(145deg, rgba(28, 15, 12, 0.98), rgba(18, 10, 10, 0.98) 52%, rgba(43, 14, 14, 0.96))",
+                        border: "1px solid rgba(232, 194, 122, 0.22)",
+                        borderRadius: 20,
+                        boxShadow:
+                          "0 24px 70px rgba(0, 0, 0, 0.48), 0 10px 26px rgba(35, 8, 8, 0.34)",
                         backdropFilter: "blur(18px)",
-                        padding: 10,
+                        padding: 9,
                       }}
                     >
                       {/* User info header */}
                       <div
-                        className="flex items-center gap-3 px-3 py-3 mb-1"
+                        className="flex items-center gap-3 px-3 py-3 mb-2"
                         style={{
-                          borderRadius: 12,
-                          background: "rgba(232, 194, 122, 0.04)",
-                          border: "1px solid rgba(232, 194, 122, 0.08)",
+                          borderRadius: 15,
+                          background:
+                            "linear-gradient(135deg, rgba(232, 194, 122, 0.075), rgba(128, 28, 28, 0.10))",
+                          border: "1px solid rgba(232, 194, 122, 0.16)",
+                          boxShadow: "inset 0 1px 0 rgba(255, 247, 236, 0.035)",
                         }}
                       >
                         <div
@@ -279,24 +283,26 @@ export const MiniNavbar = () => {
                             width: 40,
                             borderRadius: "999px",
                             fontSize: "14px",
-                            fontWeight: 500,
+                            fontWeight: 600,
                             color: "#FFF7EC",
-                            background: "linear-gradient(135deg, rgba(200,58,50,0.95), rgba(145,86,36,0.95))",
-                            border: "1px solid rgba(232, 194, 122, 0.28)",
+                            background:
+                              "linear-gradient(135deg, rgba(178, 44, 38, 0.96), rgba(132, 75, 31, 0.96))",
+                            border: "1px solid rgba(232, 194, 122, 0.34)",
+                            boxShadow: "0 8px 18px rgba(48, 8, 8, 0.28)",
                           }}
                         >
                           {initial}
                         </div>
                         <div className="min-w-0 flex-1">
                           <div
-                            className="text-sm font-medium truncate"
-                            style={{ color: "#FFF7EC" }}
+                            className="text-sm font-semibold truncate"
+                            style={{ color: "rgba(255, 247, 236, 0.96)" }}
                           >
                             {displayName || (isZh ? "用户" : "User")}
                           </div>
                           <div
                             className="text-xs truncate"
-                            style={{ color: "rgba(255, 247, 236, 0.5)" }}
+                            style={{ color: "rgba(255, 247, 236, 0.42)" }}
                           >
                             {user?.email || ""}
                           </div>
@@ -304,85 +310,106 @@ export const MiniNavbar = () => {
                       </div>
 
                       {/* Menu items */}
-                      <div className="flex flex-col">
+                      <div className="flex flex-col" style={{ gap: 3 }}>
                         <Link
                           href={`/${locale}/settings`}
                           onClick={() => setIsMenuOpen(false)}
-                          className="flex items-center gap-3 px-3 py-2.5 rounded-xl text-sm font-medium transition-colors"
-                          style={{ color: "rgba(255, 247, 236, 0.78)" }}
+                          className="flex items-center gap-3 px-3 py-2.5 rounded-xl text-sm font-medium transition-all duration-200"
+                          style={{
+                            color: "rgba(255, 247, 236, 0.74)",
+                            border: "1px solid transparent",
+                          }}
                           onMouseEnter={(e) => {
-                            e.currentTarget.style.background = "rgba(255, 247, 236, 0.06)";
-                            e.currentTarget.style.color = "#FFF7EC";
+                            e.currentTarget.style.background = "rgba(232, 194, 122, 0.075)";
+                            e.currentTarget.style.borderColor = "rgba(232, 194, 122, 0.10)";
+                            e.currentTarget.style.color = "rgba(255, 247, 236, 0.96)";
                           }}
                           onMouseLeave={(e) => {
                             e.currentTarget.style.background = "transparent";
-                            e.currentTarget.style.color = "rgba(255, 247, 236, 0.78)";
+                            e.currentTarget.style.borderColor = "transparent";
+                            e.currentTarget.style.color = "rgba(255, 247, 236, 0.74)";
                           }}
                         >
-                          <span style={{ width: 18, textAlign: "center" }}>⚙</span>
+                          <span style={{ width: 18, textAlign: "center", opacity: 0.58 }}>⚙</span>
                           {isZh ? "设置" : "Settings"}
                         </Link>
 
                         <Link
                           href={`/${locale}/credits`}
                           onClick={() => setIsMenuOpen(false)}
-                          className="flex items-center gap-3 px-3 py-2.5 rounded-xl text-sm font-medium transition-colors"
-                          style={{ color: "rgba(255, 247, 236, 0.78)" }}
+                          className="flex items-center gap-3 px-3 py-2.5 rounded-xl text-sm font-medium transition-all duration-200"
+                          style={{
+                            color: "rgba(255, 247, 236, 0.74)",
+                            border: "1px solid transparent",
+                          }}
                           onMouseEnter={(e) => {
-                            e.currentTarget.style.background = "rgba(255, 247, 236, 0.06)";
-                            e.currentTarget.style.color = "#FFF7EC";
+                            e.currentTarget.style.background = "rgba(232, 194, 122, 0.075)";
+                            e.currentTarget.style.borderColor = "rgba(232, 194, 122, 0.10)";
+                            e.currentTarget.style.color = "rgba(255, 247, 236, 0.96)";
                           }}
                           onMouseLeave={(e) => {
                             e.currentTarget.style.background = "transparent";
-                            e.currentTarget.style.color = "rgba(255, 247, 236, 0.78)";
+                            e.currentTarget.style.borderColor = "transparent";
+                            e.currentTarget.style.color = "rgba(255, 247, 236, 0.74)";
                           }}
                         >
-                          <span style={{ width: 18, textAlign: "center" }}>◉</span>
+                          <span style={{ width: 18, textAlign: "center", opacity: 0.58 }}>◉</span>
                           {isZh ? "积分明细" : "Credit History"}
                         </Link>
 
                         <Link
                           href={`/${locale}/generate`}
                           onClick={() => setIsMenuOpen(false)}
-                          className="flex items-center gap-3 px-3 py-2.5 rounded-xl text-sm font-medium transition-colors"
-                          style={{ color: "rgba(255, 247, 236, 0.78)" }}
+                          className="flex items-center gap-3 px-3 py-2.5 rounded-xl text-sm font-medium transition-all duration-200"
+                          style={{
+                            color: "rgba(255, 247, 236, 0.74)",
+                            border: "1px solid transparent",
+                          }}
                           onMouseEnter={(e) => {
-                            e.currentTarget.style.background = "rgba(255, 247, 236, 0.06)";
-                            e.currentTarget.style.color = "#FFF7EC";
+                            e.currentTarget.style.background = "rgba(232, 194, 122, 0.075)";
+                            e.currentTarget.style.borderColor = "rgba(232, 194, 122, 0.10)";
+                            e.currentTarget.style.color = "rgba(255, 247, 236, 0.96)";
                           }}
                           onMouseLeave={(e) => {
                             e.currentTarget.style.background = "transparent";
-                            e.currentTarget.style.color = "rgba(255, 247, 236, 0.78)";
+                            e.currentTarget.style.borderColor = "transparent";
+                            e.currentTarget.style.color = "rgba(255, 247, 236, 0.74)";
                           }}
                         >
-                          <span style={{ width: 18, textAlign: "center" }}>🖼</span>
+                          <span style={{ width: 18, textAlign: "center", opacity: 0.58 }}>▧</span>
                           {isZh ? "我的作品" : "My Gallery"}
                         </Link>
 
                         {/* Divider */}
                         <div
-                          className="my-1.5"
+                          className="my-1"
                           style={{
                             height: 1,
-                            background: "rgba(232, 194, 122, 0.10)",
+                            background: "rgba(232, 194, 122, 0.11)",
                           }}
                         />
 
                         <button
                           type="button"
                           onClick={handleSignOut}
-                          className="flex items-center gap-3 px-3 py-2.5 rounded-xl text-sm font-medium transition-colors text-left w-full"
-                          style={{ color: "rgba(255, 247, 236, 0.62)" }}
+                          className="flex items-center gap-3 px-3 py-2.5 rounded-xl text-sm font-medium transition-all duration-200 text-left w-full"
+                          style={{
+                            color: "rgba(255, 139, 128, 0.90)",
+                            background: "rgba(180, 39, 32, 0.075)",
+                            border: "1px solid rgba(255, 105, 94, 0.14)",
+                          }}
                           onMouseEnter={(e) => {
-                            e.currentTarget.style.background = "rgba(255, 247, 236, 0.06)";
-                            e.currentTarget.style.color = "#FFF7EC";
+                            e.currentTarget.style.background = "rgba(190, 45, 38, 0.14)";
+                            e.currentTarget.style.borderColor = "rgba(255, 105, 94, 0.24)";
+                            e.currentTarget.style.color = "rgba(255, 166, 156, 0.98)";
                           }}
                           onMouseLeave={(e) => {
-                            e.currentTarget.style.background = "transparent";
-                            e.currentTarget.style.color = "rgba(255, 247, 236, 0.62)";
+                            e.currentTarget.style.background = "rgba(180, 39, 32, 0.075)";
+                            e.currentTarget.style.borderColor = "rgba(255, 105, 94, 0.14)";
+                            e.currentTarget.style.color = "rgba(255, 139, 128, 0.90)";
                           }}
                         >
-                          <span style={{ width: 18, textAlign: "center" }}>↩</span>
+                          <span style={{ width: 18, textAlign: "center", opacity: 0.78 }}>↩</span>
                           {isZh ? "退出登录" : "Log out"}
                         </button>
                       </div>
