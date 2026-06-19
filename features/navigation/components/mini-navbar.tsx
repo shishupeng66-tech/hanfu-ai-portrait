@@ -28,17 +28,19 @@ export const MiniNavbar = () => {
 
   // Close menu when clicking outside
   useEffect(() => {
-    if (!isMenuOpen) return;
-
-    const handleClickOutside = (e: MouseEvent) => {
-      if (menuRef.current && !menuRef.current.contains(e.target as Node)) {
+    const handlePointerDown = (e: PointerEvent) => {
+      if (
+        isMenuOpenRef.current &&
+        menuRef.current &&
+        !menuRef.current.contains(e.target as Node)
+      ) {
         setIsMenuOpen(false);
       }
     };
 
-    document.addEventListener("mousedown", handleClickOutside);
-    return () => document.removeEventListener("mousedown", handleClickOutside);
-  }, [isMenuOpen]);
+    document.addEventListener("pointerdown", handlePointerDown);
+    return () => document.removeEventListener("pointerdown", handlePointerDown);
+  }, []);
 
   // Close menu on scroll — only register once, use ref to read state
   useEffect(() => {
@@ -217,7 +219,10 @@ export const MiniNavbar = () => {
                 <div className="relative" ref={menuRef}>
                   <button
                     type="button"
-                    onClick={() => setIsMenuOpen((v) => !v)}
+                    onClick={(e) => {
+                      e.stopPropagation();
+                      setIsMenuOpen((v) => !v);
+                    }}
                     className="flex items-center justify-center transition-all duration-200"
                     style={{
                       height: 40,
@@ -246,6 +251,7 @@ export const MiniNavbar = () => {
                   {isMenuOpen && (
                     <div
                       className="absolute right-0 z-50"
+                      onClick={(e) => e.stopPropagation()}
                       style={{
                         top: "calc(100% + 10px)",
                         width: 280,
