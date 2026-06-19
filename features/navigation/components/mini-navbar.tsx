@@ -100,23 +100,32 @@ export const MiniNavbar = () => {
             href="/"
             className="flex items-center whitespace-nowrap transition-colors duration-200"
             aria-label="Han Portrait home"
-            style={{ gap: 10 }}
+            style={{ gap: 12 }}
           >
             <img
               src="/brand/logo-mark.png"
               alt="Han Portrait Logo"
               className="object-contain"
-              style={{ height: 35, width: 35 }}
+              style={{ height: 42, width: 42 }}
             />
             <span
               style={{
-                fontSize: "17.5px",
+                fontSize: "20px",
                 fontWeight: 600,
                 letterSpacing: "-0.01em",
               }}
             >
               {isZh ? (
-                <span style={{ color: "#E8C27A" }}>汉韵写真</span>
+                <span
+                  style={{
+                    fontFamily: '"Songti SC", STSong, SimSun, serif',
+                    fontWeight: 600,
+                    letterSpacing: "0.045em",
+                  }}
+                >
+                  <span style={{ color: "#E8C27A" }}>汉韵</span>
+                  <span style={{ color: "#FFF7EC" }}>写真</span>
+                </span>
               ) : (
                 <>
                   <span style={{ color: "#FFF7EC" }}>Han</span>
@@ -134,20 +143,24 @@ export const MiniNavbar = () => {
               style={{
                 height: 36,
                 padding: "0 14px",
-                color: "rgba(255, 247, 236, 0.72)",
+                color: isZh ? "rgba(255, 247, 236, 0.80)" : "rgba(255, 247, 236, 0.72)",
                 fontSize: "15px",
                 fontWeight: 500,
-                letterSpacing: "0.005em",
+                letterSpacing: isZh ? "0.055em" : "0.005em",
                 background: "transparent",
                 border: "1px solid transparent",
               }}
               onMouseEnter={(e) => {
-                e.currentTarget.style.background = "rgba(255, 247, 236, 0.06)";
-                e.currentTarget.style.color = "#FFF7EC";
+                e.currentTarget.style.background = isZh
+                  ? "rgba(232, 194, 122, 0.085)"
+                  : "rgba(255, 247, 236, 0.06)";
+                e.currentTarget.style.color = isZh ? "#E8C27A" : "#FFF7EC";
               }}
               onMouseLeave={(e) => {
                 e.currentTarget.style.background = "transparent";
-                e.currentTarget.style.color = "rgba(255, 247, 236, 0.72)";
+                e.currentTarget.style.color = isZh
+                  ? "rgba(255, 247, 236, 0.80)"
+                  : "rgba(255, 247, 236, 0.72)";
               }}
             >
               {isZh ? "模板" : "Templates"}
@@ -158,23 +171,27 @@ export const MiniNavbar = () => {
               style={{
                 height: 36,
                 padding: "0 14px",
-                color: "rgba(255, 247, 236, 0.72)",
+                color: isZh ? "rgba(255, 247, 236, 0.80)" : "rgba(255, 247, 236, 0.72)",
                 fontSize: "15px",
                 fontWeight: 500,
-                letterSpacing: "0.005em",
+                letterSpacing: isZh ? "0.055em" : "0.005em",
                 background: "transparent",
                 border: "1px solid transparent",
               }}
               onMouseEnter={(e) => {
-                e.currentTarget.style.background = "rgba(255, 247, 236, 0.06)";
-                e.currentTarget.style.color = "#FFF7EC";
+                e.currentTarget.style.background = isZh
+                  ? "rgba(232, 194, 122, 0.085)"
+                  : "rgba(255, 247, 236, 0.06)";
+                e.currentTarget.style.color = isZh ? "#E8C27A" : "#FFF7EC";
               }}
               onMouseLeave={(e) => {
                 e.currentTarget.style.background = "transparent";
-                e.currentTarget.style.color = "rgba(255, 247, 236, 0.72)";
+                e.currentTarget.style.color = isZh
+                  ? "rgba(255, 247, 236, 0.80)"
+                  : "rgba(255, 247, 236, 0.72)";
               }}
             >
-              {isZh ? "指南" : "Guide"}
+              {isZh ? "流程" : "Guide"}
             </LocaleLink>
             <LocaleLink
               href="/#pricing"
@@ -182,20 +199,24 @@ export const MiniNavbar = () => {
               style={{
                 height: 36,
                 padding: "0 14px",
-                color: "rgba(255, 247, 236, 0.72)",
+                color: isZh ? "rgba(255, 247, 236, 0.80)" : "rgba(255, 247, 236, 0.72)",
                 fontSize: "15px",
                 fontWeight: 500,
-                letterSpacing: "0.005em",
+                letterSpacing: isZh ? "0.055em" : "0.005em",
                 background: "transparent",
                 border: "1px solid transparent",
               }}
               onMouseEnter={(e) => {
-                e.currentTarget.style.background = "rgba(255, 247, 236, 0.06)";
-                e.currentTarget.style.color = "#FFF7EC";
+                e.currentTarget.style.background = isZh
+                  ? "rgba(232, 194, 122, 0.085)"
+                  : "rgba(255, 247, 236, 0.06)";
+                e.currentTarget.style.color = isZh ? "#E8C27A" : "#FFF7EC";
               }}
               onMouseLeave={(e) => {
                 e.currentTarget.style.background = "transparent";
-                e.currentTarget.style.color = "rgba(255, 247, 236, 0.72)";
+                e.currentTarget.style.color = isZh
+                  ? "rgba(255, 247, 236, 0.80)"
+                  : "rgba(255, 247, 236, 0.72)";
               }}
             >
               {isZh ? "价格" : "Pricing"}
