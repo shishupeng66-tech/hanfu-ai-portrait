@@ -229,7 +229,33 @@ export const MiniNavbar = () => {
             {isLoggedIn ? (
               <>
                 {/* Language switcher */}
-                <LanguageSwitcher variant="navbarIcon" />
+                <div
+                  className="rounded-full transition-all duration-200"
+                  style={{
+                    background:
+                      "linear-gradient(180deg, rgba(255, 247, 236, 0.075), rgba(24, 14, 12, 0.42))",
+                    border: "1px solid rgba(232, 194, 122, 0.24)",
+                    boxShadow:
+                      "0 8px 20px rgba(0, 0, 0, 0.22), inset 0 1px 0 rgba(255, 247, 236, 0.08)",
+                    backdropFilter: "blur(14px)",
+                  }}
+                  onMouseEnter={(e) => {
+                    e.currentTarget.style.background =
+                      "linear-gradient(180deg, rgba(232, 194, 122, 0.12), rgba(35, 18, 13, 0.50))";
+                    e.currentTarget.style.borderColor = "rgba(232, 194, 122, 0.38)";
+                    e.currentTarget.style.boxShadow =
+                      "0 10px 24px rgba(0, 0, 0, 0.26), inset 0 1px 0 rgba(255, 247, 236, 0.12)";
+                  }}
+                  onMouseLeave={(e) => {
+                    e.currentTarget.style.background =
+                      "linear-gradient(180deg, rgba(255, 247, 236, 0.075), rgba(24, 14, 12, 0.42))";
+                    e.currentTarget.style.borderColor = "rgba(232, 194, 122, 0.24)";
+                    e.currentTarget.style.boxShadow =
+                      "0 8px 20px rgba(0, 0, 0, 0.22), inset 0 1px 0 rgba(255, 247, 236, 0.08)";
+                  }}
+                >
+                  <LanguageSwitcher variant="navbarIcon" />
+                </div>
 
                 {/* Credits pill */}
                 <CreditsBadge credits={12} locale={locale} />
@@ -250,16 +276,28 @@ export const MiniNavbar = () => {
                       fontSize: "14px",
                       fontWeight: 500,
                       color: "#FFF7EC",
-                      background: "linear-gradient(135deg, rgba(200,58,50,0.95), rgba(145,86,36,0.95))",
-                      border: "1px solid rgba(232, 194, 122, 0.28)",
+                      background:
+                        "linear-gradient(145deg, rgba(177, 52, 42, 0.92), rgba(91, 43, 26, 0.92))",
+                      border: "1px solid rgba(232, 194, 122, 0.36)",
+                      boxShadow:
+                        "0 8px 20px rgba(0, 0, 0, 0.24), inset 0 1px 0 rgba(255, 247, 236, 0.12)",
+                      backdropFilter: "blur(14px)",
                       cursor: "pointer",
                       overflow: "hidden",
                     }}
                     onMouseEnter={(e) => {
-                      e.currentTarget.style.borderColor = "rgba(232, 194, 122, 0.48)";
+                      e.currentTarget.style.background =
+                        "linear-gradient(145deg, rgba(199, 69, 52, 0.96), rgba(112, 58, 30, 0.96))";
+                      e.currentTarget.style.borderColor = "rgba(232, 194, 122, 0.54)";
+                      e.currentTarget.style.boxShadow =
+                        "0 10px 24px rgba(0, 0, 0, 0.28), inset 0 1px 0 rgba(255, 247, 236, 0.16)";
                     }}
                     onMouseLeave={(e) => {
-                      e.currentTarget.style.borderColor = "rgba(232, 194, 122, 0.28)";
+                      e.currentTarget.style.background =
+                        "linear-gradient(145deg, rgba(177, 52, 42, 0.92), rgba(91, 43, 26, 0.92))";
+                      e.currentTarget.style.borderColor = "rgba(232, 194, 122, 0.36)";
+                      e.currentTarget.style.boxShadow =
+                        "0 8px 20px rgba(0, 0, 0, 0.24), inset 0 1px 0 rgba(255, 247, 236, 0.12)";
                     }}
                     title={displayName || ""}
                   >
@@ -439,7 +477,33 @@ export const MiniNavbar = () => {
             ) : (
               <>
                 {/* Language switcher */}
-                <LanguageSwitcher variant="navbarIcon" />
+                <div
+                  className="rounded-full transition-all duration-200"
+                  style={{
+                    background:
+                      "linear-gradient(180deg, rgba(255, 247, 236, 0.075), rgba(24, 14, 12, 0.42))",
+                    border: "1px solid rgba(232, 194, 122, 0.24)",
+                    boxShadow:
+                      "0 8px 20px rgba(0, 0, 0, 0.22), inset 0 1px 0 rgba(255, 247, 236, 0.08)",
+                    backdropFilter: "blur(14px)",
+                  }}
+                  onMouseEnter={(e) => {
+                    e.currentTarget.style.background =
+                      "linear-gradient(180deg, rgba(232, 194, 122, 0.12), rgba(35, 18, 13, 0.50))";
+                    e.currentTarget.style.borderColor = "rgba(232, 194, 122, 0.38)";
+                    e.currentTarget.style.boxShadow =
+                      "0 10px 24px rgba(0, 0, 0, 0.26), inset 0 1px 0 rgba(255, 247, 236, 0.12)";
+                  }}
+                  onMouseLeave={(e) => {
+                    e.currentTarget.style.background =
+                      "linear-gradient(180deg, rgba(255, 247, 236, 0.075), rgba(24, 14, 12, 0.42))";
+                    e.currentTarget.style.borderColor = "rgba(232, 194, 122, 0.24)";
+                    e.currentTarget.style.boxShadow =
+                      "0 8px 20px rgba(0, 0, 0, 0.22), inset 0 1px 0 rgba(255, 247, 236, 0.08)";
+                  }}
+                >
+                  <LanguageSwitcher variant="navbarIcon" />
+                </div>
 
                 {/* Login button */}
                 <Link
