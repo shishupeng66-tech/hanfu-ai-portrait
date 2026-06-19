@@ -9,6 +9,7 @@ import { cn } from "@/lib/utils";
 
 export const MiniNavbar = () => {
   const locale = useLocale();
+  const isZh = locale === "zh";
   const [isAtTop, setIsAtTop] = useState(true);
 
   useEffect(() => {
@@ -69,15 +70,19 @@ export const MiniNavbar = () => {
               />
               <div className="absolute inset-0 rounded-full bg-gradient-to-r from-[#E8C27A]/10 to-[#B7352D]/10 blur-[2px]"></div>
             </div>
-            <span>
-              <span style={{ color: "#FFF7EC" }}>Han</span>
-              <span style={{ 
-                background: "linear-gradient(90deg, #E8C27A 0%, #C99A3C 100%)",
-                WebkitBackgroundClip: "text",
-                WebkitTextFillColor: "transparent",
-                backgroundClip: "text"
-              }}>Portrait</span>
-            </span>
+            {isZh ? (
+              <span style={{ color: "#E8C27A" }}>汉韵写真</span>
+            ) : (
+              <span>
+                <span style={{ color: "#FFF7EC" }}>Han</span>
+                <span style={{ 
+                  background: "linear-gradient(90deg, #E8C27A 0%, #C99A3C 100%)",
+                  WebkitBackgroundClip: "text",
+                  WebkitTextFillColor: "transparent",
+                  backgroundClip: "text"
+                }}>Portrait</span>
+              </span>
+            )}
           </LocaleLink>
 
           {/* Navigation Links */}
@@ -104,7 +109,7 @@ export const MiniNavbar = () => {
                 e.currentTarget.style.color = "rgba(255, 247, 236, 0.78)";
               }}
             >
-              Templates <span style={{ marginLeft: "6px", opacity: 0.55 }}>⌄</span>
+              {isZh ? "模板" : "Templates"} <span style={{ marginLeft: "6px", opacity: 0.55 }}>⌄</span>
             </LocaleLink>
             <LocaleLink
               href="/#how-it-works"
@@ -128,7 +133,7 @@ export const MiniNavbar = () => {
                 e.currentTarget.style.color = "rgba(255, 247, 236, 0.78)";
               }}
             >
-              Guide <span style={{ marginLeft: "6px", opacity: 0.55 }}>⌄</span>
+              {isZh ? "指南" : "Guide"} <span style={{ marginLeft: "6px", opacity: 0.55 }}>⌄</span>
             </LocaleLink>
             <LocaleLink
               href="/#pricing"
@@ -152,7 +157,7 @@ export const MiniNavbar = () => {
                 e.currentTarget.style.color = "rgba(255, 247, 236, 0.78)";
               }}
             >
-              Pricing <span style={{ marginLeft: "6px", opacity: 0.55 }}>⌄</span>
+              {isZh ? "价格" : "Pricing"} <span style={{ marginLeft: "6px", opacity: 0.55 }}>⌄</span>
             </LocaleLink>
           </nav>
 
@@ -171,7 +176,7 @@ export const MiniNavbar = () => {
                 border: "1px solid rgba(232, 194, 122, 0.22)",
               }}
             >
-              Credits: <span style={{ color: "#E8C27A", marginLeft: "4px" }}>12</span>
+              {isZh ? "积分:" : "Credits:"} <span style={{ color: "#E8C27A", marginLeft: "4px" }}>12</span>
             </div>
             <LanguageSwitcher variant="navbarIcon" />
             <Link
