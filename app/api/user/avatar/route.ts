@@ -1,7 +1,4 @@
 import { NextRequest, NextResponse } from "next/server";
-import { db } from "@/lib/db";
-import { user as userTable } from "@/lib/db/schema";
-import { eq } from "drizzle-orm";
 import { getActiveSessionUser } from "@/lib/auth/session";
 import { getErrorMessage } from "@/lib/error-utils";
 import { uploadToR2, isR2Configured } from "@/lib/r2";
@@ -76,31 +73,7 @@ export async function POST(req: NextRequest) {
       imageUrl = `data:${file.type};base64,${buffer.toString("base64")}`;
     }
 
-    // Update user image in database
-    const updatedUsers = await db
-      .update(userTable)
-      .set({ image: imageUrl, updatedAt: new Date() })
-      .where(eq(userTable.id, userId))
-      .returning({
-        id: userTable.id,
-        name: userTable.name,
-        email: userTable.email,
-        emailVerified: userTable.emailVerified,
-        image: userTable.image,
-        credits: userTable.credits,
-        createdAt: userTable.createdAt,
-      });
-
-    const updatedUser = updatedUsers[0];
-
-    if (!updatedUser) {
-      return NextResponse.json(
-        { error: "User not found" },
-        { status: 404 }
-      );
-    }
-
-    return NextResponse.json({ user: updatedUser });
+    return NextResponse.json({ url: imageUrl });
   } catch (error: unknown) {
     console.error("Avatar upload error:", error);
     return NextResponse.json(

@@ -5,7 +5,7 @@ import { motion } from "framer-motion";
 import Image from "next/image";
 import { useLocale, useTranslations } from "next-intl";
 import { useRouter } from "next/navigation";
-import { signOut, useSession } from "@/lib/auth-client";
+import { signOut, useSession, authClient } from "@/lib/auth-client";
 import { Background } from "@/components/background";
 import { Button } from "@/components/button";
 import { Container } from "@/components/container";
@@ -85,27 +85,42 @@ export default function SettingsPage() {
       const formData = new FormData();
       formData.append("file", file);
 
-      const response = await fetch("/api/user/avatar", {
+      // Step 1: Upload image to R2
+      const uploadResponse = await fetch("/api/user/avatar", {
         method: "POST",
         body: formData,
       });
 
-      const data = await response.json();
+      const uploadData = await uploadResponse.json();
 
-      if (!response.ok) {
+      if (!uploadResponse.ok) {
         throw new Error(
-          getApiErrorMessage(data, t("sections.profile.avatarUploadError"))
+          getApiErrorMessage(
+            uploadData,
+            t("sections.profile.avatarUploadError")
+          )
         );
       }
 
+      const imageUrl = uploadData.url as string;
+
+      // Step 2: Update user profile via Better Auth (syncs session automatically)
+      const { error: updateError } = await authClient.updateUser({
+        image: imageUrl,
+      });
+
+      if (updateError) {
+        throw new Error(updateError.message || t("sections.profile.avatarUploadError"));
+      }
+
+      // Step 3: Force refetch session so all components (e.g. navbar) see the update
+      await session.refetch();
+
+      // Step 4: Update local state
       setUserProfile((previous) =>
         previous
-          ? {
-              ...previous,
-              ...data.user,
-              subscription: previous.subscription ?? null,
-            }
-          : data.user
+          ? { ...previous, image: imageUrl }
+          : null
       );
       setAvatarSaveState({
         type: "success",
