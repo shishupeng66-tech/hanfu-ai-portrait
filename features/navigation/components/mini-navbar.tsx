@@ -4,7 +4,6 @@ import { useState, useEffect, useRef } from "react";
 import { LocaleLink } from "@/components/locale-link";
 import { LanguageSwitcher } from "@/components/language-switcher";
 import { useLocale } from "next-intl";
-import Image from "next/image";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
 import { cn } from "@/lib/utils";
@@ -249,13 +248,11 @@ export const MiniNavbar = () => {
                     <div className="flex h-11 w-11 items-center justify-center rounded-full bg-[rgba(232,194,122,0.08)] transition-colors duration-200 group-hover:bg-[rgba(232,194,122,0.16)]">
                       <div className="relative flex h-[38px] w-[38px] items-center justify-center overflow-hidden rounded-full bg-[radial-gradient(circle_at_30%_30%,rgba(255,210,160,0.92),rgba(190,80,40,0.88)_45%,rgba(80,25,18,0.95)_100%)] text-sm font-semibold text-[#FFF7EC] transition-[filter] duration-200 group-hover:brightness-[1.02]">
                         {user?.image ? (
-                          <Image
+                          // eslint-disable-next-line @next/next/no-img-element
+                          <img
                             src={user.image}
                             alt={displayName || "User avatar"}
-                            fill
-                            sizes="38px"
-                            className="object-cover"
-                            unoptimized
+                            className="block h-full w-full rounded-full object-cover"
                           />
                         ) : (
                           initial
@@ -313,24 +310,16 @@ export const MiniNavbar = () => {
                         >
                           {user?.image ? (
                             <span className="absolute inset-0 overflow-hidden rounded-full">
-                              <Image
+                              {/* eslint-disable-next-line @next/next/no-img-element */}
+                              <img
                                 src={user.image}
                                 alt={displayName || "User avatar"}
-                                fill
-                                sizes="40px"
-                                className="object-cover"
-                                unoptimized
+                                className="h-full w-full object-cover"
                               />
                             </span>
                           ) : (
                             initial
                           )}
-                          <span
-                            className="absolute -bottom-1 -right-1 flex h-4 w-4 items-center justify-center rounded-full border border-[rgba(232,194,122,0.30)] bg-[rgba(24,14,12,0.96)] text-[9px] font-semibold text-[#E8C27A]"
-                            style={{ lineHeight: 1 }}
-                          >
-                            ✎
-                          </span>
                         </div>
                         <div className="min-w-0 flex-1">
                           <div
