@@ -252,6 +252,14 @@ export default function SettingsPage() {
           className="mx-auto max-w-5xl"
         >
           <div className="mb-12">
+            <button
+              type="button"
+              onClick={() => router.back()}
+              className="mb-6 inline-flex items-center gap-2 text-sm text-muted-foreground transition-colors hover:text-foreground"
+            >
+              <span aria-hidden>←</span>
+              {tCommon("actions.back")}
+            </button>
             <h1 className="mb-4 text-4xl font-bold text-foreground md:text-6xl">
               {t("title")}
             </h1>
