@@ -1,7 +1,8 @@
 "use client";
 
-import { useCallback, useEffect, useState } from "react";
+import { useCallback, useEffect, useRef, useState } from "react";
 import { motion } from "framer-motion";
+import Image from "next/image";
 import { useLocale, useTranslations } from "next-intl";
 import { useRouter } from "next/navigation";
 import { signOut, useSession } from "@/lib/auth-client";
@@ -12,6 +13,7 @@ import {
   getSubscriptionPlanTranslationKey,
   normalizeProfileName,
 } from "@/lib/account-settings";
+import { getApiErrorMessage } from "@/lib/error-utils";
 
 type UserProfile = {
   id: string;
@@ -48,6 +50,9 @@ export default function SettingsPage() {
   const [loading, setLoading] = useState(true);
   const [isSaving, setIsSaving] = useState(false);
   const [saveState, setSaveState] = useState<SaveState>(null);
+  const [isUploadingAvatar, setIsUploadingAvatar] = useState(false);
+  const [avatarSaveState, setAvatarSaveState] = useState<SaveState>(null);
+  const fileInputRef = useRef<HTMLInputElement>(null);
 
   const fetchUserProfile = useCallback(async () => {
     try {
@@ -71,6 +76,64 @@ export default function SettingsPage() {
       fetchUserProfile();
     }
   }, [fetchUserProfile, session.data?.user?.id]);
+
+  const handleAvatarChange = async (file: File) => {
+    setIsUploadingAvatar(true);
+    setAvatarSaveState(null);
+
+    try {
+      const formData = new FormData();
+      formData.append("file", file);
+
+      const response = await fetch("/api/user/avatar", {
+        method: "POST",
+        body: formData,
+      });
+
+      const data = await response.json();
+
+      if (!response.ok) {
+        throw new Error(
+          getApiErrorMessage(data, t("sections.profile.avatarUploadError"))
+        );
+      }
+
+      setUserProfile((previous) =>
+        previous
+          ? {
+              ...previous,
+              ...data.user,
+              subscription: previous.subscription ?? null,
+            }
+          : data.user
+      );
+      setAvatarSaveState({
+        type: "success",
+        message: t("sections.profile.avatarUploadSuccess"),
+      });
+      router.refresh();
+    } catch (error) {
+      setAvatarSaveState({
+        type: "error",
+        message:
+          error instanceof Error
+            ? error.message
+            : t("sections.profile.avatarUploadError"),
+      });
+    } finally {
+      setIsUploadingAvatar(false);
+    }
+  };
+
+  const handleAvatarFileInput = (
+    event: React.ChangeEvent<HTMLInputElement>
+  ) => {
+    const file = event.target.files?.[0];
+    if (file) {
+      void handleAvatarChange(file);
+    }
+    event.target.value = "";
+  };
 
   const handleSaveProfile = async () => {
     const normalizedName = normalizeProfileName(name);
@@ -136,6 +199,11 @@ export default function SettingsPage() {
   };
 
   const displayUser = userProfile ?? session.data?.user;
+  const initial = displayUser?.name
+    ? displayUser.name.charAt(0).toUpperCase()
+    : displayUser?.email
+      ? displayUser.email.charAt(0).toUpperCase()
+      : "U";
   const currentPlanKey = getSubscriptionPlanTranslationKey(
     userProfile?.subscription?.planKey
   );
@@ -205,7 +273,70 @@ export default function SettingsPage() {
                 {t("sections.profile.description")}
               </p>
 
-              <div className="mt-6 space-y-4">
+              <div className="mt-6 space-y-5">
+                {/* Avatar upload */}
+                <div>
+                  <label className="mb-3 block text-sm font-medium text-card-foreground">
+                    {t("sections.profile.avatarLabel")}
+                  </label>
+                  <div className="flex items-center gap-5">
+                    <div className="relative h-20 w-20 flex-shrink-0 overflow-hidden rounded-full bg-gradient-to-br from-[rgba(255,210,160,0.92)] via-[rgba(190,80,40,0.88)] to-[rgba(80,25,18,0.95)] ring-2 ring-[rgba(232,194,122,0.18)]">
+                      {displayUser?.image ? (
+                        <Image
+                          src={displayUser.image}
+                          alt={displayUser.name || "Avatar"}
+                          fill
+                          sizes="80px"
+                          className="object-cover"
+                          unoptimized
+                        />
+                      ) : (
+                        <div className="flex h-full w-full items-center justify-center text-xl font-semibold text-[#FFF7EC]">
+                          {initial}
+                        </div>
+                      )}
+                      {isUploadingAvatar && (
+                        <div className="absolute inset-0 flex items-center justify-center bg-black/40 text-xs font-medium text-white">
+                          ...
+                        </div>
+                      )}
+                    </div>
+                    <div className="flex flex-col gap-2">
+                      <input
+                        ref={fileInputRef}
+                        type="file"
+                        accept="image/jpeg,image/png,image/webp"
+                        className="hidden"
+                        onChange={handleAvatarFileInput}
+                      />
+                      <Button
+                        variant="outline"
+                        size="sm"
+                        onClick={() => fileInputRef.current?.click()}
+                        disabled={isUploadingAvatar}
+                      >
+                        {isUploadingAvatar
+                          ? t("sections.profile.avatarUploading")
+                          : t("sections.profile.avatarChange")}
+                      </Button>
+                      <p className="text-xs text-muted-foreground">
+                        {t("sections.profile.avatarHint")}
+                      </p>
+                    </div>
+                  </div>
+                  {avatarSaveState && (
+                    <div
+                      className={`mt-3 rounded-xl border px-3 py-2 text-xs ${
+                        avatarSaveState.type === "success"
+                          ? "border-green-500/30 bg-green-500/10 text-green-600"
+                          : "border-destructive/30 bg-destructive/10 text-destructive"
+                      }`}
+                    >
+                      {avatarSaveState.message}
+                    </div>
+                  )}
+                </div>
+
                 <div>
                   <label
                     htmlFor="settings-name"

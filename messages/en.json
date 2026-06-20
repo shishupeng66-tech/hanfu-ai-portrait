@@ -1198,7 +1198,13 @@
     "sections": {
       "profile": {
         "title": "Profile",
-        "description": "Update the name shown across your workspace.",
+        "description": "Update the avatar and name shown across your workspace.",
+        "avatarLabel": "Avatar",
+        "avatarChange": "Change avatar",
+        "avatarUploading": "Uploading...",
+        "avatarUploadSuccess": "Avatar updated.",
+        "avatarUploadError": "Failed to upload avatar. Please try again.",
+        "avatarHint": "JPG, PNG, or WebP, max 2MB",
         "nameLabel": "Display name",
         "namePlaceholder": "Enter your name",
         "emailLabel": "Email address",
