@@ -436,7 +436,7 @@
   "pricing": {
     "title": "Pricing Plans",
     "subtitle": "Simple, transparent pricing that scales with your business",
-    "description": "Choose the membership plan or one-time credit pack that fits you. Memberships unlock premium portrait templates; credit packs only add generation credits.",
+    "description": "Choose a membership plan or a one-time credit pack. Membership unlocks premium portrait templates, while credit packs only add more generation credits.",
     "popular": "Popular",
     "recommended": "Recommended",
     "comingSoon": "Payments will be available soon",
@@ -446,7 +446,7 @@
     },
     "membership": {
       "basic": {
-        "name": "Member",
+        "name": "Plus",
         "price": "$9.9",
         "period": "/mo",
         "description": "For users who occasionally generate Hanfu portraits and want to unlock premium templates.",
@@ -457,10 +457,10 @@
           "Access to all standard templates",
           "Cancel anytime"
         ],
-        "cta": "Become a member"
+        "cta": "Get Plus"
       },
       "premium": {
-        "name": "Premium Member",
+        "name": "Pro",
         "price": "$19.9",
         "period": "/mo",
         "description": "For creators who want more styles and full portrait sets.",
@@ -472,10 +472,10 @@
           "Better rates on extra credits",
           "Cancel anytime"
         ],
-        "cta": "Choose Premium"
+        "cta": "Choose Pro"
       },
       "proPlus": {
-        "name": "Pro+ Annual",
+        "name": "Pro+",
         "price": "$199",
         "period": "/yr",
         "description": "For long-term creators with multiple shoots and frequent use.",
@@ -492,7 +492,7 @@
     },
     "packs": {
       "small": {
-        "name": "Small Pack",
+        "name": "Small Credit Pack",
         "price": "$5",
         "description": "For topping up credits without subscribing.",
         "features": [
@@ -505,7 +505,7 @@
         "cta": "Buy 5 credits"
       },
       "common": {
-        "name": "Standard Pack",
+        "name": "Popular Credit Pack",
         "price": "$19",
         "description": "Perfect for one full Hanfu portrait set.",
         "features": [
@@ -518,7 +518,7 @@
         "cta": "Buy 20 credits"
       },
       "large": {
-        "name": "Large Pack",
+        "name": "Large Credit Pack",
         "price": "$49",
         "description": "For batch generation and large style tests.",
         "features": [

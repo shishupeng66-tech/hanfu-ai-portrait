@@ -255,7 +255,7 @@ export function Pricing() {
     toast.info(t("comingSoon", { defaultValue: "支付功能即将上线" }));
   };
 
-  // 会员方案 3 张卡：basic 蓝、premium 绿主推、proPlus 粉
+  // 会员方案 3 张卡：Plus 蓝、Pro 绿主推、Pro+ 粉
   const membershipCards: CardConfig[] = [
     {
       key: "membership-basic",
@@ -300,7 +300,7 @@ export function Pricing() {
     },
   ];
 
-  // 点数包 3 张卡：small 蓝、common 绿主推、large 粉。不显示 /月 /年
+  // 积分包 3 张卡：small 蓝、common 绿主推、large 粉。不显示 /月 /年
   const packCards: CardConfig[] = [
     {
       key: "pack-small",
