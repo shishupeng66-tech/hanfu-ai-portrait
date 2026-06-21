@@ -171,7 +171,8 @@
         "cta": "选择专业版"
       },
       "footer": "查看完整定价详情",
-      "footerLink": "/pricing"
+      "footerLink": "/pricing",
+      "popular": "最受欢迎"
     },
     "testimonials": {
       "title": "全球汉服爱好者的热爱",
