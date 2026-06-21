@@ -3,7 +3,6 @@ import { Background } from "@/components/background";
 import { Heading } from "@/components/heading";
 import { Subheading } from "@/components/subheading";
 import { Pricing } from "@/components/pricing";
-import { PricingTable } from "./pricing-table";
 import { BackButton } from "./back-button";
 import { Companies } from "@/components/companies";
 import { Metadata } from "next";
@@ -43,9 +42,9 @@ export default async function PricingPage(
   return (
     <div className="relative overflow-hidden">
       <Background />
-      <Container className="flex flex-col items-center justify-between pb-12">
-        <div className="relative z-20 w-full pt-4 md:pt-6">
-          <div className="mb-4 flex justify-center md:justify-start">
+      <Container className="flex flex-col items-center justify-between pb-16">
+        <div className="relative z-20 w-full pt-7 md:pt-10">
+          <div className="mb-5 flex justify-center md:justify-start">
             <BackButton />
           </div>
           <Heading as="h1">{t('title')}</Heading>
@@ -54,7 +53,6 @@ export default async function PricingPage(
           </Subheading>
         </div>
         <Pricing />
-        <PricingTable />
         <Companies />
       </Container>
     </div>

@@ -368,6 +368,75 @@
       "perMonth": "/月",
       "perYear": "/年"
     },
+    "table": {
+      "rows": {
+        "purchaseType": "购买类型",
+        "price": "价格",
+        "billingCycle": "计费周期",
+        "creditsIncluded": "获得积分",
+        "premiumTemplates": "会员模板",
+        "newTemplates": "新模板权益",
+        "extraCreditDiscount": "额外积分优惠",
+        "subscription": "是否订阅",
+        "delivery": "到账方式",
+        "bestFor": "适合人群"
+      },
+      "membership": {
+        "basic": {
+          "purchaseType": "订阅",
+          "billingCycle": "每月",
+          "creditsIncluded": "每月 10 积分",
+          "premiumTemplates": "解锁会员专属模板",
+          "newTemplates": "普通更新",
+          "extraCreditDiscount": "无",
+          "bestFor": "偶尔生成汉服写真"
+        },
+        "premium": {
+          "purchaseType": "订阅",
+          "billingCycle": "每月",
+          "creditsIncluded": "每月 22 积分",
+          "premiumTemplates": "解锁全部会员模板",
+          "newTemplates": "优先体验新写真模板",
+          "extraCreditDiscount": "会员专属优惠",
+          "bestFor": "生成完整写真套图"
+        },
+        "proPlus": {
+          "purchaseType": "年卡订阅",
+          "billingCycle": "每年",
+          "creditsIncluded": "每年 260 积分",
+          "premiumTemplates": "解锁全部会员模板",
+          "newTemplates": "全年优先体验新模板",
+          "extraCreditDiscount": "会员专属优惠",
+          "bestFor": "长期创作和高频使用"
+        }
+      },
+      "packs": {
+        "small": {
+          "purchaseType": "一次性积分包",
+          "creditsIncluded": "5 积分",
+          "subscription": "否",
+          "premiumTemplates": "否",
+          "delivery": "支付成功后立即到账",
+          "bestFor": "临时补充积分"
+        },
+        "common": {
+          "purchaseType": "一次性积分包",
+          "creditsIncluded": "20 积分",
+          "subscription": "否",
+          "premiumTemplates": "否",
+          "delivery": "支付成功后立即到账",
+          "bestFor": "生成一组完整汉服写真"
+        },
+        "large": {
+          "purchaseType": "一次性积分包",
+          "creditsIncluded": "55 积分",
+          "subscription": "否",
+          "premiumTemplates": "否",
+          "delivery": "支付成功后立即到账",
+          "bestFor": "批量生成和多套风格测试"
+        }
+      }
+    },
     "comparison": {
       "title": "方案对比",
       "rows": {

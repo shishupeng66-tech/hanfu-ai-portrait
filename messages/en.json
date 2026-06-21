@@ -537,6 +537,75 @@
       "perMonth": "/mo",
       "perYear": "/yr"
     },
+    "table": {
+      "rows": {
+        "purchaseType": "Purchase type",
+        "price": "Price",
+        "billingCycle": "Billing cycle",
+        "creditsIncluded": "Credits included",
+        "premiumTemplates": "Premium templates",
+        "newTemplates": "New templates",
+        "extraCreditDiscount": "Extra credit discount",
+        "subscription": "Subscription",
+        "delivery": "Delivery",
+        "bestFor": "Best for"
+      },
+      "membership": {
+        "basic": {
+          "purchaseType": "Subscription",
+          "billingCycle": "Monthly",
+          "creditsIncluded": "10 credits monthly",
+          "premiumTemplates": "Member-only templates",
+          "newTemplates": "Regular updates",
+          "extraCreditDiscount": "Not included",
+          "bestFor": "Occasional Hanfu portraits"
+        },
+        "premium": {
+          "purchaseType": "Subscription",
+          "billingCycle": "Monthly",
+          "creditsIncluded": "22 credits monthly",
+          "premiumTemplates": "All premium templates",
+          "newTemplates": "Early access to new templates",
+          "extraCreditDiscount": "Member discount",
+          "bestFor": "Full portrait sets"
+        },
+        "proPlus": {
+          "purchaseType": "Annual subscription",
+          "billingCycle": "Yearly",
+          "creditsIncluded": "260 credits yearly",
+          "premiumTemplates": "All premium templates",
+          "newTemplates": "Year-round early access",
+          "extraCreditDiscount": "Member discount",
+          "bestFor": "Long-term and frequent creation"
+        }
+      },
+      "packs": {
+        "small": {
+          "purchaseType": "One-time credit pack",
+          "creditsIncluded": "5 credits",
+          "subscription": "No",
+          "premiumTemplates": "No",
+          "delivery": "Added instantly after payment",
+          "bestFor": "Quick top-ups"
+        },
+        "common": {
+          "purchaseType": "One-time credit pack",
+          "creditsIncluded": "20 credits",
+          "subscription": "No",
+          "premiumTemplates": "No",
+          "delivery": "Added instantly after payment",
+          "bestFor": "A complete Hanfu portrait set"
+        },
+        "large": {
+          "purchaseType": "One-time credit pack",
+          "creditsIncluded": "55 credits",
+          "subscription": "No",
+          "premiumTemplates": "No",
+          "delivery": "Added instantly after payment",
+          "bestFor": "Batch generation and multiple styles"
+        }
+      }
+    },
     "comparison": {
       "title": "Plan Comparison",
       "rows": {

@@ -6,6 +6,7 @@ import { useState } from "react";
 import { useTranslations } from "next-intl";
 import { toast } from "sonner";
 import { cn } from "@/lib/utils";
+import { PricingTable } from "@/app/[locale]/(marketing)/pricing/pricing-table";
 
 type TabValue = "membership" | "packs";
 
@@ -377,6 +378,9 @@ export function Pricing() {
           <PriceCard key={card.key} config={card} />
         ))}
       </div>
+
+      {/* Detailed comparison table follows the active tab */}
+      <PricingTable mode={active} />
     </div>
   );
 }
