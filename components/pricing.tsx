@@ -1,17 +1,13 @@
 "use client";
 
 import { motion } from "framer-motion";
-import { Check, Crown, Gem, Sparkles } from "lucide-react";
+import { Check, Crown, Gem, Sparkles, Coins, Package, ShoppingBag } from "lucide-react";
 import { useState } from "react";
 import { useTranslations } from "next-intl";
 import { toast } from "sonner";
 import { cn } from "@/lib/utils";
-import {
-  getDefaultOneTimePack,
-  getSubscriptionPlanDisplays,
-} from "@/lib/billing-display";
 
-type BillingTab = "monthly" | "yearly";
+type TabValue = "membership" | "packs";
 
 type CardColor = "blue" | "green" | "pink";
 
@@ -90,10 +86,12 @@ const text = {
   feature: "#3A3A3A",
 };
 
+type IconComponent = typeof Sparkles;
+
 type CardConfig = {
   key: string;
   color: CardColor;
-  Icon: typeof Sparkles;
+  Icon: IconComponent;
   name: string;
   price: string;
   period?: string;
@@ -242,86 +240,113 @@ function PriceCard({ config }: { config: CardConfig }) {
 }
 
 export function Pricing() {
-  const [active, setActive] = useState<BillingTab>("monthly");
+  const [active, setActive] = useState<TabValue>("membership");
   const t = useTranslations("pricing");
 
-  const subscriptionPlans = getSubscriptionPlanDisplays();
-  const defaultPack = getDefaultOneTimePack();
-
   const tabs = [
-    { name: t("billing.monthly"), value: "monthly" },
-    { name: t("billing.yearly"), value: "yearly" },
-  ] satisfies Array<{ name: string; value: BillingTab }>;
+    { name: t("tabs.membership"), value: "membership" as const },
+    { name: t("tabs.packs"), value: "packs" as const },
+  ];
 
-  // Temporary: 支付暂未上线，所有按钮统一弹 toast 提示。
-  // 真实 checkout 逻辑（/api/payments/creem/checkout + Creem 跳转）保留在 route 和 lib 里，
-  // 等 Creem 后台准备好新一批产品后再接回来。
+  // 支付暂未上线，所有按钮统一弹 toast。
+  // 真实 Creem checkout 逻辑保留在 /api/payments/creem/* 和 lib/payments/creem.ts，
+  // 等后台准备好新一批产品（6 个）后再接回来。
   const handlePurchaseClick = () => {
     toast.info(t("comingSoon", { defaultValue: "支付功能即将上线" }));
   };
 
-  // 给三张卡按位置分配颜色和图标：第一个订阅 → 蓝，第二个订阅（featured）→ 绿，点数包 → 粉
-  const subscriptionCards: CardConfig[] = subscriptionPlans.map((plan, idx) => {
-    const currentPrice =
-      active === "monthly"
-        ? plan.displayMonthlyPrice
-        : plan.displayYearlyPrice;
-    const currentCredits =
-      active === "monthly"
-        ? plan.displayMonthlyCredits
-        : plan.displayYearlyCredits;
-    const creditSummary =
-      active === "monthly"
-        ? t("details.monthlyCredits", { credits: currentCredits })
-        : t("details.yearlyCredits", { credits: currentCredits });
-
-    const planFeatures = (t.raw(`tiers.${plan.id}.features`) as string[]) ?? [];
-    const allFeatures = [creditSummary, ...planFeatures];
-
-    const color: CardColor = plan.featured ? "green" : idx === 0 ? "blue" : "pink";
-    const Icon = plan.featured ? Crown : idx === 0 ? Sparkles : Gem;
-
-    return {
-      key: plan.id,
-      color,
-      Icon,
-      name: t(`tiers.${plan.id}.name`),
-      price: currentPrice,
-      period:
-        active === "monthly"
-          ? t("billing.perMonth", { defaultValue: "" })
-          : t("billing.perYear", { defaultValue: "" }),
-      description: t(`tiers.${plan.id}.description`),
-      features: allFeatures,
-      cta: t(`tiers.${plan.id}.cta`),
+  // 会员方案 3 张卡：basic 蓝、premium 绿主推、proPlus 粉
+  const membershipCards: CardConfig[] = [
+    {
+      key: "membership-basic",
+      color: "blue",
+      Icon: Sparkles,
+      name: t("membership.basic.name"),
+      price: t("membership.basic.price"),
+      period: t("membership.basic.period"),
+      description: t("membership.basic.description"),
+      features: t.raw("membership.basic.features") as string[],
+      cta: t("membership.basic.cta"),
       onClick: handlePurchaseClick,
-      featured: plan.featured,
-      badgeText: plan.featured ? t("popular", { defaultValue: "最受欢迎" }) : undefined,
-      animKey: `${plan.id}-${active}`,
-    };
-  });
+      animKey: "membership-basic",
+    },
+    {
+      key: "membership-premium",
+      color: "green",
+      Icon: Crown,
+      name: t("membership.premium.name"),
+      price: t("membership.premium.price"),
+      period: t("membership.premium.period"),
+      description: t("membership.premium.description"),
+      features: t.raw("membership.premium.features") as string[],
+      cta: t("membership.premium.cta"),
+      onClick: handlePurchaseClick,
+      featured: true,
+      badgeText: t("popular"),
+      animKey: "membership-premium",
+    },
+    {
+      key: "membership-proplus",
+      color: "pink",
+      Icon: Gem,
+      name: t("membership.proPlus.name"),
+      price: t("membership.proPlus.price"),
+      period: t("membership.proPlus.period"),
+      description: t("membership.proPlus.description"),
+      features: t.raw("membership.proPlus.features") as string[],
+      cta: t("membership.proPlus.cta"),
+      onClick: handlePurchaseClick,
+      animKey: "membership-proplus",
+    },
+  ];
 
-  const creditsCard: CardConfig = {
-    key: "credits-pack",
-    color: "pink",
-    Icon: Gem,
-    name: t("tiers.credits.name"),
-    price: defaultPack.displayPrice,
-    description: t("tiers.credits.description"),
-    features: [
-      t("details.oneTimeCredits", { credits: defaultPack.displayCredits }),
-      ...((t.raw("tiers.credits.features") as string[]) ?? []),
-    ],
-    cta: t("tiers.credits.cta", { credits: defaultPack.displayCredits }),
-    onClick: handlePurchaseClick,
-    animKey: `credits-pack-${defaultPack.key}`,
-  };
+  // 点数包 3 张卡：small 蓝、common 绿主推、large 粉。不显示 /月 /年
+  const packCards: CardConfig[] = [
+    {
+      key: "pack-small",
+      color: "blue",
+      Icon: Coins,
+      name: t("packs.small.name"),
+      price: t("packs.small.price"),
+      description: t("packs.small.description"),
+      features: t.raw("packs.small.features") as string[],
+      cta: t("packs.small.cta"),
+      onClick: handlePurchaseClick,
+      animKey: "pack-small",
+    },
+    {
+      key: "pack-common",
+      color: "green",
+      Icon: Package,
+      name: t("packs.common.name"),
+      price: t("packs.common.price"),
+      description: t("packs.common.description"),
+      features: t.raw("packs.common.features") as string[],
+      cta: t("packs.common.cta"),
+      onClick: handlePurchaseClick,
+      featured: true,
+      badgeText: t("recommended"),
+      animKey: "pack-common",
+    },
+    {
+      key: "pack-large",
+      color: "pink",
+      Icon: ShoppingBag,
+      name: t("packs.large.name"),
+      price: t("packs.large.price"),
+      description: t("packs.large.description"),
+      features: t.raw("packs.large.features") as string[],
+      cta: t("packs.large.cta"),
+      onClick: handlePurchaseClick,
+      animKey: "pack-large",
+    },
+  ];
 
-  const allCards: CardConfig[] = [...subscriptionCards, creditsCard];
+  const activeCards = active === "membership" ? membershipCards : packCards;
 
   return (
     <div className="relative w-full">
-      {/* Billing tabs */}
+      {/* Top tabs: Membership / Packs */}
       <div className="mx-auto mb-10 flex w-fit items-center justify-center overflow-hidden rounded-full border border-black/5 bg-white p-1 shadow-sm">
         {tabs.map((tab) => (
           <button
@@ -348,7 +373,7 @@ export function Pricing() {
 
       {/* Cards */}
       <div className="relative z-20 mx-auto grid max-w-6xl grid-cols-1 items-stretch gap-6 md:grid-cols-2 lg:grid-cols-3 lg:gap-8">
-        {allCards.map((card) => (
+        {activeCards.map((card) => (
           <PriceCard key={card.key} config={card} />
         ))}
       </div>

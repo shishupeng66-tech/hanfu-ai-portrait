@@ -436,9 +436,101 @@
   "pricing": {
     "title": "Pricing Plans",
     "subtitle": "Simple, transparent pricing that scales with your business",
-    "description": "Choose between live recurring subscriptions and a one-time credit top-up. Every price on this page is driven directly from the billing config used at checkout.",
+    "description": "Choose the membership plan or one-time credit pack that fits you. Memberships unlock premium portrait templates; credit packs only add generation credits.",
     "popular": "Popular",
+    "recommended": "Recommended",
     "comingSoon": "Payments will be available soon",
+    "tabs": {
+      "membership": "Membership",
+      "packs": "Credit Packs"
+    },
+    "membership": {
+      "basic": {
+        "name": "Member",
+        "price": "$9.9",
+        "period": "/mo",
+        "description": "For users who occasionally generate Hanfu portraits and want to unlock premium templates.",
+        "features": [
+          "10 credits every month",
+          "1 credit = 1 generated image",
+          "Unlock member-exclusive templates",
+          "Access to all standard templates",
+          "Cancel anytime"
+        ],
+        "cta": "Become a member"
+      },
+      "premium": {
+        "name": "Premium Member",
+        "price": "$19.9",
+        "period": "/mo",
+        "description": "For creators who want more styles and full portrait sets.",
+        "features": [
+          "22 credits every month",
+          "1 credit = 1 generated image",
+          "Unlock every member template",
+          "Early access to new templates",
+          "Better rates on extra credits",
+          "Cancel anytime"
+        ],
+        "cta": "Choose Premium"
+      },
+      "proPlus": {
+        "name": "Pro+ Annual",
+        "price": "$199",
+        "period": "/yr",
+        "description": "For long-term creators with multiple shoots and frequent use.",
+        "features": [
+          "260 credits every year",
+          "1 credit = 1 generated image",
+          "Unlock every member template",
+          "Year-round early access to new templates",
+          "Member-only credit discounts",
+          "About 12 months for the price of 10"
+        ],
+        "cta": "Choose Pro+"
+      }
+    },
+    "packs": {
+      "small": {
+        "name": "Small Pack",
+        "price": "$5",
+        "description": "For topping up credits without subscribing.",
+        "features": [
+          "Get 5 credits one-time",
+          "1 credit = 1 generated image",
+          "Use standard templates",
+          "Credited instantly after payment",
+          "No auto-renewal"
+        ],
+        "cta": "Buy 5 credits"
+      },
+      "common": {
+        "name": "Standard Pack",
+        "price": "$19",
+        "description": "Perfect for one full Hanfu portrait set.",
+        "features": [
+          "Get 20 credits one-time",
+          "1 credit = 1 generated image",
+          "Great for trying multiple styles",
+          "Credited instantly after payment",
+          "No auto-renewal"
+        ],
+        "cta": "Buy 20 credits"
+      },
+      "large": {
+        "name": "Large Pack",
+        "price": "$49",
+        "description": "For batch generation and large style tests.",
+        "features": [
+          "Get 55 credits one-time",
+          "6 bonus credits over standard rate",
+          "Great for high-volume generation",
+          "Credited instantly after payment",
+          "No auto-renewal"
+        ],
+        "cta": "Buy 55 credits"
+      }
+    },
     "billing": {
       "monthly": "Monthly",
       "yearly": "Yearly",
