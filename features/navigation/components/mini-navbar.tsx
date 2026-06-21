@@ -235,65 +235,6 @@ export const MiniNavbar = () => {
                 <CreditsBadge credits={12} locale={locale} />
 
                 {/* Avatar + dropdown */}
-                <style>{`
-                  .mini-navbar-avatar-button {
-                    height: 40px;
-                    width: 40px;
-                    display: inline-flex;
-                    align-items: center;
-                    justify-content: center;
-                    padding: 0;
-                    border-radius: 999px;
-                    border: 1px solid rgba(232, 194, 122, 0.12);
-                    background: rgba(232, 194, 122, 0.06);
-                    cursor: pointer;
-                    transition: background-color 180ms ease, border-color 180ms ease;
-                  }
-
-                  .mini-navbar-avatar-button:hover {
-                    border-color: rgba(232, 194, 122, 0.32);
-                    background: rgba(232, 194, 122, 0.12);
-                  }
-
-                  .mini-navbar-avatar-frame {
-                    height: 34px;
-                    width: 34px;
-                    display: block;
-                    flex-shrink: 0;
-                    box-sizing: border-box;
-                    padding: 2px;
-                    border-radius: 999px;
-                    background: linear-gradient(135deg, rgba(232, 194, 122, 0.28), rgba(232, 194, 122, 0.08));
-                    transition: background 180ms ease, filter 180ms ease;
-                  }
-
-                  .mini-navbar-avatar-button:hover .mini-navbar-avatar-frame {
-                    background: linear-gradient(135deg, rgba(232, 194, 122, 0.72), rgba(232, 194, 122, 0.2));
-                    filter: brightness(1.02);
-                  }
-
-                  .mini-navbar-avatar-image {
-                    height: 100%;
-                    width: 100%;
-                    display: flex;
-                    align-items: center;
-                    justify-content: center;
-                    overflow: hidden;
-                    border-radius: 999px;
-                    background: radial-gradient(circle at 30% 30%, rgba(255, 210, 160, 0.92), rgba(190, 80, 40, 0.88) 45%, rgba(80, 25, 18, 0.95) 100%);
-                    color: #FFF7EC;
-                    font-size: 12px;
-                    font-weight: 600;
-                    line-height: 1;
-                  }
-
-                  .mini-navbar-avatar-image img {
-                    height: 100%;
-                    width: 100%;
-                    display: block;
-                    object-fit: cover;
-                  }
-                `}</style>
                 <div className="relative" ref={menuRef}>
                   <button
                     type="button"
@@ -301,19 +242,23 @@ export const MiniNavbar = () => {
                       e.stopPropagation();
                       setIsMenuOpen((v) => !v);
                     }}
-                    className="mini-navbar-avatar-button"
+                    className="group flex h-12 w-12 cursor-pointer items-center justify-center rounded-full bg-[rgba(232,194,122,0.12)] transition-colors duration-200 hover:bg-[rgba(232,194,122,0.18)]"
                     title={displayName || ""}
                   >
-                    <span className="mini-navbar-avatar-frame">
-                      <span className="mini-navbar-avatar-image">
+                    <div className="flex h-11 w-11 items-center justify-center rounded-full bg-[rgba(232,194,122,0.08)] transition-colors duration-200 group-hover:bg-[rgba(232,194,122,0.16)]">
+                      <div className="relative flex h-[38px] w-[38px] items-center justify-center overflow-hidden rounded-full bg-[radial-gradient(circle_at_30%_30%,rgba(255,210,160,0.92),rgba(190,80,40,0.88)_45%,rgba(80,25,18,0.95)_100%)] text-sm font-semibold text-[#FFF7EC] transition-[filter] duration-200 group-hover:brightness-[1.02]">
                         {user?.image ? (
                           // eslint-disable-next-line @next/next/no-img-element
-                          <img src={user.image} alt={displayName || "User avatar"} />
+                          <img
+                            src={user.image}
+                            alt={displayName || "User avatar"}
+                            className="block h-full w-full rounded-full object-cover"
+                          />
                         ) : (
                           initial
                         )}
-                      </span>
-                    </span>
+                      </div>
+                    </div>
                   </button>
 
                   {/* Dropdown menu */}
