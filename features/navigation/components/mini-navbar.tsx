@@ -1,6 +1,6 @@
 "use client";
 
-import { useState, useEffect, useRef } from "react";
+import { useState, useEffect, useRef, type MouseEvent } from "react";
 import { AnimatePresence, motion } from "framer-motion";
 import { LocaleLink } from "@/components/locale-link";
 import { LanguageSwitcher } from "@/components/language-switcher";
@@ -65,6 +65,18 @@ export const MiniNavbar = () => {
     await signOut();
     router.refresh();
     router.push(`/${locale}`);
+  };
+
+  const handleAnchorClick = (
+    e: MouseEvent<HTMLAnchorElement>,
+    id: string
+  ) => {
+    const section = document.getElementById(id);
+    if (!section) return;
+
+    e.preventDefault();
+    window.history.pushState(null, "", `/${locale}#${id}`);
+    section.scrollIntoView({ behavior: "smooth", block: "start" });
   };
 
   const user = session.data?.user;
@@ -142,6 +154,7 @@ export const MiniNavbar = () => {
           <nav className="flex items-center" aria-label="Primary navigation" style={{ marginLeft: 42, gap: 12 }}>
             <LocaleLink
               href="/#hanfu-styles"
+              onClick={(e) => handleAnchorClick(e, "hanfu-styles")}
               className="flex items-center justify-center rounded-full transition-all duration-200"
               style={{
                 height: 36,
@@ -170,6 +183,7 @@ export const MiniNavbar = () => {
             </LocaleLink>
             <LocaleLink
               href="/#how-it-works"
+              onClick={(e) => handleAnchorClick(e, "how-it-works")}
               className="flex items-center justify-center rounded-full transition-all duration-200"
               style={{
                 height: 36,
@@ -198,6 +212,7 @@ export const MiniNavbar = () => {
             </LocaleLink>
             <LocaleLink
               href="/#pricing"
+              onClick={(e) => handleAnchorClick(e, "pricing")}
               className="flex items-center justify-center rounded-full transition-all duration-200"
               style={{
                 height: 36,
