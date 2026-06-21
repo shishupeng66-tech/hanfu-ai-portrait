@@ -1,6 +1,7 @@
 "use client";
 
 import { useState, useEffect, useRef } from "react";
+import { AnimatePresence, motion } from "framer-motion";
 import { LocaleLink } from "@/components/locale-link";
 import { LanguageSwitcher } from "@/components/language-switcher";
 import { useLocale } from "next-intl";
@@ -17,6 +18,7 @@ export const MiniNavbar = () => {
   const router = useRouter();
   const [isAtTop, setIsAtTop] = useState(true);
   const [isMenuOpen, setIsMenuOpen] = useState(false);
+  const [isAvatarHovered, setIsAvatarHovered] = useState(false);
   const session = useSession();
   const isLoggedIn = !!session.data?.user;
   const menuRef = useRef<HTMLDivElement>(null);
@@ -242,11 +244,18 @@ export const MiniNavbar = () => {
                       e.stopPropagation();
                       setIsMenuOpen((v) => !v);
                     }}
-                    className="group flex h-12 w-12 cursor-pointer items-center justify-center rounded-full bg-[rgba(232,194,122,0.12)] transition-colors duration-200 hover:bg-[rgba(232,194,122,0.18)]"
+                    onMouseEnter={() => setIsAvatarHovered(true)}
+                    onMouseLeave={() => setIsAvatarHovered(false)}
+                    className="group relative flex h-12 w-12 cursor-pointer items-center justify-center rounded-full bg-[rgba(232,194,122,0.12)] transition-colors duration-200 hover:bg-[rgba(232,194,122,0.18)]"
                     title={displayName || ""}
                   >
-                    <div className="flex h-11 w-11 items-center justify-center rounded-full bg-[rgba(232,194,122,0.08)] transition-colors duration-200 group-hover:bg-[rgba(232,194,122,0.16)]">
-                      <div className="relative flex h-[38px] w-[38px] items-center justify-center overflow-hidden rounded-full bg-[radial-gradient(circle_at_30%_30%,rgba(255,210,160,0.92),rgba(190,80,40,0.88)_45%,rgba(80,25,18,0.95)_100%)] text-sm font-semibold text-[#FFF7EC] transition-[filter] duration-200 group-hover:brightness-[1.02]">
+                    <motion.div
+                      whileHover={{ scale: 1.05 }}
+                      whileTap={{ scale: 0.95 }}
+                      transition={{ type: "spring", stiffness: 400, damping: 17 }}
+                      className="flex h-11 w-11 items-center justify-center rounded-full bg-[rgba(232,194,122,0.08)] transition-colors duration-200 group-hover:bg-[rgba(232,194,122,0.16)]"
+                    >
+                      <div className="relative flex h-[38px] w-[38px] items-center justify-center overflow-hidden rounded-full bg-[radial-gradient(circle_at_30%_30%,rgba(255,210,160,0.92),rgba(190,80,40,0.88)_45%,rgba(80,25,18,0.95)_100%)] text-sm font-semibold text-[#FFF7EC] ring-2 ring-[rgba(24,14,12,0.72)] shadow-lg transition-[filter] duration-200 group-hover:brightness-[1.02]">
                         {user?.image ? (
                           // eslint-disable-next-line @next/next/no-img-element
                           <img
@@ -258,7 +267,26 @@ export const MiniNavbar = () => {
                           initial
                         )}
                       </div>
-                    </div>
+                    </motion.div>
+                    <AnimatePresence>
+                      {isAvatarHovered && displayName && (
+                        <motion.div
+                          initial={{ y: -20, opacity: 0, filter: "blur(4px)" }}
+                          animate={{ y: 8, opacity: 1, filter: "blur(0px)" }}
+                          exit={{ y: -20, opacity: 0, filter: "blur(4px)" }}
+                          transition={{
+                            type: "spring",
+                            stiffness: 300,
+                            damping: 25,
+                            opacity: { duration: 0.2 },
+                            filter: { duration: 0.2 },
+                          }}
+                          className="pointer-events-none absolute left-1/2 top-full z-10 mt-2 -translate-x-1/2 whitespace-nowrap rounded-md border border-[rgba(232,194,122,0.16)] bg-[rgba(28,16,14,0.96)] px-2 py-1 text-xs font-medium text-[#FFF7EC] shadow-lg"
+                        >
+                          {displayName}
+                        </motion.div>
+                      )}
+                    </AnimatePresence>
                   </button>
 
                   {/* Dropdown menu */}
