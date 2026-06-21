@@ -438,6 +438,7 @@
     "subtitle": "Simple, transparent pricing that scales with your business",
     "description": "Choose between live recurring subscriptions and a one-time credit top-up. Every price on this page is driven directly from the billing config used at checkout.",
     "popular": "Popular",
+    "comingSoon": "Payments will be available soon",
     "billing": {
       "monthly": "Monthly",
       "yearly": "Yearly",

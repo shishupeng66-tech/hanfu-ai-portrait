@@ -2,11 +2,10 @@
 
 import { motion } from "framer-motion";
 import { Check, Crown, Gem, Sparkles } from "lucide-react";
-import { useCallback, useState } from "react";
-import { useLocale, useTranslations } from "next-intl";
-import { useRouter } from "next/navigation";
+import { useState } from "react";
+import { useTranslations } from "next-intl";
+import { toast } from "sonner";
 import { cn } from "@/lib/utils";
-import { useSession } from "@/lib/auth-client";
 import {
   getDefaultOneTimePack,
   getSubscriptionPlanDisplays,
@@ -244,11 +243,7 @@ function PriceCard({ config }: { config: CardConfig }) {
 
 export function Pricing() {
   const [active, setActive] = useState<BillingTab>("monthly");
-  const session = useSession();
-  const router = useRouter();
   const t = useTranslations("pricing");
-  const locale = useLocale();
-  const userId = session.data?.user?.id;
 
   const subscriptionPlans = getSubscriptionPlanDisplays();
   const defaultPack = getDefaultOneTimePack();
@@ -258,33 +253,15 @@ export function Pricing() {
     { name: t("billing.yearly"), value: "yearly" },
   ] satisfies Array<{ name: string; value: BillingTab }>;
 
-  const startCheckout = useCallback(
-    async (key: string, kind: "subscription" | "one_time") => {
-      if (!userId) {
-        router.push(`/${locale}/signup`);
-        return;
-      }
-
-      const res = await fetch("/api/payments/creem/checkout", {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ key, kind }),
-      });
-
-      if (!res.ok) {
-        return;
-      }
-
-      const { url } = (await res.json()) as { url: string };
-      window.location.href = url;
-    },
-    [locale, router, userId]
-  );
+  // Temporary: 支付暂未上线，所有按钮统一弹 toast 提示。
+  // 真实 checkout 逻辑（/api/payments/creem/checkout + Creem 跳转）保留在 route 和 lib 里，
+  // 等 Creem 后台准备好新一批产品后再接回来。
+  const handlePurchaseClick = () => {
+    toast.info(t("comingSoon", { defaultValue: "支付功能即将上线" }));
+  };
 
   // 给三张卡按位置分配颜色和图标：第一个订阅 → 蓝，第二个订阅（featured）→ 绿，点数包 → 粉
   const subscriptionCards: CardConfig[] = subscriptionPlans.map((plan, idx) => {
-    const currentPlan =
-      active === "monthly" ? plan.monthlyPlan : plan.yearlyPlan;
     const currentPrice =
       active === "monthly"
         ? plan.displayMonthlyPrice
@@ -317,7 +294,7 @@ export function Pricing() {
       description: t(`tiers.${plan.id}.description`),
       features: allFeatures,
       cta: t(`tiers.${plan.id}.cta`),
-      onClick: () => startCheckout(currentPlan.key, "subscription"),
+      onClick: handlePurchaseClick,
       featured: plan.featured,
       badgeText: plan.featured ? t("popular", { defaultValue: "最受欢迎" }) : undefined,
       animKey: `${plan.id}-${active}`,
@@ -336,7 +313,7 @@ export function Pricing() {
       ...((t.raw("tiers.credits.features") as string[]) ?? []),
     ],
     cta: t("tiers.credits.cta", { credits: defaultPack.displayCredits }),
-    onClick: () => startCheckout(defaultPack.key, "one_time"),
+    onClick: handlePurchaseClick,
     animKey: `credits-pack-${defaultPack.key}`,
   };
 
