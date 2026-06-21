@@ -1,12 +1,14 @@
 export type BillingKind = "subscription" | "one_time";
 
 export type PlanKey =
-  | "starter_monthly"
-  | "starter_yearly"
+  | "plus_monthly"
   | "pro_monthly"
-  | "pro_yearly";
+  | "proplus_yearly";
 
-export type PackKey = "pack_200";
+export type PackKey =
+  | "pack_small"
+  | "pack_popular"
+  | "pack_large";
 
 export type GrantScheduleConfig =
   | {
@@ -27,7 +29,6 @@ type SubscriptionPlan = {
   currency: "usd";
   creditsPerCycle: number;
   cycle: "month" | "year";
-  // To be filled when Creem IDs are available
   creemPriceId?: string;
   grantSchedule?: GrantScheduleConfig;
 };
@@ -42,68 +43,62 @@ type OneTimePack = {
 };
 
 export const subscriptionPlans: Record<PlanKey, SubscriptionPlan> = {
-  starter_monthly: {
-    key: "starter_monthly",
+  plus_monthly: {
+    key: "plus_monthly",
     kind: "subscription",
-    priceCents: 2900,
+    priceCents: 990,
     currency: "usd",
-    creditsPerCycle: 1000,
+    creditsPerCycle: 10,
     cycle: "month",
-    creemPriceId: "prod_6oSIwPL8m6scklr3fwdkC9",
+    creemPriceId: "prod_6PoSDMfbwhBhErem8pPule",
     grantSchedule: { mode: "per_cycle" },
-  },
-  starter_yearly: {
-    key: "starter_yearly",
-    kind: "subscription",
-    priceCents: 29000,
-    currency: "usd",
-    creditsPerCycle: 12000,
-    cycle: "year",
-    creemPriceId: "prod_2V1LbGt2bLmZpKgmASTiCN",
-    grantSchedule: {
-      mode: "installments",
-      grantsPerCycle: 12,
-      intervalMonths: 1,
-      creditsPerGrant: 1000,
-      initialGrants: 1,
-    },
   },
   pro_monthly: {
     key: "pro_monthly",
     kind: "subscription",
-    priceCents: 9900,
+    priceCents: 1990,
     currency: "usd",
-    creditsPerCycle: 10000,
+    creditsPerCycle: 22,
     cycle: "month",
-    creemPriceId: "prod_5Xzh9qV5TWeTQtRxjZPEHM",
+    creemPriceId: "prod_5ISUR9mYVpSlKu1QU8PwW8",
     grantSchedule: { mode: "per_cycle" },
   },
-  pro_yearly: {
-    key: "pro_yearly",
+  proplus_yearly: {
+    key: "proplus_yearly",
     kind: "subscription",
-    priceCents: 99000,
+    priceCents: 19900,
     currency: "usd",
-    creditsPerCycle: 120000,
+    creditsPerCycle: 260,
     cycle: "year",
-    creemPriceId: "prod_2xyljTJW1IlT8FUDrucU3X",
-    grantSchedule: {
-      mode: "installments",
-      grantsPerCycle: 12,
-      intervalMonths: 1,
-      creditsPerGrant: 10000,
-      initialGrants: 1,
-    },
+    creemPriceId: "prod_16o388IDnRXlqOuMjrFeL",
+    grantSchedule: { mode: "per_cycle" },
   },
 };
 
 export const oneTimePacks: Record<PackKey, OneTimePack> = {
-  pack_200: {
-    key: "pack_200",
+  pack_small: {
+    key: "pack_small",
     kind: "one_time",
     priceCents: 500,
     currency: "usd",
-    credits: 200,
-    creemPriceId: "prod_3SiroZeMbMQidMVFDMUzKy",
+    credits: 5,
+    creemPriceId: "prod_2LjKXaJgJs69mZf9X02SVX",
+  },
+  pack_popular: {
+    key: "pack_popular",
+    kind: "one_time",
+    priceCents: 1900,
+    currency: "usd",
+    credits: 20,
+    creemPriceId: "prod_2I65kPTVfEwqfQIW1FthPd",
+  },
+  pack_large: {
+    key: "pack_large",
+    kind: "one_time",
+    priceCents: 4900,
+    currency: "usd",
+    credits: 55,
+    creemPriceId: "prod_7PtO0h2GValAHmkV84t2K0",
   },
 };
 

@@ -239,7 +239,8 @@
     "ctaFooter": {
       "title": "准备好看自己穿汉服了吗？",
       "subtitle": "加入数千名已经发现汉服之美的用户。首次3张写真免费。",
-      "cta": "免费开始使用"
+      "cta": "免费开始使用",
+      "trustNote": "注册即可获得 3 积分，先生成再决定是否升级。"
     }
   },
   "features": {
@@ -271,6 +272,7 @@
     "popular": "最受欢迎",
     "recommended": "推荐",
     "comingSoon": "支付功能即将上线",
+    "checkoutError": "跳转支付失败，请重试",
     "tabs": {
       "membership": "会员方案",
       "packs": "积分包"

@@ -7,6 +7,9 @@ import { useTranslations } from "next-intl";
 import { toast } from "sonner";
 import { cn } from "@/lib/utils";
 import { PricingTable } from "@/app/[locale]/(marketing)/pricing/pricing-table";
+import { useSession } from "@/lib/auth-client";
+import { useRouter, usePathname } from "next/navigation";
+import { useLocale } from "next-intl";
 
 type TabValue = "membership" | "packs";
 
@@ -103,6 +106,8 @@ type CardConfig = {
   featured?: boolean;
   badgeText?: string;
   animKey: string;
+  kind?: "subscription" | "one_time";
+  planKey?: string;
 };
 
 function PriceCard({ config }: { config: CardConfig }) {
@@ -243,18 +248,40 @@ function PriceCard({ config }: { config: CardConfig }) {
 export function Pricing() {
   const [active, setActive] = useState<TabValue>("membership");
   const t = useTranslations("pricing");
+  const session = useSession();
+  const router = useRouter();
+  const pathname = usePathname();
+  const locale = useLocale();
+  const isLoggedIn = !!session.data?.user;
 
   const tabs = [
     { name: t("tabs.membership"), value: "membership" as const },
     { name: t("tabs.packs"), value: "packs" as const },
   ];
 
-  // 支付暂未上线，所有按钮统一弹 toast。
-  // 真实 Creem checkout 逻辑保留在 /api/payments/creem/* 和 lib/payments/creem.ts，
-  // 等后台准备好新一批产品（6 个）后再接回来。
-  const handlePurchaseClick = () => {
-    toast.info(t("comingSoon", { defaultValue: "支付功能即将上线" }));
-  };
+  async function handleCheckout(kind: "subscription" | "one_time", key: string) {
+    if (!isLoggedIn) {
+      const callbackUrl = encodeURIComponent(pathname);
+      router.push(`/${locale}/login?callbackUrl=${callbackUrl}`);
+      return;
+    }
+
+    try {
+      const res = await fetch("/api/payments/creem/checkout", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ kind, key }),
+      });
+      const data = await res.json();
+      if (data.url) {
+        window.location.href = data.url;
+      } else {
+        toast.error(t("checkoutError", { defaultValue: "跳转支付失败，请重试" }));
+      }
+    } catch {
+      toast.error(t("checkoutError", { defaultValue: "跳转支付失败，请重试" }));
+    }
+  }
 
   // 会员方案 3 张卡：Plus 蓝、Pro 绿主推、Pro+ 粉
   const membershipCards: CardConfig[] = [
@@ -268,8 +295,10 @@ export function Pricing() {
       description: t("membership.basic.description"),
       features: t.raw("membership.basic.features") as string[],
       cta: t("membership.basic.cta"),
-      onClick: handlePurchaseClick,
+      onClick: () => handleCheckout("subscription", "plus_monthly"),
       animKey: "membership-basic",
+      kind: "subscription",
+      planKey: "plus_monthly",
     },
     {
       key: "membership-premium",
@@ -281,10 +310,12 @@ export function Pricing() {
       description: t("membership.premium.description"),
       features: t.raw("membership.premium.features") as string[],
       cta: t("membership.premium.cta"),
-      onClick: handlePurchaseClick,
+      onClick: () => handleCheckout("subscription", "pro_monthly"),
       featured: true,
       badgeText: t("popular"),
       animKey: "membership-premium",
+      kind: "subscription",
+      planKey: "pro_monthly",
     },
     {
       key: "membership-proplus",
@@ -296,8 +327,10 @@ export function Pricing() {
       description: t("membership.proPlus.description"),
       features: t.raw("membership.proPlus.features") as string[],
       cta: t("membership.proPlus.cta"),
-      onClick: handlePurchaseClick,
+      onClick: () => handleCheckout("subscription", "proplus_yearly"),
       animKey: "membership-proplus",
+      kind: "subscription",
+      planKey: "proplus_yearly",
     },
   ];
 
@@ -312,8 +345,10 @@ export function Pricing() {
       description: t("packs.small.description"),
       features: t.raw("packs.small.features") as string[],
       cta: t("packs.small.cta"),
-      onClick: handlePurchaseClick,
+      onClick: () => handleCheckout("one_time", "pack_small"),
       animKey: "pack-small",
+      kind: "one_time",
+      planKey: "pack_small",
     },
     {
       key: "pack-common",
@@ -324,10 +359,12 @@ export function Pricing() {
       description: t("packs.common.description"),
       features: t.raw("packs.common.features") as string[],
       cta: t("packs.common.cta"),
-      onClick: handlePurchaseClick,
+      onClick: () => handleCheckout("one_time", "pack_popular"),
       featured: true,
       badgeText: t("recommended"),
       animKey: "pack-common",
+      kind: "one_time",
+      planKey: "pack_popular",
     },
     {
       key: "pack-large",
@@ -338,8 +375,10 @@ export function Pricing() {
       description: t("packs.large.description"),
       features: t.raw("packs.large.features") as string[],
       cta: t("packs.large.cta"),
-      onClick: handlePurchaseClick,
+      onClick: () => handleCheckout("one_time", "pack_large"),
       animKey: "pack-large",
+      kind: "one_time",
+      planKey: "pack_large",
     },
   ];
 

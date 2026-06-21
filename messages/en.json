@@ -440,6 +440,7 @@
     "popular": "Popular",
     "recommended": "Recommended",
     "comingSoon": "Payments will be available soon",
+    "checkoutError": "Checkout failed. Please try again.",
     "tabs": {
       "membership": "Membership",
       "packs": "Credit Packs"
