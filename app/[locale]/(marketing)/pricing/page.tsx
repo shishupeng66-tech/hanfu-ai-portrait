@@ -41,10 +41,10 @@ export default async function PricingPage(
   const t = await getTranslations({ locale, namespace: 'pricing' });
 
   return (
-    <div className="relative overflow-hidden py-20 md:py-0">
+    <div className="relative overflow-hidden">
       <Background />
-      <Container className="flex flex-col items-center justify-between  pb-20">
-        <div className="relative z-20 py-10 md:pt-40 w-full">
+      <Container className="flex flex-col items-center justify-between pb-20">
+        <div className="relative z-20 w-full pt-10 md:pt-16">
           <div className="mb-6 flex justify-center md:justify-start">
             <BackButton />
           </div>

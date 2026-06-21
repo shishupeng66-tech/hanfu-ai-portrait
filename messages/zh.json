@@ -268,9 +268,12 @@
     "title": "定价方案",
     "subtitle": "简单透明的定价，随您的业务一同扩展",
     "description": "在真实可购买的订阅方案和一次性点数补充包之间选择。这个页面上的价格直接来自结账使用的账单配置。",
+    "popular": "最受欢迎",
     "billing": {
       "monthly": "按月计费",
-      "yearly": "按年计费"
+      "yearly": "按年计费",
+      "perMonth": "/月",
+      "perYear": "/年"
     },
     "comparison": {
       "title": "方案对比",
