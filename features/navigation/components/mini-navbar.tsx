@@ -246,16 +246,16 @@ export const MiniNavbar = () => {
                     }}
                     onMouseEnter={() => setIsAvatarHovered(true)}
                     onMouseLeave={() => setIsAvatarHovered(false)}
-                    className="group relative flex h-12 w-12 cursor-pointer items-center justify-center rounded-full bg-[rgba(232,194,122,0.12)] transition-colors duration-200 hover:bg-[rgba(232,194,122,0.18)]"
+                    className="group relative flex h-12 w-12 cursor-pointer items-center justify-center rounded-full bg-transparent transition-colors duration-200"
                     title={displayName || ""}
                   >
                     <motion.div
                       whileHover={{ scale: 1.05 }}
                       whileTap={{ scale: 0.95 }}
                       transition={{ type: "spring", stiffness: 400, damping: 17 }}
-                      className="flex h-11 w-11 items-center justify-center rounded-full bg-[rgba(232,194,122,0.08)] transition-colors duration-200 group-hover:bg-[rgba(232,194,122,0.16)]"
+                      className="flex h-[42px] w-[42px] items-center justify-center rounded-full bg-[#E8C27A] shadow-[0_0_0_1px_rgba(24,14,12,0.72)] transition-colors duration-200 group-hover:bg-[#F2D38A]"
                     >
-                      <div className="relative flex h-[38px] w-[38px] items-center justify-center overflow-hidden rounded-full bg-[radial-gradient(circle_at_30%_30%,rgba(255,210,160,0.92),rgba(190,80,40,0.88)_45%,rgba(80,25,18,0.95)_100%)] text-sm font-semibold text-[#FFF7EC] ring-2 ring-[rgba(24,14,12,0.72)] shadow-lg transition-[filter] duration-200 group-hover:brightness-[1.02]">
+                      <div className="relative flex h-8 w-8 items-center justify-center overflow-hidden rounded-full bg-[radial-gradient(circle_at_30%_30%,rgba(255,210,160,0.92),rgba(190,80,40,0.88)_45%,rgba(80,25,18,0.95)_100%)] text-sm font-semibold text-[#FFF7EC] transition-[filter] duration-200 group-hover:brightness-[1.02]">
                         {user?.image ? (
                           // eslint-disable-next-line @next/next/no-img-element
                           <img
@@ -307,63 +307,28 @@ export const MiniNavbar = () => {
                         padding: 9,
                       }}
                     >
-                      {/* User info header — click to go to settings */}
-                      <Link
-                        href={`/${locale}/settings`}
-                        onClick={() => setIsMenuOpen(false)}
-                        className="flex items-center gap-3 px-3 py-3 mb-2 transition-all duration-200 hover:opacity-90"
+                      {/* User info header (display only) */}
+                      <div
+                        className="px-3 py-3 mb-2"
                         style={{
                           borderRadius: 15,
-                          background:
-                            "linear-gradient(135deg, rgba(232, 194, 122, 0.065), rgba(128, 28, 28, 0.075))",
-                          border: "1px solid rgba(232, 194, 122, 0.10)",
-                          boxShadow: "inset 0 1px 0 rgba(255, 247, 236, 0.04)",
-                          cursor: "pointer",
                         }}
                       >
                         <div
-                          className="relative flex-shrink-0 flex items-center justify-center"
-                          style={{
-                            height: 40,
-                            width: 40,
-                            borderRadius: "999px",
-                            fontSize: "14px",
-                            fontWeight: 600,
-                            color: "#FFF7EC",
-                            background:
-                              "linear-gradient(135deg, rgba(178, 44, 38, 0.96), rgba(132, 75, 31, 0.96))",
-                            border: "1px solid rgba(232, 194, 122, 0.34)",
-                            boxShadow: "0 8px 18px rgba(48, 8, 8, 0.28)",
-                          }}
+                          className="text-sm font-semibold truncate"
+                          style={{ color: "rgba(255, 247, 236, 0.96)" }}
                         >
-                          {user?.image ? (
-                            <span className="absolute inset-0 overflow-hidden rounded-full">
-                              {/* eslint-disable-next-line @next/next/no-img-element */}
-                              <img
-                                src={user.image}
-                                alt={displayName || "User avatar"}
-                                className="h-full w-full object-cover"
-                              />
-                            </span>
-                          ) : (
-                            initial
-                          )}
+                          {displayName || (isZh ? "用户" : "User")}
                         </div>
-                        <div className="min-w-0 flex-1">
+                        {user?.email && (
                           <div
-                            className="text-sm font-semibold truncate"
-                            style={{ color: "rgba(255, 247, 236, 0.96)" }}
+                            className="text-xs truncate mt-1"
+                            style={{ color: "rgba(255, 247, 236, 0.52)" }}
                           >
-                            {displayName || (isZh ? "用户" : "User")}
+                            {user.email}
                           </div>
-                          <div
-                            className="text-xs truncate"
-                            style={{ color: "rgba(255, 247, 236, 0.42)" }}
-                          >
-                            {isZh ? "点击更换头像" : "Click to change avatar"}
-                          </div>
-                        </div>
-                      </Link>
+                        )}
+                      </div>
 
                       {/* Menu items */}
                       <div className="flex flex-col" style={{ gap: 3 }}>
