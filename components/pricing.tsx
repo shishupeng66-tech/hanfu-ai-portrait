@@ -115,8 +115,8 @@ function PriceCard({ config }: { config: CardConfig }) {
       transition={{ duration: 0.55, ease: "easeOut" }}
       whileHover={{ y: -6, scale: 1.012 }}
       className={cn(
-        "relative flex min-h-[600px] flex-col overflow-hidden rounded-[2rem] p-7 transition-shadow duration-300",
-        config.featured && "lg:-mt-4 lg:min-h-[640px]"
+        "relative flex min-h-[480px] flex-col overflow-hidden rounded-[1.75rem] p-5 transition-shadow duration-300",
+        config.featured && "lg:-mt-3 lg:min-h-[510px]"
       )}
       style={{
         background: styles.cardBg,
@@ -138,45 +138,45 @@ function PriceCard({ config }: { config: CardConfig }) {
       )}
 
       <div
-        className="mb-7 flex h-14 w-14 items-center justify-center rounded-2xl"
+        className="mb-5 flex h-11 w-11 items-center justify-center rounded-xl"
         style={{
           background: "#FFFFFF",
           color: styles.iconColor,
           boxShadow: `inset 0 0 0 1px ${styles.iconRing}, 0 4px 14px rgba(0,0,0,0.06)`,
         }}
       >
-        <Icon className="h-7 w-7" aria-hidden="true" />
+        <Icon className="h-5 w-5" aria-hidden="true" />
       </div>
 
-      <div className="mb-6">
+      <div className="mb-4">
         <h3
-          className="text-[24px] md:text-[26px] font-bold tracking-tight"
+          className="text-[20px] md:text-[22px] font-bold tracking-tight"
           style={{ color: text.title }}
         >
           {config.name}
         </h3>
         <p
-          className="mt-2 min-h-[44px] text-[15px] leading-[1.55] font-medium"
+          className="mt-1.5 min-h-[36px] text-[13px] leading-[1.5] font-medium"
           style={{ color: text.desc }}
         >
           {config.description}
         </p>
       </div>
 
-      <div className="mb-8 flex items-end gap-1">
+      <div className="mb-5 flex items-end gap-1">
         <motion.span
           key={config.animKey}
           initial={{ x: -16, opacity: 0 }}
           animate={{ x: 0, opacity: 1 }}
           transition={{ duration: 0.2, ease: "easeOut" }}
-          className="text-[44px] font-bold leading-none tracking-[-0.03em]"
+          className="text-[34px] font-bold leading-none tracking-[-0.03em]"
           style={{ color: text.price }}
         >
           {config.price}
         </motion.span>
         {config.period && (
           <span
-            className="pb-2 text-[14px] font-medium"
+            className="pb-1.5 text-[13px] font-medium"
             style={{ color: text.period }}
           >
             {config.period}
@@ -184,24 +184,24 @@ function PriceCard({ config }: { config: CardConfig }) {
         )}
       </div>
 
-      <ul className="mb-8 flex-1 space-y-3.5">
+      <ul className="mb-5 flex-1 space-y-2.5">
         {config.features.map((feature) => (
-          <li key={feature} className="flex items-start gap-3">
+          <li key={feature} className="flex items-start gap-2.5">
             <span
-              className="mt-0.5 flex h-5 w-5 shrink-0 items-center justify-center rounded-full"
+              className="mt-0.5 flex h-[18px] w-[18px] shrink-0 items-center justify-center rounded-full"
               style={{
                 background: styles.checkBg,
                 color: "#FFFFFF",
               }}
             >
               <Check
-                className="h-3.5 w-3.5"
+                className="h-3 w-3"
                 strokeWidth={3}
                 aria-hidden="true"
               />
             </span>
             <span
-              className="text-[15px] font-medium leading-[1.55]"
+              className="text-[13.5px] font-medium leading-[1.5]"
               style={{ color: text.feature }}
             >
               {feature}
@@ -213,7 +213,7 @@ function PriceCard({ config }: { config: CardConfig }) {
       <button
         type="button"
         onClick={config.onClick}
-        className="inline-flex h-12 w-full items-center justify-center rounded-full text-[15px] font-semibold transition-all duration-200 active:scale-[0.98] focus:outline-none"
+        className="inline-flex h-10 w-full items-center justify-center rounded-full text-[14px] font-semibold transition-all duration-200 active:scale-[0.98] focus:outline-none"
         style={{
           color: styles.buttonText,
           background: styles.buttonBg,
@@ -347,14 +347,14 @@ export function Pricing() {
   return (
     <div className="relative w-full">
       {/* Top tabs: Membership / Packs */}
-      <div className="mx-auto mb-10 flex w-fit items-center justify-center overflow-hidden rounded-full border border-black/5 bg-white p-1 shadow-sm">
+      <div className="mx-auto mb-6 flex w-fit items-center justify-center overflow-hidden rounded-full border border-black/5 bg-white p-1 shadow-sm">
         {tabs.map((tab) => (
           <button
             key={tab.value}
             type="button"
             onClick={() => setActive(tab.value)}
             className={cn(
-              "relative rounded-full px-5 py-2 text-sm font-semibold transition-colors",
+              "relative rounded-full px-4 py-1.5 text-sm font-semibold transition-colors",
               active === tab.value ? "text-white" : "text-[#3A3A3A]"
             )}
           >
@@ -372,7 +372,7 @@ export function Pricing() {
       </div>
 
       {/* Cards */}
-      <div className="relative z-20 mx-auto grid max-w-6xl grid-cols-1 items-stretch gap-6 md:grid-cols-2 lg:grid-cols-3 lg:gap-8">
+      <div className="relative z-20 mx-auto grid max-w-5xl grid-cols-1 items-stretch gap-5 md:grid-cols-2 lg:grid-cols-3 lg:gap-6">
         {activeCards.map((card) => (
           <PriceCard key={card.key} config={card} />
         ))}

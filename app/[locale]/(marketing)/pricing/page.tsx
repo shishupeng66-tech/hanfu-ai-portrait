@@ -43,9 +43,9 @@ export default async function PricingPage(
   return (
     <div className="relative overflow-hidden">
       <Background />
-      <Container className="flex flex-col items-center justify-between pb-20">
-        <div className="relative z-20 w-full pt-10 md:pt-16">
-          <div className="mb-6 flex justify-center md:justify-start">
+      <Container className="flex flex-col items-center justify-between pb-12">
+        <div className="relative z-20 w-full pt-4 md:pt-6">
+          <div className="mb-4 flex justify-center md:justify-start">
             <BackButton />
           </div>
           <Heading as="h1">{t('title')}</Heading>
