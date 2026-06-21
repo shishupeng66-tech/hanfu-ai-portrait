@@ -4,6 +4,7 @@ import { Heading } from "@/components/heading";
 import { Subheading } from "@/components/subheading";
 import { Pricing } from "@/components/pricing";
 import { PricingTable } from "./pricing-table";
+import { BackButton } from "./back-button";
 import { Companies } from "@/components/companies";
 import { Metadata } from "next";
 import { getTranslations } from 'next-intl/server';
@@ -43,7 +44,10 @@ export default async function PricingPage(
     <div className="relative overflow-hidden py-20 md:py-0">
       <Background />
       <Container className="flex flex-col items-center justify-between  pb-20">
-        <div className="relative z-20 py-10 md:pt-40">
+        <div className="relative z-20 py-10 md:pt-40 w-full">
+          <div className="mb-6 flex justify-center md:justify-start">
+            <BackButton />
+          </div>
           <Heading as="h1">{t('title')}</Heading>
           <Subheading className="text-center">
             {t('description')}
