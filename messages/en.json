@@ -1203,7 +1203,7 @@
     "welcome": "Welcome back",
     "welcomeBonus": {
       "title": "🎉 Welcome to HanPortrait!",
-      "message": "Congratulations on your successful registration! We've added 300 credits welcome bonus to your account.",
+      "message": "Congratulations on your successful registration! We've added 3 credits welcome bonus to your account.",
       "description": "Use these credits to create beautiful Hanfu portraits with our AI.",
       "ctaButton": "Try Now",
       "dismissButton": "Got it"

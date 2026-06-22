@@ -43,13 +43,13 @@ export const auth = betterAuth({
         const newSession = ctx.context.newSession;
         if (newSession) {
           try {
-            // Grant 300 credits as registration bonus
+            // Grant 3 credits as registration bonus
             await refundCredits(
               newSession.user.id,
-              300,
+              3,
               "registration_bonus"
             );
-            console.log(`[Auth] New user registered, granted 300 credits: ${newSession.user.email}`);
+            console.log(`[Auth] New user registered, granted 3 credits: ${newSession.user.email}`);
           } catch (error) {
             console.error("[Auth] Failed to grant registration bonus:", error);
           }
