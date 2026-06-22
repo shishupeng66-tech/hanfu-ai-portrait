@@ -8,7 +8,7 @@ import { toast } from "sonner";
 import { cn } from "@/lib/utils";
 import { PricingTable } from "@/app/[locale]/(marketing)/pricing/pricing-table";
 import { useSession } from "@/lib/auth-client";
-import { useRouter, usePathname } from "next/navigation";
+import { useRouter, usePathname, useSearchParams } from "next/navigation";
 import { useLocale } from "next-intl";
 
 type TabValue = "membership" | "packs";
@@ -246,18 +246,31 @@ function PriceCard({ config }: { config: CardConfig }) {
 }
 
 export function Pricing() {
-  const [active, setActive] = useState<TabValue>("membership");
   const t = useTranslations("pricing");
   const session = useSession();
   const router = useRouter();
   const pathname = usePathname();
+  const searchParams = useSearchParams();
   const locale = useLocale();
   const isLoggedIn = !!session.data?.user;
+
+  const initialTab: TabValue =
+    searchParams.get("tab") === "packs" ? "packs" : "membership";
+  const [active, setActive] = useState<TabValue>(initialTab);
 
   const tabs = [
     { name: t("tabs.membership"), value: "membership" as const },
     { name: t("tabs.packs"), value: "packs" as const },
   ];
+
+  function handleTabChange(value: TabValue) {
+    setActive(value);
+    const params = new URLSearchParams(searchParams.toString());
+    params.set("tab", value);
+    router.replace(`/${locale}/pricing?${params.toString()}`, {
+      scroll: false,
+    });
+  }
 
   async function handleCheckout(kind: "subscription" | "one_time", key: string) {
     if (!isLoggedIn) {
@@ -392,7 +405,7 @@ export function Pricing() {
           <button
             key={tab.value}
             type="button"
-            onClick={() => setActive(tab.value)}
+            onClick={() => handleTabChange(tab.value)}
             className={cn(
               "relative rounded-full px-4 py-1.5 text-sm font-semibold transition-colors",
               active === tab.value ? "text-white" : "text-[#3A3A3A]"
