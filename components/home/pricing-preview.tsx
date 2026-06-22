@@ -2,7 +2,7 @@
 
 import { useRef } from "react";
 import { motion, useInView } from "framer-motion";
-import { Check, Crown, Gem, Sparkles } from "lucide-react";
+import { Check, Coins, Crown, Sparkles } from "lucide-react";
 import { useTranslations } from "next-intl";
 import { Heading } from "@/components/heading";
 import { Subheading } from "@/components/subheading";
@@ -27,26 +27,10 @@ export function HomePricingPreview() {
         t("free.feature4"),
       ],
       cta: t("free.cta"),
+      href: "/generate",
       icon: Sparkles,
-      color: "blue",
+      color: "blue" as const,
       highlighted: false,
-    },
-    {
-      name: t("starter.name"),
-      price: t("starter.price"),
-      period: t("starter.period"),
-      description: t("starter.description"),
-      features: [
-        t("starter.feature1"),
-        t("starter.feature2"),
-        t("starter.feature3"),
-        t("starter.feature4"),
-        t("starter.feature5"),
-      ],
-      cta: t("starter.cta"),
-      icon: Crown,
-      color: "green",
-      highlighted: true,
     },
     {
       name: t("pro.name"),
@@ -58,23 +42,38 @@ export function HomePricingPreview() {
         t("pro.feature2"),
         t("pro.feature3"),
         t("pro.feature4"),
-        t("pro.feature5"),
-        t("pro.feature6"),
       ],
       cta: t("pro.cta"),
-      icon: Gem,
-      color: "pink",
+      href: "/pricing",
+      icon: Crown,
+      color: "green" as const,
+      highlighted: true,
+    },
+    {
+      name: t("packs.name"),
+      price: t("packs.price"),
+      period: t("packs.period"),
+      description: t("packs.description"),
+      features: [
+        t("packs.feature1"),
+        t("packs.feature2"),
+        t("packs.feature3"),
+        t("packs.feature4"),
+      ],
+      cta: t("packs.cta"),
+      href: "/pricing",
+      icon: Coins,
+      color: "pink" as const,
       highlighted: false,
     },
   ] as const;
 
-  // 三套浅色清新配色（白天模式）
   const colorStyles = {
     blue: {
       cardBg:
         "linear-gradient(160deg, #F0F7FF 0%, #E2EEFF 55%, #D6E6FE 100%)",
       borderColor: "rgba(61, 123, 200, 0.18)",
-      accent: "#3D7BC8", // 主色
+      accent: "#3D7BC8",
       iconBg: "#FFFFFF",
       iconColor: "#3D7BC8",
       iconRing: "rgba(61, 123, 200, 0.22)",
@@ -120,7 +119,6 @@ export function HomePricingPreview() {
     },
   } as const;
 
-  // 白天模式文字色：深灰为主，保证清晰
   const text = {
     title: "#1F1F1F",
     desc: "#5A5A5A",
@@ -171,7 +169,6 @@ export function HomePricingPreview() {
                     : "0 18px 44px -16px rgba(40, 40, 40, 0.18), 0 2px 6px rgba(0,0,0,0.04)",
                 }}
               >
-                {/* Popular badge */}
                 {plan.highlighted && (
                   <div
                     className="absolute right-5 top-5 rounded-full px-3 py-1 text-xs font-semibold"
@@ -185,7 +182,6 @@ export function HomePricingPreview() {
                   </div>
                 )}
 
-                {/* Icon */}
                 <div
                   className="mb-7 flex h-14 w-14 items-center justify-center rounded-2xl"
                   style={{
@@ -197,7 +193,6 @@ export function HomePricingPreview() {
                   <Icon className="h-7 w-7" aria-hidden="true" />
                 </div>
 
-                {/* Plan name + desc */}
                 <div className="mb-6">
                   <h3
                     className="text-[24px] md:text-[26px] font-bold tracking-tight"
@@ -213,7 +208,6 @@ export function HomePricingPreview() {
                   </p>
                 </div>
 
-                {/* Price */}
                 <div className="mb-8 flex items-end gap-1">
                   <span
                     className="text-[44px] font-bold leading-none tracking-[-0.03em]"
@@ -231,7 +225,6 @@ export function HomePricingPreview() {
                   )}
                 </div>
 
-                {/* Features */}
                 <ul className="mb-8 flex-1 space-y-3.5">
                   {plan.features.map((feature) => (
                     <li key={feature} className="flex items-start gap-3">
@@ -258,9 +251,8 @@ export function HomePricingPreview() {
                   ))}
                 </ul>
 
-                {/* CTA */}
                 <LocaleLink
-                  href="/pricing"
+                  href={plan.href}
                   className="inline-flex h-12 w-full items-center justify-center rounded-full text-[15px] font-semibold transition-all duration-200 active:scale-[0.98]"
                   style={{
                     color: styles.buttonText,

@@ -133,46 +133,43 @@
     },
     "pricing": {
       "title": "选择方案",
-      "subtitle": "免费开始，随时升级获取更多功能",
+      "subtitle": "免费开始，升级会员或购买积分包",
       "free": {
         "name": "免费试用",
         "price": "免费",
         "period": "",
-        "description": "先试试再说",
-        "feature1": "3次免费生成",
-        "feature2": "基础风格",
-        "feature3": "标准分辨率",
-        "feature4": "含水印",
+        "description": "先体验效果，再决定是否升级。",
+        "feature1": "注册赠送 3 积分",
+        "feature2": "1 积分生成 1 张图片",
+        "feature3": "可使用基础写真模板",
+        "feature4": "适合第一次体验",
         "cta": "免费开始"
       },
-      "starter": {
-        "name": "入门版",
-        "price": "￥69",
-        "period": "/月",
-        "description": "汉服爱好者之选",
-        "feature1": "每月100次生成",
-        "feature2": "全部朝代风格",
-        "feature3": "高清分辨率",
-        "feature4": "无水印",
-        "feature5": "优先处理",
-        "cta": "选择入门版"
-      },
       "pro": {
-        "name": "专业版",
-        "price": "￥199",
+        "name": "Pro",
+        "price": "$19.9",
         "period": "/月",
-        "description": "专业创作者之选",
-        "feature1": "无限次生成",
-        "feature2": "全部风格+独家款",
-        "feature3": "4K分辨率",
-        "feature4": "无水印",
-        "feature5": "极速处理",
-        "feature6": "商业授权",
-        "cta": "选择专业版"
+        "description": "适合想生成更多风格和完整写真套图的用户。",
+        "feature1": "每月获得 22 积分",
+        "feature2": "解锁全部会员模板",
+        "feature3": "优先体验新写真模板",
+        "feature4": "额外购买积分更优惠",
+        "cta": "查看 Pro 会员"
+      },
+      "packs": {
+        "name": "积分包",
+        "price": "$5",
+        "period": "起",
+        "description": "一次性补充积分，不包含会员权益。",
+        "feature1": "一次性购买，立即到账",
+        "feature2": "可用于普通写真模板",
+        "feature3": "不解锁会员专属模板",
+        "feature4": "适合临时补充生成次数",
+        "cta": "查看积分包"
       },
       "footer": "查看完整定价详情",
       "footerLink": "/pricing",
-      "popular": "最受欢迎"
+      "popular": "最畅销"
     },
     "testimonials": {
       "title": "全球汉服爱好者的热爱",

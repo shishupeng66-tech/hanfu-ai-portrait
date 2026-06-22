@@ -301,46 +301,43 @@
     },
     "pricing": {
       "title": "Choose Your Plan",
-      "subtitle": "Start free, upgrade when you're ready for more",
+      "subtitle": "Start free, upgrade with membership or credit packs",
       "free": {
         "name": "Free Trial",
-        "price": "$0",
+        "price": "Free",
         "period": "",
-        "description": "Try before you commit",
-        "feature1": "3 free generations",
-        "feature2": "Basic styles",
-        "feature3": "Standard resolution",
-        "feature4": "Watermark included",
-        "cta": "Start Free"
-      },
-      "starter": {
-        "name": "Starter",
-        "price": "$9.99",
-        "period": "/mo",
-        "description": "For hanfu enthusiasts",
-        "feature1": "100 generations/month",
-        "feature2": "All dynasty styles",
-        "feature3": "HD resolution",
-        "feature4": "No watermark",
-        "feature5": "Priority processing",
-        "cta": "Choose Starter"
+        "description": "Experience the results first, then decide to upgrade.",
+        "feature1": "Get 3 free credits on signup",
+        "feature2": "1 credit = 1 generated image",
+        "feature3": "Access basic portrait templates",
+        "feature4": "Perfect for first-time users",
+        "cta": "Get Started Free"
       },
       "pro": {
         "name": "Pro",
-        "price": "$29.99",
+        "price": "$19.9",
         "period": "/mo",
-        "description": "For power users",
-        "feature1": "Unlimited generations",
-        "feature2": "All styles + exclusive",
-        "feature3": "4K resolution",
-        "feature4": "No watermark",
-        "feature5": "Fastest processing",
-        "feature6": "Commercial license",
-        "cta": "Choose Pro"
+        "description": "For creators who want more styles and full portrait sets.",
+        "feature1": "Get 22 credits every month",
+        "feature2": "Unlock every member template",
+        "feature3": "Early access to new templates",
+        "feature4": "Better rates on extra credits",
+        "cta": "View Pro Membership"
+      },
+      "packs": {
+        "name": "Credit Packs",
+        "price": "$5",
+        "period": "+",
+        "description": "One-time credit top-up, no membership benefits.",
+        "feature1": "One-time purchase, instant delivery",
+        "feature2": "Use on standard portrait templates",
+        "feature3": "Does not unlock member-only templates",
+        "feature4": "Great for temporary credit boosts",
+        "cta": "View Credit Packs"
       },
       "footer": "See full pricing details",
       "footerLink": "/pricing",
-      "popular": "Popular"
+      "popular": "Best Seller"
     },
     "testimonials": {
       "title": "Loved by Hanfu Enthusiasts Worldwide",
