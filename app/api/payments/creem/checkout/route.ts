@@ -42,6 +42,9 @@ export async function POST(req: NextRequest) {
       return NextResponse.json({ error: "Invalid kind" }, { status: 400 });
     }
 
+    console.log("[Creem Checkout] kind:", kind, "key:", key, "creemPriceId:", creemPriceId);
+    console.log("[Creem Checkout] CREEM_API_KEY exists:", !!process.env.CREEM_API_KEY);
+
     const { url } = await createCheckoutSession({
       userId,
       key,
@@ -53,7 +56,7 @@ export async function POST(req: NextRequest) {
 
     return NextResponse.json({ url });
   } catch (error: unknown) {
-    console.error("Creem checkout error:", error);
+    console.error("[Creem Checkout] Error:", error);
     return NextResponse.json(
       { error: getErrorMessage(error, "Server error") },
       { status: 500 }

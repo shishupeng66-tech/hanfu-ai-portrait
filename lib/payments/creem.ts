@@ -45,6 +45,7 @@ export async function createCheckoutSession(params: CreateCheckoutParams): Promi
   const endpointUrl = `${base}/v1/checkouts`; // Correct endpoint path from docs
 
   try {
+    console.log("[Creem API] POST", endpointUrl, "product_id:", params.creemPriceId);
     const res = await fetch(endpointUrl, {
       method: "POST",
       headers: {
@@ -54,12 +55,16 @@ export async function createCheckoutSession(params: CreateCheckoutParams): Promi
       body: JSON.stringify(payload),
     });
 
+    console.log("[Creem API] response status:", res.status);
+
     if (!res.ok) {
       const errorText = await res.text();
+      console.error("[Creem API] error body:", errorText);
       throw new Error(`Creem checkout create failed: ${res.status} ${errorText}`);
     }
 
     const data = (await res.json()) as { url?: string; checkout_url?: string; id?: string };
+    console.log("[Creem API] response data:", JSON.stringify(data));
     const redirectUrl = data.checkout_url || data.url; // Creem returns checkout_url
     
     if (!redirectUrl) {
