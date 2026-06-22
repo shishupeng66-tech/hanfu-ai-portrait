@@ -126,7 +126,7 @@ describe("SettingsPage", () => {
           credits: 420,
           createdAt: "2025-01-01T00:00:00.000Z",
           subscription: {
-            planKey: "starter_monthly",
+            planKey: "plus_monthly",
             status: "active",
             currentPeriodEnd: "2026-01-01T00:00:00.000Z",
           },
@@ -146,7 +146,7 @@ describe("SettingsPage", () => {
     expect(await screen.findByDisplayValue("Sistine Builder")).toBeInTheDocument();
     expect(screen.getByDisplayValue("Sistine Builder")).toBeInTheDocument();
     expect(screen.getByText("420")).toBeInTheDocument();
-    expect(screen.getByText("Starter Monthly")).toBeInTheDocument();
+    expect(screen.getByText("Plus Monthly")).toBeInTheDocument();
     expect(screen.getByRole("button", { name: "Manage credits" })).toBeInTheDocument();
     expect(screen.getByRole("button", { name: "View pricing" })).toBeInTheDocument();
   });

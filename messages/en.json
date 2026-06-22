@@ -1236,10 +1236,9 @@
         },
         "plans": {
           "free": "Free",
-          "starterMonthly": "Starter Monthly",
-          "starterYearly": "Starter Yearly",
+          "plusMonthly": "Plus Monthly",
           "proMonthly": "Pro Monthly",
-          "proYearly": "Pro Yearly"
+          "proplusYearly": "Pro+ Yearly"
         },
         "buyCredits": "Buy {credits} Credits ({price})",
         "viewCredits": "View Credits"

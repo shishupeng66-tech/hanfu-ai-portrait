@@ -1067,10 +1067,9 @@
         },
         "plans": {
           "free": "免费版",
-          "starterMonthly": "入门版 (月付)",
-          "starterYearly": "入门版 (年付)",
+          "plusMonthly": "Plus（月付）",
           "proMonthly": "专业版 (月付)",
-          "proYearly": "专业版 (年付)"
+          "proplusYearly": "Pro+（年付）"
         },
         "buyCredits": "购买 {credits} 点数 ({price})",
         "viewCredits": "查看积分"

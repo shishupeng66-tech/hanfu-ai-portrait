@@ -14,14 +14,12 @@ export function normalizeProfileName(name: string) {
 
 export function getSubscriptionPlanTranslationKey(planKey?: string | null) {
   switch (planKey) {
-    case "starter_monthly":
-      return "starterMonthly";
-    case "starter_yearly":
-      return "starterYearly";
+    case "plus_monthly":
+      return "plusMonthly";
     case "pro_monthly":
       return "proMonthly";
-    case "pro_yearly":
-      return "proYearly";
+    case "proplus_yearly":
+      return "proplusYearly";
     default:
       return "free";
   }

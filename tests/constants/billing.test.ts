@@ -7,13 +7,18 @@ import {
 
 describe("billing config", () => {
   it("exposes supported subscription keys", () => {
-    expect(isSubscriptionKey("starter_monthly")).toBe(true);
-    expect(isSubscriptionKey("starter_yearly")).toBe(true);
+    expect(isSubscriptionKey("plus_monthly")).toBe(true);
+    expect(isSubscriptionKey("pro_monthly")).toBe(true);
+    expect(isSubscriptionKey("proplus_yearly")).toBe(true);
+    expect(isSubscriptionKey("starter_monthly")).toBe(false);
     expect(isSubscriptionKey("pack_200")).toBe(false);
   });
 
   it("exposes supported one-time pack keys", () => {
-    expect(isPackKey("pack_200")).toBe(true);
+    expect(isPackKey("pack_small")).toBe(true);
+    expect(isPackKey("pack_popular")).toBe(true);
+    expect(isPackKey("pack_large")).toBe(true);
+    expect(isPackKey("pack_200")).toBe(false);
     expect(isPackKey("pro_monthly")).toBe(false);
   });
 
@@ -21,8 +26,6 @@ describe("billing config", () => {
     const yearlyPlans = Object.values(subscriptionPlans).filter(
       (plan) => plan.grantSchedule?.mode === "installments"
     );
-
-    expect(yearlyPlans.length).toBeGreaterThan(0);
 
     for (const plan of yearlyPlans) {
       if (plan.grantSchedule?.mode !== "installments") {

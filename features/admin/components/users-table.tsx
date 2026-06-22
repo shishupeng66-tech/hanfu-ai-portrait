@@ -620,7 +620,7 @@ function SubscriptionManagementModal({
               {t("selectPlan")}
             </label>
             <div className="space-y-2">
-              {["free", "starter_monthly", "starter_yearly", "professional_monthly", "professional_yearly", "enterprise"].map((plan) => (
+              {["free", "plus_monthly", "pro_monthly", "proplus_yearly", "enterprise"].map((plan) => (
                 <label key={plan} className="flex items-center gap-2 cursor-pointer">
                   <input
                     type="radio"

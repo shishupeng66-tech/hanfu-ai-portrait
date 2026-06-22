@@ -18,10 +18,9 @@ describe("account settings helpers", () => {
   });
 
   it("maps known subscription plans to existing translation keys", () => {
-    expect(getSubscriptionPlanTranslationKey("starter_monthly")).toBe("starterMonthly");
-    expect(getSubscriptionPlanTranslationKey("starter_yearly")).toBe("starterYearly");
+    expect(getSubscriptionPlanTranslationKey("plus_monthly")).toBe("plusMonthly");
     expect(getSubscriptionPlanTranslationKey("pro_monthly")).toBe("proMonthly");
-    expect(getSubscriptionPlanTranslationKey("pro_yearly")).toBe("proYearly");
+    expect(getSubscriptionPlanTranslationKey("proplus_yearly")).toBe("proplusYearly");
     expect(getSubscriptionPlanTranslationKey()).toBe("free");
   });
 });

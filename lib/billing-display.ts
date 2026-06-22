@@ -5,18 +5,17 @@ import {
   subscriptionPlans,
 } from "@/constants/billing";
 
-export const DEFAULT_ONE_TIME_PACK_KEY: PackKey = "pack_200";
+export const DEFAULT_ONE_TIME_PACK_KEY: PackKey = "pack_small";
 export const MARKETING_SUBSCRIPTION_PLAN_FAMILIES = [
   {
-    id: "starter",
-    monthlyKey: "starter_monthly",
-    yearlyKey: "starter_yearly",
+    id: "plus",
+    monthlyKey: "plus_monthly",
     featured: false,
   },
   {
     id: "pro",
     monthlyKey: "pro_monthly",
-    yearlyKey: "pro_yearly",
+    yearlyKey: "proplus_yearly",
     featured: true,
   },
 ] as const;
@@ -40,10 +39,16 @@ function getCreditsPerGrant(planKey: PlanKey) {
 }
 
 export function getDefaultOneTimePack() {
-  const pack = oneTimePacks[DEFAULT_ONE_TIME_PACK_KEY];
+  const fallbackKey = Object.keys(oneTimePacks)[0] as PackKey | undefined;
+  const key = oneTimePacks[DEFAULT_ONE_TIME_PACK_KEY] ? DEFAULT_ONE_TIME_PACK_KEY : fallbackKey;
+  const pack = key ? oneTimePacks[key] : undefined;
+
+  if (!key || !pack) {
+    throw new Error("No one-time credit packs are configured.");
+  }
 
   return {
-    key: DEFAULT_ONE_TIME_PACK_KEY,
+    key,
     pack,
     displayCredits: formatCredits(pack.credits),
     displayPrice: formatUsdPrice(pack.priceCents),
@@ -53,17 +58,18 @@ export function getDefaultOneTimePack() {
 export function getSubscriptionPlanDisplays() {
   return MARKETING_SUBSCRIPTION_PLAN_FAMILIES.map((family) => {
     const monthlyPlan = subscriptionPlans[family.monthlyKey];
-    const yearlyPlan = subscriptionPlans[family.yearlyKey];
+    const yearlyPlan = "yearlyKey" in family ? subscriptionPlans[family.yearlyKey] : undefined;
 
     return {
       ...family,
       monthlyPlan,
       yearlyPlan,
       displayMonthlyPrice: formatUsdPrice(monthlyPlan.priceCents),
-      displayYearlyPrice: formatUsdPrice(yearlyPlan.priceCents),
+      displayYearlyPrice: yearlyPlan ? formatUsdPrice(yearlyPlan.priceCents) : undefined,
       displayMonthlyCredits: formatCredits(monthlyPlan.creditsPerCycle),
-      displayYearlyCredits: formatCredits(yearlyPlan.creditsPerCycle),
-      displayYearlyCreditsPerGrant: formatCredits(getCreditsPerGrant(family.yearlyKey)),
+      displayYearlyCredits: yearlyPlan ? formatCredits(yearlyPlan.creditsPerCycle) : undefined,
+      displayYearlyCreditsPerGrant:
+        yearlyPlan && "yearlyKey" in family ? formatCredits(getCreditsPerGrant(family.yearlyKey)) : undefined,
     };
   });
 }
