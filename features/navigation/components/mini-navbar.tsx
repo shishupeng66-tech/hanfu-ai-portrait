@@ -114,7 +114,7 @@ export const MiniNavbar = () => {
   );
 
   return (
-    <header className="fixed left-1/2 z-50 -translate-x-1/2" style={{ top: 13 }}>
+    <header className="fixed inset-x-0 z-50 flex justify-center" style={{ top: 13 }}>
       <div
         className={cn(
           "transition-all duration-500 ease-out",
@@ -127,9 +127,9 @@ export const MiniNavbar = () => {
           className="flex items-center"
           style={{
             height: "52px",
-            minWidth: "1180px",
-            width: "auto",
+            width: "min(1180px, calc(100vw - 48px))",
             maxWidth: "1180px",
+            minWidth: "0",
             borderRadius: "999px",
             padding: "0 20px",
             background: "rgba(24, 14, 12, 0.72)",
