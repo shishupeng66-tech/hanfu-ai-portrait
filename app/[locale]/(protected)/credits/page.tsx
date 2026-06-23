@@ -8,8 +8,7 @@ import { Button } from "@/components/button";
 import { Container } from "@/components/container";
 import { Background } from "@/components/background";
 import { motion } from "framer-motion";
-import { getDefaultOneTimePack } from "@/lib/billing-display";
-import { getSubscriptionPlanDisplayInfo } from "@/lib/account-settings";
+import { oneTimePacks, type PackKey } from "@/constants/billing";
 import type {
   ClientUserProfile,
   CreditHistoryRecord,
@@ -29,7 +28,6 @@ export default function CreditsPage() {
   const [page, setPage] = useState(1);
   const [hasMore, setHasMore] = useState(true);
   const limit = 20;
-  const creditPack = getDefaultOneTimePack();
 
   // Fetch user profile with credits
   const fetchUserProfile = useCallback(async () => {
@@ -98,10 +96,6 @@ export default function CreditsPage() {
   );
 
   const credits = userProfile?.credits ?? 0;
-  const planDisplayInfo = getSubscriptionPlanDisplayInfo(
-    userProfile?.subscription?.planKey,
-    locale
-  );
 
   if (loading && !session.data?.user) {
     return (
@@ -160,14 +154,6 @@ export default function CreditsPage() {
             <div className="text-4xl font-bold text-card-foreground mb-2">
               {credits}
             </div>
-            <div className="mb-4">
-              <span
-                className="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium"
-                style={planDisplayInfo.badgeStyle}
-              >
-                {planDisplayInfo.displayNameShort}
-              </span>
-            </div>
             <p className="text-sm text-muted-foreground">
               {t('balance.description')}
             </p>
@@ -179,14 +165,20 @@ export default function CreditsPage() {
               {t('purchase.title')}
             </h3>
             <div className="space-y-2">
-              <Button
-                variant="primary"
-                className="w-full justify-between"
-                onClick={() => startCheckout(creditPack.key)}
-              >
-                <span>{creditPack.pack.credits} {t('purchase.credits')}</span>
-                <span className="font-bold">{creditPack.displayPrice}</span>
-              </Button>
+              {(['pack_small', 'pack_popular', 'pack_large'] as PackKey[]).map((packKey) => {
+                const pack = oneTimePacks[packKey];
+                return (
+                  <Button
+                    key={pack.key}
+                    variant="primary"
+                    className="w-full justify-between"
+                    onClick={() => startCheckout(pack.key)}
+                  >
+                    <span>{pack.credits} {t('purchase.credits')}</span>
+                    <span className="font-bold">${(pack.priceCents / 100).toFixed(0)}</span>
+                  </Button>
+                );
+              })}
             </div>
           </div>
 
