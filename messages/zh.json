@@ -1101,6 +1101,11 @@
         "adjustment": "系统调整",
         "registration_bonus": "新人注册礼包"
       }
+    },
+    "navigation": {
+      "backHome": "返回首页",
+      "startCreating": "开始创作",
+      "viewCredits": "查看积分"
     }
   },
   "credits": {
@@ -1152,6 +1157,10 @@
         "welcome_bonus": "欢迎奖励",
         "referral_bonus": "推荐奖励"
       }
+    },
+    "navigation": {
+      "backToDashboard": "返回仪表盘",
+      "startCreating": "开始创作"
     }
   },
   "profile": {

@@ -1270,6 +1270,11 @@
         "adjustment": "System Adjustment",
         "registration_bonus": "New User Welcome Bonus"
       }
+    },
+    "navigation": {
+      "backHome": "Back home",
+      "startCreating": "Start creating",
+      "viewCredits": "View credits"
     }
   },
   "credits": {
@@ -1321,6 +1326,10 @@
         "welcome_bonus": "Welcome Bonus",
         "referral_bonus": "Referral Bonus"
       }
+    },
+    "navigation": {
+      "backToDashboard": "Back to dashboard",
+      "startCreating": "Start creating"
     }
   },
   "profile": {

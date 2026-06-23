@@ -3,6 +3,7 @@
 import { useCallback, useEffect, useState } from "react";
 import { useSession } from "@/lib/auth-client";
 import { useLocale, useTranslations } from "next-intl";
+import Link from "next/link";
 import { Button } from "@/components/button";
 import { Container } from "@/components/container";
 import { Background } from "@/components/background";
@@ -127,9 +128,21 @@ export default function CreditsPage() {
           <h1 className="text-4xl md:text-6xl font-bold text-foreground mb-4">
             {t('title')}
           </h1>
-          <p className="text-xl text-muted-foreground mb-12">
+          <p className="text-xl text-muted-foreground mb-6">
             {t('subtitle')}
           </p>
+          <div className="flex flex-wrap gap-3 mb-6">
+            <Link href={`/${locale}/dashboard`}>
+              <Button variant="outline" size="sm">
+                {t('navigation.backToDashboard')}
+              </Button>
+            </Link>
+            <Link href={`/${locale}/generate`}>
+              <Button variant="outline" size="sm">
+                {t('navigation.startCreating')}
+              </Button>
+            </Link>
+          </div>
         </motion.div>
 
         {/* Credits Overview */}

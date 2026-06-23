@@ -2,6 +2,7 @@
 
 import { useSession, signOut } from "@/lib/auth-client";
 import { useRouter, useSearchParams } from "next/navigation";
+import Link from "next/link";
 import { useLocale, useTranslations } from 'next-intl';
 import { Button } from "@/components/button";
 import { Container } from "@/components/container";
@@ -118,15 +119,42 @@ export default function DashboardPage() {
           <h1 className="text-4xl md:text-6xl font-bold text-foreground mb-4">
             {t('title')}
           </h1>
-          <p className="text-xl text-muted-foreground mb-12">
+          <p className="text-xl text-muted-foreground mb-6">
             {t('welcome')}, {displayUser?.name || displayUser?.email}
           </p>
 
+          <div className="flex flex-wrap gap-3 mb-6">
+            <Link href={`/${locale}`}>
+              <Button variant="outline" size="sm">
+                {t('navigation.backHome')}
+              </Button>
+            </Link>
+            <Link href={`/${locale}/generate`}>
+              <Button variant="outline" size="sm">
+                {t('navigation.startCreating')}
+              </Button>
+            </Link>
+            {paymentSuccess && (
+              <Link href={`/${locale}/credits`}>
+                <Button variant="outline" size="sm">
+                  {t('navigation.viewCredits')}
+                </Button>
+              </Link>
+            )}
+          </div>
+
           {paymentSuccess && (
             <div className="mb-8 p-4 bg-green-500/10 border border-green-500/20 rounded-lg">
-              <p className="text-green-600 font-medium">
-                {t('paymentSuccess')}
-              </p>
+              <div className="flex items-center justify-between">
+                <p className="text-green-600 font-medium">
+                  {t('paymentSuccess')}
+                </p>
+                <Link href={`/${locale}/credits`}>
+                  <Button variant="outline" size="sm" className="ml-4">
+                    {t('navigation.viewCredits')}
+                  </Button>
+                </Link>
+              </div>
             </div>
           )}
         </motion.div>

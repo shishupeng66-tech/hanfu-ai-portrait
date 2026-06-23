@@ -89,12 +89,12 @@ export function getSubscriptionPlanDisplayInfo(planKey?: string | null, locale: 
         displayName: isZh ? "免费版" : "Free",
         displayNameShort: isZh ? "免费" : "Free",
         badgeStyle: {
-          background: "rgba(255, 247, 236, 0.06)",
-          border: "1px solid rgba(255, 247, 236, 0.12)",
-          color: "rgba(255, 247, 236, 0.6)",
+          background: "rgba(248, 250, 252, 0.2)",
+          border: "1px solid rgba(203, 213, 225, 0.3)",
+          color: "rgba(71, 85, 105, 0.9)",
           fontWeight: 500,
         },
-        creditsPerCycle: 0,
+        creditsPerCycle: undefined,
         cycle: undefined,
       };
   }
