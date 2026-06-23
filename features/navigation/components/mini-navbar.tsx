@@ -287,7 +287,11 @@ export const MiniNavbar = () => {
                 </span>
 
                 {/* Credits pill */}
-                <CreditsBadge credits={userProfile?.credits ?? 0} locale={locale} />
+                <CreditsBadge
+                  credits={userProfile?.credits ?? 0}
+                  locale={locale}
+                  planName={planDisplayInfo.displayNameShort}
+                />
 
                 {/* Avatar + dropdown */}
                 <div className="relative" ref={menuRef}>
