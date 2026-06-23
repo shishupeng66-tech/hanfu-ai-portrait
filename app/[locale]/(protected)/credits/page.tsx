@@ -27,6 +27,7 @@ export default function CreditsPage() {
   const [loadingHistory, setLoadingHistory] = useState(true);
   const [page, setPage] = useState(1);
   const [hasMore, setHasMore] = useState(true);
+  const [loadingButtons, setLoadingButtons] = useState<Record<string, boolean>>({});
   const limit = 20;
 
   // Fetch user profile with credits
@@ -73,6 +74,38 @@ export default function CreditsPage() {
     }
   }, [session.data?.user?.id, fetchUserProfile, fetchCreditHistory]);
 
+  // Refresh data when page becomes visible again (e.g., user returns from checkout tab)
+  useEffect(() => {
+    const handleVisibilityChange = () => {
+      if (document.visibilityState === 'visible' && session.data?.user?.id) {
+        // Page became visible again, refresh user data
+        console.log('[Credits] Page visible, refreshing data');
+        fetchUserProfile();
+        fetchCreditHistory(1);
+        // Also clear any button loading states
+        setLoadingButtons({});
+      }
+    };
+    
+    // Also listen to window focus as an additional trigger
+    const handleWindowFocus = () => {
+      if (session.data?.user?.id) {
+        console.log('[Credits] Window focused, refreshing data');
+        fetchUserProfile();
+        fetchCreditHistory(1);
+        setLoadingButtons({});
+      }
+    };
+    
+    document.addEventListener('visibilitychange', handleVisibilityChange);
+    window.addEventListener('focus', handleWindowFocus);
+    
+    return () => {
+      document.removeEventListener('visibilitychange', handleVisibilityChange);
+      window.removeEventListener('focus', handleWindowFocus);
+    };
+  }, [session.data?.user?.id, fetchUserProfile, fetchCreditHistory]);
+
   const loadMore = () => {
     const nextPage = page + 1;
     setPage(nextPage);
@@ -83,16 +116,54 @@ export default function CreditsPage() {
     async (planKey: string) => {
       const userId = session.data?.user?.id;
       if (!userId) return;
-      const res = await fetch("/api/payments/creem/checkout", {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ key: planKey, kind: "one_time" }),
-      });
-      if (!res.ok) return;
-      const { url } = (await res.json()) as { url: string };
-      window.location.href = url;
+      
+      // Open a blank new tab immediately to avoid popup blockers
+      const checkoutWindow = window.open("about:blank", "_blank");
+      
+      // Disable opener reference for security if window was opened
+      if (checkoutWindow) {
+        checkoutWindow.opener = null;
+      }
+      
+      setLoadingButtons(prev => ({ ...prev, [planKey]: true }));
+      
+      try {
+        const res = await fetch("/api/payments/creem/checkout", {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify({ 
+            key: planKey, 
+            kind: "one_time",
+            cancelUrl: `/${locale}/credits`
+          }),
+        });
+        
+        if (!res.ok) {
+          // Close the blank window if checkout creation failed
+          checkoutWindow?.close();
+          setLoadingButtons(prev => ({ ...prev, [planKey]: false }));
+          return;
+        }
+        
+        const { url } = (await res.json()) as { url: string };
+        
+        // Navigate the new window to checkout URL
+        if (checkoutWindow) {
+          checkoutWindow.location.href = url;
+          // Clear button loading state since new tab is successfully opened
+          setLoadingButtons(prev => ({ ...prev, [planKey]: false }));
+        } else {
+          // Fallback to current tab only if new window was completely blocked
+          setLoadingButtons(prev => ({ ...prev, [planKey]: false }));
+          window.location.assign(url);
+        }
+      } catch {
+        // Close the blank window on any error
+        checkoutWindow?.close();
+        setLoadingButtons(prev => ({ ...prev, [planKey]: false }));
+      }
     },
-    [session.data?.user?.id]
+    [session.data?.user?.id, locale]
   );
 
   const credits = userProfile?.credits ?? 0;
@@ -167,15 +238,23 @@ export default function CreditsPage() {
             <div className="space-y-2">
               {(['pack_small', 'pack_popular', 'pack_large'] as PackKey[]).map((packKey) => {
                 const pack = oneTimePacks[packKey];
+                const isLoading = loadingButtons[pack.key];
                 return (
                   <Button
                     key={pack.key}
                     variant="primary"
                     className="w-full justify-between"
                     onClick={() => startCheckout(pack.key)}
+                    disabled={isLoading}
                   >
-                    <span>{pack.credits} {t('purchase.credits')}</span>
-                    <span className="font-bold">${(pack.priceCents / 100).toFixed(0)}</span>
+                    {isLoading ? (
+                      <span>{tCommon('status.loading')}</span>
+                    ) : (
+                      <>
+                        <span>{pack.credits} {t('purchase.credits')}</span>
+                        <span className="font-bold">${(pack.priceCents / 100).toFixed(0)}</span>
+                      </>
+                    )}
                   </Button>
                 );
               })}

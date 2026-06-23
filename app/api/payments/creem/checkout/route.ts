@@ -7,6 +7,7 @@ import { getErrorMessage } from "@/lib/error-utils";
 type Body = {
   kind: "subscription" | "one_time";
   key: string; // plan or pack key
+  cancelUrl?: string; // optional cancel URL, defaults to /pricing
 };
 
 export async function POST(req: NextRequest) {
@@ -24,7 +25,15 @@ export async function POST(req: NextRequest) {
     let creemPriceId: string | undefined;
     // Add success=1 so client has a stable success signal on return
     const successUrl = `${process.env.NEXT_PUBLIC_APP_URL || "http://localhost:3000"}/dashboard?success=1`;
-    const cancelUrl = `${process.env.NEXT_PUBLIC_APP_URL || "http://localhost:3000"}/pricing`;
+    let cancelUrl: string;
+    if (body.cancelUrl) {
+      // If cancelUrl already starts with http(s), use as is; otherwise prepend base URL
+      cancelUrl = body.cancelUrl.startsWith('http') 
+        ? body.cancelUrl
+        : `${process.env.NEXT_PUBLIC_APP_URL || "http://localhost:3000"}${body.cancelUrl}`;
+    } else {
+      cancelUrl = `${process.env.NEXT_PUBLIC_APP_URL || "http://localhost:3000"}/pricing`;
+    }
 
     if (kind === "subscription") {
       if (!isSubscriptionKey(key)) {

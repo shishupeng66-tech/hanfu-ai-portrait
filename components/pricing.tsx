@@ -283,7 +283,11 @@ export function Pricing() {
       const res = await fetch("/api/payments/creem/checkout", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ kind, key }),
+        body: JSON.stringify({ 
+          kind, 
+          key,
+          cancelUrl: `/${locale}/pricing?tab=${kind === "one_time" ? "packs" : "membership"}`
+        }),
       });
       const data = await res.json();
       if (data.url) {
