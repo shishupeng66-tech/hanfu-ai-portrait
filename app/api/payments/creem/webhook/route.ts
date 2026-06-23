@@ -10,6 +10,7 @@ import {
   resetSubscriptionSchedule,
 } from "@/lib/billing/subscription";
 import { eq, sql } from "drizzle-orm";
+import { handleSubscriptionTermination } from "@/lib/payments/subscription-termination";
 import { sendPurchaseEmail } from "@/lib/email";
 
 type CreemMetadata = {
@@ -180,7 +181,31 @@ export async function POST(req: NextRequest) {
           .update(subscriptionTable)
           .set({ status: "active" })
           .where(eq(subscriptionTable.providerSubId, subscriptionId));
+        return NextResponse.json({ received: true });
       }
+
+      // Handle subscription termination events
+      if (!type) {
+        // If event type is missing, just acknowledge
+        return NextResponse.json({ received: true });
+      }
+
+      // Only process if we have a subscription ID
+      if (subscriptionId) {
+        const handled = await handleSubscriptionTermination(
+          db,
+          type,
+          subscriptionId,
+          userId,
+          kind
+        );
+
+        if (handled) {
+          return NextResponse.json({ received: true });
+        }
+      }
+
+      // For other non-payment events, just acknowledge
       return NextResponse.json({ received: true });
     }
 
