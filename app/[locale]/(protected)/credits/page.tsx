@@ -123,6 +123,63 @@ export default function CreditsPage() {
       // Disable opener reference for security if window was opened
       if (checkoutWindow) {
         checkoutWindow.opener = null;
+        
+        // Write a simple loading page to avoid showing blank white page
+        const loadingText = locale === 'zh' ? '正在打开安全支付页面…' : 'Opening secure checkout…';
+        const html = `
+<!DOCTYPE html>
+<html lang="${locale}">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>${loadingText}</title>
+  <style>
+    body {
+      margin: 0;
+      padding: 0;
+      font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, sans-serif;
+      background: #f9fafb;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      min-height: 100vh;
+      color: #374151;
+    }
+    .loading-container {
+      text-align: center;
+      padding: 2rem;
+      max-width: 90%;
+    }
+    .spinner {
+      display: inline-block;
+      width: 24px;
+      height: 24px;
+      border: 3px solid rgba(59, 130, 246, 0.3);
+      border-radius: 50%;
+      border-top-color: #3b82f6;
+      animation: spin 1s ease-in-out infinite;
+      margin-bottom: 1rem;
+    }
+    @keyframes spin {
+      to { transform: rotate(360deg); }
+    }
+    .loading-text {
+      font-size: 1.125rem;
+      font-weight: 500;
+      margin: 0;
+      line-height: 1.5;
+    }
+  </style>
+</head>
+<body>
+  <div class="loading-container">
+    <div class="spinner"></div>
+    <p class="loading-text">${loadingText}</p>
+  </div>
+</body>
+</html>`;
+        checkoutWindow.document.write(html);
+        checkoutWindow.document.close();
       }
       
       setLoadingButtons(prev => ({ ...prev, [planKey]: true }));
@@ -142,6 +199,7 @@ export default function CreditsPage() {
           // Close the blank window if checkout creation failed
           checkoutWindow?.close();
           setLoadingButtons(prev => ({ ...prev, [planKey]: false }));
+          console.error('Checkout creation failed:', res.status, res.statusText);
           return;
         }
         
@@ -157,10 +215,11 @@ export default function CreditsPage() {
           setLoadingButtons(prev => ({ ...prev, [planKey]: false }));
           window.location.assign(url);
         }
-      } catch {
+      } catch (error) {
         // Close the blank window on any error
         checkoutWindow?.close();
         setLoadingButtons(prev => ({ ...prev, [planKey]: false }));
+        console.error('Checkout error:', error);
       }
     },
     [session.data?.user?.id, locale]
