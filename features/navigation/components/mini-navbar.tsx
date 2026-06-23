@@ -278,14 +278,6 @@ export const MiniNavbar = () => {
                 {/* Language switcher */}
                 <LanguageSwitcher variant="navbarIcon" />
 
-                {/* Plan badge */}
-                <span
-                  className="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium"
-                  style={planDisplayInfo.badgeStyle}
-                >
-                  {planDisplayInfo.displayNameShort}
-                </span>
-
                 {/* Credits pill */}
                 <CreditsBadge
                   credits={userProfile?.credits ?? 0}
