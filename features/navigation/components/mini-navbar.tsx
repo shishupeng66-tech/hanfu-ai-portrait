@@ -10,6 +10,8 @@ import { useRouter } from "next/navigation";
 import { cn } from "@/lib/utils";
 import { useSession, signOut } from "@/lib/auth-client";
 import { CreditsBadge } from "@/components/ui/credits-badge";
+import { getSubscriptionPlanDisplayInfo } from "@/lib/account-settings";
+import type { ClientUserProfile, UserProfileResponse } from "@/lib/client-api";
 import { Images, LogOut, ReceiptText, Settings } from "lucide-react";
 
 export const MiniNavbar = () => {
@@ -19,10 +21,34 @@ export const MiniNavbar = () => {
   const [isAtTop, setIsAtTop] = useState(true);
   const [isMenuOpen, setIsMenuOpen] = useState(false);
   const [isAvatarHovered, setIsAvatarHovered] = useState(false);
+  const [userProfile, setUserProfile] = useState<ClientUserProfile | null>(null);
+  const [loadingProfile, setLoadingProfile] = useState(false);
   const session = useSession();
   const isLoggedIn = !!session.data?.user;
   const menuRef = useRef<HTMLDivElement>(null);
   const isMenuOpenRef = useRef(false);
+
+  // Fetch user profile with subscription info
+  useEffect(() => {
+    if (!isLoggedIn || userProfile || loadingProfile) return;
+    
+    const fetchUserProfile = async () => {
+      setLoadingProfile(true);
+      try {
+        const response = await fetch("/api/user/profile");
+        if (response.ok) {
+          const data = (await response.json()) as UserProfileResponse;
+          setUserProfile(data.user);
+        }
+      } catch (error) {
+        console.error("Error fetching user profile in navbar:", error);
+      } finally {
+        setLoadingProfile(false);
+      }
+    };
+    
+    fetchUserProfile();
+  }, [isLoggedIn, userProfile, loadingProfile]);
 
   // Keep ref in sync with isMenuOpen for scroll handler
   useEffect(() => {
@@ -82,6 +108,10 @@ export const MiniNavbar = () => {
   const user = session.data?.user;
   const displayName = user?.name || (user?.email ? user.email.split("@")[0] : "");
   const initial = (user?.name || user?.email || "?").charAt(0).toUpperCase();
+  const planDisplayInfo = getSubscriptionPlanDisplayInfo(
+    userProfile?.subscription?.planKey,
+    locale
+  );
 
   return (
     <header className="fixed left-1/2 z-50 -translate-x-1/2" style={{ top: 13 }}>
@@ -248,8 +278,16 @@ export const MiniNavbar = () => {
                 {/* Language switcher */}
                 <LanguageSwitcher variant="navbarIcon" />
 
+                {/* Plan badge */}
+                <span
+                  className="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium"
+                  style={planDisplayInfo.badgeStyle}
+                >
+                  {planDisplayInfo.displayNameShort}
+                </span>
+
                 {/* Credits pill */}
-                <CreditsBadge credits={12} locale={locale} />
+                <CreditsBadge credits={userProfile?.credits ?? 0} locale={locale} />
 
                 {/* Avatar + dropdown */}
                 <div className="relative" ref={menuRef}>

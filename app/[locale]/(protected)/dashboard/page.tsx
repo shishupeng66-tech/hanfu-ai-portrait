@@ -9,7 +9,7 @@ import { Background } from "@/components/background";
 import { motion } from "framer-motion";
 import { useCallback, useEffect, useState } from "react";
 import { getDefaultOneTimePack } from "@/lib/billing-display";
-import { getSubscriptionPlanTranslationKey } from "@/lib/account-settings";
+import { getSubscriptionPlanDisplayInfo } from "@/lib/account-settings";
 import type { ClientUserProfile, UserProfileResponse } from "@/lib/client-api";
 
 export default function DashboardPage() {
@@ -88,8 +88,9 @@ export default function DashboardPage() {
   const user = session.data?.user;
   const displayUser = userProfile || user;
   const credits = userProfile?.credits ?? 0;
-  const subscriptionPlanKey = getSubscriptionPlanTranslationKey(
-    userProfile?.subscription?.planKey
+  const planDisplayInfo = getSubscriptionPlanDisplayInfo(
+    userProfile?.subscription?.planKey,
+    locale
   );
 
   if (loading && !user) {
@@ -209,9 +210,22 @@ export default function DashboardPage() {
               </div>
               <div className="flex flex-col">
                 <span className="text-sm text-muted-foreground">{t('cards.statistics.labels.plan')}</span>
-                <span className="text-base font-medium text-card-foreground">
-                  {t(`cards.statistics.plans.${subscriptionPlanKey}`)}
-                </span>
+                <div className="flex items-center gap-2">
+                  <span className="text-base font-medium text-card-foreground">
+                    {planDisplayInfo.displayName}
+                  </span>
+                  {planDisplayInfo.creditsPerCycle && planDisplayInfo.creditsPerCycle > 0 && (
+                    <span className="text-xs text-muted-foreground">
+                      {planDisplayInfo.cycle === 'year' 
+                        ? locale === 'zh' 
+                          ? `每年 ${planDisplayInfo.creditsPerCycle} 积分`
+                          : `${planDisplayInfo.creditsPerCycle} credits/year`
+                        : locale === 'zh'
+                          ? `每月 ${planDisplayInfo.creditsPerCycle} 积分`
+                          : `${planDisplayInfo.creditsPerCycle} credits/month`}
+                    </span>
+                  )}
+                </div>
               </div>
               <div className="flex flex-col">
                 <span className="text-sm text-muted-foreground">{t('cards.statistics.labels.credits')}</span>

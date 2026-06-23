@@ -8,6 +8,7 @@ import { Container } from "@/components/container";
 import { Background } from "@/components/background";
 import { motion } from "framer-motion";
 import { getDefaultOneTimePack } from "@/lib/billing-display";
+import { getSubscriptionPlanDisplayInfo } from "@/lib/account-settings";
 import type {
   ClientUserProfile,
   CreditHistoryRecord,
@@ -96,6 +97,10 @@ export default function CreditsPage() {
   );
 
   const credits = userProfile?.credits ?? 0;
+  const planDisplayInfo = getSubscriptionPlanDisplayInfo(
+    userProfile?.subscription?.planKey,
+    locale
+  );
 
   if (loading && !session.data?.user) {
     return (
@@ -139,8 +144,16 @@ export default function CreditsPage() {
             <h3 className="text-lg font-medium text-muted-foreground mb-2">
               {t('balance.title')}
             </h3>
-            <div className="text-4xl font-bold text-card-foreground mb-4">
+            <div className="text-4xl font-bold text-card-foreground mb-2">
               {credits}
+            </div>
+            <div className="mb-4">
+              <span
+                className="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium"
+                style={planDisplayInfo.badgeStyle}
+              >
+                {planDisplayInfo.displayNameShort}
+              </span>
             </div>
             <p className="text-sm text-muted-foreground">
               {t('balance.description')}
