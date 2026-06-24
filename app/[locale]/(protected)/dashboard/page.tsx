@@ -96,21 +96,19 @@ export default function DashboardPage() {
 
   if (loading && !user) {
     return (
-      <div className="relative min-h-screen">
-        <Background />
-        <Container className="relative z-10 py-20">
+      <div className="min-h-screen" style={{ background: "#1B120E" }}>
+        <div className="p-8">
           <div className="flex justify-center items-center h-64">
-            <p className="text-muted-foreground">{tCommon('status.loading')}</p>
+            <p style={{ color: "rgba(255, 247, 236, 0.62)" }}>{tCommon('status.loading')}</p>
           </div>
-        </Container>
+        </div>
       </div>
     );
   }
 
   return (
-    <div className="relative min-h-screen">
-      <Background />
-      <Container className="relative z-10 py-20">
+    <div className="min-h-screen" style={{ background: "#1B120E" }}>
+      <div className="p-8">
         <motion.div
           initial={{ y: 20, opacity: 0 }}
           animate={{ y: 0, opacity: 1 }}
@@ -300,7 +298,7 @@ export default function DashboardPage() {
             Sign Out
           </Button>
         </motion.div>
-      </Container>
+      </div>
     </div>
   );
 }

@@ -229,30 +229,28 @@ export default function CreditsPage() {
 
   if (loading && !session.data?.user) {
     return (
-      <div className="relative min-h-screen">
-        <Background />
-        <Container className="relative z-10 py-20">
+      <div className="min-h-screen" style={{ background: "#1B120E" }}>
+        <div className="p-8">
           <div className="flex justify-center items-center h-64">
-            <p className="text-muted-foreground">{tCommon('status.loading')}</p>
+            <p style={{ color: "rgba(255, 247, 236, 0.62)" }}>{tCommon('status.loading')}</p>
           </div>
-        </Container>
+        </div>
       </div>
     );
   }
 
   return (
-    <div className="relative min-h-screen">
-      <Background />
-      <Container className="relative z-10 py-20">
+    <div className="min-h-screen" style={{ background: "#1B120E" }}>
+      <div className="p-8">
         <motion.div
           initial={{ y: 20, opacity: 0 }}
           animate={{ y: 0, opacity: 1 }}
           transition={{ ease: "easeOut", duration: 0.5 }}
         >
-          <h1 className="text-4xl md:text-6xl font-bold text-foreground mb-4">
+          <h1 className="text-4xl md:text-6xl font-bold mb-4" style={{ color: "#FFF7EC" }}>
             {t('title')}
           </h1>
-          <p className="text-xl text-muted-foreground mb-6">
+          <p className="text-xl mb-6" style={{ color: "rgba(255, 247, 236, 0.62)" }}>
             {t('subtitle')}
           </p>
           <div className="flex flex-wrap gap-3 mb-6">
@@ -277,21 +275,33 @@ export default function CreditsPage() {
           className="grid grid-cols-1 md:grid-cols-3 gap-6 mb-8"
         >
           {/* Current Balance */}
-          <div className="bg-card/50 backdrop-blur-md rounded-2xl p-6 border border-border">
-            <h3 className="text-lg font-medium text-muted-foreground mb-2">
+          <div 
+            className="rounded-2xl p-6 border"
+            style={{
+              background: "#2A1C15",
+              borderColor: "rgba(232, 194, 122, 0.16)",
+            }}
+          >
+            <h3 className="text-lg font-medium mb-2" style={{ color: "rgba(255, 247, 236, 0.62)" }}>
               {t('balance.title')}
             </h3>
-            <div className="text-4xl font-bold text-card-foreground mb-2">
+            <div className="text-4xl font-bold mb-2" style={{ color: "#E8C27A" }}>
               {credits}
             </div>
-            <p className="text-sm text-muted-foreground">
+            <p className="text-sm" style={{ color: "rgba(255, 247, 236, 0.52)" }}>
               {t('balance.description')}
             </p>
           </div>
 
           {/* Quick Purchase Options */}
-          <div className="bg-card/50 backdrop-blur-md rounded-2xl p-6 border border-border">
-            <h3 className="text-lg font-medium text-muted-foreground mb-4">
+          <div 
+            className="rounded-2xl p-6 border"
+            style={{
+              background: "#2A1C15",
+              borderColor: "rgba(232, 194, 122, 0.16)",
+            }}
+          >
+            <h3 className="text-lg font-medium mb-4" style={{ color: "rgba(255, 247, 236, 0.62)" }}>
               {t('purchase.title')}
             </h3>
             <div className="space-y-2">
@@ -299,22 +309,36 @@ export default function CreditsPage() {
                 const pack = oneTimePacks[packKey];
                 const isLoading = loadingButtons[pack.key];
                 return (
-                  <Button
+                  <button
                     key={pack.key}
-                    variant="primary"
-                    className="w-full justify-between"
+                    className="w-full justify-between rounded-xl px-4 py-3 text-sm font-medium transition-all duration-200 flex items-center"
+                    style={{
+                      background: "#C83A32",
+                      color: "#FFF7EC",
+                      border: "1px solid rgba(232, 194, 122, 0.22)",
+                    }}
                     onClick={() => startCheckout(pack.key)}
                     disabled={isLoading}
+                    onMouseEnter={(e) => {
+                      if (!isLoading) {
+                        e.currentTarget.style.background = "#D7463E";
+                      }
+                    }}
+                    onMouseLeave={(e) => {
+                      if (!isLoading) {
+                        e.currentTarget.style.background = "#C83A32";
+                      }
+                    }}
                   >
                     {isLoading ? (
-                      <span>{tCommon('status.loading')}</span>
+                      <span style={{ color: "#FFF7EC" }}>{tCommon('status.loading')}</span>
                     ) : (
                       <>
                         <span>{pack.credits} {t('purchase.credits')}</span>
                         <span className="font-bold">${(pack.priceCents / 100).toFixed(0)}</span>
                       </>
                     )}
-                  </Button>
+                  </button>
                 );
               })}
             </div>
@@ -466,7 +490,7 @@ export default function CreditsPage() {
             )}
           </div>
         </motion.div>
-      </Container>
+      </div>
     </div>
   );
 }

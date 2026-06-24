@@ -47,7 +47,7 @@
       "chat": "对话",
       "image": "图片",
       "video": "视频",
-      "credits": "积分管理",
+      "credits": "积分详情",
       "profile": "个人资料",
       "settings": "设置"
     },
@@ -886,7 +886,7 @@
       "dashboard": "仪表板",
       "users": "用户管理",
       "subscriptions": "订阅管理",
-      "credits": "积分管理",
+      "credits": "积分详情",
       "backToDashboard": "返回用户面板"
     },
     "header": {
@@ -1001,7 +1001,7 @@
       }
     },
     "credits": {
-      "title": "积分管理",
+      "title": "积分详情",
       "totalIssued": "总发放",
       "totalUsed": "总消耗",
       "totalTransactions": "总交易数",
@@ -1109,7 +1109,7 @@
     }
   },
   "credits": {
-    "title": "积分管理",
+    "title": "积分详情",
     "subtitle": "管理您的积分并查看使用记录",
     "balance": {
       "title": "当前余额",

@@ -310,14 +310,10 @@ export default function GeneratePage() {
         throw new Error(t("errors.noResult"));
       }
       
-      // Success: update credits (optimistic update)
-      setUserCredits(prev => prev - GENERATION_COST);
+      // Success: update result and refresh credits
       setResultUrls(data.imageUrls);
-      
       // Refresh credits from server to ensure consistency
-      setTimeout(() => {
-        fetchUserCredits();
-      }, 500);
+      fetchUserCredits();
     } catch (err) {
       setError(err instanceof Error ? err.message : t("errors.generationFailed"));
     } finally {
