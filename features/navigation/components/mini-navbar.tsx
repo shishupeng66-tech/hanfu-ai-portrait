@@ -12,7 +12,7 @@ import { useSession, signOut } from "@/lib/auth-client";
 import { CreditsBadge } from "@/components/ui/credits-badge";
 import { getSubscriptionPlanDisplayInfo } from "@/lib/account-settings";
 import type { ClientUserProfile, UserProfileResponse } from "@/lib/client-api";
-import { Images, LogOut, ReceiptText, Settings } from "lucide-react";
+import { Images, LogOut, ReceiptText, Settings, Crown } from "lucide-react";
 
 export const MiniNavbar = () => {
   const locale = useLocale();
@@ -454,6 +454,31 @@ export const MiniNavbar = () => {
                           <span className="pointer-events-none absolute left-1.5 top-1/2 h-5 w-[2px] -translate-y-1/2 rounded-full bg-[#E8C27A] opacity-0 transition-opacity duration-200 group-hover:opacity-100" />
                           <Images size={16} strokeWidth={1.8} style={{ width: 18, flexShrink: 0 }} />
                           {isZh ? "我的作品" : "My Gallery"}
+                        </Link>
+
+                        <Link
+                          href={`/${locale}/pricing?tab=membership`}
+                          onClick={() => setIsMenuOpen(false)}
+                          className="group relative flex items-center gap-3 overflow-hidden px-3 py-2.5 rounded-xl text-sm font-medium transition-all duration-200"
+                          style={{
+                            color: "rgba(255, 247, 236, 0.74)",
+                            border: "1px solid transparent",
+                          }}
+                          onMouseEnter={(e) => {
+                            e.currentTarget.style.background =
+                              "linear-gradient(90deg, rgba(232, 194, 122, 0.16), rgba(232, 194, 122, 0.055))";
+                            e.currentTarget.style.borderColor = "rgba(232, 194, 122, 0.08)";
+                            e.currentTarget.style.color = "rgba(255, 247, 236, 0.96)";
+                          }}
+                          onMouseLeave={(e) => {
+                            e.currentTarget.style.background = "transparent";
+                            e.currentTarget.style.borderColor = "transparent";
+                            e.currentTarget.style.color = "rgba(255, 247, 236, 0.74)";
+                          }}
+                        >
+                          <span className="pointer-events-none absolute left-1.5 top-1/2 h-5 w-[2px] -translate-y-1/2 rounded-full bg-[#E8C27A] opacity-0 transition-opacity duration-200 group-hover:opacity-100" />
+                          <Crown size={16} strokeWidth={1.8} style={{ width: 18, flexShrink: 0 }} />
+                          {isZh ? "订阅" : "Subscription"}
                         </Link>
 
                         {/* Divider */}

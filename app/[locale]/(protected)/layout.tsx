@@ -2,6 +2,7 @@ import { headers } from "next/headers";
 import { redirect } from "next/navigation";
 import { EmailVerifiedGuard } from "@/features/auth/components/email-verified-guard";
 import { getActiveSessionUser } from "@/lib/auth/session";
+import { AppSidebar } from "@/features/navigation/components/app-sidebar";
 
 export default async function ProtectedLayout(
   props: {
@@ -28,9 +29,12 @@ export default async function ProtectedLayout(
 
   return (
     <EmailVerifiedGuard requireEmailVerification={true}>
-      <main className="min-h-screen">
-        {children}
-      </main>
+      <div className="flex min-h-screen">
+        <AppSidebar />
+        <main className="flex-1 ml-[260px]">
+          {children}
+        </main>
+      </div>
     </EmailVerifiedGuard>
   );
 }
