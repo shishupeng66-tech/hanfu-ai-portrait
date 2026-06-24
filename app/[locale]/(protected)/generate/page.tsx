@@ -1,7 +1,7 @@
 "use client";
 
 import Image from "next/image";
-import { ChangeEvent, useState, useMemo } from "react";
+import { ChangeEvent, useState, useMemo, useEffect, useCallback } from "react";
 import { cn } from "@/lib/utils";
 import Link from "next/link";
 import { useLocale, useTranslations } from "next-intl";
@@ -163,10 +163,35 @@ export default function GeneratePage() {
   const [resultUrls, setResultUrls] = useState<string[]>([]);
   const [error, setError] = useState<string | null>(null);
   const [isGenerating, setIsGenerating] = useState(false);
+  const [userCredits, setUserCredits] = useState<number>(0);
+  const [loadingCredits, setLoadingCredits] = useState(true);
 
   // Real auth session from better-auth
   const session = useSession();
   const isLoggedIn = !!session.data?.user;
+
+  // Fetch user credits
+  const fetchUserCredits = useCallback(async () => {
+    if (!isLoggedIn) {
+      setLoadingCredits(false);
+      return;
+    }
+    try {
+      const response = await fetch("/api/user/profile");
+      if (response.ok) {
+        const data = await response.json();
+        setUserCredits(data.user?.credits || 0);
+      }
+    } catch (error) {
+      console.error("Failed to fetch user credits:", error);
+    } finally {
+      setLoadingCredits(false);
+    }
+  }, [isLoggedIn]);
+
+  useEffect(() => {
+    fetchUserCredits();
+  }, [fetchUserCredits]);
 
   // Style templates data
   const styleTemplates: StyleTemplate[] = useMemo(
@@ -302,10 +327,33 @@ export default function GeneratePage() {
 
   // Handle generation
   async function handleGenerate() {
+    const GENERATION_COST = 1; // Credits consumed per generation
+    
+    // Check if user has uploaded a file
     if (!file) {
       setError(t("errors.uploadRequired"));
       return;
     }
+    
+    // Check if user has enough credits
+    if (userCredits < GENERATION_COST) {
+      const message = t("errors.insufficientCredits", { defaultValue: "积分不足，请先购买积分" });
+      const shouldNavigate = window.confirm(`${message}\n\n是否跳转到积分页面？`);
+      if (shouldNavigate) {
+        window.location.href = `/${locale}/credits`;
+      }
+      return;
+    }
+    
+    // Confirm credit consumption
+    const confirmMessage = t("confirmations.creditConsumption", { 
+      defaultValue: `本次生成将消耗 ${GENERATION_COST} 积分，是否继续？` 
+    });
+    if (!window.confirm(confirmMessage)) {
+      return; // User cancelled
+    }
+    
+    // Proceed with generation
     setIsGenerating(true);
     setError(null);
     setResultUrls([]);
@@ -325,7 +373,15 @@ export default function GeneratePage() {
       if (!data.imageUrls || data.imageUrls.length === 0) {
         throw new Error(t("errors.noResult"));
       }
+      
+      // Success: update credits (optimistic update)
+      setUserCredits(prev => prev - GENERATION_COST);
       setResultUrls(data.imageUrls);
+      
+      // Refresh credits from server to ensure consistency
+      setTimeout(() => {
+        fetchUserCredits();
+      }, 500);
     } catch (err) {
       setError(err instanceof Error ? err.message : t("errors.generationFailed"));
     } finally {
@@ -536,7 +592,7 @@ export default function GeneratePage() {
                       border: "1px solid rgba(232, 194, 122, 0.22)",
                     }}
                   >
-                    {tStudio("credits")}
+                    {loadingCredits ? "..." : `${userCredits} ${tStudio("credits")}`}
                   </div>
                 </div>
               ) : (
@@ -546,7 +602,7 @@ export default function GeneratePage() {
                 >
                   <Icon name="coins" className="h-[18px] w-[18px]" style={{ color: "#E8C27A" }} />
                   <span className="text-sm font-medium" style={{ color: "#E8C27A" }}>
-                    {tStudio("credits")}
+                    {loadingCredits ? "..." : `${userCredits} ${tStudio("credits")}`}
                   </span>
                 </div>
               )}
