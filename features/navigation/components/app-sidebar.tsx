@@ -172,40 +172,55 @@ function NavItem({
     <div className="flex flex-col w-full">
       <div
         className={`group flex items-center justify-between px-2.5 py-[7px] rounded-[6px] cursor-pointer transition-all duration-200 select-none
-          ${isActive
-            ? 'bg-black/5 dark:bg-white/10 text-foreground font-medium'
-            : 'text-muted-foreground hover:bg-black/5 dark:hover:bg-white/5 hover:text-foreground/90'
-          }
+          ${isActive ? 'font-medium' : ''}
         `}
-        style={{ paddingLeft: `${level * 12 + 10}px` }}
+        style={{
+          paddingLeft: `${level * 12 + 10}px`,
+          background: isActive ? 'rgba(232, 194, 122, 0.10)' : 'transparent',
+          color: isActive ? '#E8C27A' : 'rgba(255, 247, 236, 0.68)',
+        }}
+        onMouseEnter={(e) => {
+          if (!isActive) {
+            e.currentTarget.style.background = 'rgba(215, 70, 62, 0.10)';
+            e.currentTarget.style.color = '#E8C27A';
+          }
+        }}
+        onMouseLeave={(e) => {
+          if (!isActive) {
+            e.currentTarget.style.background = 'transparent';
+            e.currentTarget.style.color = 'rgba(255, 247, 236, 0.68)';
+          }
+        }}
         onClick={handleClick}
       >
         <div className="flex items-center gap-2.5">
           <item.icon
-            className={`w-[16px] h-[16px] transition-colors
-              ${isActive ? 'text-foreground' : 'text-muted-foreground/70 group-hover:text-foreground/70'}
-            `}
+            className="w-[16px] h-[16px] transition-colors flex-shrink-0"
+            style={{
+              color: isActive ? '#E8C27A' : 'rgba(255, 247, 236, 0.60)',
+            }}
             strokeWidth={1.5}
           />
-          <span className="text-[13px] tracking-wide truncate">
+          <span className="text-[13px] tracking-wide truncate" style={{ fontWeight: isActive ? 600 : 400 }}>
             {item.title}
           </span>
         </div>
 
         <div className="flex items-center gap-2">
           {item.shortcut && (
-            <kbd className="hidden group-hover:inline-flex items-center justify-center h-5 px-1.5 text-[10px] font-medium font-mono text-muted-foreground/60 bg-background/50 border border-border/50 rounded-[4px] shadow-xs">
+            <kbd className="hidden group-hover:inline-flex items-center justify-center h-5 px-1.5 text-[10px] font-medium font-mono rounded-[4px]" style={{ color: 'rgba(255, 247, 236, 0.40)', background: 'rgba(255, 247, 236, 0.06)', border: '1px solid rgba(232, 194, 122, 0.15)' }}>
               {item.shortcut}
             </kbd>
           )}
           {item.badge && (
-            <span className="flex items-center justify-center min-w-[20px] h-5 px-1.5 text-[10px] font-medium rounded-full bg-primary/10 text-primary">
+            <span className="flex items-center justify-center min-w-[20px] h-5 px-1.5 text-[10px] font-medium rounded-full" style={{ background: 'rgba(200, 58, 50, 0.15)', color: '#E8C27A' }}>
               {item.badge}
             </span>
           )}
           {hasChildren && (
             <ChevronRight
-              className={`w-3.5 h-3.5 text-muted-foreground/50 transition-transform duration-200 ${isOpen ? 'rotate-90' : ''}`}
+              className={`w-3.5 h-3.5 transition-transform duration-200 ${isOpen ? 'rotate-90' : ''}`}
+              style={{ color: 'rgba(255, 247, 236, 0.40)' }}
               strokeWidth={2}
             />
           )}
@@ -264,7 +279,7 @@ export function SidebarNav({
         {mockNavGroups.map((group, idx) => (
           <div key={idx} className="flex flex-col gap-0.5">
             {group.heading && (
-              <span className="px-2.5 mb-1 text-[11px] font-semibold tracking-wider text-muted-foreground/50 uppercase">
+              <span className="px-2.5 mb-1 text-[11px] font-semibold tracking-wider uppercase" style={{ color: 'rgba(255, 247, 236, 0.38)' }}>
                 {group.heading}
               </span>
             )}
@@ -280,7 +295,7 @@ export function SidebarNav({
         ))}
       </div>
 
-      <div className="mt-auto pt-4 border-t border-border/50 flex flex-col gap-0.5">
+      <div className="pt-4 flex flex-col gap-0.5" style={{ borderTop: '1px solid rgba(232, 194, 122, 0.10)' }}>
         {mockBottomItems.map(item => (
           <NavItem
             key={item.id}
@@ -320,16 +335,16 @@ export function AppSidebar({
 
   return (
     <aside
-      className="fixed left-0 top-0 h-screen z-40 transition-[width] duration-300 ease-out"
+      className="fixed left-0 top-0 bottom-0 z-40 flex flex-col transition-[width] duration-300 ease-out"
       style={{ width: isOpen ? 260 : 0, background: '#241812' }}
     >
       <div
-        className={`h-full overflow-hidden transition-opacity duration-300 ${
+        className={`flex-1 flex flex-col min-h-0 overflow-hidden transition-opacity duration-300 ${
           isOpen ? 'opacity-100' : 'opacity-0'
         }`}
       >
         <SidebarNav
-          className="w-[260px] h-full border-none bg-transparent"
+          className="w-[260px] h-full min-h-0 flex-1 border-none bg-transparent"
           activeId={activeId}
           onSelect={handleSelect}
           activeWorkspace={activeWorkspace}
