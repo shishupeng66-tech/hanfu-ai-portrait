@@ -101,7 +101,7 @@ export default function ProfilePage() {
                 initial={{ scale: 0.8, opacity: 0 }}
                 animate={{ scale: 1, opacity: 1 }}
                 transition={{ ease: "easeOut", duration: 0.5, delay: 0.2 }}
-                className="w-32 h-32 rounded-full bg-gradient-to-br from-blue-500 to-purple-600 flex items-center justify-center text-white font-bold text-4xl mb-6 ring-4 ring-border/50"
+                className="w-32 h-32 rounded-full bg-gradient-to-br from-[rgba(232,194,122,0.92)] via-[rgba(232,194,122,0.60)] to-[rgba(232,194,122,0.30)] flex items-center justify-center text-[rgba(255,247,236,0.92)] font-bold text-4xl mb-6 ring-4 ring-border/50"
               >
                 {displayUser?.image ? (
                   <Image

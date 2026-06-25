@@ -48,8 +48,8 @@ function StarRating() {
         >
           <path
             d="M7 1L8.545 5.13L13 5.545L9.73 8.545L10.695 13L7 10.635L3.305 13L4.27 8.545L1 5.545L5.455 5.13L7 1Z"
-            fill="#EF9F27"
-            stroke="#EF9F27"
+            fill="#E8C27A"
+            stroke="#E8C27A"
             strokeWidth="0.5"
           />
         </svg>
@@ -118,12 +118,12 @@ export function HomeTestimonials() {
               transition={{ delay: i * 0.08, duration: 0.4 }}
               className={cn(
                 "flex flex-col p-6 rounded-2xl border bg-card",
-                "border-muted/50 hover:border-[#EF9F27]/30",
+                "border-muted/50 hover:border-[#E8C27A]/30",
                 "transition-all duration-300 hover:shadow-md"
               )}
             >
               {/* Quote icon */}
-              <div className="text-[#EF9F27]/30 mb-3">
+              <div className="text-[#E8C27A]/30 mb-3">
                 <QuoteIcon />
               </div>
 
@@ -135,7 +135,7 @@ export function HomeTestimonials() {
               {/* Author */}
               <div className="flex items-center gap-3 pt-4 border-t border-border/50">
                 {/* Avatar placeholder */}
-                <div className="w-10 h-10 rounded-full bg-gradient-to-br from-[#0F6E56]/20 to-[#EF9F27]/20 flex items-center justify-center text-xs font-semibold text-[#0F6E56] shrink-0">
+                <div className="w-10 h-10 rounded-full bg-gradient-to-br from-[#E8C27A]/20 to-[#E8C27A]/10 flex items-center justify-center text-xs font-semibold text-[#E8C27A] shrink-0">
                   {item.name.charAt(0)}
                 </div>
                 <div className="min-w-0">

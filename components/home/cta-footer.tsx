@@ -15,17 +15,17 @@ export function HomeCTAFooter() {
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         <div
           ref={ref}
-          className="relative overflow-hidden rounded-3xl bg-gradient-to-br from-[#0F6E56] via-[#0F6E56]/90 to-[#19A07E] p-8 md:p-16 lg:p-20"
+          className="relative overflow-hidden rounded-3xl bg-gradient-to-br from-[#111114] via-[#141418] to-[#111114] border border-[rgba(255,247,236,0.08)] p-8 md:p-16 lg:p-20"
         >
           {/* Decorative elements */}
           <div className="absolute inset-0 pointer-events-none">
             {/* Top-right circle */}
             <div className="absolute -top-24 -right-24 w-64 h-64 rounded-full bg-white/5" />
-            <div className="absolute -top-12 -right-12 w-32 h-32 rounded-full bg-[#EF9F27]/10" />
+            <div className="absolute -top-12 -right-12 w-32 h-32 rounded-full bg-[#E8C27A]/10" />
 
             {/* Bottom-left circle */}
             <div className="absolute -bottom-24 -left-24 w-64 h-64 rounded-full bg-black/10" />
-            <div className="absolute -bottom-12 -left-12 w-32 h-32 rounded-full bg-[#D85A30]/10" />
+            <div className="absolute -bottom-12 -left-12 w-32 h-32 rounded-full bg-[#E8C27A]/10" />
 
             {/* Decorative dots pattern */}
             <svg
@@ -55,18 +55,18 @@ export function HomeCTAFooter() {
             transition={{ duration: 0.5 }}
             className="relative z-10 text-center max-w-2xl mx-auto"
           >
-            <h2 className="text-2xl sm:text-3xl md:text-4xl font-bold text-white mb-4 leading-tight">
+            <h2 className="text-2xl sm:text-3xl md:text-4xl font-bold text-[rgba(255,247,236,0.92)] mb-4 leading-tight">
               {t("title")}
             </h2>
-            <p className="text-base md:text-lg text-white/80 mb-10 leading-relaxed">
+            <p className="text-base md:text-lg text-[rgba(255,247,236,0.72)] mb-10 leading-relaxed">
               {t("subtitle")}
             </p>
 
             <LocaleLink
               href="/generate"
-              className="inline-flex items-center gap-2 px-8 py-4 rounded-full bg-[#EF9F27] text-white font-semibold text-base transition-all active:scale-95 shadow-lg hover:shadow-xl hover:bg-[#F0A838]"
+              className="inline-flex items-center gap-2 px-8 py-4 rounded-full bg-[rgba(232,194,122,0.10)] text-[#E8C27A] font-semibold text-base transition-all active:scale-95 shadow-lg hover:shadow-xl hover:bg-[rgba(232,194,122,0.16)] border border-[rgba(232,194,122,0.16)]"
               style={{
-                boxShadow: "0 4px 24px rgba(239,159,39,0.4)",
+                boxShadow: "0 4px 24px rgba(232,194,122,0.15)",
               }}
             >
               {t("cta")}
@@ -88,7 +88,7 @@ export function HomeCTAFooter() {
             </LocaleLink>
 
             {/* Trust note */}
-            <p className="mt-6 text-sm text-white/50">
+            <p className="mt-6 text-sm text-[rgba(255,247,236,0.45)]">
               {t("trustNote")}
             </p>
           </motion.div>

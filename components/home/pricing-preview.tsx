@@ -71,61 +71,61 @@ export function HomePricingPreview() {
   const colorStyles = {
     blue: {
       cardBg:
-        "linear-gradient(160deg, #F0F7FF 0%, #E2EEFF 55%, #D6E6FE 100%)",
-      borderColor: "rgba(61, 123, 200, 0.18)",
-      accent: "#3D7BC8",
-      iconBg: "#FFFFFF",
-      iconColor: "#3D7BC8",
-      iconRing: "rgba(61, 123, 200, 0.22)",
-      checkColor: "#FFFFFF",
-      checkBg: "#3D7BC8",
-      buttonBg: "#FFFFFF",
-      buttonText: "#3D7BC8",
-      buttonBorder: "rgba(61, 123, 200, 0.32)",
-      buttonHoverBg: "#3D7BC8",
-      buttonHoverText: "#FFFFFF",
+        "linear-gradient(160deg, #111114 0%, #141418 55%, #111114 100%)",
+      borderColor: "rgba(255, 247, 236, 0.08)",
+      accent: "#E8C27A",
+      iconBg: "rgba(232, 194, 122, 0.10)",
+      iconColor: "#E8C27A",
+      iconRing: "rgba(232, 194, 122, 0.22)",
+      checkColor: "#0B0B0D",
+      checkBg: "#E8C27A",
+      buttonBg: "rgba(232, 194, 122, 0.10)",
+      buttonText: "#E8C27A",
+      buttonBorder: "rgba(232, 194, 122, 0.16)",
+      buttonHoverBg: "rgba(232, 194, 122, 0.16)",
+      buttonHoverText: "#E8C27A",
     },
     green: {
       cardBg:
-        "linear-gradient(160deg, #EEFAF1 0%, #DEF4E5 55%, #CCEDD8 100%)",
-      borderColor: "rgba(47, 143, 92, 0.22)",
-      accent: "#2F8F5C",
-      iconBg: "#FFFFFF",
-      iconColor: "#2F8F5C",
-      iconRing: "rgba(47, 143, 92, 0.24)",
-      checkColor: "#FFFFFF",
-      checkBg: "#2F8F5C",
-      buttonBg: "#2F8F5C",
-      buttonText: "#FFFFFF",
+        "linear-gradient(160deg, #111114 0%, #141418 55%, #111114 100%)",
+      borderColor: "rgba(232, 194, 122, 0.12)",
+      accent: "#E8C27A",
+      iconBg: "rgba(232, 194, 122, 0.10)",
+      iconColor: "#E8C27A",
+      iconRing: "rgba(232, 194, 122, 0.24)",
+      checkColor: "#0B0B0D",
+      checkBg: "#E8C27A",
+      buttonBg: "#E8C27A",
+      buttonText: "#0B0B0D",
       buttonBorder: "transparent",
-      buttonHoverBg: "#247048",
-      buttonHoverText: "#FFFFFF",
+      buttonHoverBg: "#F2D38A",
+      buttonHoverText: "#0B0B0D",
     },
     pink: {
       cardBg:
-        "linear-gradient(160deg, #FFF1F3 0%, #FCE3E7 55%, #F8D2D9 100%)",
-      borderColor: "rgba(196, 90, 110, 0.20)",
-      accent: "#C45A6E",
-      iconBg: "#FFFFFF",
-      iconColor: "#C45A6E",
-      iconRing: "rgba(196, 90, 110, 0.22)",
-      checkColor: "#FFFFFF",
-      checkBg: "#C45A6E",
-      buttonBg: "#FFFFFF",
-      buttonText: "#C45A6E",
-      buttonBorder: "rgba(196, 90, 110, 0.32)",
-      buttonHoverBg: "#C45A6E",
-      buttonHoverText: "#FFFFFF",
+        "linear-gradient(160deg, #111114 0%, #141418 55%, #111114 100%)",
+      borderColor: "rgba(255, 247, 236, 0.08)",
+      accent: "#E8C27A",
+      iconBg: "rgba(232, 194, 122, 0.10)",
+      iconColor: "#E8C27A",
+      iconRing: "rgba(232, 194, 122, 0.22)",
+      checkColor: "#0B0B0D",
+      checkBg: "#E8C27A",
+      buttonBg: "rgba(232, 194, 122, 0.10)",
+      buttonText: "#E8C27A",
+      buttonBorder: "rgba(232, 194, 122, 0.16)",
+      buttonHoverBg: "rgba(232, 194, 122, 0.16)",
+      buttonHoverText: "#E8C27A",
     },
   } as const;
 
   const text = {
-    title: "#1F1F1F",
-    desc: "#5A5A5A",
-    price: "#1F1F1F",
-    period: "#6B6B6B",
-    feature: "#3A3A3A",
-    footer: "rgba(40, 40, 40, 0.72)",
+    title: "rgba(255, 247, 236, 0.92)",
+    desc: "rgba(255, 247, 236, 0.45)",
+    price: "rgba(255, 247, 236, 0.92)",
+    period: "rgba(255, 247, 236, 0.45)",
+    feature: "rgba(255, 247, 236, 0.72)",
+    footer: "rgba(255, 247, 236, 0.72)",
   };
 
   return (
@@ -173,9 +173,9 @@ export function HomePricingPreview() {
                   <div
                     className="absolute right-5 top-5 rounded-full px-3 py-1 text-xs font-semibold"
                     style={{
-                      color: "#FFFFFF",
+                      color: "#0B0B0D",
                       background: styles.accent,
-                      boxShadow: "0 6px 14px rgba(47, 143, 92, 0.30)",
+                      boxShadow: "0 6px 14px rgba(232, 194, 122, 0.20)",
                     }}
                   >
                     {t("popular")}
@@ -288,7 +288,7 @@ export function HomePricingPreview() {
         >
           <LocaleLink
             href="/pricing"
-            className="text-[15px] font-medium underline underline-offset-4 decoration-[#2F8F5C]/40 transition-colors hover:decoration-[#2F8F5C]"
+            className="text-[15px] font-medium underline underline-offset-4 decoration-[#E8C27A]/40 transition-colors hover:decoration-[#E8C27A]"
             style={{ color: text.footer }}
           >
             {t("footer")}

@@ -6,93 +6,89 @@
 
 @layer base {
   :root {
-    /* 主要背景和前景色 */
-    --background: 0 0% 100%;
-    --foreground: 0 0% 3.9%;
+    /* 深色金色高级SaaS风格 - 统一暗色模式 */
+    --background: 240 6% 4%;
+    --foreground: 36 100% 96%;
 
-    /* 卡片容器 */
-    --card: 0 0% 100%;
-    --card-foreground: 0 0% 3.9%;
+    --card: 240 5% 7%;
+    --card-foreground: 36 100% 96%;
 
-    /* 弹出层 */
-    --popover: 0 0% 100%;
-    --popover-foreground: 0 0% 3.9%;
+    --popover: 240 5% 7%;
+    --popover-foreground: 36 100% 96%;
 
-    /* 主色调 - 中国红 (用于主要按钮、链接等) */
-    --primary: 0 72% 51%;
-    --primary-foreground: 0 0% 100%;
+    /* 主色调 - 金色 */
+    --primary: 40 62% 69%;
+    --primary-foreground: 240 6% 4%;
 
-    /* 次要色调 - 金色系 */
-    --secondary: 45 93% 58%;
-    --secondary-foreground: 0 0% 9%;
+    /* 次要色调 */
+    --secondary: 40 62% 69%;
+    --secondary-foreground: 240 6% 4%;
 
     /* 柔和/禁用状态 */
-    --muted: 0 0% 96.1%;
-    --muted-foreground: 0 0% 35%;
+    --muted: 240 5% 10%;
+    --muted-foreground: 36 100% 96%;
 
     /* 强调色 - 金色 */
-    --accent: 45 93% 58%;
-    --accent-foreground: 0 0% 9%;
+    --accent: 40 62% 69%;
+    --accent-foreground: 240 6% 4%;
 
     /* 边框、输入框、焦点环 */
-    --border: 0 0% 89.8%;
-    --input: 0 0% 89.8%;
-    --ring: 0 72% 51%;
+    --border: 36 100% 96%;
+    --input: 36 100% 96%;
+    --ring: 40 62% 69%;
 
-    /* 渐变色支持 - 红金渐变 */
-    --gradient-from: 0 72% 51%;
-    --gradient-to: 45 93% 58%;
+    /* 渐变色支持 - 金色系 */
+    --gradient-from: 40 62% 69%;
+    --gradient-to: 40 70% 74%;
 
     /* 导航栏特定颜色 */
-    --navbar-bg: 0 0% 98%;
-    --navbar-bg-scrolled: 0 0% 96.1%;
+    --navbar-bg: 240 5% 7%;
+    --navbar-bg-scrolled: 240 5% 10%;
 
-    /* 阴影颜色 (用于导航栏、卡片等) */
-    --shadow-color: 0 72% 51%;
+    /* 阴影颜色 */
+    --shadow-color: 40 62% 69%;
 
     /* 悬停状态 */
-    --hover-bg: 0 72% 51%;
-    --hover-foreground: 0 0% 100%;
+    --hover-bg: 240 5% 11%;
+    --hover-foreground: 36 100% 96%;
   }
 
   .dark {
-    --background: 0 0% 3.9%;
-    --foreground: 0 0% 98%;
+    --background: 240 6% 4%;
+    --foreground: 36 100% 96%;
 
-    --card: 0 0% 3.9%;
-    --card-foreground: 0 0% 98%;
+    --card: 240 5% 7%;
+    --card-foreground: 36 100% 96%;
 
-    --popover: 0 0% 3.9%;
-    --popover-foreground: 0 0% 98%;
+    --popover: 240 5% 7%;
+    --popover-foreground: 36 100% 96%;
 
-    /* 主色调 - 中国红 (深色模式) */
-    --primary: 0 72% 61%;
-    --primary-foreground: 0 0% 100%;
+    --primary: 40 62% 69%;
+    --primary-foreground: 240 6% 4%;
 
-    /* 次要色调 - 金色系 */
-    --secondary: 45 93% 68%;
-    --secondary-foreground: 0 0% 9%;
+    --secondary: 40 62% 69%;
+    --secondary-foreground: 240 6% 4%;
 
-    --muted: 0 0% 14.9%;
-    --muted-foreground: 0 0% 70%;
+    --muted: 240 5% 10%;
+    --muted-foreground: 36 100% 96%;
 
-    --accent: 45 93% 68%;
-    --accent-foreground: 0 0% 9%;
+    --accent: 40 62% 69%;
+    --accent-foreground: 240 6% 4%;
 
-    --border: 0 0% 14.9%;
-    --input: 0 0% 14.9%;
-    --ring: 0 72% 61%;
+    --border: 36 100% 96%;
+    --input: 36 100% 96%;
+    --ring: 40 62% 69%;
 
-    --gradient-from: 0 72% 61%;
-    --gradient-to: 45 93% 68%;
+    --gradient-from: 40 62% 69%;
+    --gradient-to: 40 70% 74%;
 
-    --navbar-bg: 0 0% 11.8%;
-    --navbar-bg-scrolled: 0 0% 14.9%;
+    --navbar-bg: 240 5% 7%;
+    --navbar-bg-scrolled: 240 5% 10%;
 
-    --shadow-color: 0 72% 61%;
+    --shadow-color: 40 62% 69%;
 
-    --hover-bg: 0 72% 61%;
-    --hover-foreground: 0 0% 100%;
+    --hover-bg: 240 5% 11%;
+    --hover-foreground: 36 100% 96%;
   }
 }
 
@@ -104,6 +100,8 @@ html {
 body {
   overflow-x: hidden;
   width: 100%;
+  background-color: #0B0B0D;
+  color: rgba(255, 247, 236, 0.72);
 }
 
 /* Fumadocs language popovers are translucent by default, which lets sidebar

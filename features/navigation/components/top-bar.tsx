@@ -34,22 +34,22 @@ export function TopBar({
     <div
       className="h-14 flex items-center px-4 justify-between shrink-0"
       style={{
-        background: "#1B120E",
-        borderBottom: "1px solid rgba(232, 194, 122, 0.10)",
+        background: "#0B0B0D",
+        borderBottom: "1px solid rgba(255, 247, 236, 0.08)",
       }}
     >
       <div className="flex items-center gap-3">
         <button
           onClick={onToggleSidebar}
           className="p-1.5 rounded-md transition-colors"
-          style={{ color: "rgba(255, 247, 236, 0.5)" }}
+          style={{ color: "rgba(255, 247, 236, 0.45)" }}
           onMouseEnter={(e) => {
-            e.currentTarget.style.background = "rgba(232, 194, 122, 0.1)";
+            e.currentTarget.style.background = "rgba(232, 194, 122, 0.10)";
             e.currentTarget.style.color = "#E8C27A";
           }}
           onMouseLeave={(e) => {
             e.currentTarget.style.background = "transparent";
-            e.currentTarget.style.color = "rgba(255, 247, 236, 0.5)";
+            e.currentTarget.style.color = "rgba(255, 247, 236, 0.45)";
           }}
         >
           {isSidebarOpen ? (
@@ -60,13 +60,13 @@ export function TopBar({
         </button>
         <div
           className="flex items-center gap-2 text-sm"
-          style={{ color: "rgba(255, 247, 236, 0.5)" }}
+          style={{ color: "rgba(255, 247, 236, 0.45)" }}
         >
           <span className="truncate">{workspaceName}</span>
           <span>/</span>
           <span
             className="font-medium truncate"
-            style={{ color: "#FFF7EC" }}
+            style={{ color: "rgba(255, 247, 236, 0.92)" }}
           >
             {pageTitle}
           </span>
@@ -83,8 +83,8 @@ export function TopBar({
         <div
           className="w-8 h-8 rounded-full border"
           style={{
-            background: "rgba(232, 194, 122, 0.1)",
-            borderColor: "rgba(232, 194, 122, 0.2)",
+            background: "rgba(232, 194, 122, 0.10)",
+            borderColor: "rgba(232, 194, 122, 0.16)",
           }}
         />
       </div>

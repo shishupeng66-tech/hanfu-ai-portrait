@@ -54,11 +54,11 @@ function FAQItem({
       animate={isInView ? { opacity: 1, y: 0 } : { opacity: 0, y: 20 }}
       transition={{ delay, duration: 0.4 }}
       className={cn(
-        "border rounded-xl overflow-hidden transition-all duration-300",
-        isOpen
-          ? "border-[#0F6E56]/30 bg-card shadow-sm"
-          : "border-border/50 bg-card hover:border-[#0F6E56]/20"
-      )}
+          "border rounded-xl overflow-hidden transition-all duration-300",
+          isOpen
+            ? "border-[#E8C27A]/30 bg-card shadow-sm"
+            : "border-border/50 bg-card hover:border-[#E8C27A]/20"
+        )}
     >
       <button
         onClick={onToggle}
@@ -71,7 +71,7 @@ function FAQItem({
         <span
           className={cn(
             "shrink-0 transition-colors",
-            isOpen ? "text-[#0F6E56]" : "text-muted-foreground"
+            isOpen ? "text-[#E8C27A]" : "text-muted-foreground"
           )}
         >
           <ChevronIcon isOpen={isOpen} />
@@ -120,7 +120,7 @@ export function HomeFAQ() {
   return (
     <section className="relative py-20 md:py-32">
       {/* Background accent */}
-      <div className="absolute inset-0 bg-gradient-to-b from-transparent via-[#EF9F27]/3 to-transparent dark:via-[#EF9F27]/5 pointer-events-none" />
+      <div className="absolute inset-0 bg-gradient-to-b from-transparent via-[#E8C27A]/3 to-transparent dark:via-[#E8C27A]/5 pointer-events-none" />
 
       <div className="relative z-10 max-w-3xl mx-auto px-4 sm:px-6 lg:px-8">
         {/* Section Header */}

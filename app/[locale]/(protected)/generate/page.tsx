@@ -325,25 +325,25 @@ export default function GeneratePage() {
     <main
       className="flex-1 min-h-screen"
       style={{
-        background: "#1B120E",
+        background: "#0B0B0D",
       }}
     >
 
         {/* Top Bar */}
         <div
           className="px-8 py-6 border-b"
-          style={{ borderColor: "rgba(232, 194, 122, 0.12)" }}
+          style={{ borderColor: "rgba(255, 247, 236, 0.08)" }}
         >
           <div>
             <h1
               className="text-3xl font-bold mb-1"
-              style={{ color: "#FFF7EC" }}
+              style={{ color: "rgba(255, 247, 236, 0.92)" }}
             >
               {tStudio("title")}
             </h1>
             <p
               className="text-sm"
-              style={{ color: "rgba(255, 247, 236, 0.62)" }}
+              style={{ color: "rgba(255, 247, 236, 0.72)" }}
             >
               {tStudio("subtitle")}
             </p>
@@ -358,14 +358,14 @@ export default function GeneratePage() {
             <div
               className="p-6 border"
               style={{
-                background: "#2A1C15",
-                borderColor: "rgba(232, 194, 122, 0.16)",
+                background: "#111114",
+                borderColor: "rgba(255, 247, 236, 0.08)",
                 borderRadius: "24px",
               }}
             >
               <h2
                 className="text-xl font-semibold mb-4"
-                style={{ color: "#FFF7EC" }}
+                style={{ color: "rgba(255, 247, 236, 0.92)" }}
               >
                 {t("uploadCard.title")}
               </h2>
@@ -379,8 +379,8 @@ export default function GeneratePage() {
                 <div
                   className="min-h-[320px] flex flex-col items-center justify-center border-2 border-dashed rounded-3xl p-6 text-center transition-all"
                   style={{
-                    borderColor: "rgba(232, 194, 122, 0.2)",
-                    background: "rgba(27, 18, 14, 0.5)",
+                    borderColor: "rgba(255, 247, 236, 0.08)",
+                    background: "rgba(11, 11, 13, 0.5)",
                   }}
                 >
                   {previewUrl ? (
@@ -397,19 +397,19 @@ export default function GeneratePage() {
                     <div>
                       <div
                         className="w-16 h-16 mx-auto mb-4 rounded-full flex items-center justify-center"
-                        style={{ background: "rgba(232, 194, 122, 0.1)" }}
+                        style={{ background: "rgba(232, 194, 122, 0.10)" }}
                       >
                         <span className="text-2xl" style={{ color: "#E8C27A" }}>📸</span>
                       </div>
                       <p
                         className="text-lg font-medium mb-1"
-                        style={{ color: "#FFF7EC" }}
+                        style={{ color: "rgba(255, 247, 236, 0.92)" }}
                       >
                         {t("uploadCard.cta")}
                       </p>
                       <p
                         className="text-sm"
-                        style={{ color: "rgba(255, 247, 236, 0.62)" }}
+                        style={{ color: "rgba(255, 247, 236, 0.72)" }}
                       >
                         {t("uploadCard.hint")}
                       </p>
@@ -423,21 +423,21 @@ export default function GeneratePage() {
             <div
               className="p-6 border"
               style={{
-                borderColor: "rgba(232, 194, 122, 0.16)",
+                borderColor: "rgba(255, 247, 236, 0.08)",
                 borderRadius: "24px",
-                background: "#2A1C15",
+                background: "#111114",
               }}
             >
               <h2
                 className="text-xl font-semibold mb-4"
-                style={{ color: "#FFF7EC" }}
+                style={{ color: "rgba(255, 247, 236, 0.92)" }}
               >
                 {t("previewCard.title")}
               </h2>
               <div
                 className="min-h-[320px] flex items-center justify-center rounded-3xl border-dashed border-2 border-border"
                 style={{
-                  background: "rgba(27, 18, 14, 0.5)",
+                  background: "rgba(11, 11, 13, 0.5)",
                 }}
               >
                 {resultUrls.length > 0 ? (
@@ -469,11 +469,11 @@ export default function GeneratePage() {
                         alt="Han Portrait Logo"
                         className="h-16 w-16 object-contain drop-shadow-[0_0_12px_rgba(232,194,122,0.4)] animate-breathing"
                       />
-                      <div className="absolute inset-0 rounded-full bg-gradient-to-r from-[rgba(232,194,122,0.2)] to-[rgba(183,53,45,0.2)] blur-[3px]" />
+                      <div className="absolute inset-0 rounded-full bg-gradient-to-r from-[rgba(232,194,122,0.2)] to-[rgba(232,194,122,0.05)] blur-[3px]" />
                     </div>
                     <p
                       className="text-center text-sm"
-                      style={{ color: "rgba(255, 247, 236, 0.62)" }}
+                      style={{ color: "rgba(255, 247, 236, 0.72)" }}
                     >
                       {t("previewCard.loading")}
                     </p>
@@ -481,7 +481,7 @@ export default function GeneratePage() {
                 ) : (
                   <p
                     className="text-center text-sm"
-                    style={{ color: "rgba(255, 247, 236, 0.62)" }}
+                    style={{ color: "rgba(255, 247, 236, 0.72)" }}
                   >
                     {t("previewCard.placeholder")}
                   </p>
@@ -495,7 +495,7 @@ export default function GeneratePage() {
             <div className="flex items-center justify-between mb-6">
               <h2
                 className="text-2xl font-semibold"
-                style={{ color: "#FFF7EC" }}
+                style={{ color: "rgba(255, 247, 236, 0.92)" }}
               >
                 {t("styleTemplates.title")}
               </h2>
@@ -508,17 +508,20 @@ export default function GeneratePage() {
                   isGenerating || !file ? "opacity-50 cursor-not-allowed" : "hover:scale-105"
                 )}
                 style={{
-                  background: "#C83A32",
-                  color: "#FFF7EC",
+                  background: "rgba(232, 194, 122, 0.10)",
+                  color: "#E8C27A",
+                  border: "1px solid rgba(232, 194, 122, 0.16)",
                 }}
                 onMouseEnter={(e) => {
                   if (!isGenerating && file) {
-                    e.currentTarget.style.background = "#D7463E";
+                    e.currentTarget.style.background = "rgba(232, 194, 122, 0.16)";
+                    e.currentTarget.style.borderColor = "rgba(232, 194, 122, 0.25)";
                   }
                 }}
                 onMouseLeave={(e) => {
                   if (!isGenerating && file) {
-                    e.currentTarget.style.background = "#C83A32";
+                    e.currentTarget.style.background = "rgba(232, 194, 122, 0.10)";
+                    e.currentTarget.style.borderColor = "rgba(232, 194, 122, 0.16)";
                   }
                 }}
               >
@@ -534,12 +537,12 @@ export default function GeneratePage() {
                   className={cn(
                     "group cursor-pointer overflow-hidden transition-all duration-300",
                     selectedTemplate === template.id
-                      ? "ring-2 ring-[rgba(232,194,122,0.4)] ring-offset-2 ring-offset-[#1B120E]"
+                      ? "ring-2 ring-[rgba(232,194,122,0.4)] ring-offset-2 ring-offset-[#0B0B0D]"
                       : "hover:ring-2 hover:ring-[rgba(232,194,122,0.2)]"
                   )}
                   style={{
-                    background: "#2A1C15",
-                    border: `1px solid ${selectedTemplate === template.id ? "rgba(232,194,122,0.35)" : "rgba(232,194,122,0.16)"}`,
+                    background: "#111114",
+                    border: `1px solid ${selectedTemplate === template.id ? "rgba(232,194,122,0.35)" : "rgba(255,247,236,0.08)"}`,
                     borderRadius: "24px",
                   }}
                 >
@@ -551,18 +554,18 @@ export default function GeneratePage() {
                       className="object-cover transition-transform duration-300 group-hover:scale-105"
                     />
                     {/* Gradient overlay */}
-                    <div className="absolute inset-0 bg-gradient-to-t from-[rgba(27,18,14,0.8)] via-transparent to-transparent" />
+                    <div className="absolute inset-0 bg-gradient-to-t from-[rgba(11,11,13,0.8)] via-transparent to-transparent" />
                   </div>
                   <div className="p-5">
                     <h3
                       className="text-lg font-semibold mb-1"
-                      style={{ color: "#FFF7EC" }}
+                      style={{ color: "rgba(255, 247, 236, 0.92)" }}
                     >
                       {template.name}
                     </h3>
                     <p
                       className="text-sm"
-                      style={{ color: "rgba(255, 247, 236, 0.62)" }}
+                      style={{ color: "rgba(255, 247, 236, 0.72)" }}
                     >
                       {template.description}
                     </p>
@@ -576,7 +579,7 @@ export default function GeneratePage() {
             <div
               className="mb-6 px-5 py-4 rounded-xl"
               style={{
-                background: "rgba(200,58,50,0.1)",
+                background: "rgba(200,58,50,0.10)",
                 border: "1px solid rgba(200,58,50,0.25)",
                 color: "#E8C27A",
               }}

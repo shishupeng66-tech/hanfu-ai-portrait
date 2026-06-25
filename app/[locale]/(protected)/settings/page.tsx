@@ -303,7 +303,7 @@ export default function SettingsPage() {
                     {t("sections.profile.avatarLabel")}
                   </label>
                   <div className="flex items-center gap-5">
-                    <div className="relative h-20 w-20 flex-shrink-0 overflow-hidden rounded-full bg-gradient-to-br from-[rgba(255,210,160,0.92)] via-[rgba(190,80,40,0.88)] to-[rgba(80,25,18,0.95)] ring-2 ring-[rgba(232,194,122,0.18)]">
+                    <div className="relative h-20 w-20 flex-shrink-0 overflow-hidden rounded-full bg-gradient-to-br from-[rgba(232,194,122,0.92)] via-[rgba(232,194,122,0.60)] to-[rgba(232,194,122,0.30)] ring-2 ring-[rgba(232,194,122,0.18)]">
                       {displayUser?.image ? (
                         <Image
                           src={displayUser.image}
@@ -314,7 +314,7 @@ export default function SettingsPage() {
                           unoptimized
                         />
                       ) : (
-                        <div className="flex h-full w-full items-center justify-center text-xl font-semibold text-[#FFF7EC]">
+                        <div className="flex h-full w-full items-center justify-center text-xl font-semibold text-[rgba(255,247,236,0.92)]">
                           {initial}
                         </div>
                       )}

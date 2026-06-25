@@ -132,11 +132,11 @@ export const MiniNavbar = () => {
             minWidth: "0",
             borderRadius: "999px",
             padding: "0 20px",
-            background: "rgba(24, 14, 12, 0.72)",
-            border: "1px solid rgba(232, 194, 122, 0.16)",
+            background: "rgba(11, 11, 13, 0.72)",
+            border: "1px solid rgba(255, 247, 236, 0.08)",
             backdropFilter: "blur(18px)",
             boxShadow:
-              "0 12px 40px rgba(0, 0, 0, 0.22), 0 0 30px rgba(120, 35, 30, 0.10)",
+              "0 12px 40px rgba(0, 0, 0, 0.22), 0 0 30px rgba(0, 0, 0, 0.10)",
           }}
           aria-label="Main navigation"
         >
@@ -169,11 +169,11 @@ export const MiniNavbar = () => {
                   }}
                 >
                   <span style={{ color: "#E8C27A" }}>汉韵</span>
-                  <span style={{ color: "#FFF7EC" }}>写真</span>
+                  <span style={{ color: "rgba(255, 247, 236, 0.92)" }}>写真</span>
                 </span>
               ) : (
                 <>
-                  <span style={{ color: "#FFF7EC" }}>Han</span>
+                  <span style={{ color: "rgba(255, 247, 236, 0.92)" }}>Han</span>
                   <span style={{ color: "#E8C27A" }}> Portrait</span>
                 </>
               )}
@@ -189,7 +189,7 @@ export const MiniNavbar = () => {
               style={{
                 height: 36,
                 padding: "0 14px",
-                color: isZh ? "rgba(255, 247, 236, 0.80)" : "rgba(255, 247, 236, 0.72)",
+                color: "rgba(255, 247, 236, 0.72)",
                 fontSize: "15px",
                 fontWeight: 500,
                 letterSpacing: isZh ? "0.055em" : "0.005em",
@@ -197,16 +197,12 @@ export const MiniNavbar = () => {
                 border: "1px solid transparent",
               }}
               onMouseEnter={(e) => {
-                e.currentTarget.style.background = isZh
-                  ? "rgba(232, 194, 122, 0.085)"
-                  : "rgba(255, 247, 236, 0.06)";
-                e.currentTarget.style.color = isZh ? "#E8C27A" : "#FFF7EC";
+                e.currentTarget.style.background = "rgba(232, 194, 122, 0.085)";
+                e.currentTarget.style.color = "#E8C27A";
               }}
               onMouseLeave={(e) => {
                 e.currentTarget.style.background = "transparent";
-                e.currentTarget.style.color = isZh
-                  ? "rgba(255, 247, 236, 0.80)"
-                  : "rgba(255, 247, 236, 0.72)";
+                e.currentTarget.style.color = "rgba(255, 247, 236, 0.72)";
               }}
             >
               {isZh ? "模板" : "Templates"}
@@ -302,9 +298,9 @@ export const MiniNavbar = () => {
                       whileHover={{ scale: 1.05 }}
                       whileTap={{ scale: 0.95 }}
                       transition={{ type: "spring", stiffness: 400, damping: 17 }}
-                      className="flex h-[42px] w-[42px] items-center justify-center rounded-full bg-[#E8C27A] shadow-[0_0_0_1px_rgba(24,14,12,0.72)] transition-colors duration-200 group-hover:bg-[#F2D38A]"
+                      className="flex h-[42px] w-[42px] items-center justify-center rounded-full bg-[#E8C27A] shadow-[0_0_0_1px_rgba(11,11,13,0.72)] transition-colors duration-200 group-hover:bg-[#F2D38A]"
                     >
-                      <div className="relative flex h-8 w-8 items-center justify-center overflow-hidden rounded-full bg-[radial-gradient(circle_at_30%_30%,rgba(255,210,160,0.92),rgba(190,80,40,0.88)_45%,rgba(80,25,18,0.95)_100%)] text-sm font-semibold text-[#FFF7EC] transition-[filter] duration-200 group-hover:brightness-[1.02]">
+                      <div className="relative flex h-8 w-8 items-center justify-center overflow-hidden rounded-full bg-[radial-gradient(circle_at_30%_30%,rgba(232,194,122,0.92),rgba(232,194,122,0.60)_45%,rgba(232,194,122,0.30)_100%)] text-sm font-semibold text-[rgba(255,247,236,0.92)] transition-[filter] duration-200 group-hover:brightness-[1.02]">
                         {user?.image ? (
                           // eslint-disable-next-line @next/next/no-img-element
                           <img
@@ -330,7 +326,7 @@ export const MiniNavbar = () => {
                             opacity: { duration: 0.2 },
                             filter: { duration: 0.2 },
                           }}
-                          className="pointer-events-none absolute left-1/2 top-full z-10 mt-2 -translate-x-1/2 whitespace-nowrap rounded-md border border-[rgba(232,194,122,0.16)] bg-[rgba(28,16,14,0.96)] px-2 py-1 text-xs font-medium text-[#FFF7EC] shadow-lg"
+                          className="pointer-events-none absolute left-1/2 top-full z-10 mt-2 -translate-x-1/2 whitespace-nowrap rounded-md border border-[rgba(232,194,122,0.16)] bg-[rgba(11,11,13,0.96)] px-2 py-1 text-xs font-medium text-[rgba(255,247,236,0.92)] shadow-lg"
                         >
                           {displayName}
                         </motion.div>
@@ -347,11 +343,11 @@ export const MiniNavbar = () => {
                         top: "calc(100% + 10px)",
                         width: 268,
                         background:
-                          "linear-gradient(145deg, rgba(31, 16, 13, 0.74), rgba(18, 10, 10, 0.68) 54%, rgba(44, 15, 15, 0.66))",
-                        border: "1px solid rgba(232, 194, 122, 0.12)",
+                          "linear-gradient(145deg, rgba(17, 17, 20, 0.74), rgba(11, 11, 13, 0.68) 54%, rgba(20, 20, 24, 0.66))",
+                        border: "1px solid rgba(255, 247, 236, 0.08)",
                         borderRadius: 20,
                         boxShadow:
-                          "0 28px 80px rgba(0, 0, 0, 0.42), 0 12px 30px rgba(35, 8, 8, 0.20), inset 0 1px 0 rgba(255, 247, 236, 0.05)",
+                          "0 28px 80px rgba(0, 0, 0, 0.42), 0 12px 30px rgba(0, 0, 0, 0.20), inset 0 1px 0 rgba(255, 247, 236, 0.05)",
                         backdropFilter: "blur(28px) saturate(1.15)",
                         padding: 9,
                       }}
@@ -365,14 +361,14 @@ export const MiniNavbar = () => {
                       >
                         <div
                           className="text-sm font-semibold truncate"
-                          style={{ color: "rgba(255, 247, 236, 0.96)" }}
+                          style={{ color: "rgba(255, 247, 236, 0.92)" }}
                         >
                           {displayName || (isZh ? "用户" : "User")}
                         </div>
                         {user?.email && (
                           <div
                             className="text-xs truncate mt-1"
-                            style={{ color: "rgba(255, 247, 236, 0.52)" }}
+                            style={{ color: "rgba(255, 247, 236, 0.45)" }}
                           >
                             {user.email}
                           </div>
@@ -495,20 +491,20 @@ export const MiniNavbar = () => {
                           onClick={handleSignOut}
                           className="group relative flex items-center gap-3 overflow-hidden px-3 py-2.5 rounded-xl text-sm font-medium transition-all duration-200 text-left w-full"
                           style={{
-                            color: "rgba(255, 139, 128, 0.90)",
-                            background: "rgba(180, 39, 32, 0.055)",
-                            border: "1px solid rgba(255, 105, 94, 0.10)",
+                            color: "rgba(255, 247, 236, 0.72)",
+                            background: "rgba(255, 247, 236, 0.05)",
+                            border: "1px solid rgba(255, 247, 236, 0.08)",
                           }}
                           onMouseEnter={(e) => {
                             e.currentTarget.style.background =
-                              "linear-gradient(90deg, rgba(232, 194, 122, 0.12), rgba(190, 45, 38, 0.12))";
-                            e.currentTarget.style.borderColor = "rgba(232, 194, 122, 0.10)";
-                            e.currentTarget.style.color = "rgba(255, 166, 156, 0.98)";
+                              "rgba(232, 194, 122, 0.10)";
+                            e.currentTarget.style.borderColor = "rgba(232, 194, 122, 0.16)";
+                            e.currentTarget.style.color = "#E8C27A";
                           }}
                           onMouseLeave={(e) => {
-                            e.currentTarget.style.background = "rgba(180, 39, 32, 0.055)";
-                            e.currentTarget.style.borderColor = "rgba(255, 105, 94, 0.10)";
-                            e.currentTarget.style.color = "rgba(255, 139, 128, 0.90)";
+                            e.currentTarget.style.background = "rgba(255, 247, 236, 0.05)";
+                            e.currentTarget.style.borderColor = "rgba(255, 247, 236, 0.08)";
+                            e.currentTarget.style.color = "rgba(255, 247, 236, 0.72)";
                           }}
                         >
                           <span className="pointer-events-none absolute left-1.5 top-1/2 h-5 w-[2px] -translate-y-1/2 rounded-full bg-[#E8C27A] opacity-0 transition-opacity duration-200 group-hover:opacity-100" />
@@ -535,7 +531,7 @@ export const MiniNavbar = () => {
                     borderRadius: "999px",
                     fontSize: "14px",
                     fontWeight: 500,
-                    color: "#FFF7EC",
+                    color: "rgba(255, 247, 236, 0.92)",
                     background: "rgba(255, 247, 236, 0.06)",
                     border: "1px solid rgba(232, 194, 122, 0.26)",
                   }}
@@ -547,7 +543,7 @@ export const MiniNavbar = () => {
                   onMouseLeave={(e) => {
                     e.currentTarget.style.background = "rgba(255, 247, 236, 0.06)";
                     e.currentTarget.style.borderColor = "rgba(232, 194, 122, 0.26)";
-                    e.currentTarget.style.color = "#FFF7EC";
+                    e.currentTarget.style.color = "rgba(255, 247, 236, 0.92)";
                   }}
                 >
                   {isZh ? "登录" : "Login"}

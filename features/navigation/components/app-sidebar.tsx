@@ -81,10 +81,10 @@ function BrandHeader() {
         className="w-8 h-8 object-contain rounded-[6px]"
       />
       <div className="flex flex-col overflow-hidden">
-        <span className="text-[13px] font-medium leading-none mb-1 truncate max-w-[120px]" style={{ color: '#FFF7EC' }}>
+        <span className="text-[13px] font-medium leading-none mb-1 truncate max-w-[120px]" style={{ color: 'rgba(255, 247, 236, 0.92)' }}>
           汉韵写真
         </span>
-        <span className="text-[11px] leading-none" style={{ color: 'rgba(255, 247, 236, 0.5)' }}>
+        <span className="text-[11px] leading-none" style={{ color: 'rgba(255, 247, 236, 0.45)' }}>
           Han Portrait
         </span>
       </div>
@@ -124,18 +124,18 @@ function NavItem({
         style={{
           paddingLeft: `${level * 12 + 10}px`,
           background: isActive ? 'rgba(232, 194, 122, 0.10)' : 'transparent',
-          color: isActive ? '#E8C27A' : 'rgba(255, 247, 236, 0.68)',
+          color: isActive ? '#E8C27A' : 'rgba(255, 247, 236, 0.72)',
         }}
         onMouseEnter={(e) => {
           if (!isActive) {
-            e.currentTarget.style.background = 'rgba(215, 70, 62, 0.10)';
+            e.currentTarget.style.background = 'rgba(232, 194, 122, 0.08)';
             e.currentTarget.style.color = '#E8C27A';
           }
         }}
         onMouseLeave={(e) => {
           if (!isActive) {
             e.currentTarget.style.background = 'transparent';
-            e.currentTarget.style.color = 'rgba(255, 247, 236, 0.68)';
+            e.currentTarget.style.color = 'rgba(255, 247, 236, 0.72)';
           }
         }}
         onClick={handleClick}
@@ -144,7 +144,7 @@ function NavItem({
           <item.icon
             className="w-[16px] h-[16px] transition-colors flex-shrink-0"
             style={{
-              color: isActive ? '#E8C27A' : 'rgba(255, 247, 236, 0.60)',
+              color: isActive ? '#E8C27A' : 'rgba(255, 247, 236, 0.45)',
             }}
             strokeWidth={1.5}
           />
@@ -155,12 +155,12 @@ function NavItem({
 
         <div className="flex items-center gap-2">
           {item.shortcut && (
-            <kbd className="hidden group-hover:inline-flex items-center justify-center h-5 px-1.5 text-[10px] font-medium font-mono rounded-[4px]" style={{ color: 'rgba(255, 247, 236, 0.40)', background: 'rgba(255, 247, 236, 0.06)', border: '1px solid rgba(232, 194, 122, 0.15)' }}>
+            <kbd className="hidden group-hover:inline-flex items-center justify-center h-5 px-1.5 text-[10px] font-medium font-mono rounded-[4px]" style={{ color: 'rgba(255, 247, 236, 0.25)', background: 'rgba(255, 247, 236, 0.05)', border: '1px solid rgba(255, 247, 236, 0.08)' }}>
               {item.shortcut}
             </kbd>
           )}
           {item.badge && (
-            <span className="flex items-center justify-center min-w-[20px] h-5 px-1.5 text-[10px] font-medium rounded-full" style={{ background: 'rgba(200, 58, 50, 0.15)', color: '#E8C27A' }}>
+            <span className="flex items-center justify-center min-w-[20px] h-5 px-1.5 text-[10px] font-medium rounded-full" style={{ background: 'rgba(232, 194, 122, 0.10)', color: '#E8C27A' }}>
               {item.badge}
             </span>
           )}
@@ -226,7 +226,7 @@ export function SidebarNav({
         {mockNavGroups.map((group, idx) => (
           <div key={idx} className="flex flex-col gap-0.5">
             {group.heading && (
-              <span className="px-2.5 mb-1 text-[11px] font-semibold tracking-wider uppercase" style={{ color: 'rgba(255, 247, 236, 0.38)' }}>
+              <span className="px-2.5 mb-1 text-[11px] font-semibold tracking-wider uppercase" style={{ color: 'rgba(255, 247, 236, 0.25)' }}>
                 {group.heading}
               </span>
             )}
@@ -242,7 +242,7 @@ export function SidebarNav({
         ))}
       </div>
 
-      <div className="pt-4 flex flex-col gap-0.5" style={{ borderTop: '1px solid rgba(232, 194, 122, 0.10)' }}>
+      <div className="pt-4 flex flex-col gap-0.5" style={{ borderTop: '1px solid rgba(255, 247, 236, 0.08)' }}>
         {mockBottomItems.map(item => (
           <NavItem
             key={item.id}
@@ -283,7 +283,7 @@ export function AppSidebar({
   return (
     <aside
       className="fixed left-0 top-0 bottom-0 z-40 flex flex-col transition-[width] duration-300 ease-out"
-      style={{ width: isOpen ? 260 : 0, background: '#241812' }}
+      style={{ width: isOpen ? 260 : 0, background: '#0B0B0D' }}
     >
       <div
         className={`flex-1 flex flex-col min-h-0 overflow-hidden transition-opacity duration-300 ${

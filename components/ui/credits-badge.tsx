@@ -127,11 +127,11 @@ export const CreditsBadge = ({
             top: "calc(100% + 8px)",
             width: 260,
             background:
-              "linear-gradient(145deg, rgba(31, 16, 13, 0.74), rgba(18, 10, 10, 0.68) 54%, rgba(44, 15, 15, 0.66))",
-            border: "1px solid rgba(232, 194, 122, 0.12)",
+              "linear-gradient(145deg, rgba(17, 17, 20, 0.74), rgba(11, 11, 13, 0.68) 54%, rgba(20, 20, 24, 0.66))",
+            border: "1px solid rgba(255, 247, 236, 0.08)",
             borderRadius: 16,
             boxShadow:
-              "0 28px 80px rgba(0, 0, 0, 0.42), 0 12px 30px rgba(35, 8, 8, 0.20), inset 0 1px 0 rgba(255, 247, 236, 0.05)",
+              "0 28px 80px rgba(0, 0, 0, 0.42), 0 12px 30px rgba(0, 0, 0, 0.20), inset 0 1px 0 rgba(255, 247, 236, 0.05)",
             backdropFilter: "blur(28px) saturate(1.15)",
             padding: 14,
           }}
@@ -145,7 +145,7 @@ export const CreditsBadge = ({
               <span
                 style={{
                   fontSize: "13px",
-                  color: "rgba(255, 247, 236, 0.60)",
+                  color: "rgba(255, 247, 236, 0.45)",
                 }}
               >
                 {currentCreditsLabel}
@@ -166,7 +166,7 @@ export const CreditsBadge = ({
               <span
                 style={{
                   fontSize: "13px",
-                  color: "rgba(255, 247, 236, 0.60)",
+                  color: "rgba(255, 247, 236, 0.45)",
                 }}
               >
                 {planTypeLabel}
@@ -175,7 +175,7 @@ export const CreditsBadge = ({
                 style={{
                   fontSize: "14px",
                   fontWeight: 600,
-                  color: "rgba(255, 247, 236, 0.92)",
+                  color: "rgba(255, 247, 236, 0.72)",
                 }}
               >
                 {planName}
@@ -186,7 +186,7 @@ export const CreditsBadge = ({
             <div
               style={{
                 height: 1,
-                background: "rgba(232, 194, 122, 0.10)",
+                background: "rgba(255, 247, 236, 0.08)",
                 margin: "2px 0",
               }}
             />

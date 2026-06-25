@@ -97,7 +97,7 @@ export function LanguageSwitcher({ variant = "default" }: LanguageSwitcherProps)
         <div
           className={cn(
             "absolute right-0 mt-2 p-2 w-[170px] z-[60]",
-            "rounded-[16px] border border-[rgba(232,194,122,0.16)] bg-[rgba(28,16,14,0.96)] text-[#FFF7EC] shadow-[0_24px_80px_rgba(0,0,0,0.35)] backdrop-blur-[18px]",
+            "rounded-[16px] border border-[rgba(255,247,236,0.08)] bg-[rgba(11,11,13,0.96)] text-[rgba(255,247,236,0.92)] shadow-[0_24px_80px_rgba(0,0,0,0.35)] backdrop-blur-[18px]",
             "animate-in fade-in-0 zoom-in-95"
           )}
           role="menu"
@@ -111,7 +111,7 @@ export function LanguageSwitcher({ variant = "default" }: LanguageSwitcherProps)
                 onClick={() => switchLocale(loc)}
                 className={cn(
                   "flex items-center justify-between w-full px-3 py-2.5 h-[40px] rounded-[10px] text-sm font-medium",
-                  isActive ? "text-[#E8C27A]" : "text-[rgba(255,247,236,0.72)] hover:bg-[rgba(232,194,122,0.10)] hover:text-[#FFF7EC]",
+                  isActive ? "text-[#E8C27A]" : "text-[rgba(255,247,236,0.72)] hover:bg-[rgba(232,194,122,0.10)] hover:text-[rgba(255,247,236,0.92)]",
                   "transition-colors duration-150"
                 )}
                 role="menuitem"

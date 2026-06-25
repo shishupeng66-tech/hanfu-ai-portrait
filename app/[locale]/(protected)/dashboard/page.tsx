@@ -96,10 +96,10 @@ export default function DashboardPage() {
 
   if (loading && !user) {
     return (
-      <div className="min-h-screen" style={{ background: "#1B120E" }}>
+      <div className="min-h-screen" style={{ background: "#0B0B0D" }}>
         <div className="p-8">
           <div className="flex justify-center items-center h-64">
-            <p style={{ color: "rgba(255, 247, 236, 0.62)" }}>{tCommon('status.loading')}</p>
+            <p style={{ color: "rgba(255, 247, 236, 0.72)" }}>{tCommon('status.loading')}</p>
           </div>
         </div>
       </div>
@@ -107,7 +107,7 @@ export default function DashboardPage() {
   }
 
   return (
-    <div className="min-h-screen" style={{ background: "#1B120E" }}>
+    <div className="min-h-screen" style={{ background: "#0B0B0D" }}>
       <div className="p-8">
         <motion.div
           initial={{ y: 20, opacity: 0 }}
@@ -142,9 +142,9 @@ export default function DashboardPage() {
           </div>
 
           {paymentSuccess && (
-            <div className="mb-8 p-4 bg-green-500/10 border border-green-500/20 rounded-lg">
+            <div className="mb-8 p-4 bg-[rgba(232,194,122,0.10)] border border-[rgba(232,194,122,0.16)] rounded-lg">
               <div className="flex items-center justify-between">
-                <p className="text-green-600 font-medium">
+                <p className="text-[#E8C27A] font-medium">
                   {t('paymentSuccess')}
                 </p>
                 <Link href={`/${locale}/credits`}>
@@ -183,7 +183,7 @@ export default function DashboardPage() {
               </div>
               <div className="flex flex-col">
                 <span className="text-sm text-muted-foreground">{t('cards.personalInfo.labels.status')}</span>
-                <span className="text-base font-medium text-green-500">
+                <span className="text-base font-medium text-[#E8C27A]">
                   {tCommon('status.verified')}
                 </span>
               </div>

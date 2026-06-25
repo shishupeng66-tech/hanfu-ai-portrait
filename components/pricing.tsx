@@ -34,60 +34,60 @@ const colorStyles: Record<
 > = {
   blue: {
     cardBg:
-      "linear-gradient(160deg, #F0F7FF 0%, #E2EEFF 55%, #D6E6FE 100%)",
-    borderColor: "rgba(61, 123, 200, 0.18)",
-    accent: "#3D7BC8",
-    iconColor: "#3D7BC8",
-    iconRing: "rgba(61, 123, 200, 0.22)",
-    checkBg: "#3D7BC8",
-    buttonBg: "#FFFFFF",
-    buttonText: "#3D7BC8",
-    buttonBorder: "rgba(61, 123, 200, 0.32)",
-    buttonHoverBg: "#3D7BC8",
-    buttonHoverText: "#FFFFFF",
+      "linear-gradient(160deg, #111114 0%, #141418 55%, #111114 100%)",
+    borderColor: "rgba(255, 247, 236, 0.08)",
+    accent: "#E8C27A",
+    iconColor: "#E8C27A",
+    iconRing: "rgba(232, 194, 122, 0.22)",
+    checkBg: "#E8C27A",
+    buttonBg: "rgba(232, 194, 122, 0.10)",
+    buttonText: "#E8C27A",
+    buttonBorder: "rgba(232, 194, 122, 0.16)",
+    buttonHoverBg: "rgba(232, 194, 122, 0.16)",
+    buttonHoverText: "#E8C27A",
     shadow:
-      "0 18px 44px -16px rgba(40, 40, 40, 0.18), 0 2px 6px rgba(0,0,0,0.04)",
+      "0 18px 44px -16px rgba(0, 0, 0, 0.18), 0 2px 6px rgba(0,0,0,0.04)",
   },
   green: {
     cardBg:
-      "linear-gradient(160deg, #EEFAF1 0%, #DEF4E5 55%, #CCEDD8 100%)",
-    borderColor: "rgba(47, 143, 92, 0.22)",
-    accent: "#2F8F5C",
-    iconColor: "#2F8F5C",
-    iconRing: "rgba(47, 143, 92, 0.24)",
-    checkBg: "#2F8F5C",
-    buttonBg: "#2F8F5C",
-    buttonText: "#FFFFFF",
+      "linear-gradient(160deg, #111114 0%, #141418 55%, #111114 100%)",
+    borderColor: "rgba(232, 194, 122, 0.12)",
+    accent: "#E8C27A",
+    iconColor: "#E8C27A",
+    iconRing: "rgba(232, 194, 122, 0.24)",
+    checkBg: "#E8C27A",
+    buttonBg: "#E8C27A",
+    buttonText: "#0B0B0D",
     buttonBorder: "transparent",
-    buttonHoverBg: "#247048",
-    buttonHoverText: "#FFFFFF",
+    buttonHoverBg: "#F2D38A",
+    buttonHoverText: "#0B0B0D",
     shadow:
-      "0 24px 60px -10px rgba(47, 143, 92, 0.30), 0 6px 16px rgba(0,0,0,0.06)",
+      "0 24px 60px -10px rgba(232, 194, 122, 0.15), 0 6px 16px rgba(0,0,0,0.06)",
   },
   pink: {
     cardBg:
-      "linear-gradient(160deg, #FFF1F3 0%, #FCE3E7 55%, #F8D2D9 100%)",
-    borderColor: "rgba(196, 90, 110, 0.20)",
-    accent: "#C45A6E",
-    iconColor: "#C45A6E",
-    iconRing: "rgba(196, 90, 110, 0.22)",
-    checkBg: "#C45A6E",
-    buttonBg: "#FFFFFF",
-    buttonText: "#C45A6E",
-    buttonBorder: "rgba(196, 90, 110, 0.32)",
-    buttonHoverBg: "#C45A6E",
-    buttonHoverText: "#FFFFFF",
+      "linear-gradient(160deg, #111114 0%, #141418 55%, #111114 100%)",
+    borderColor: "rgba(255, 247, 236, 0.08)",
+    accent: "#E8C27A",
+    iconColor: "#E8C27A",
+    iconRing: "rgba(232, 194, 122, 0.22)",
+    checkBg: "#E8C27A",
+    buttonBg: "rgba(232, 194, 122, 0.10)",
+    buttonText: "#E8C27A",
+    buttonBorder: "rgba(232, 194, 122, 0.16)",
+    buttonHoverBg: "rgba(232, 194, 122, 0.16)",
+    buttonHoverText: "#E8C27A",
     shadow:
-      "0 18px 44px -16px rgba(40, 40, 40, 0.18), 0 2px 6px rgba(0,0,0,0.04)",
+      "0 18px 44px -16px rgba(0, 0, 0, 0.18), 0 2px 6px rgba(0,0,0,0.04)",
   },
 };
 
 const text = {
-  title: "#1F1F1F",
-  desc: "#5A5A5A",
-  price: "#1F1F1F",
-  period: "#6B6B6B",
-  feature: "#3A3A3A",
+  title: "rgba(255, 247, 236, 0.92)",
+  desc: "rgba(255, 247, 236, 0.45)",
+  price: "rgba(255, 247, 236, 0.92)",
+  period: "rgba(255, 247, 236, 0.45)",
+  feature: "rgba(255, 247, 236, 0.72)",
 };
 
 type IconComponent = typeof Sparkles;
@@ -134,19 +134,18 @@ function PriceCard({ config }: { config: CardConfig }) {
         <div
           className="absolute right-5 top-5 rounded-full px-3 py-1 text-xs font-semibold"
           style={{
-            color: "#FFFFFF",
+            color: "#0B0B0D",
             background: styles.accent,
-            boxShadow: "0 6px 14px rgba(47, 143, 92, 0.30)",
+            boxShadow: "0 6px 14px rgba(232, 194, 122, 0.20)",
           }}
         >
           {config.badgeText}
         </div>
       )}
 
-      <div
-        className="mb-5 flex h-11 w-11 items-center justify-center rounded-xl"
+      <div className="mb-5 flex h-11 w-11 items-center justify-center rounded-xl"
         style={{
-          background: "#FFFFFF",
+          background: "rgba(232, 194, 122, 0.10)",
           color: styles.iconColor,
           boxShadow: `inset 0 0 0 1px ${styles.iconRing}, 0 4px 14px rgba(0,0,0,0.06)`,
         }}
@@ -197,7 +196,7 @@ function PriceCard({ config }: { config: CardConfig }) {
               className="mt-0.5 flex h-[18px] w-[18px] shrink-0 items-center justify-center rounded-full"
               style={{
                 background: styles.checkBg,
-                color: "#FFFFFF",
+                color: "#0B0B0D",
               }}
             >
               <Check
@@ -404,7 +403,7 @@ export function Pricing() {
   return (
     <div className="relative w-full">
       {/* Top tabs: Membership / Packs */}
-      <div className="mx-auto mb-6 flex w-fit items-center justify-center overflow-hidden rounded-full border border-black/5 bg-white p-1 shadow-sm">
+      <div className="mx-auto mb-6 flex w-fit items-center justify-center overflow-hidden rounded-full border border-[rgba(255,247,236,0.08)] bg-[#111114] p-1 shadow-sm">
         {tabs.map((tab) => (
           <button
             key={tab.value}
@@ -412,7 +411,7 @@ export function Pricing() {
             onClick={() => handleTabChange(tab.value)}
             className={cn(
               "relative rounded-full px-4 py-1.5 text-sm font-semibold transition-colors",
-              active === tab.value ? "text-white" : "text-[#3A3A3A]"
+              active === tab.value ? "text-[#0B0B0D]" : "text-[rgba(255,247,236,0.72)]"
             )}
           >
             {active === tab.value && (
@@ -420,7 +419,7 @@ export function Pricing() {
                 layoutId="pricing-billing-tab"
                 transition={{ type: "spring", bounce: 0.2, duration: 0.5 }}
                 className="absolute inset-0 rounded-full"
-                style={{ background: "#2F8F5C" }}
+                style={{ background: "#E8C27A" }}
               />
             )}
             <span className="relative z-10">{tab.name}</span>

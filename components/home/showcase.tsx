@@ -9,28 +9,28 @@ import { cn } from "@/lib/utils";
 
 const dynastyColors = [
   {
-    border: "border-[#D85A30]/20 dark:border-[#D85A30]/30",
-    bg: "bg-[#D85A30]/5",
-    accent: "text-[#D85A30]",
-    hoverBorder: "hover:border-[#D85A30]/40",
+    border: "border-[#E8C27A]/20 dark:border-[#E8C27A]/30",
+    bg: "bg-[#E8C27A]/5",
+    accent: "text-[#E8C27A]",
+    hoverBorder: "hover:border-[#E8C27A]/40",
   },
   {
-    border: "border-[#0F6E56]/20 dark:border-[#0F6E56]/30",
-    bg: "bg-[#0F6E56]/5",
-    accent: "text-[#0F6E56]",
-    hoverBorder: "hover:border-[#0F6E56]/40",
+    border: "border-[#E8C27A]/20 dark:border-[#E8C27A]/30",
+    bg: "bg-[#E8C27A]/5",
+    accent: "text-[#E8C27A]",
+    hoverBorder: "hover:border-[#E8C27A]/40",
   },
   {
-    border: "border-[#EF9F27]/20 dark:border-[#EF9F27]/30",
-    bg: "bg-[#EF9F27]/5",
-    accent: "text-[#EF9F27]",
-    hoverBorder: "hover:border-[#EF9F27]/40",
+    border: "border-[#E8C27A]/20 dark:border-[#E8C27A]/30",
+    bg: "bg-[#E8C27A]/5",
+    accent: "text-[#E8C27A]",
+    hoverBorder: "hover:border-[#E8C27A]/40",
   },
   {
-    border: "border-[#D85A30]/20 dark:border-[#D85A30]/30",
-    bg: "bg-[#D85A30]/5",
-    accent: "text-[#D85A30]",
-    hoverBorder: "hover:border-[#D85A30]/40",
+    border: "border-[#E8C27A]/20 dark:border-[#E8C27A]/30",
+    bg: "bg-[#E8C27A]/5",
+    accent: "text-[#E8C27A]",
+    hoverBorder: "hover:border-[#E8C27A]/40",
   },
 ];
 
@@ -167,7 +167,7 @@ export function HomeShowcase() {
   return (
     <section id="hanfu-styles" className="relative py-20 md:py-32 overflow-hidden">
       {/* Background gradient */}
-      <div className="absolute inset-0 bg-gradient-to-b from-transparent via-[#0F6E56]/3 to-transparent dark:via-[#0F6E56]/5 pointer-events-none" />
+      <div className="absolute inset-0 bg-gradient-to-b from-transparent via-[#E8C27A]/3 to-transparent dark:via-[#E8C27A]/5 pointer-events-none" />
 
       <div ref={ref} className="relative z-10 max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         {/* Section Header */}

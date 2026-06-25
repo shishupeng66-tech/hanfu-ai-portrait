@@ -138,12 +138,12 @@ export default function CreditsPage() {
       margin: 0;
       padding: 0;
       font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, sans-serif;
-      background: #f9fafb;
+      background: #0B0B0D;
       display: flex;
       justify-content: center;
       align-items: center;
       min-height: 100vh;
-      color: #374151;
+      color: rgba(255, 247, 236, 0.72);
     }
     .loading-container {
       text-align: center;
@@ -154,9 +154,9 @@ export default function CreditsPage() {
       display: inline-block;
       width: 24px;
       height: 24px;
-      border: 3px solid rgba(59, 130, 246, 0.3);
+      border: 3px solid rgba(232, 194, 122, 0.3);
       border-radius: 50%;
-      border-top-color: #3b82f6;
+      border-top-color: #E8C27A;
       animation: spin 1s ease-in-out infinite;
       margin-bottom: 1rem;
     }
@@ -229,10 +229,10 @@ export default function CreditsPage() {
 
   if (loading && !session.data?.user) {
     return (
-      <div className="min-h-screen" style={{ background: "#1B120E" }}>
+      <div className="min-h-screen" style={{ background: "#0B0B0D" }}>
         <div className="p-8">
           <div className="flex justify-center items-center h-64">
-            <p style={{ color: "rgba(255, 247, 236, 0.62)" }}>{tCommon('status.loading')}</p>
+            <p style={{ color: "rgba(255, 247, 236, 0.72)" }}>{tCommon('status.loading')}</p>
           </div>
         </div>
       </div>
@@ -240,17 +240,17 @@ export default function CreditsPage() {
   }
 
   return (
-    <div className="min-h-screen" style={{ background: "#1B120E" }}>
+    <div className="min-h-screen" style={{ background: "#0B0B0D" }}>
       <div className="p-8">
         <motion.div
           initial={{ y: 20, opacity: 0 }}
           animate={{ y: 0, opacity: 1 }}
           transition={{ ease: "easeOut", duration: 0.5 }}
         >
-          <h1 className="text-4xl md:text-6xl font-bold mb-4" style={{ color: "#FFF7EC" }}>
+          <h1 className="text-4xl md:text-6xl font-bold mb-4" style={{ color: "rgba(255, 247, 236, 0.92)" }}>
             {t('title')}
           </h1>
-          <p className="text-xl mb-6" style={{ color: "rgba(255, 247, 236, 0.62)" }}>
+          <p className="text-xl mb-6" style={{ color: "rgba(255, 247, 236, 0.72)" }}>
             {t('subtitle')}
           </p>
           <div className="flex flex-wrap gap-3 mb-6">
@@ -278,17 +278,17 @@ export default function CreditsPage() {
           <div 
             className="rounded-2xl p-6 border"
             style={{
-              background: "#2A1C15",
-              borderColor: "rgba(232, 194, 122, 0.16)",
+              background: "#111114",
+              borderColor: "rgba(255, 247, 236, 0.08)",
             }}
           >
-            <h3 className="text-lg font-medium mb-2" style={{ color: "rgba(255, 247, 236, 0.62)" }}>
+            <h3 className="text-lg font-medium mb-2" style={{ color: "rgba(255, 247, 236, 0.72)" }}>
               {t('balance.title')}
             </h3>
             <div className="text-4xl font-bold mb-2" style={{ color: "#E8C27A" }}>
               {credits}
             </div>
-            <p className="text-sm" style={{ color: "rgba(255, 247, 236, 0.52)" }}>
+            <p className="text-sm" style={{ color: "rgba(255, 247, 236, 0.45)" }}>
               {t('balance.description')}
             </p>
           </div>
@@ -297,11 +297,11 @@ export default function CreditsPage() {
           <div 
             className="rounded-2xl p-6 border"
             style={{
-              background: "#2A1C15",
-              borderColor: "rgba(232, 194, 122, 0.16)",
+              background: "#111114",
+              borderColor: "rgba(255, 247, 236, 0.08)",
             }}
           >
-            <h3 className="text-lg font-medium mb-4" style={{ color: "rgba(255, 247, 236, 0.62)" }}>
+            <h3 className="text-lg font-medium mb-4" style={{ color: "rgba(255, 247, 236, 0.72)" }}>
               {t('purchase.title')}
             </h3>
             <div className="space-y-2">
@@ -313,25 +313,27 @@ export default function CreditsPage() {
                     key={pack.key}
                     className="w-full justify-between rounded-xl px-4 py-3 text-sm font-medium transition-all duration-200 flex items-center"
                     style={{
-                      background: "#C83A32",
-                      color: "#FFF7EC",
-                      border: "1px solid rgba(232, 194, 122, 0.22)",
+                      background: "rgba(232, 194, 122, 0.10)",
+                      color: "#E8C27A",
+                      border: "1px solid rgba(232, 194, 122, 0.16)",
                     }}
                     onClick={() => startCheckout(pack.key)}
                     disabled={isLoading}
                     onMouseEnter={(e) => {
                       if (!isLoading) {
-                        e.currentTarget.style.background = "#D7463E";
+                        e.currentTarget.style.background = "rgba(232, 194, 122, 0.16)";
+                        e.currentTarget.style.borderColor = "rgba(232, 194, 122, 0.25)";
                       }
                     }}
                     onMouseLeave={(e) => {
                       if (!isLoading) {
-                        e.currentTarget.style.background = "#C83A32";
+                        e.currentTarget.style.background = "rgba(232, 194, 122, 0.10)";
+                        e.currentTarget.style.borderColor = "rgba(232, 194, 122, 0.16)";
                       }
                     }}
                   >
                     {isLoading ? (
-                      <span style={{ color: "#FFF7EC" }}>{tCommon('status.loading')}</span>
+                      <span style={{ color: "#E8C27A" }}>{tCommon('status.loading')}</span>
                     ) : (
                       <>
                         <span>{pack.credits} {t('purchase.credits')}</span>
@@ -345,7 +347,7 @@ export default function CreditsPage() {
           </div>
 
           {/* Usage Statistics */}
-          <div className="rounded-2xl p-6 border" style={{ background: '#2A1C15', borderColor: 'rgba(232, 194, 122, 0.16)' }}>
+          <div className="rounded-2xl p-6 border" style={{ background: '#141418', borderColor: 'rgba(255, 247, 236, 0.08)' }}>
             <h3 className="text-lg font-medium text-muted-foreground mb-4">
               {t('statistics.title')}
             </h3>
@@ -383,8 +385,8 @@ export default function CreditsPage() {
           animate={{ y: 0, opacity: 1 }}
           transition={{ ease: "easeOut", duration: 0.5, delay: 0.2 }}
         >
-          <div className="rounded-2xl p-6 border" style={{ background: '#2A1C15', borderColor: 'rgba(232, 194, 122, 0.16)' }}>
-            <h3 className="text-xl font-semibold mb-4" style={{ color: '#FFF7EC' }}>
+          <div className="rounded-2xl p-6 border" style={{ background: '#111114', borderColor: 'rgba(255, 247, 236, 0.08)' }}>
+            <h3 className="text-xl font-semibold mb-4" style={{ color: 'rgba(255, 247, 236, 0.92)' }}>
               {t('history.title')}
             </h3>
 
@@ -444,9 +446,9 @@ export default function CreditsPage() {
                             <td className="py-3 px-2">
                               <span className={`inline-flex px-2 py-1 text-xs font-medium rounded-full ${
                                 record.type === 'purchase' || record.type === 'subscription'
-                                  ? 'bg-green-500/10 text-green-600'
+                                  ? 'bg-[rgba(232,194,122,0.10)] text-[#E8C27A]'
                                   : record.type === 'usage'
-                                  ? 'bg-red-500/10 text-red-600'
+                                  ? 'bg-[rgba(200,58,50,0.10)] text-[#C83A32]'
                                   : record.type === 'bonus'
                                   ? 'bg-muted text-muted-foreground'
                                   : 'bg-muted text-muted-foreground'
@@ -460,7 +462,7 @@ export default function CreditsPage() {
                               })}
                             </td>
                             <td className="py-3 px-2 text-sm text-right font-mono">
-                              <span className={record.amount > 0 ? 'text-green-600' : 'text-red-600'}>
+                              <span className={record.amount > 0 ? 'text-[#E8C27A]' : 'text-[rgba(255,247,236,0.45)]'}>
                                 {record.amount > 0 ? '+' : ''}{record.amount}
                               </span>
                             </td>

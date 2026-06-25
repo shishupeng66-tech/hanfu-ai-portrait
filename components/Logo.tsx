@@ -32,7 +32,7 @@ export const Logo = () => {
         </span>
       ) : (
         <span className="text-[20px] font-semibold tracking-[-0.02em]">
-          <span className="text-[#FFF7EC]">Han</span>
+          <span className="text-[rgba(255,247,236,0.92)]">Han</span>
           <span className="text-[#E8C27A]"> Portrait</span>
         </span>
       )}

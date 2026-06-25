@@ -23,20 +23,20 @@ function UploadIcon() {
         height="36"
         rx="10"
         stroke="currentColor"
-        className="text-[#EF9F27]"
+        className="text-[#E8C27A]"
         strokeWidth="1.5"
       />
       <path
         d="M20 12V24"
         stroke="currentColor"
-        className="text-[#EF9F27]"
+        className="text-[#E8C27A]"
         strokeWidth="2"
         strokeLinecap="round"
       />
       <path
         d="M14 18L20 12L26 18"
         stroke="currentColor"
-        className="text-[#EF9F27]"
+        className="text-[#E8C27A]"
         strokeWidth="2"
         strokeLinecap="round"
         strokeLinejoin="round"
@@ -44,7 +44,7 @@ function UploadIcon() {
       <path
         d="M12 28H28"
         stroke="currentColor"
-        className="text-[#EF9F27]"
+        className="text-[#E8C27A]"
         strokeWidth="2"
         strokeLinecap="round"
       />
@@ -68,13 +68,13 @@ function AIIcon() {
         height="36"
         rx="10"
         stroke="currentColor"
-        className="text-[#D85A30]"
+        className="text-[#E8C27A]"
         strokeWidth="1.5"
       />
       <path
         d="M20 10L22 16L28 16L23 20L25 26L20 22L15 26L17 20L12 16L18 16L20 10Z"
         stroke="currentColor"
-        className="text-[#D85A30]"
+        className="text-[#E8C27A]"
         strokeWidth="1.5"
         strokeLinejoin="round"
       />
@@ -98,20 +98,20 @@ function DownloadIcon() {
         height="36"
         rx="10"
         stroke="currentColor"
-        className="text-[#0F6E56]"
+        className="text-[#E8C27A]"
         strokeWidth="1.5"
       />
       <path
         d="M20 12V24"
         stroke="currentColor"
-        className="text-[#0F6E56]"
+        className="text-[#E8C27A]"
         strokeWidth="2"
         strokeLinecap="round"
       />
       <path
         d="M14 20L20 26L26 20"
         stroke="currentColor"
-        className="text-[#0F6E56]"
+        className="text-[#E8C27A]"
         strokeWidth="2"
         strokeLinecap="round"
         strokeLinejoin="round"
@@ -119,7 +119,7 @@ function DownloadIcon() {
       <path
         d="M12 28H28"
         stroke="currentColor"
-        className="text-[#0F6E56]"
+        className="text-[#E8C27A]"
         strokeWidth="2"
         strokeLinecap="round"
       />
@@ -215,21 +215,21 @@ export function HomeHowItWorks() {
       icon: <UploadIcon />,
       title: t("step1.title"),
       description: t("step1.description"),
-      colorClass: "bg-[#EF9F27]/10 text-[#EF9F27]",
+      colorClass: "bg-[#E8C27A]/10 text-[#E8C27A]",
     },
     {
       step: 2,
       icon: <AIIcon />,
       title: t("step2.title"),
       description: t("step2.description"),
-      colorClass: "bg-[#D85A30]/10 text-[#D85A30]",
+      colorClass: "bg-[#E8C27A]/10 text-[#E8C27A]",
     },
     {
       step: 3,
       icon: <DownloadIcon />,
       title: t("step3.title"),
       description: t("step3.description"),
-      colorClass: "bg-[#0F6E56]/10 text-[#0F6E56]",
+      colorClass: "bg-[#E8C27A]/10 text-[#E8C27A]",
     },
   ];
 

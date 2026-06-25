@@ -47,7 +47,7 @@ const ActionButton = ({ children }: { children: React.ReactNode }) => {
       whileHover={{ y: -2 }}
       whileTap={{ scale: 0.97 }}
       onClick={handleClick}
-      className="h-14 cursor-pointer rounded-full bg-[#C83A32] px-9 text-base font-semibold text-[#FFF7EC] shadow-[0_0_28px_rgba(200,58,50,0.28)] transition-[background-color,box-shadow,transform] duration-200 hover:bg-[#D7463E] hover:shadow-[0_0_34px_rgba(200,58,50,0.42)] focus:outline-none focus:ring-2 focus:ring-[#E8C27A]/60 focus:ring-offset-2 focus:ring-offset-[#030604]"
+      className="h-14 cursor-pointer rounded-full bg-[rgba(232,194,122,0.10)] px-9 text-base font-semibold text-[#E8C27A] border border-[rgba(232,194,122,0.16)] shadow-[0_0_28px_rgba(232,194,122,0.10)] transition-[background-color,box-shadow,transform] duration-200 hover:bg-[rgba(232,194,122,0.16)] hover:border-[rgba(232,194,122,0.25)] hover:shadow-[0_0_34px_rgba(232,194,122,0.15)] focus:outline-none focus:ring-2 focus:ring-[#E8C27A]/60 focus:ring-offset-2 focus:ring-offset-[#0B0B0D]"
     >
       {children}
     </motion.button>
@@ -72,7 +72,7 @@ export const AnimatedMarqueeHero: React.FC<AnimatedMarqueeHeroProps> = ({
         className
       )}
     >
-      <div className="pointer-events-none absolute inset-0 -z-10 overflow-hidden bg-[#030604]">
+      <div className="pointer-events-none absolute inset-0 -z-10 overflow-hidden bg-[#0B0B0D]">
         {backgroundImage ? (
           <Image
             src={backgroundImage}
@@ -87,7 +87,7 @@ export const AnimatedMarqueeHero: React.FC<AnimatedMarqueeHeroProps> = ({
         {/* Minimal top scrim for title readability */}
         <div className="absolute inset-x-0 top-0 h-[55%] bg-gradient-to-b from-black/30 via-black/10 to-transparent" />
         {/* Bottom fade for marquee transition */}
-        <div className="absolute inset-x-0 bottom-0 h-[25%] bg-gradient-to-t from-[#030604]/70 to-transparent" />
+        <div className="absolute inset-x-0 bottom-0 h-[25%] bg-gradient-to-t from-[#0B0B0D]/70 to-transparent" />
       </div>
 
       <div className="z-10 flex flex-col items-center px-5 pt-[104px] md:pt-[128px]">
@@ -95,7 +95,7 @@ export const AnimatedMarqueeHero: React.FC<AnimatedMarqueeHeroProps> = ({
           initial="hidden"
           animate="show"
           variants={fadeIn}
-          className="mb-6 inline-block rounded-full border border-[#E8C27A]/35 bg-[rgba(120,35,30,0.35)] px-3.5 py-2 text-sm font-medium text-[#E8C27A] backdrop-blur-sm md:text-[15px]"
+          className="mb-6 inline-block rounded-full border border-[rgba(232,194,122,0.25)] bg-[rgba(232,194,122,0.08)] px-3.5 py-2 text-sm font-medium text-[#E8C27A] backdrop-blur-sm md:text-[15px]"
         >
           {tagline}
         </motion.div>
@@ -104,7 +104,7 @@ export const AnimatedMarqueeHero: React.FC<AnimatedMarqueeHeroProps> = ({
           initial="hidden"
           animate="show"
           variants={fadeIn}
-          className="w-full max-w-[1180px] text-[42px] font-bold leading-[1.05] tracking-[-0.03em] text-[#FFF7EC] sm:text-5xl md:text-[64px] md:leading-none lg:text-[68px] xl:text-[72px]"
+          className="w-full max-w-[1180px] text-[42px] font-bold leading-[1.05] tracking-[-0.03em] text-[rgba(255,247,236,0.92)] sm:text-5xl md:text-[64px] md:leading-none lg:text-[68px] xl:text-[72px]"
         >
           {title}
         </motion.h1>
