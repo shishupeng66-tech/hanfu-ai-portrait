@@ -304,7 +304,13 @@ const flattenItems = (items: NavItemData[]): NavItemData[] => {
 };
 const flatMockData = flattenItems(allItems);
 
-export function AppSidebar() {
+export function AppSidebar({
+  isOpen = true,
+  onToggle,
+}: {
+  isOpen?: boolean;
+  onToggle?: () => void;
+}) {
   const [activeId, setActiveId] = useState('home');
   const [activeWorkspace, setActiveWorkspace] = useState('Acme Corp');
 
@@ -313,14 +319,23 @@ export function AppSidebar() {
   };
 
   return (
-    <aside className="fixed left-0 top-0 h-screen z-40 w-[260px]">
-      <SidebarNav
-        className="w-full h-full border-none bg-transparent"
-        activeId={activeId}
-        onSelect={handleSelect}
-        activeWorkspace={activeWorkspace}
-        onWorkspaceSelect={setActiveWorkspace}
-      />
+    <aside
+      className="fixed left-0 top-0 h-screen z-40 transition-[width] duration-300 ease-out"
+      style={{ width: isOpen ? 260 : 0 }}
+    >
+      <div
+        className={`h-full overflow-hidden transition-opacity duration-300 ${
+          isOpen ? 'opacity-100' : 'opacity-0'
+        }`}
+      >
+        <SidebarNav
+          className="w-[260px] h-full border-none bg-transparent"
+          activeId={activeId}
+          onSelect={handleSelect}
+          activeWorkspace={activeWorkspace}
+          onWorkspaceSelect={setActiveWorkspace}
+        />
+      </div>
     </aside>
   );
 }

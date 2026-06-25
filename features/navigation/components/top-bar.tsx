@@ -1,14 +1,18 @@
 "use client";
 
-import { useState } from "react";
 import { PanelLeftClose, PanelLeftOpen } from "lucide-react";
 import { useLocale } from "next-intl";
 import { usePathname } from "next/navigation";
 
-export function TopBar() {
+export function TopBar({
+  isSidebarOpen,
+  onToggleSidebar,
+}: {
+  isSidebarOpen: boolean;
+  onToggleSidebar: () => void;
+}) {
   const locale = useLocale();
   const pathname = usePathname();
-  const [isSidebarOpen, setIsSidebarOpen] = useState(true);
 
   // Map pathname to page title
   const getPageTitle = () => {
@@ -36,7 +40,7 @@ export function TopBar() {
     >
       <div className="flex items-center gap-3">
         <button
-          onClick={() => setIsSidebarOpen(!isSidebarOpen)}
+          onClick={onToggleSidebar}
           className="p-1.5 rounded-md transition-colors"
           style={{ color: "rgba(255, 247, 236, 0.5)" }}
           onMouseEnter={(e) => {
