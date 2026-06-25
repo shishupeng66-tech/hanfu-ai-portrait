@@ -321,7 +321,7 @@ export function AppSidebar({
   return (
     <aside
       className="fixed left-0 top-0 h-screen z-40 transition-[width] duration-300 ease-out"
-      style={{ width: isOpen ? 260 : 0 }}
+      style={{ width: isOpen ? 260 : 0, background: '#241812' }}
     >
       <div
         className={`h-full overflow-hidden transition-opacity duration-300 ${

@@ -345,7 +345,7 @@ export default function CreditsPage() {
           </div>
 
           {/* Usage Statistics */}
-          <div className="bg-card/50 backdrop-blur-md rounded-2xl p-6 border border-border">
+          <div className="rounded-2xl p-6 border" style={{ background: '#2A1C15', borderColor: 'rgba(232, 194, 122, 0.16)' }}>
             <h3 className="text-lg font-medium text-muted-foreground mb-4">
               {t('statistics.title')}
             </h3>
@@ -383,8 +383,8 @@ export default function CreditsPage() {
           animate={{ y: 0, opacity: 1 }}
           transition={{ ease: "easeOut", duration: 0.5, delay: 0.2 }}
         >
-          <div className="bg-card/50 backdrop-blur-md rounded-2xl p-6 border border-border">
-            <h3 className="text-xl font-semibold text-card-foreground mb-4">
+          <div className="rounded-2xl p-6 border" style={{ background: '#2A1C15', borderColor: 'rgba(232, 194, 122, 0.16)' }}>
+            <h3 className="text-xl font-semibold mb-4" style={{ color: '#FFF7EC' }}>
               {t('history.title')}
             </h3>
 
