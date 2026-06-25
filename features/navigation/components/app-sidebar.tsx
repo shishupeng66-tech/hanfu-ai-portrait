@@ -2,27 +2,25 @@
 
 import React, { useState } from 'react';
 import {
-  Search,
-  LayoutDashboard,
-  FolderKanban,
-  Users,
+  Home,
+  PenLine,
+  LayoutGrid,
+  Image,
+  Coins,
+  Crown,
+  ReceiptText,
+  User,
   Settings,
+  Bell,
   LogOut,
-  Hash,
-  ChevronDown,
   ChevronRight,
-  Inbox,
-  Calendar,
-  Activity,
-  CreditCard,
-  Globe,
-  Terminal,
-  Blocks,
   PanelLeftClose,
   PanelLeftOpen,
   Command,
-  X
+  X,
+  Search
 } from 'lucide-react';
+import Link from 'next/link';
 
 export type NavItemData = {
   id: string;
@@ -30,6 +28,7 @@ export type NavItemData = {
   icon: React.ElementType;
   badge?: number | string;
   shortcut?: string;
+  href?: string;
   children?: NavItemData[];
 };
 
@@ -41,52 +40,29 @@ export type NavGroupData = {
 const mockNavGroups: NavGroupData[] = [
   {
     items: [
-      { id: 'search', title: 'Search', icon: Search, shortcut: '⌘K' },
-      { id: 'home', title: 'Home', icon: LayoutDashboard },
-      { id: 'inbox', title: 'Inbox', icon: Inbox, badge: 12 },
-      { id: 'analytics', title: 'Analytics', icon: Activity },
+      { id: 'home', title: '首页', icon: Home, href: '/dashboard' },
     ]
   },
   {
-    heading: 'Workspace',
+    heading: '创作',
     items: [
-      {
-        id: 'projects',
-        title: 'Projects',
-        icon: FolderKanban,
-        children: [
-          { id: 'p-active', title: 'Active', icon: Hash },
-          { id: 'p-archived', title: 'Archived', icon: Hash },
-        ]
-      },
-      { id: 'calendar', title: 'Calendar', icon: Calendar },
-      {
-        id: 'team',
-        title: 'Team',
-        icon: Users,
-        children: [
-          { id: 't-design', title: 'Designers', icon: Hash },
-          { id: 't-eng', title: 'Engineering', icon: Hash },
-          { id: 't-product', title: 'Product', icon: Hash },
-        ]
-      },
-      {
-        id: 'customers',
-        title: 'Customers',
-        icon: Globe,
-        children: [
-          { id: 'c-enterprise', title: 'Enterprise', icon: Hash },
-          { id: 'c-smb', title: 'SMB', icon: Hash },
-        ]
-      },
-      { id: 'finance', title: 'Finance', icon: CreditCard },
+      { id: 'create', title: '开始创作', icon: PenLine, href: '/generate' },
+      { id: 'templates', title: '模板库', icon: LayoutGrid, href: '/templates' },
+      { id: 'gallery', title: '我的作品', icon: Image, href: '/gallery' },
     ]
   },
   {
-    heading: 'Developers',
+    heading: '账户与消费',
     items: [
-      { id: 'api', title: 'API Keys', icon: Terminal },
-      { id: 'webhooks', title: 'Webhooks', icon: Blocks },
+      { id: 'credits', title: '积分中心', icon: Coins, badge: 128, href: '/credits' },
+      { id: 'subscription', title: '订阅计划', icon: Crown, href: '/pricing' },
+    ]
+  },
+  {
+    heading: '个人中心',
+    items: [
+      { id: 'profile', title: '个人资料', icon: User, href: '/profile' },
+      { id: 'notifications', title: '通知消息', icon: Bell, href: '/notifications' },
     ]
   }
 ];
@@ -96,52 +72,23 @@ const mockBottomItems: NavItemData[] = [
   { id: 'logout', title: 'Log out', icon: LogOut },
 ];
 
-function WorkspaceSwitcher({ selected, onSelect }: { selected?: string, onSelect?: (ws: string) => void }) {
-  const [isOpen, setIsOpen] = useState(false);
-  const [internalSelected, setInternalSelected] = useState('Acme Corp');
-
-  const current = selected || internalSelected;
-  const handleSelect = onSelect || setInternalSelected;
-
+function BrandHeader() {
   return (
-    <div className="relative">
-      <div
-        onClick={() => setIsOpen(!isOpen)}
-        className="flex items-center justify-between px-2 py-2 mb-4 rounded-lg hover:bg-black/5 dark:hover:bg-white/5 cursor-pointer transition-colors select-none group"
-      >
-        <div className="flex items-center gap-3">
-          <div className="w-8 h-8 rounded-[6px] bg-primary text-primary-foreground flex items-center justify-center font-semibold text-[13px] shadow-sm">
-            {current.charAt(0)}
-          </div>
-          <div className="flex flex-col overflow-hidden">
-            <span className="text-[13px] font-medium leading-none mb-1 text-foreground truncate max-w-[120px]">{current}</span>
-            <span className="text-[11px] text-muted-foreground leading-none">Pro Plan</span>
-          </div>
-        </div>
-        <ChevronDown className="w-4 h-4 text-muted-foreground/50 group-hover:text-foreground/70 transition-colors shrink-0" strokeWidth={1.5} />
+    <Link href="/" className="flex items-center gap-3 px-2 py-2 mb-4 rounded-lg cursor-pointer transition-colors select-none group">
+      <img
+        src="/brand/logo-mark.png"
+        alt="汉韵写真"
+        className="w-8 h-8 object-contain rounded-[6px]"
+      />
+      <div className="flex flex-col overflow-hidden">
+        <span className="text-[13px] font-medium leading-none mb-1 truncate max-w-[120px]" style={{ color: '#FFF7EC' }}>
+          汉韵写真
+        </span>
+        <span className="text-[11px] leading-none" style={{ color: 'rgba(255, 247, 236, 0.5)' }}>
+          Han Portrait
+        </span>
       </div>
-
-      {isOpen && (
-        <>
-          <div className="fixed inset-0 z-40" onClick={() => setIsOpen(false)} />
-          <div className="absolute top-[52px] left-0 w-full bg-card border border-border/50 rounded-lg shadow-xl z-50 py-1 flex flex-col gap-0.5 animate-in fade-in zoom-in-95 duration-100">
-            {['Acme Corp', 'Personal Workspace', 'Client Sandbox'].map(ws => (
-              <div
-                key={ws}
-                onClick={() => { handleSelect(ws); setIsOpen(false); }}
-                className={`px-3 py-2 mx-1 text-[13px] rounded-md cursor-pointer transition-colors ${current === ws ? 'bg-primary/10 text-primary font-medium' : 'text-foreground/80 hover:bg-black/5 dark:hover:bg-white/5'}`}
-              >
-                {ws}
-              </div>
-            ))}
-            <div className="h-px bg-border/50 my-1 mx-2" />
-            <div className="px-3 py-2 mx-1 text-[13px] text-muted-foreground hover:bg-black/5 dark:hover:bg-white/5 rounded-md cursor-pointer flex items-center gap-2 transition-colors">
-              <span className="text-[16px] leading-none mb-0.5">+</span> Create Workspace
-            </div>
-          </div>
-        </>
-      )}
-    </div>
+    </Link>
   );
 }
 
@@ -273,7 +220,7 @@ export function SidebarNav({
 
   return (
     <div className={`flex flex-col w-[260px] h-full bg-card/50 border-r border-border/50 p-3 font-sans ${className}`}>
-      <WorkspaceSwitcher selected={activeWorkspace} onSelect={onWorkspaceSelect} />
+      <BrandHeader />
 
       <div className="flex-1 overflow-y-auto [&::-webkit-scrollbar]:hidden [-ms-overflow-style:none] [scrollbar-width:none] flex flex-col gap-4 mt-2">
         {mockNavGroups.map((group, idx) => (
