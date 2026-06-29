@@ -33,8 +33,8 @@
     --accent-foreground: 240 6% 4%;
 
     /* 边框、输入框、焦点环 */
-    --border: 36 100% 96%;
-    --input: 36 100% 96%;
+    --border: 36 20% 30%;
+    --input: 240 5% 12%;
     --ring: 40 62% 69%;
 
     /* 渐变色支持 - 金色系 */
@@ -75,8 +75,8 @@
     --accent: 40 62% 69%;
     --accent-foreground: 240 6% 4%;
 
-    --border: 36 100% 96%;
-    --input: 36 100% 96%;
+    --border: 36 20% 30%;
+    --input: 240 5% 12%;
     --ring: 40 62% 69%;
 
     --gradient-from: 40 62% 69%;
