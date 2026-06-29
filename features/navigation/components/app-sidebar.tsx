@@ -21,6 +21,7 @@ import {
   Search
 } from 'lucide-react';
 import Link from 'next/link';
+import { useLocale } from 'next-intl';
 
 export type NavItemData = {
   id: string;
@@ -37,55 +38,97 @@ export type NavGroupData = {
   items: NavItemData[];
 };
 
-const mockNavGroups: NavGroupData[] = [
-  {
-    items: [
-      { id: 'home', title: '首页', icon: Home, href: '/dashboard' },
-    ]
-  },
-  {
-    heading: '创作',
-    items: [
-      { id: 'create', title: '开始创作', icon: PenLine, href: '/generate' },
-      { id: 'templates', title: '模板库', icon: LayoutGrid, href: '/templates' },
-      { id: 'gallery', title: '我的作品', icon: Image, href: '/gallery' },
-    ]
-  },
-  {
-    heading: '账户与消费',
-    items: [
-      { id: 'credits', title: '积分中心', icon: Coins, badge: 128, href: '/credits' },
-      { id: 'subscription', title: '订阅计划', icon: Crown, href: '/pricing' },
-    ]
-  },
-  {
-    heading: '个人中心',
-    items: [
-      { id: 'profile', title: '个人资料', icon: User, href: '/profile' },
-      { id: 'notifications', title: '通知消息', icon: Bell, href: '/notifications' },
-    ]
+function getNavGroups(locale: string): NavGroupData[] {
+  if (locale === 'zh') {
+    return [
+      {
+        items: [
+          { id: 'home', title: '首页', icon: Home, href: '/dashboard' },
+        ]
+      },
+      {
+        heading: '创作',
+        items: [
+          { id: 'create', title: '开始创作', icon: PenLine, href: '/generate' },
+          { id: 'templates', title: '模板库', icon: LayoutGrid, href: '/templates' },
+          { id: 'gallery', title: '我的作品', icon: Image, href: '/gallery' },
+        ]
+      },
+      {
+        heading: '账户与消费',
+        items: [
+          { id: 'credits', title: '积分中心', icon: Coins, badge: 128, href: '/credits' },
+          { id: 'subscription', title: '订阅计划', icon: Crown, href: '/pricing' },
+        ]
+      },
+      {
+        heading: '个人中心',
+        items: [
+          { id: 'profile', title: '个人资料', icon: User, href: '/profile' },
+          { id: 'notifications', title: '通知消息', icon: Bell, href: '/notifications' },
+        ]
+      }
+    ];
   }
-];
+  return [
+    {
+      items: [
+        { id: 'home', title: 'Home', icon: Home, href: '/dashboard' },
+      ]
+    },
+    {
+      heading: 'Create',
+      items: [
+        { id: 'create', title: 'Start Creating', icon: PenLine, href: '/generate' },
+        { id: 'templates', title: 'Templates', icon: LayoutGrid, href: '/templates' },
+        { id: 'gallery', title: 'My Works', icon: Image, href: '/gallery' },
+      ]
+    },
+    {
+      heading: 'Account & Billing',
+      items: [
+        { id: 'credits', title: 'Credits', icon: Coins, badge: 128, href: '/credits' },
+        { id: 'subscription', title: 'Subscription', icon: Crown, href: '/pricing' },
+      ]
+    },
+    {
+      heading: 'Profile',
+      items: [
+        { id: 'profile', title: 'Profile', icon: User, href: '/profile' },
+        { id: 'notifications', title: 'Notifications', icon: Bell, href: '/notifications' },
+      ]
+    }
+  ];
+}
 
-const mockBottomItems: NavItemData[] = [
-  { id: 'settings', title: 'Settings', icon: Settings, shortcut: '⌘,' },
-  { id: 'logout', title: 'Log out', icon: LogOut },
-];
+function getBottomItems(locale: string): NavItemData[] {
+  if (locale === 'zh') {
+    return [
+      { id: 'settings', title: '设置', icon: Settings, shortcut: '⌘,' },
+      { id: 'logout', title: '退出登录', icon: LogOut },
+    ];
+  }
+  return [
+    { id: 'settings', title: 'Settings', icon: Settings, shortcut: '⌘,' },
+    { id: 'logout', title: 'Log out', icon: LogOut },
+  ];
+}
 
 function BrandHeader() {
+  const locale = useLocale();
   return (
     <Link href="/" className="flex items-center gap-3 px-2 py-2 mb-4 rounded-lg cursor-pointer transition-colors select-none group">
       <img
         src="/brand/logo-mark.png"
-        alt="汉韵写真"
+        alt={locale === 'zh' ? '汉韵写真' : 'Han Portrait'}
         className="w-8 h-8 object-contain rounded-[6px]"
       />
       <div className="flex flex-col overflow-hidden">
         <span className="text-[13px] font-medium leading-none mb-1 truncate max-w-[120px]" style={{ color: 'rgba(255, 247, 236, 0.92)' }}>
-          汉韵写真
+          {locale === 'zh' ? '汉韵写真' : 'Han Portrait'}
         </span>
         <span className="text-[11px] leading-none" style={{ color: 'rgba(255, 247, 236, 0.45)' }}>
-          Han Portrait
+          {locale === 'zh' ? 'Han Portrait' : 'AI Hanfu Studio'}
         </span>
       </div>
     </Link>
@@ -96,12 +139,14 @@ function NavItem({
   item,
   activeId,
   onSelect,
-  level = 0
+  level = 0,
+  isZh = false
 }: {
   item: NavItemData;
   activeId: string;
   onSelect: (id: string) => void;
   level?: number;
+  isZh?: boolean;
 }) {
   const isActive = activeId === item.id;
   const hasChildren = !!item.children;
@@ -115,27 +160,35 @@ function NavItem({
     }
   };
 
+  // 参考图二：更深的文字颜色、更大的字体、更宽松的间距
+  const normalColor = isZh ? 'rgba(255, 247, 236, 0.82)' : 'rgba(255, 247, 236, 0.78)';
+  const hoverColor = '#E8C27A';
+  const iconNormalColor = isZh ? 'rgba(255, 247, 236, 0.55)' : 'rgba(255, 247, 236, 0.50)';
+  const fontSize = isZh ? '14px' : '13px';
+  const itemPadding = isZh ? '8px 10px' : '7px 10px';
+
   return (
     <div className="flex flex-col w-full">
       <div
-        className={`group flex items-center justify-between px-2.5 py-[7px] rounded-[6px] cursor-pointer transition-all duration-200 select-none
+        className={`group flex items-center justify-between rounded-[6px] cursor-pointer transition-all duration-200 select-none
           ${isActive ? 'font-medium' : ''}
         `}
         style={{
+          padding: itemPadding,
           paddingLeft: `${level * 12 + 10}px`,
           background: isActive ? 'rgba(232, 194, 122, 0.10)' : 'transparent',
-          color: isActive ? '#E8C27A' : 'rgba(255, 247, 236, 0.72)',
+          color: isActive ? hoverColor : normalColor,
         }}
         onMouseEnter={(e) => {
           if (!isActive) {
             e.currentTarget.style.background = 'rgba(232, 194, 122, 0.08)';
-            e.currentTarget.style.color = '#E8C27A';
+            e.currentTarget.style.color = hoverColor;
           }
         }}
         onMouseLeave={(e) => {
           if (!isActive) {
             e.currentTarget.style.background = 'transparent';
-            e.currentTarget.style.color = 'rgba(255, 247, 236, 0.72)';
+            e.currentTarget.style.color = normalColor;
           }
         }}
         onClick={handleClick}
@@ -144,11 +197,11 @@ function NavItem({
           <item.icon
             className="w-[16px] h-[16px] transition-colors flex-shrink-0"
             style={{
-              color: isActive ? '#E8C27A' : 'rgba(255, 247, 236, 0.45)',
+              color: isActive ? hoverColor : iconNormalColor,
             }}
             strokeWidth={1.5}
           />
-          <span className="text-[13px] tracking-wide truncate" style={{ fontWeight: isActive ? 600 : 400 }}>
+          <span className="tracking-wide truncate" style={{ fontSize, fontWeight: isActive ? 600 : 400 }}>
             {item.title}
           </span>
         </div>
@@ -192,6 +245,7 @@ function NavItem({
                 activeId={activeId}
                 onSelect={onSelect}
                 level={level + 1}
+                isZh={isZh}
               />
             ))}
           </div>
@@ -217,16 +271,28 @@ export function SidebarNav({
   const [internalId, setInternalId] = useState('home');
   const currentId = activeId !== undefined ? activeId : internalId;
   const handleSelect = onSelect || setInternalId;
+  const locale = useLocale();
+  const isZh = locale === 'zh';
+
+  const navGroups = getNavGroups(locale);
+  const bottomItems = getBottomItems(locale);
+
+  // 参考图二：分组标题颜色更深，间距更大
+  const headingColor = isZh ? 'rgba(255, 247, 236, 0.38)' : 'rgba(255, 247, 236, 0.32)';
+  const groupGap = isZh ? 'gap-1.5' : 'gap-0.5';
+  const sectionGap = isZh ? 'gap-5' : 'gap-4';
+  const headingSize = isZh ? '12px' : '11px';
+  const headingLetterSpacing = isZh ? '0.08em' : '0.05em';
 
   return (
     <div className={`flex flex-col w-[260px] h-full bg-card/50 border-r border-border/50 p-3 font-sans ${className}`}>
       <BrandHeader />
 
-      <div className="flex-1 overflow-y-auto [&::-webkit-scrollbar]:hidden [-ms-overflow-style:none] [scrollbar-width:none] flex flex-col gap-4 mt-2">
-        {mockNavGroups.map((group, idx) => (
-          <div key={idx} className="flex flex-col gap-0.5">
+      <div className={`flex-1 overflow-y-auto [&::-webkit-scrollbar]:hidden [-ms-overflow-style:none] [scrollbar-width:none] flex flex-col ${sectionGap} mt-2`}>
+        {navGroups.map((group, idx) => (
+          <div key={idx} className={`flex flex-col ${groupGap}`}>
             {group.heading && (
-              <span className="px-2.5 mb-1 text-[11px] font-semibold tracking-wider uppercase" style={{ color: 'rgba(255, 247, 236, 0.25)' }}>
+              <span className="px-2.5 mb-1 font-semibold uppercase" style={{ fontSize: headingSize, letterSpacing: headingLetterSpacing, color: headingColor }}>
                 {group.heading}
               </span>
             )}
@@ -236,6 +302,7 @@ export function SidebarNav({
                 item={item}
                 activeId={currentId}
                 onSelect={handleSelect}
+                isZh={isZh}
               />
             ))}
           </div>
@@ -243,12 +310,13 @@ export function SidebarNav({
       </div>
 
       <div className="pt-4 flex flex-col gap-0.5" style={{ borderTop: '1px solid rgba(255, 247, 236, 0.08)' }}>
-        {mockBottomItems.map(item => (
+        {bottomItems.map(item => (
           <NavItem
             key={item.id}
             item={item}
             activeId={currentId}
             onSelect={handleSelect}
+            isZh={isZh}
           />
         ))}
       </div>
@@ -256,7 +324,12 @@ export function SidebarNav({
   );
 }
 
-const allItems = [...mockNavGroups.flatMap(g => g.items), ...mockBottomItems];
+function getAllItems(locale: string): NavItemData[] {
+  const groups = getNavGroups(locale);
+  const bottoms = getBottomItems(locale);
+  return [...groups.flatMap(g => g.items), ...bottoms];
+}
+
 const flattenItems = (items: NavItemData[]): NavItemData[] => {
   return items.reduce((acc, item) => {
     acc.push(item);
@@ -264,7 +337,6 @@ const flattenItems = (items: NavItemData[]): NavItemData[] => {
     return acc;
   }, [] as NavItemData[]);
 };
-const flatMockData = flattenItems(allItems);
 
 export function AppSidebar({
   isOpen = true,
@@ -307,7 +379,10 @@ export default function SidebarNavPreview() {
   const [activeId, setActiveId] = useState('home');
   const [activeWorkspace, setActiveWorkspace] = useState('Acme Corp');
   const [isSearchOpen, setIsSearchOpen] = useState(false);
+  const previewLocale = 'zh';
 
+  const allItems = getAllItems(previewLocale);
+  const flatMockData = flattenItems(allItems);
   const activeItem = flatMockData.find(i => i.id === activeId);
   const activeTitle = activeItem ? activeItem.title : 'Dashboard';
 
