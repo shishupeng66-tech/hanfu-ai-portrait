@@ -4,10 +4,13 @@ import React, { useState } from 'react';
 import {
   Home,
   PenLine,
+  LayoutGrid,
+  Image,
   Coins,
   Crown,
   User,
   Settings,
+  Bell,
   LogOut,
   ChevronRight,
   PanelLeftClose,
@@ -18,6 +21,7 @@ import {
 } from 'lucide-react';
 import Link from 'next/link';
 import { useLocale } from 'next-intl';
+import { useRouter } from 'next/navigation';
 
 export type NavItemData = {
   id: string;
@@ -46,6 +50,8 @@ function getNavGroups(locale: string): NavGroupData[] {
         heading: '创作',
         items: [
           { id: 'create', title: '开始创作', icon: PenLine, href: '/generate' },
+          { id: 'templates', title: '模板库', icon: LayoutGrid, href: '/templates' },
+          { id: 'gallery', title: '我的作品', icon: Image, href: '/gallery' },
         ]
       },
       {
@@ -59,6 +65,7 @@ function getNavGroups(locale: string): NavGroupData[] {
         heading: '个人中心',
         items: [
           { id: 'profile', title: '个人资料', icon: User, href: '/profile' },
+          { id: 'notifications', title: '通知消息', icon: Bell, href: '/notifications' },
         ]
       }
     ];
@@ -70,11 +77,13 @@ function getNavGroups(locale: string): NavGroupData[] {
       ]
     },
     {
-        heading: 'Create',
-        items: [
-          { id: 'create', title: 'Start Creating', icon: PenLine, href: '/generate' },
-        ]
-      },
+      heading: 'Create',
+      items: [
+        { id: 'create', title: 'Start Creating', icon: PenLine, href: '/generate' },
+        { id: 'templates', title: 'Templates', icon: LayoutGrid, href: '/templates' },
+        { id: 'gallery', title: 'My Works', icon: Image, href: '/gallery' },
+      ]
+    },
     {
       heading: 'Account & Billing',
       items: [
@@ -83,11 +92,12 @@ function getNavGroups(locale: string): NavGroupData[] {
       ]
     },
     {
-        heading: 'Profile',
-        items: [
-          { id: 'profile', title: 'Profile', icon: User, href: '/profile' },
-        ]
-      }
+      heading: 'Profile',
+      items: [
+        { id: 'profile', title: 'Profile', icon: User, href: '/profile' },
+        { id: 'notifications', title: 'Notifications', icon: Bell, href: '/notifications' },
+      ]
+    }
   ];
 }
 
@@ -183,12 +193,18 @@ function NavItem({
   const isActive = activeId === item.id;
   const hasChildren = !!item.children;
   const [isOpen, setIsOpen] = useState(false);
+  const router = useRouter();
+  const locale = useLocale();
 
   const handleClick = () => {
     if (hasChildren) {
       setIsOpen(!isOpen);
     } else {
       onSelect(item.id);
+      if (item.href) {
+        const href = item.href.startsWith('/') ? `/${locale}${item.href}` : item.href;
+        router.push(href);
+      }
     }
   };
 
