@@ -116,20 +116,43 @@ function getBottomItems(locale: string): NavItemData[] {
 
 function BrandHeader() {
   const locale = useLocale();
+  const isZh = locale === 'zh';
+
   return (
-    <Link href="/" className="flex items-center gap-3 px-2 py-2 mb-4 rounded-lg cursor-pointer transition-colors select-none group">
+    <Link href="/" className="flex items-center gap-3.5 px-2 py-3 mb-5 rounded-lg cursor-pointer transition-colors select-none group">
       <img
         src="/brand/logo-mark.png"
-        alt={locale === 'zh' ? '汉韵写真' : 'Han Portrait'}
-        className="w-8 h-8 object-contain rounded-[6px]"
+        alt={isZh ? '汉韵写真' : 'Han Portrait'}
+        className="w-10 h-10 object-contain rounded-[8px]"
       />
       <div className="flex flex-col overflow-hidden">
-        <span className="text-[13px] font-medium leading-none mb-1 truncate max-w-[120px]" style={{ color: 'rgba(255, 247, 236, 0.92)' }}>
-          {locale === 'zh' ? '汉韵写真' : 'Han Portrait'}
-        </span>
-        <span className="text-[11px] leading-none" style={{ color: 'rgba(255, 247, 236, 0.45)' }}>
-          {locale === 'zh' ? 'Han Portrait' : 'AI Hanfu Studio'}
-        </span>
+        {isZh ? (
+          <span
+            className="text-[17px] font-bold leading-none truncate max-w-[140px]"
+            style={{
+              background: 'linear-gradient(135deg, #E8C27A 0%, #C84B31 100%)',
+              WebkitBackgroundClip: 'text',
+              WebkitTextFillColor: 'transparent',
+              backgroundClip: 'text',
+            }}
+          >
+            汉韵写真
+          </span>
+        ) : (
+          <span className="text-[17px] font-bold leading-none truncate max-w-[140px]">
+            <span style={{ color: 'rgba(255, 247, 236, 0.92)' }}>Han</span>
+            <span
+              style={{
+                background: 'linear-gradient(135deg, #E8C27A 0%, #C84B31 100%)',
+                WebkitBackgroundClip: 'text',
+                WebkitTextFillColor: 'transparent',
+                backgroundClip: 'text',
+              }}
+            >
+              {' '}Portrait
+            </span>
+          </span>
+        )}
       </div>
     </Link>
   );
