@@ -120,62 +120,44 @@ function BrandHeader() {
 
   return (
     <div className="flex flex-col">
-      {/* 品牌容器：rounded-xl + subtle gradient background */}
-      <Link
-        href="/"
-        className="flex items-center gap-3.5 px-3 py-3 rounded-xl cursor-pointer transition-all duration-200 select-none group"
-        style={{
-          background: 'linear-gradient(to right, #0F0F12, #121217)',
-          border: '1px solid rgba(255, 255, 255, 0.05)',
-          boxShadow: '0 0 20px rgba(214, 178, 94, 0.05)',
-        }}
-      >
-        {/* Logo 徽章结构：外圈金色 glow + 内圈 border */}
-        <div
-          className="relative flex items-center justify-center w-12 h-12 rounded-xl flex-shrink-0"
-          style={{
-            background: 'linear-gradient(135deg, rgba(214, 178, 94, 0.10) 0%, rgba(214, 178, 94, 0.05) 100%)',
-            border: '1px solid rgba(214, 178, 94, 0.15)',
-            boxShadow: '0 0 16px rgba(214, 178, 94, 0.08), inset 0 1px 0 rgba(255, 255, 255, 0.05)',
-          }}
-        >
-          <img
-            src="/brand/logo-mark.png"
-            alt={isZh ? '汉韵写真' : 'Han Portrait'}
-            className="w-7 h-7 object-contain"
-          />
-        </div>
-
-        {/* 品牌文字：双行结构 */}
+      <Link href="/" className="flex items-center gap-4 px-2 py-3 rounded-lg cursor-pointer transition-colors select-none group">
+        <img
+          src="/brand/logo-mark.png"
+          alt={isZh ? '汉韵写真' : 'Han Portrait'}
+          className="w-11 h-11 object-contain rounded-[8px]"
+        />
         <div className="flex flex-col overflow-hidden">
-          {/* 主标题 */}
-          <span
-            className="text-[15px] font-bold leading-tight truncate max-w-[150px]"
-            style={{
-              color: 'rgba(255, 247, 236, 0.92)',
-              letterSpacing: isZh ? '0.04em' : '0.06em',
-            }}
-          >
-            {isZh ? '汉韵写真' : 'HAN PORTRAIT'}
-          </span>
-          {/* 副标题：金色小字，tracking 加大 */}
-          <span
-            className="text-[10px] font-medium leading-tight truncate max-w-[150px] mt-0.5"
-            style={{
-              color: '#D6B25E',
-              letterSpacing: '0.14em',
-              opacity: 0.85,
-            }}
-          >
-            AI HANFU STUDIO
-          </span>
+          {isZh ? (
+            <span
+              className="text-[18px] font-bold leading-none truncate max-w-[150px]"
+              style={{
+                background: 'linear-gradient(135deg, #E8C27A 0%, #C84B31 100%)',
+                WebkitBackgroundClip: 'text',
+                WebkitTextFillColor: 'transparent',
+                backgroundClip: 'text',
+              }}
+            >
+              汉韵写真
+            </span>
+          ) : (
+            <span className="text-[18px] font-bold leading-none truncate max-w-[150px]">
+              <span style={{ color: 'rgba(255, 247, 236, 0.92)' }}>Han</span>
+              <span
+                style={{
+                  background: 'linear-gradient(135deg, #E8C27A 0%, #C84B31 100%)',
+                  WebkitBackgroundClip: 'text',
+                  WebkitTextFillColor: 'transparent',
+                  backgroundClip: 'text',
+                }}
+              >
+                {' '}Portrait
+              </span>
+            </span>
+          )}
         </div>
       </Link>
-
-      {/* 底部分割线：金色渐变线 */}
-      <div className="mx-3 mt-3 mb-3 h-px" style={{
-        background: 'linear-gradient(to right, transparent 0%, rgba(214, 178, 94, 0.25) 30%, rgba(214, 178, 94, 0.35) 50%, rgba(214, 178, 94, 0.25) 70%, transparent 100%)',
-      }} />
+      {/* 品牌名下方分界线 */}
+      <div className="mx-2 mb-4" style={{ borderBottom: '1px solid rgba(255, 247, 236, 0.08)' }} />
     </div>
   );
 }
@@ -330,10 +312,7 @@ export function SidebarNav({
   const headingLetterSpacing = isZh ? '0.08em' : '0.05em';
 
   return (
-    <div
-      className={`flex flex-col w-[260px] h-full border-r border-border/50 p-3 font-sans ${className}`}
-      style={{ background: 'linear-gradient(to bottom, #0B0B0D, #0A0A0C)' }}
-    >
+    <div className={`flex flex-col w-[260px] h-full bg-card/50 border-r border-border/50 p-3 font-sans ${className}`}>
       <BrandHeader />
 
       <div className={`flex-1 overflow-y-auto [&::-webkit-scrollbar]:hidden [-ms-overflow-style:none] [scrollbar-width:none] flex flex-col ${sectionGap} mt-2`}>
