@@ -4,21 +4,17 @@ import React, { useState } from 'react';
 import {
   Home,
   PenLine,
-  LayoutGrid,
-  Image,
   Coins,
   Crown,
-  ReceiptText,
   User,
   Settings,
-  Bell,
   LogOut,
   ChevronRight,
   PanelLeftClose,
   PanelLeftOpen,
   Command,
   X,
-  Search
+  Search,
 } from 'lucide-react';
 import Link from 'next/link';
 import { useLocale } from 'next-intl';
@@ -50,8 +46,6 @@ function getNavGroups(locale: string): NavGroupData[] {
         heading: '创作',
         items: [
           { id: 'create', title: '开始创作', icon: PenLine, href: '/generate' },
-          { id: 'templates', title: '模板库', icon: LayoutGrid, href: '/templates' },
-          { id: 'gallery', title: '我的作品', icon: Image, href: '/gallery' },
         ]
       },
       {
@@ -65,7 +59,6 @@ function getNavGroups(locale: string): NavGroupData[] {
         heading: '个人中心',
         items: [
           { id: 'profile', title: '个人资料', icon: User, href: '/profile' },
-          { id: 'notifications', title: '通知消息', icon: Bell, href: '/notifications' },
         ]
       }
     ];
@@ -77,13 +70,11 @@ function getNavGroups(locale: string): NavGroupData[] {
       ]
     },
     {
-      heading: 'Create',
-      items: [
-        { id: 'create', title: 'Start Creating', icon: PenLine, href: '/generate' },
-        { id: 'templates', title: 'Templates', icon: LayoutGrid, href: '/templates' },
-        { id: 'gallery', title: 'My Works', icon: Image, href: '/gallery' },
-      ]
-    },
+        heading: 'Create',
+        items: [
+          { id: 'create', title: 'Start Creating', icon: PenLine, href: '/generate' },
+        ]
+      },
     {
       heading: 'Account & Billing',
       items: [
@@ -92,12 +83,11 @@ function getNavGroups(locale: string): NavGroupData[] {
       ]
     },
     {
-      heading: 'Profile',
-      items: [
-        { id: 'profile', title: 'Profile', icon: User, href: '/profile' },
-        { id: 'notifications', title: 'Notifications', icon: Bell, href: '/notifications' },
-      ]
-    }
+        heading: 'Profile',
+        items: [
+          { id: 'profile', title: 'Profile', icon: User, href: '/profile' },
+        ]
+      }
   ];
 }
 
