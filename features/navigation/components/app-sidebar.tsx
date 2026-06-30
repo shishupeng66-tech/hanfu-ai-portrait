@@ -120,44 +120,59 @@ function BrandHeader() {
 
   return (
     <div className="flex flex-col">
-      <Link href="/" className="flex items-center gap-4 px-2 py-3 rounded-lg cursor-pointer transition-colors select-none group">
+      <Link
+        href="/"
+        className="flex items-center gap-3.5 px-3.5 py-4 rounded-lg cursor-pointer transition-colors select-none group"
+      >
         <img
           src="/brand/logo-mark.png"
           alt={isZh ? '汉韵写真' : 'Han Portrait'}
-          className="w-11 h-11 object-contain rounded-[8px]"
+          className="w-11 h-11 object-contain shrink-0"
         />
-        <div className="flex flex-col overflow-hidden">
+
+        <div className="flex flex-col overflow-hidden min-w-0">
           {isZh ? (
             <span
-              className="text-[18px] font-bold leading-none truncate max-w-[150px]"
+              className="text-[40px] font-black leading-tight tracking-[0.11em] truncate max-w-[170px]"
               style={{
-                background: 'linear-gradient(135deg, #E8C27A 0%, #C84B31 100%)',
+                background:
+                  'linear-gradient(135deg, #F2D58A 0%, #D6B25E 42%, #B9412E 100%)',
                 WebkitBackgroundClip: 'text',
                 WebkitTextFillColor: 'transparent',
                 backgroundClip: 'text',
+                textShadow: '0 0 18px rgba(214, 178, 94, 0.12)',
               }}
             >
               汉韵写真
             </span>
           ) : (
-            <span className="text-[18px] font-bold leading-none truncate max-w-[150px]">
-              <span style={{ color: 'rgba(255, 247, 236, 0.92)' }}>Han</span>
-              <span
-                style={{
-                  background: 'linear-gradient(135deg, #E8C27A 0%, #C84B31 100%)',
-                  WebkitBackgroundClip: 'text',
-                  WebkitTextFillColor: 'transparent',
-                  backgroundClip: 'text',
-                }}
-              >
-                {' '}Portrait
+            <div className="flex flex-col">
+              <span className="text-[20px] font-black leading-tight tracking-[0.04em] truncate max-w-[170px]">
+                <span style={{ color: 'rgba(255, 247, 236, 0.94)' }}>Han</span>
+                <span
+                  style={{
+                    background:
+                      'linear-gradient(135deg, #F2D58A 0%, #C84B31 100%)',
+                    WebkitBackgroundClip: 'text',
+                    WebkitTextFillColor: 'transparent',
+                    backgroundClip: 'text',
+                  }}
+                >
+                  {' '}Portrait
+                </span>
               </span>
-            </span>
+              <span className="mt-0.5 text-[10px] font-semibold tracking-[0.22em] text-[#D6B25E]/65">
+                AI HANFU STUDIO
+              </span>
+            </div>
           )}
         </div>
       </Link>
-      {/* 品牌名下方分界线 */}
-      <div className="mx-2 mb-4" style={{ borderBottom: '1px solid rgba(255, 247, 236, 0.08)' }} />
+
+      <div
+        className="mx-2 mb-4"
+        style={{ borderBottom: '1px solid rgba(255, 247, 236, 0.08)' }}
+      />
     </div>
   );
 }
