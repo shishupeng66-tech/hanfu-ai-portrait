@@ -119,17 +119,29 @@ function BrandHeader() {
   const isZh = locale === 'zh';
 
   return (
-    <div className="flex flex-col">
-      <Link href="/" className="flex items-center gap-4 px-2 py-3 rounded-lg cursor-pointer transition-colors select-none group">
-        <img
-          src="/brand/logo-mark.png"
-          alt={isZh ? '汉韵写真' : 'Han Portrait'}
-          className="w-11 h-11 object-contain rounded-[8px]"
-        />
-        <div className="flex flex-col overflow-hidden">
-          {isZh ? (
+    <Link href="/" className="flex items-center gap-3.5 px-2 py-3 mb-5 rounded-lg cursor-pointer transition-colors select-none group">
+      <img
+        src="/brand/logo-mark.png"
+        alt={isZh ? '汉韵写真' : 'Han Portrait'}
+        className="w-10 h-10 object-contain rounded-[8px]"
+      />
+      <div className="flex flex-col overflow-hidden">
+        {isZh ? (
+          <span
+            className="text-[17px] font-bold leading-none truncate max-w-[140px]"
+            style={{
+              background: 'linear-gradient(135deg, #E8C27A 0%, #C84B31 100%)',
+              WebkitBackgroundClip: 'text',
+              WebkitTextFillColor: 'transparent',
+              backgroundClip: 'text',
+            }}
+          >
+            汉韵写真
+          </span>
+        ) : (
+          <span className="text-[17px] font-bold leading-none truncate max-w-[140px]">
+            <span style={{ color: 'rgba(255, 247, 236, 0.92)' }}>Han</span>
             <span
-              className="text-[18px] font-bold leading-none truncate max-w-[150px]"
               style={{
                 background: 'linear-gradient(135deg, #E8C27A 0%, #C84B31 100%)',
                 WebkitBackgroundClip: 'text',
@@ -137,28 +149,12 @@ function BrandHeader() {
                 backgroundClip: 'text',
               }}
             >
-              汉韵写真
+              {' '}Portrait
             </span>
-          ) : (
-            <span className="text-[18px] font-bold leading-none truncate max-w-[150px]">
-              <span style={{ color: 'rgba(255, 247, 236, 0.92)' }}>Han</span>
-              <span
-                style={{
-                  background: 'linear-gradient(135deg, #E8C27A 0%, #C84B31 100%)',
-                  WebkitBackgroundClip: 'text',
-                  WebkitTextFillColor: 'transparent',
-                  backgroundClip: 'text',
-                }}
-              >
-                {' '}Portrait
-              </span>
-            </span>
-          )}
-        </div>
-      </Link>
-      {/* 品牌名下方分界线 */}
-      <div className="mx-2 mb-4" style={{ borderBottom: '1px solid rgba(255, 247, 236, 0.08)' }} />
-    </div>
+          </span>
+        )}
+      </div>
+    </Link>
   );
 }
 
