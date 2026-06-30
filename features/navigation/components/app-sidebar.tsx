@@ -57,7 +57,7 @@ function getNavGroups(locale: string): NavGroupData[] {
       {
         heading: '账户与消费',
         items: [
-          { id: 'credits', title: '积分中心', icon: Coins, badge: 128, href: '/credits' },
+          { id: 'credits', title: '积分中心', icon: Coins, href: '/credits' },
           { id: 'subscription', title: '订阅计划', icon: Crown, href: '/pricing' },
         ]
       },
@@ -87,7 +87,7 @@ function getNavGroups(locale: string): NavGroupData[] {
     {
       heading: 'Account & Billing',
       items: [
-        { id: 'credits', title: 'Credits', icon: Coins, badge: 128, href: '/credits' },
+        { id: 'credits', title: 'Credits', icon: Coins, href: '/credits' },
         { id: 'subscription', title: 'Subscription', icon: Crown, href: '/pricing' },
       ]
     },
