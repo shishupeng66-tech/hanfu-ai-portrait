@@ -1,8 +1,15 @@
 "use client";
 
+import { useState, useEffect } from "react";
 import { PanelLeftClose, PanelLeftOpen } from "lucide-react";
 import { useLocale } from "next-intl";
 import { usePathname } from "next/navigation";
+import { useSession } from "@/lib/auth-client";
+import { LanguageSwitcher } from "@/components/language-switcher";
+import { CreditsBadge } from "@/components/ui/credits-badge";
+import { UserMenu } from "@/features/navigation/components/user-menu";
+import { getSubscriptionPlanDisplayInfo } from "@/lib/account-settings";
+import type { ClientUserProfile, UserProfileResponse } from "@/lib/client-api";
 
 export function TopBar({
   isSidebarOpen,
@@ -13,6 +20,37 @@ export function TopBar({
 }) {
   const locale = useLocale();
   const pathname = usePathname();
+  const session = useSession();
+  const isLoggedIn = !!session.data?.user;
+  const [userProfile, setUserProfile] = useState<ClientUserProfile | null>(null);
+  const [loadingProfile, setLoadingProfile] = useState(false);
+
+  // Fetch user profile with subscription info
+  useEffect(() => {
+    if (!isLoggedIn || userProfile || loadingProfile) return;
+
+    const fetchUserProfile = async () => {
+      setLoadingProfile(true);
+      try {
+        const response = await fetch("/api/user/profile");
+        if (response.ok) {
+          const data = (await response.json()) as UserProfileResponse;
+          setUserProfile(data.user);
+        }
+      } catch (error) {
+        console.error("Error fetching user profile in top-bar:", error);
+      } finally {
+        setLoadingProfile(false);
+      }
+    };
+
+    fetchUserProfile();
+  }, [isLoggedIn, userProfile, loadingProfile]);
+
+  const planDisplayInfo = getSubscriptionPlanDisplayInfo(
+    userProfile?.subscription?.planKey,
+    locale
+  );
 
   // Map pathname to page title
   const getPageTitle = () => {
@@ -74,19 +112,15 @@ export function TopBar({
       </div>
 
       <div className="flex items-center gap-3">
-        {/* Search placeholder */}
-        <div
-          className="w-64 h-8 rounded-md hidden md:block"
-          style={{ background: "rgba(255, 247, 236, 0.05)" }}
+        <LanguageSwitcher variant="navbarIcon" />
+
+        <CreditsBadge
+          credits={userProfile?.credits ?? 0}
+          locale={locale}
+          planName={planDisplayInfo.displayNameShort}
         />
-        {/* User avatar placeholder */}
-        <div
-          className="w-8 h-8 rounded-full border"
-          style={{
-            background: "rgba(232, 194, 122, 0.10)",
-            borderColor: "rgba(232, 194, 122, 0.16)",
-          }}
-        />
+
+        <UserMenu variant="navbar" />
       </div>
     </div>
   );
