@@ -117,27 +117,28 @@ export function NotificationDropdown() {
       <button
         ref={buttonRef}
         onClick={() => setIsOpen(!isOpen)}
-        className="flex items-center justify-center w-9 h-9 rounded-full transition-all duration-200"
+        className="group flex h-[42px] w-[42px] items-center justify-center transition-all duration-200 focus:outline-none rounded-full"
         style={{
-          color: "rgba(255, 247, 236, 0.55)",
           background: "transparent",
           border: "1px solid transparent",
         }}
         onMouseEnter={(e) => {
-          e.currentTarget.style.color = "rgba(255, 247, 236, 0.82)";
-          e.currentTarget.style.background = "rgba(255, 247, 236, 0.04)";
-          e.currentTarget.style.borderColor = "rgba(255, 247, 236, 0.08)";
+          e.currentTarget.style.background = "rgba(232,194,122,0.10)";
+          e.currentTarget.style.borderColor = "rgba(232,194,122,0.20)";
         }}
         onMouseLeave={(e) => {
-          e.currentTarget.style.color = "rgba(255, 247, 236, 0.55)";
           e.currentTarget.style.background = "transparent";
           e.currentTarget.style.borderColor = "transparent";
         }}
       >
-        <Bell className="w-[18px] h-[18px]" strokeWidth={1.5} />
+        <Bell
+          className="h-[18px] w-[18px] transition-colors duration-200"
+          style={{ color: "rgba(232,194,122,0.58)" }}
+          strokeWidth={1.5}
+        />
         {hasUnread && (
           <span
-            className="absolute top-1.5 right-1.5 w-[7px] h-[7px] rounded-full"
+            className="absolute top-2.5 right-2.5 w-[7px] h-[7px] rounded-full"
             style={{ background: "#E8C27A" }}
           />
         )}

@@ -75,15 +75,35 @@ export function LanguageSwitcher({ variant = "default" }: LanguageSwitcherProps)
         onClick={() => setIsOpen(!isOpen)}
         className={cn(
           variant === "navbarIcon"
-            ? "group flex h-[42px] w-[42px] items-center justify-center bg-transparent transition-colors duration-200 focus:outline-none"
+            ? "group flex h-[42px] w-[42px] items-center justify-center transition-all duration-200 focus:outline-none rounded-full"
             : "flex items-center gap-2 px-3 py-1.5 text-sm rounded-full transition-all duration-200 border border-white/12 bg-white/8 text-white hover:bg-white/15 focus:outline-none focus:ring-2 focus:ring-[#B7352D] focus:ring-opacity-50"
         )}
+        style={
+          variant === "navbarIcon"
+            ? {
+                background: "transparent",
+                border: "1px solid transparent",
+              }
+            : undefined
+        }
+        onMouseEnter={(e) => {
+          if (variant === "navbarIcon") {
+            e.currentTarget.style.background = "rgba(232,194,122,0.10)";
+            e.currentTarget.style.borderColor = "rgba(232,194,122,0.20)";
+          }
+        }}
+        onMouseLeave={(e) => {
+          if (variant === "navbarIcon") {
+            e.currentTarget.style.background = "transparent";
+            e.currentTarget.style.borderColor = "transparent";
+          }
+        }}
         aria-expanded={isOpen}
         aria-haspopup="true"
         aria-label="Select language"
       >
         {variant === "navbarIcon" ? (
-          <Sparkles className="h-[18px] w-[18px] text-[rgba(232,194,122,0.58)] transition-colors duration-200 group-hover:text-[rgba(255,247,236,0.86)]" />
+          <Sparkles className="h-[18px] w-[18px] transition-colors duration-200" style={{ color: "rgba(232,194,122,0.58)" }} />
         ) : (
           <>
             <Globe2 className="w-4 h-4" />
