@@ -22,7 +22,6 @@ import {
 import Link from 'next/link';
 import { useLocale } from 'next-intl';
 import { usePathname, useRouter } from 'next/navigation';
-import { useEffect } from 'react';
 
 export type NavItemData = {
   id: string;

@@ -8,6 +8,7 @@ import { useSession } from "@/lib/auth-client";
 import { LanguageSwitcher } from "@/components/language-switcher";
 import { CreditsBadge } from "@/components/ui/credits-badge";
 import { UserMenu } from "@/features/navigation/components/user-menu";
+import { NotificationDropdown } from "@/features/navigation/components/notification-dropdown";
 import { getSubscriptionPlanDisplayInfo } from "@/lib/account-settings";
 import type { ClientUserProfile, UserProfileResponse } from "@/lib/client-api";
 
@@ -61,6 +62,7 @@ export function TopBar({
       [`/${locale}/pricing`]: locale === "zh" ? "订阅" : "Subscription",
       [`/${locale}/settings`]: locale === "zh" ? "设置" : "Settings",
       [`/${locale}/profile`]: locale === "zh" ? "个人资料" : "Profile",
+      [`/${locale}/notifications`]: locale === "zh" ? "通知中心" : "Notifications",
     };
     return pathMap[pathname] || "";
   };
@@ -112,6 +114,8 @@ export function TopBar({
       </div>
 
       <div className="flex items-center gap-3">
+        <NotificationDropdown />
+
         <LanguageSwitcher variant="navbarIcon" />
 
         <CreditsBadge

@@ -1,7 +1,6 @@
 "use client";
 
 import { useSession } from "@/lib/auth-client";
-import Image from "next/image";
 import { useTranslations, useLocale } from 'next-intl';
 import { Container } from "@/components/container";
 import { Background } from "@/components/background";
