@@ -21,7 +21,8 @@ import {
 } from 'lucide-react';
 import Link from 'next/link';
 import { useLocale } from 'next-intl';
-import { useRouter } from 'next/navigation';
+import { usePathname, useRouter } from 'next/navigation';
+import { useEffect } from 'react';
 
 export type NavItemData = {
   id: string;
@@ -393,12 +394,26 @@ export function AppSidebar({
   isOpen?: boolean;
   onToggle?: () => void;
 }) {
-  const [activeId, setActiveId] = useState('home');
   const [activeWorkspace, setActiveWorkspace] = useState('Acme Corp');
+  const pathname = usePathname();
+  const locale = useLocale();
 
-  const handleSelect = (id: string) => {
-    setActiveId(id);
+  const getActiveIdFromPathname = () => {
+    const pathToIdMap: Record<string, string> = {
+      [`/${locale}/dashboard`]: 'home',
+      [`/${locale}/generate`]: 'create',
+      [`/${locale}/templates`]: 'templates',
+      [`/${locale}/gallery`]: 'gallery',
+      [`/${locale}/credits`]: 'credits',
+      [`/${locale}/pricing`]: 'subscription',
+      [`/${locale}/profile`]: 'profile',
+      [`/${locale}/notifications`]: 'notifications',
+      [`/${locale}/settings`]: 'settings',
+    };
+    return pathToIdMap[pathname] || 'home';
   };
+
+  const activeId = getActiveIdFromPathname();
 
   return (
     <aside
@@ -413,7 +428,7 @@ export function AppSidebar({
         <SidebarNav
           className="w-[260px] h-full min-h-0 flex-1 border-none bg-transparent"
           activeId={activeId}
-          onSelect={handleSelect}
+          onSelect={() => {}}
           activeWorkspace={activeWorkspace}
           onWorkspaceSelect={setActiveWorkspace}
         />
