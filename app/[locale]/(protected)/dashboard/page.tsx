@@ -68,11 +68,11 @@ const QUICK_ACTIONS = [
     href: "/credits",
   },
   {
-    id: "gallery",
+    id: "works",
     title: "我的作品",
     subtitle: "管理作品集",
     icon: FolderOpen,
-    href: "/gallery",
+    href: "/works",
   },
 ];
 
@@ -352,7 +352,7 @@ export default function DashboardPage() {
               {locale === 'zh' ? '最近作品' : 'Recent works'}
             </h3>
             <Link 
-              href={`/${locale}/gallery`}
+              href={`/${locale}/works`}
               className="text-sm font-medium transition-colors hover:opacity-80"
               style={{ color: "#E8C27A" }}
             >

@@ -51,7 +51,7 @@ function getNavGroups(locale: string): NavGroupData[] {
         items: [
           { id: 'create', title: '开始创作', icon: PenLine, href: '/generate' },
           { id: 'templates', title: '模板库', icon: LayoutGrid, href: '/templates' },
-          { id: 'gallery', title: '我的作品', icon: Image, href: '/gallery' },
+          { id: 'works', title: '我的作品', icon: Image, href: '/works' },
         ]
       },
       {
@@ -81,7 +81,7 @@ function getNavGroups(locale: string): NavGroupData[] {
       items: [
         { id: 'create', title: 'Start Creating', icon: PenLine, href: '/generate' },
         { id: 'templates', title: 'Templates', icon: LayoutGrid, href: '/templates' },
-        { id: 'gallery', title: 'My Works', icon: Image, href: '/gallery' },
+        { id: 'works', title: 'My Works', icon: Image, href: '/works' },
       ]
     },
     {
@@ -402,7 +402,7 @@ export function AppSidebar({
       [`/${locale}/dashboard`]: 'home',
       [`/${locale}/generate`]: 'create',
       [`/${locale}/templates`]: 'templates',
-      [`/${locale}/gallery`]: 'gallery',
+      [`/${locale}/works`]: 'works',
       [`/${locale}/credits`]: 'credits',
       [`/${locale}/pricing`]: 'subscription',
       [`/${locale}/profile`]: 'profile',
