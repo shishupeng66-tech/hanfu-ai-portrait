@@ -58,6 +58,7 @@ export function TopBar({
     const pathMap: Record<string, string> = {
       [`/${locale}/dashboard`]: locale === "zh" ? "首页" : "Home",
       [`/${locale}/generate`]: locale === "zh" ? "创作" : "Generate",
+      [`/${locale}/works`]: locale === "zh" ? "我的作品" : "My Works",
       [`/${locale}/credits`]: locale === "zh" ? "积分" : "Credits",
       [`/${locale}/pricing`]: locale === "zh" ? "订阅" : "Subscription",
       [`/${locale}/settings`]: locale === "zh" ? "设置" : "Settings",
