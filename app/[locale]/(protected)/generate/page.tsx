@@ -10,6 +10,7 @@ type StyleTemplate = {
   id: string;
   apiTemplateKey: "nightLanternRedBlackHanfu";
   name: string;
+  dynasty: "唐" | "宋" | "元" | "明" | "清" | "新中式";
   label: string;
   previewUrl: string;
 };
@@ -21,20 +22,199 @@ const templateData: StyleTemplate[] = [
     id: "tangGlamour",
     apiTemplateKey: "nightLanternRedBlackHanfu",
     name: "盛唐金影",
+    dynasty: "唐",
     label: "唐风",
     previewUrl: "/images/hanfu-hero/palace-red-02.jpg",
+  },
+  {
+    id: "palaceLantern",
+    apiTemplateKey: "nightLanternRedBlackHanfu",
+    name: "宫灯夜宴",
+    dynasty: "唐",
+    label: "唐风",
+    previewUrl: "/images/hanfu-hero/festival-lantern-01.jpg",
+  },
+  {
+    id: "tangLady",
+    apiTemplateKey: "nightLanternRedBlackHanfu",
+    name: "唐风仕女",
+    dynasty: "唐",
+    label: "唐风",
+    previewUrl: "/images/hanfu-hero/palace-red-03.jpg",
+  },
+  {
+    id: "goldHairpin",
+    apiTemplateKey: "nightLanternRedBlackHanfu",
+    name: "华服金钗",
+    dynasty: "唐",
+    label: "唐风",
+    previewUrl: "/images/hanfu-hero/palace-red-01.jpg",
   },
   {
     id: "songElegance",
     apiTemplateKey: "nightLanternRedBlackHanfu",
     name: "宋韵清婉",
+    dynasty: "宋",
     label: "宋韵",
     previewUrl: "/images/hanfu-hero/palace-red-03.jpg",
+  },
+  {
+    id: "teaGathering",
+    apiTemplateKey: "nightLanternRedBlackHanfu",
+    name: "茶席雅集",
+    dynasty: "宋",
+    label: "宋韵",
+    previewUrl: "/images/hanfu-hero/spring-pink-01.jpg",
+  },
+  {
+    id: "landscapePlain",
+    apiTemplateKey: "nightLanternRedBlackHanfu",
+    name: "山水素衣",
+    dynasty: "宋",
+    label: "宋韵",
+    previewUrl: "/images/hanfu-hero/jade-temple-01.jpg",
+  },
+  {
+    id: "courtyardShadow",
+    apiTemplateKey: "nightLanternRedBlackHanfu",
+    name: "庭院清影",
+    dynasty: "宋",
+    label: "宋韵",
+    previewUrl: "/images/hanfu-hero/palace-red-02.jpg",
+  },
+  {
+    id: "grasslandHu",
+    apiTemplateKey: "nightLanternRedBlackHanfu",
+    name: "草原胡风",
+    dynasty: "元",
+    label: "元风",
+    previewUrl: "/images/hanfu-hero/palace-red-01.jpg",
+  },
+  {
+    id: "yuanPalace",
+    apiTemplateKey: "nightLanternRedBlackHanfu",
+    name: "元宫华服",
+    dynasty: "元",
+    label: "元风",
+    previewUrl: "/images/hanfu-hero/festival-lantern-01.jpg",
+  },
+  {
+    id: "frontierMoon",
+    apiTemplateKey: "nightLanternRedBlackHanfu",
+    name: "塞外明月",
+    dynasty: "元",
+    label: "元风",
+    previewUrl: "/images/hanfu-hero/jade-temple-01.jpg",
+  },
+  {
+    id: "brocadeRider",
+    apiTemplateKey: "nightLanternRedBlackHanfu",
+    name: "锦袍骑影",
+    dynasty: "元",
+    label: "元风",
+    previewUrl: "/images/hanfu-hero/palace-red-03.jpg",
+  },
+  {
+    id: "mingFormal",
+    apiTemplateKey: "nightLanternRedBlackHanfu",
+    name: "明制端庄",
+    dynasty: "明",
+    label: "明制",
+    previewUrl: "/images/hanfu-hero/jade-temple-01.jpg",
+  },
+  {
+    id: "phoenixCrown",
+    apiTemplateKey: "nightLanternRedBlackHanfu",
+    name: "凤冠霞帔",
+    dynasty: "明",
+    label: "明制",
+    previewUrl: "/images/hanfu-hero/palace-red-02.jpg",
+  },
+  {
+    id: "boudoirLady",
+    apiTemplateKey: "nightLanternRedBlackHanfu",
+    name: "庭院闺秀",
+    dynasty: "明",
+    label: "明制",
+    previewUrl: "/images/hanfu-hero/spring-pink-01.jpg",
+  },
+  {
+    id: "redWallSnow",
+    apiTemplateKey: "nightLanternRedBlackHanfu",
+    name: "朱墙雪景",
+    dynasty: "明",
+    label: "明制",
+    previewUrl: "/images/hanfu-hero/palace-red-03.jpg",
+  },
+  {
+    id: "qingPalace",
+    apiTemplateKey: "nightLanternRedBlackHanfu",
+    name: "清宫雅韵",
+    dynasty: "清",
+    label: "清韵",
+    previewUrl: "/images/hanfu-hero/jade-temple-01.jpg",
+  },
+  {
+    id: "qipaoFlower",
+    apiTemplateKey: "nightLanternRedBlackHanfu",
+    name: "旗装花影",
+    dynasty: "清",
+    label: "清韵",
+    previewUrl: "/images/hanfu-hero/spring-pink-01.jpg",
+  },
+  {
+    id: "palacePortrait",
+    apiTemplateKey: "nightLanternRedBlackHanfu",
+    name: "宫廷肖像",
+    dynasty: "清",
+    label: "清韵",
+    previewUrl: "/images/hanfu-hero/palace-red-01.jpg",
+  },
+  {
+    id: "winterRed",
+    apiTemplateKey: "nightLanternRedBlackHanfu",
+    name: "冬雪红妆",
+    dynasty: "清",
+    label: "清韵",
+    previewUrl: "/images/hanfu-hero/festival-lantern-01.jpg",
+  },
+  {
+    id: "bluePorcelain",
+    apiTemplateKey: "nightLanternRedBlackHanfu",
+    name: "青花瓷",
+    dynasty: "新中式",
+    label: "新中式",
+    previewUrl: "/images/hanfu-hero/jade-temple-01.jpg",
+  },
+  {
+    id: "modernQipao",
+    apiTemplateKey: "nightLanternRedBlackHanfu",
+    name: "现代旗袍",
+    dynasty: "新中式",
+    label: "新中式",
+    previewUrl: "/images/hanfu-hero/spring-pink-01.jpg",
+  },
+  {
+    id: "modernGuofeng",
+    apiTemplateKey: "nightLanternRedBlackHanfu",
+    name: "国风时尚",
+    dynasty: "新中式",
+    label: "新中式",
+    previewUrl: "/images/hanfu-hero/palace-red-03.jpg",
+  },
+  {
+    id: "orientalMagazine",
+    apiTemplateKey: "nightLanternRedBlackHanfu",
+    name: "东方杂志",
+    dynasty: "新中式",
+    label: "新中式",
+    previewUrl: "/images/hanfu-hero/palace-red-02.jpg",
   },
   {
     id: "qinHanNoir",
     apiTemplateKey: "nightLanternRedBlackHanfu",
     name: "秦汉玄色",
+    dynasty: "明",
     label: "秦汉",
     previewUrl: "/images/hanfu-hero/palace-red-01.jpg",
   },
@@ -42,6 +222,7 @@ const templateData: StyleTemplate[] = [
     id: "drunkenFlower",
     apiTemplateKey: "nightLanternRedBlackHanfu",
     name: "醉花影",
+    dynasty: "新中式",
     label: "国风",
     previewUrl: "/images/hanfu-hero/festival-lantern-01.jpg",
   },
@@ -49,6 +230,7 @@ const templateData: StyleTemplate[] = [
     id: "pearBlossom",
     apiTemplateKey: "nightLanternRedBlackHanfu",
     name: "梨花幽韵",
+    dynasty: "清",
     label: "旗袍",
     previewUrl: "/images/hanfu-hero/spring-pink-01.jpg",
   },
@@ -56,9 +238,25 @@ const templateData: StyleTemplate[] = [
     id: "dunhuangMuse",
     apiTemplateKey: "nightLanternRedBlackHanfu",
     name: "敦煌飞天",
+    dynasty: "唐",
     label: "敦煌",
     previewUrl: "/images/hanfu-hero/jade-temple-01.jpg",
   },
+];
+
+const dynastyTabs: StyleTemplate["dynasty"][] = ["唐", "宋", "元", "明", "清", "新中式"];
+
+const featuredTemplateIds = [
+  "tangGlamour",
+  "songElegance",
+  "qinHanNoir",
+  "drunkenFlower",
+  "pearBlossom",
+  "dunhuangMuse",
+  "bluePorcelain",
+  "winterRed",
+  "palaceLantern",
+  "modernQipao",
 ];
 
 function UploadIcon() {
@@ -124,6 +322,11 @@ export default function GeneratePage() {
   const styleTemplates: StyleTemplate[] = useMemo(() => templateData, []);
   const activeTemplate = styleTemplates.find((template) => template.id === selectedTemplate) ?? null;
   const selectedTemplateName = activeTemplate?.name || "盛唐金影";
+  const selectedDynasty = activeTemplate?.dynasty || "唐";
+  const activeDynastyTemplates = styleTemplates.filter((template) => template.dynasty === selectedDynasty);
+  const featuredTemplates = featuredTemplateIds
+    .map((templateId) => styleTemplates.find((template) => template.id === templateId))
+    .filter((template): template is StyleTemplate => Boolean(template));
 
   function handleFileChange(event: ChangeEvent<HTMLInputElement>) {
     const nextFile = event.target.files?.[0] || null;
@@ -214,37 +417,106 @@ export default function GeneratePage() {
       />
       <div className="pointer-events-none absolute inset-x-0 top-0 h-[520px] bg-gradient-to-b from-[rgba(232,194,122,0.08)] via-[rgba(232,194,122,0.025)] to-transparent" />
 
-      <main className="relative mx-auto max-w-[1240px] px-6 py-14 lg:py-16">
+      <main className="relative mx-auto max-w-[1240px] px-6 py-9 lg:py-10">
         <section className="text-center">
-          <div className="mb-5 inline-flex items-center gap-2 rounded-full border border-[rgba(232,194,122,0.16)] bg-[rgba(20,20,24,0.72)] px-4 py-1.5 text-xs text-[#E8C27A] shadow-[0_12px_40px_rgba(0,0,0,0.22)] backdrop-blur">
+          <div className="mb-4 inline-flex items-center gap-2 rounded-full border border-[rgba(232,194,122,0.16)] bg-[rgba(20,20,24,0.72)] px-4 py-1.5 text-xs text-[#E8C27A] shadow-[0_12px_40px_rgba(0,0,0,0.22)] backdrop-blur">
             <SparkIcon className="h-3.5 w-3.5" />
             汉韵写真 · 开始创作
           </div>
-          <h1 className="text-4xl font-semibold tracking-normal text-[rgba(255,247,236,0.94)] md:text-5xl lg:text-6xl">创作您的汉服写真</h1>
-          <p className="mx-auto mt-5 max-w-2xl text-base leading-7 text-[rgba(255,247,236,0.52)]">
+          <h1 className="text-4xl font-semibold tracking-normal text-[rgba(255,247,236,0.94)] md:text-5xl">创作您的汉服写真</h1>
+          <p className="mx-auto mt-4 max-w-2xl text-sm leading-6 text-[rgba(255,247,236,0.52)] md:text-base">
             上传一张清晰正脸照，选择模板，生成专属于你的 AI 汉服写真。
           </p>
         </section>
 
-        <section className="mx-auto mt-10 w-full max-w-4xl rounded-[24px] border border-[rgba(255,247,236,0.08)] bg-[rgba(17,17,20,0.88)] p-5 shadow-[0_28px_110px_rgba(0,0,0,0.36)] backdrop-blur md:p-6">
-          <label className="block cursor-pointer">
-            <input type="file" accept="image/*" className="hidden" onChange={handleFileChange} />
-            <div className="relative flex h-[300px] items-center justify-center overflow-hidden rounded-2xl border border-dashed border-[rgba(232,194,122,0.30)] bg-[#0B0B0D] text-center transition hover:border-[rgba(232,194,122,0.55)] hover:bg-[rgba(232,194,122,0.035)] md:h-[336px]">
-              {previewUrl ? (
-                <Image src={previewUrl} alt="上传预览" fill className="object-contain p-4" unoptimized />
-              ) : (
-                <div className="flex flex-col items-center px-6">
-                  <div className="mb-5 flex h-[76px] w-[76px] items-center justify-center rounded-full border border-[rgba(232,194,122,0.24)] bg-[rgba(232,194,122,0.08)] text-[#E8C27A] shadow-[0_0_38px_rgba(232,194,122,0.10)]">
-                    <UploadIcon />
-                  </div>
-                  <p className="text-xl font-semibold text-[rgba(255,247,236,0.94)]">点击上传面部照片</p>
-                  <p className="mt-2 text-sm text-[rgba(255,247,236,0.48)]">支持 JPG、PNG、WebP，建议使用清晰正脸照</p>
+        <section className="mx-auto mt-8 w-full max-w-[1040px] rounded-[24px] border border-[rgba(255,247,236,0.08)] bg-[rgba(17,17,20,0.88)] p-5 shadow-[0_28px_110px_rgba(0,0,0,0.36)] backdrop-blur md:p-7">
+          <div className="grid gap-6 lg:grid-cols-[0.48fr_0.52fr]">
+            <div className="min-w-0">
+              <h2 className="mb-3 text-base font-semibold text-[rgba(255,247,236,0.92)]">上传面部照片</h2>
+              <label className="block cursor-pointer">
+                <input type="file" accept="image/*" className="hidden" onChange={handleFileChange} />
+                <div className="relative flex h-[268px] items-center justify-center overflow-hidden rounded-2xl border border-dashed border-[rgba(232,194,122,0.30)] bg-[#0B0B0D] text-center transition hover:border-[rgba(232,194,122,0.55)] hover:bg-[rgba(232,194,122,0.035)] md:h-[292px]">
+                  {previewUrl ? (
+                    <Image src={previewUrl} alt="上传预览" fill className="object-contain p-4" unoptimized />
+                  ) : (
+                    <div className="flex flex-col items-center px-6">
+                      <div className="mb-4 flex h-[68px] w-[68px] items-center justify-center rounded-full border border-[rgba(232,194,122,0.24)] bg-[rgba(232,194,122,0.08)] text-[#E8C27A] shadow-[0_0_34px_rgba(232,194,122,0.10)]">
+                        <UploadIcon />
+                      </div>
+                      <p className="text-lg font-semibold text-[rgba(255,247,236,0.94)]">点击上传面部照片</p>
+                      <p className="mt-2 max-w-[280px] text-sm leading-5 text-[rgba(255,247,236,0.48)]">
+                        支持 JPG、PNG、WebP，建议使用清晰正脸照
+                      </p>
+                    </div>
+                  )}
                 </div>
-              )}
+              </label>
             </div>
-          </label>
 
-          <div className="mt-4 flex flex-wrap items-center justify-center gap-2.5">
+            <div className="min-w-0 rounded-2xl border border-[rgba(255,247,236,0.08)] bg-[#141418] p-4">
+              <h2 className="mb-3 text-base font-semibold text-[rgba(255,247,236,0.92)]">选择写真风格</h2>
+              <div className="flex flex-wrap gap-2">
+                {dynastyTabs.map((dynasty) => {
+                  const isSelected = selectedDynasty === dynasty;
+
+                  return (
+                    <button
+                      key={dynasty}
+                      type="button"
+                      onClick={() => {
+                        const nextTemplate = styleTemplates.find((template) => template.dynasty === dynasty);
+                        if (nextTemplate) {
+                          setSelectedTemplate(nextTemplate.id);
+                          setGenerationError(null);
+                        }
+                      }}
+                      className="rounded-full border px-4 py-2 text-sm transition"
+                      style={{
+                        background: isSelected ? "rgba(232,194,122,0.16)" : "rgba(255,247,236,0.04)",
+                        borderColor: isSelected ? "rgba(232,194,122,0.58)" : "rgba(255,247,236,0.08)",
+                        color: isSelected ? "#E8C27A" : "rgba(255,247,236,0.62)",
+                      }}
+                    >
+                      {dynasty}
+                    </button>
+                  );
+                })}
+              </div>
+
+              <div className="mt-5 grid grid-cols-2 gap-2 sm:grid-cols-4 lg:grid-cols-2 xl:grid-cols-4">
+                {activeDynastyTemplates.map((template) => {
+                  const isSelected = selectedTemplate === template.id;
+
+                  return (
+                    <button
+                      key={template.id}
+                      type="button"
+                      onClick={() => {
+                        setSelectedTemplate(template.id);
+                        setGenerationError(null);
+                      }}
+                      className="rounded-full border px-3 py-2 text-sm transition hover:border-[rgba(232,194,122,0.34)]"
+                      style={{
+                        background: isSelected ? "rgba(232,194,122,0.10)" : "rgba(255,247,236,0.04)",
+                        borderColor: isSelected ? "rgba(232,194,122,0.68)" : "rgba(255,247,236,0.08)",
+                        color: isSelected ? "#E8C27A" : "rgba(255,247,236,0.62)",
+                      }}
+                    >
+                      {template.name}
+                    </button>
+                  );
+                })}
+              </div>
+
+              <div className="mt-5 rounded-xl border border-[rgba(232,194,122,0.12)] bg-[rgba(232,194,122,0.045)] px-4 py-3 text-sm text-[rgba(255,247,236,0.56)]">
+                当前选择：<span className="font-medium text-[#E8C27A]">{selectedDynasty}</span>
+                <span className="px-1 text-[rgba(255,247,236,0.28)]">·</span>
+                <span className="font-medium text-[#E8C27A]">{selectedTemplateName}</span>
+              </div>
+            </div>
+          </div>
+
+          <div className="mt-5 flex flex-wrap items-center justify-center gap-2.5">
             {["正脸清晰", "光线充足", "面部无遮挡", "背景简洁"].map((tip) => (
               <span key={tip} className="inline-flex items-center gap-2 rounded-full border border-[rgba(255,247,236,0.08)] bg-[rgba(255,247,236,0.04)] px-3 py-1.5 text-xs text-[rgba(255,247,236,0.55)]">
                 <span className="h-1.5 w-1.5 rounded-full bg-[#E8C27A]" />
@@ -253,13 +525,13 @@ export default function GeneratePage() {
             ))}
           </div>
 
-          <div className="mt-6 flex flex-col items-center">
+          <div className="mt-5 flex flex-col items-center">
             <button
               type="button"
               onClick={handleGenerate}
               disabled={isGenerating}
               className={cn(
-                "flex h-14 w-[280px] items-center justify-center gap-2 rounded-xl px-8 text-base font-semibold text-[#0B0B0D] transition disabled:cursor-not-allowed disabled:opacity-70 md:w-[312px]",
+                "flex h-[58px] w-[280px] items-center justify-center gap-2 rounded-xl px-8 text-base font-semibold text-[#0B0B0D] transition disabled:cursor-not-allowed disabled:opacity-70 md:w-[332px]",
                 !isGenerating && file ? "hover:brightness-110" : "opacity-60"
               )}
               style={{
@@ -273,7 +545,7 @@ export default function GeneratePage() {
             <p className={cn("mt-3 min-h-5 text-sm", generationError ? "text-[#E8C27A]" : "text-[rgba(255,247,236,0.45)]")}>
               {generationError || (
                 <>
-                  当前模板：<span className="font-medium text-[#E8C27A]">{selectedTemplateName}</span> · 消耗{" "}
+                  当前模板：<span className="font-medium text-[#E8C27A]">{selectedDynasty} · {selectedTemplateName}</span> · 消耗{" "}
                   <span className="font-semibold text-[#E8C27A]">{GENERATION_COST} 积分</span>
                 </>
               )}
@@ -309,19 +581,19 @@ export default function GeneratePage() {
           </section>
         )}
 
-        <section className="mt-14 pb-12">
+        <section className="mt-9 pb-12">
           <div className="mb-6 flex flex-col gap-2 md:flex-row md:items-end md:justify-between">
             <div>
-              <h2 className="text-2xl font-semibold text-[rgba(255,247,236,0.92)]">选择汉服模板</h2>
-              <p className="mt-2 text-sm text-[rgba(255,247,236,0.48)]">不同风格对应不同朝代与氛围，选择一种开始生成。</p>
+              <h2 className="text-2xl font-semibold text-[rgba(255,247,236,0.92)]">热门汉服写真模板</h2>
+              <p className="mt-2 text-sm text-[rgba(255,247,236,0.48)]">随机推荐 10 套风格，浏览更多灵感。</p>
             </div>
             <span className="text-sm text-[rgba(255,247,236,0.45)]">
-              已选 <span className="font-medium text-[#E8C27A]">{selectedTemplateName}</span>
+              当前 <span className="font-medium text-[#E8C27A]">{selectedDynasty} · {selectedTemplateName}</span>
             </span>
           </div>
 
-          <div className="grid grid-cols-1 gap-5 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-6">
-            {styleTemplates.map((template) => {
+          <div className="flex gap-5 overflow-x-auto overflow-y-hidden pb-4 [scrollbar-width:none] [&::-webkit-scrollbar]:hidden">
+            {featuredTemplates.map((template) => {
               const isSelected = selectedTemplate === template.id;
 
               return (
@@ -332,19 +604,19 @@ export default function GeneratePage() {
                     setSelectedTemplate(template.id);
                     setGenerationError(null);
                   }}
-                  className="group relative overflow-hidden rounded-2xl border bg-[#111114] text-left shadow-[0_16px_50px_rgba(0,0,0,0.22)] transition hover:-translate-y-0.5 hover:border-[rgba(232,194,122,0.32)]"
+                  className="group relative w-[180px] shrink-0 overflow-hidden rounded-2xl border bg-[#111114] text-left shadow-[0_16px_50px_rgba(0,0,0,0.22)] transition hover:-translate-y-0.5 hover:border-[rgba(232,194,122,0.32)]"
                   style={{
                     borderColor: isSelected ? "rgba(232,194,122,0.92)" : "rgba(255,247,236,0.08)",
                     boxShadow: isSelected ? "0 0 0 1px rgba(232,194,122,0.28), 0 18px 52px rgba(0,0,0,0.28)" : undefined,
                   }}
                 >
-                  <div className="relative aspect-[4/5] overflow-hidden">
-                    <Image src={template.previewUrl} alt={template.name} fill className="object-cover transition duration-500 group-hover:scale-[1.035] group-hover:brightness-110" sizes="(min-width: 1280px) 180px, (min-width: 1024px) 33vw, (min-width: 640px) 50vw, 100vw" />
+                  <div className="relative aspect-[3/4] overflow-hidden">
+                    <Image src={template.previewUrl} alt={template.name} fill className="object-cover transition duration-500 group-hover:scale-[1.035] group-hover:brightness-110" sizes="180px" />
                     <div className="absolute inset-x-0 bottom-0 h-16 bg-gradient-to-t from-[#111114] to-transparent" />
                   </div>
-                  <div className="flex items-center justify-between gap-3 px-4 pb-4 pt-3">
+                  <div className="px-4 pb-4 pt-3">
+                    <div className="mb-2 inline-flex rounded-full border border-[rgba(232,194,122,0.16)] px-2 py-0.5 text-[11px] text-[#E8C27A]">{template.label}</div>
                     <p className="truncate text-base font-semibold text-[rgba(255,247,236,0.92)]">{template.name}</p>
-                    <span className="shrink-0 rounded-full border border-[rgba(232,194,122,0.16)] px-2 py-0.5 text-[11px] text-[#E8C27A]">{template.label}</span>
                   </div>
                   {isSelected && (
                     <span className="absolute right-2 top-2 flex h-7 w-7 items-center justify-center rounded-full bg-[#E8C27A] text-[#0B0B0D] shadow-[0_8px_24px_rgba(0,0,0,0.24)]">
