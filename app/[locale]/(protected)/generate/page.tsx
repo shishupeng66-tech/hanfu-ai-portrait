@@ -1,4 +1,4 @@
-﻿"use client";
+"use client";
 
 import Image from "next/image";
 import { ChangeEvent, useState, useMemo, useEffect, useCallback } from "react";
@@ -234,14 +234,14 @@ export default function GeneratePage() {
 
       <div className="min-h-0 flex-1 overflow-hidden px-6 pb-4">
         <div className="grid h-full min-h-0 gap-4 overflow-hidden" style={{ gridTemplateColumns: "minmax(0,0.47fr) minmax(0,0.53fr)" }}>
-          <section className="grid min-h-0 grid-rows-[minmax(0,1fr)_100px_190px] gap-3 overflow-hidden">
+          <section className="grid min-h-0 grid-rows-[minmax(0,0.58fr)_112px_minmax(0,0.42fr)] gap-3 overflow-hidden">
             <div className="min-h-0 overflow-hidden rounded-xl border border-[rgba(255,247,236,0.08)] bg-[#111114] p-4 shadow-[0_18px_70px_rgba(0,0,0,0.24)]">
               <div className="mb-4 flex items-center gap-2">
                 <SparkIcon className="h-4 w-4 text-[#E8C27A]" />
                 <h2 className="text-lg font-semibold leading-none text-[rgba(255,247,236,0.92)]">上传面部照片</h2>
               </div>
 
-              <div className="grid h-[calc(100%-34px)] min-h-0 gap-4" style={{ gridTemplateColumns: "minmax(0,1fr) 228px" }}>
+              <div className="grid h-[calc(100%-34px)] min-h-0 gap-4" style={{ gridTemplateColumns: "minmax(0,1fr) minmax(220px,238px)" }}>
                 <label className="block min-h-0 cursor-pointer">
                   <input type="file" accept="image/*" className="hidden" onChange={handleFileChange} />
                   <div className="flex h-full min-h-[210px] items-center justify-center rounded-xl border border-dashed border-[rgba(232,194,122,0.42)] bg-[rgba(11,11,13,0.72)] p-4 text-center transition hover:border-[rgba(232,194,122,0.72)] hover:bg-[rgba(232,194,122,0.04)]">
@@ -267,9 +267,9 @@ export default function GeneratePage() {
                     <Image src="/images/hanfu-hero/spring-pink-01.jpg" alt="照片示例" fill className="object-cover" sizes="228px" />
                   </div>
                   <p className="mb-2 text-sm font-medium text-[rgba(255,247,236,0.72)]">拍摄建议</p>
-                  <ul className="space-y-1.5">
+                  <ul className="space-y-2">
                     {photoTips.map((tip) => (
-                      <li key={tip} className="flex items-start gap-2 text-xs leading-5 text-[rgba(255,247,236,0.62)]">
+                      <li key={tip} className="flex items-start gap-2 text-[12px] leading-[18px] text-[rgba(255,247,236,0.66)]">
                         <span className="mt-[6px] h-1.5 w-1.5 shrink-0 rounded-full border border-[#E8C27A]" />
                         <span>{tip}</span>
                       </li>
@@ -280,7 +280,7 @@ export default function GeneratePage() {
             </div>
 
             <div className="min-h-0 overflow-hidden rounded-xl border border-[rgba(255,247,236,0.08)] bg-[#111114] p-3">
-              <div className="grid h-[68px] gap-3" style={{ gridTemplateColumns: "42fr 58fr" }}>
+              <div className="grid h-[64px] gap-3" style={{ gridTemplateColumns: "42fr 58fr" }}>
                 <button type="button" className="flex min-w-0 items-center justify-between rounded-lg border border-[rgba(255,247,236,0.08)] bg-[#141418] px-4 text-left transition hover:border-[rgba(232,194,122,0.24)]">
                   <span className="min-w-0">
                     <span className="block text-xs text-[#E8C27A]">当前模板</span>
@@ -306,7 +306,7 @@ export default function GeneratePage() {
                   {isGenerating ? "生成中..." : "生成写真"}
                 </button>
               </div>
-              <p className="pt-2 text-center text-xs text-[rgba(255,247,236,0.45)]">
+              <p className="pt-1.5 text-center text-xs leading-4 text-[rgba(255,247,236,0.45)]">
                 {generationError ? generationError : "已选择模板后即可开始生成（消耗 "}
                 {!generationError && <span className="font-semibold text-[#E8C27A]">10 积分</span>}
                 {!generationError && "）"}
@@ -314,7 +314,7 @@ export default function GeneratePage() {
             </div>
 
             <div className="min-h-0 overflow-hidden rounded-xl border border-[rgba(255,247,236,0.08)] bg-[#111114] p-3">
-              <div className="mb-3 flex h-6 shrink-0 items-center justify-between">
+              <div className="mb-2 flex h-6 shrink-0 items-center justify-between">
                 <div className="flex items-center gap-2">
                   <SparkIcon className="h-4 w-4 text-[#E8C27A]" />
                   <h3 className="text-lg font-semibold leading-none text-[rgba(255,247,236,0.92)]">推荐模板</h3>
@@ -325,7 +325,7 @@ export default function GeneratePage() {
                 </button>
               </div>
 
-              <div className="flex h-[136px] gap-3 overflow-x-auto overflow-y-hidden pb-1 [scrollbar-width:none] [&::-webkit-scrollbar]:hidden">
+              <div className="flex h-[134px] gap-3 overflow-x-auto overflow-y-hidden pb-1 [scrollbar-width:none] [&::-webkit-scrollbar]:hidden">
                 {styleTemplates.map((template) => {
                   const isSelected = selectedTemplate === template.id;
 
@@ -337,13 +337,13 @@ export default function GeneratePage() {
                         setSelectedTemplate(template.id);
                         setGenerationError(null);
                       }}
-                      className="group relative h-[132px] w-[92px] shrink-0 overflow-hidden rounded-lg border bg-[#141418] text-left transition"
+                      className="group relative h-[130px] w-[92px] shrink-0 overflow-hidden rounded-lg border bg-[#141418] text-left transition"
                       style={{
                         borderColor: isSelected ? "rgba(232,194,122,0.95)" : "rgba(255,247,236,0.08)",
                         boxShadow: isSelected ? "0 0 0 1px rgba(232,194,122,0.38)" : "none",
                       }}
                     >
-                      <div className="relative h-[100px] w-full overflow-hidden">
+                      <div className="relative h-[96px] w-full overflow-hidden">
                         <Image src={template.previewUrl} alt={template.name} fill className="object-cover transition duration-300 group-hover:scale-105" sizes="92px" />
                         <div className="absolute inset-x-0 bottom-0 h-10 bg-gradient-to-t from-[#141418] to-transparent" />
                       </div>
@@ -380,13 +380,13 @@ export default function GeneratePage() {
               </button>
             </div>
 
-            <div className="relative flex min-h-0 flex-1 items-center justify-center overflow-hidden">
-              <button type="button" onClick={handlePrevImage} disabled={resultUrls.length === 0} className="absolute left-4 top-1/2 z-10 flex h-12 w-12 -translate-y-1/2 items-center justify-center rounded-full border border-[rgba(232,194,122,0.24)] bg-[rgba(232,194,122,0.08)] text-[#E8C27A] transition hover:bg-[rgba(232,194,122,0.14)] disabled:opacity-45" aria-label="上一张">
-                <ChevronIcon direction="left" />
-              </button>
+            <div className="flex min-h-0 flex-1 items-center justify-center overflow-hidden">
+              <div className="flex h-full w-full items-center justify-center gap-6">
+                <button type="button" onClick={handlePrevImage} disabled={resultUrls.length === 0} className="z-10 flex h-12 w-12 shrink-0 items-center justify-center rounded-full border border-[rgba(232,194,122,0.24)] bg-[rgba(232,194,122,0.08)] text-[#E8C27A] transition hover:bg-[rgba(232,194,122,0.14)] disabled:opacity-45" aria-label="上一张">
+                  <ChevronIcon direction="left" />
+                </button>
 
-              <div className="relative flex h-full w-full items-center justify-center px-20">
-                <div className="relative aspect-[3/4] h-auto max-h-[calc(100%-8px)] w-[58%] min-w-[360px] max-w-[520px] overflow-hidden rounded-xl border border-[rgba(232,194,122,0.26)] bg-[#0B0B0D] shadow-[0_32px_90px_rgba(0,0,0,0.45)]">
+                <div className="relative aspect-[3/4] h-auto max-h-full min-w-[400px] max-w-[560px] overflow-hidden rounded-xl border border-[rgba(232,194,122,0.26)] bg-[#0B0B0D] shadow-[0_32px_90px_rgba(0,0,0,0.45)]" style={{ width: "64%" }}>
                   {resultUrls.length > 0 ? (
                     <Image src={resultUrls[currentPreviewIndex]} alt="生成的汉服写真" fill className="object-cover" unoptimized />
                   ) : (
@@ -420,11 +420,11 @@ export default function GeneratePage() {
                     </div>
                   )}
                 </div>
-              </div>
 
-              <button type="button" onClick={handleNextImage} disabled={resultUrls.length === 0} className="absolute right-4 top-1/2 z-10 flex h-12 w-12 -translate-y-1/2 items-center justify-center rounded-full border border-[rgba(232,194,122,0.24)] bg-[rgba(232,194,122,0.08)] text-[#E8C27A] transition hover:bg-[rgba(232,194,122,0.14)] disabled:opacity-45" aria-label="下一张">
-                <ChevronIcon direction="right" />
-              </button>
+                <button type="button" onClick={handleNextImage} disabled={resultUrls.length === 0} className="z-10 flex h-12 w-12 shrink-0 items-center justify-center rounded-full border border-[rgba(232,194,122,0.24)] bg-[rgba(232,194,122,0.08)] text-[#E8C27A] transition hover:bg-[rgba(232,194,122,0.14)] disabled:opacity-45" aria-label="下一张">
+                  <ChevronIcon direction="right" />
+                </button>
+              </div>
             </div>
 
             <div className="mt-4 flex shrink-0 justify-center gap-3">
