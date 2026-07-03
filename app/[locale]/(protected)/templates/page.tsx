@@ -198,23 +198,7 @@ export default function TemplatesPage() {
   return (
     <div className="min-h-screen bg-[#0B0B0D] px-6 py-8 text-[rgba(255,247,236,0.92)]">
       <div className="mx-auto max-w-[1440px]">
-        <header className="mb-7 flex flex-col gap-5 lg:flex-row lg:items-end lg:justify-between">
-          <div>
-            <div className="mb-3 inline-flex rounded-full border border-[rgba(232,194,122,0.16)] bg-[rgba(232,194,122,0.06)] px-3 py-1 text-xs text-[#E8C27A]">
-              汉服写真模板展厅
-            </div>
-            <h1 className="text-3xl font-semibold tracking-normal text-[rgba(255,247,236,0.92)]">模板库</h1>
-            <p className="mt-2 text-sm leading-6 text-[rgba(255,247,236,0.52)]">浏览汉服写真风格，选择一个模板开始创作。</p>
-          </div>
-          <Link
-            href={`/${locale}/generate`}
-            className="inline-flex h-11 items-center justify-center rounded-xl bg-[#E8C27A] px-5 text-sm font-semibold text-[#0B0B0D] transition hover:bg-[#F2D38A]"
-          >
-            开始创作
-          </Link>
-        </header>
-
-        <section className="mb-7 rounded-[24px] border border-[rgba(255,247,236,0.08)] bg-[rgba(17,17,20,0.88)] p-4 shadow-[0_20px_80px_rgba(0,0,0,0.25)]">
+        <section className="mb-6 rounded-[24px] border border-[rgba(255,247,236,0.08)] bg-[rgba(17,17,20,0.88)] p-4 shadow-[0_20px_80px_rgba(0,0,0,0.25)]">
           <div className="relative">
             <span className="pointer-events-none absolute left-4 top-1/2 -translate-y-1/2 text-[rgba(255,247,236,0.35)]">
               <SearchIcon />
@@ -273,7 +257,7 @@ export default function TemplatesPage() {
         </section>
 
         {filteredTemplates.length > 0 ? (
-          <section className="grid grid-cols-[repeat(auto-fit,minmax(220px,1fr))] gap-5">
+          <section className="grid grid-cols-1 gap-5 sm:grid-cols-2 lg:grid-cols-4 xl:grid-cols-5">
             {filteredTemplates.map((template) => {
               const isFavorite = favoriteIds.has(template.id);
 
@@ -288,7 +272,7 @@ export default function TemplatesPage() {
                       alt={template.name}
                       fill
                       className="object-cover transition duration-500 group-hover:scale-[1.04] group-hover:brightness-110"
-                      sizes="(min-width: 1280px) 25vw, (min-width: 768px) 33vw, 100vw"
+                      sizes="(min-width: 1280px) 20vw, (min-width: 1024px) 25vw, (min-width: 640px) 50vw, 100vw"
                     />
                     <div className="absolute inset-x-0 bottom-0 h-28 bg-gradient-to-t from-[#111114] via-[rgba(17,17,20,0.76)] to-transparent" />
 
