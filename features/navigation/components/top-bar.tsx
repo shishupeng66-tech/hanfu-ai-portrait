@@ -108,7 +108,7 @@ export function TopBar({
           <span>/</span>
           <span
             className="font-medium truncate"
-            style={{ color: "rgba(255, 247, 236, 0.92)" }}
+            style={{ color: "#E8C27A" }}
           >
             {pageTitle}
           </span>
