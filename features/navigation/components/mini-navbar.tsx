@@ -298,7 +298,7 @@ export const MiniNavbar = () => {
                       whileHover={{ scale: 1.05 }}
                       whileTap={{ scale: 0.95 }}
                       transition={{ type: "spring", stiffness: 400, damping: 17 }}
-                      className="flex h-[42px] w-[42px] items-center justify-center rounded-full bg-[#E8C27A] shadow-[0_0_0_1px_rgba(11,11,13,0.72)] transition-colors duration-200 group-hover:bg-[#F2D38A]"
+                      className="flex h-[42px] w-[42px] items-center justify-center rounded-full border border-[rgba(232,194,122,0.28)] bg-[rgba(255,247,236,0.04)] shadow-[0_0_0_1px_rgba(255,247,236,0.04)] transition-colors duration-200 group-hover:border-[rgba(232,194,122,0.48)] group-hover:bg-[rgba(232,194,122,0.08)]"
                     >
                       <div className="relative flex h-8 w-8 items-center justify-center overflow-hidden rounded-full bg-[radial-gradient(circle_at_30%_30%,rgba(232,194,122,0.92),rgba(232,194,122,0.60)_45%,rgba(232,194,122,0.30)_100%)] text-sm font-semibold text-[rgba(255,247,236,0.92)] transition-[filter] duration-200 group-hover:brightness-[1.02]">
                         {user?.image ? (
