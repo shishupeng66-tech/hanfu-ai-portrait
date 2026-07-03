@@ -7,9 +7,7 @@ import { signOut, useSession } from "@/lib/auth-client";
 import { useRouter } from "next/navigation";
 import { useLocale, useTranslations } from 'next-intl';
 import {
-  IconUser,
   IconLogout,
-  IconLayoutDashboard,
   IconShield,
   IconCoins,
   IconSettings,
@@ -130,15 +128,6 @@ export function UserMenu({ variant = "default" }: UserMenuProps) {
             </div>
 
             <Link
-              href={`/${locale}/dashboard`}
-              onClick={() => setIsOpen(false)}
-              className="flex items-center gap-3 px-4 py-2 text-sm text-[rgba(255,247,236,0.72)] hover:bg-[rgba(232,194,122,0.10)] hover:text-[#E8C27A] transition-colors"
-            >
-              <IconLayoutDashboard className="w-4 h-4" />
-              {t('navigation.main.dashboard')}
-            </Link>
-
-            <Link
               href={`/${locale}/settings`}
               onClick={() => setIsOpen(false)}
               className="flex items-center gap-3 px-4 py-2 text-sm text-[rgba(255,247,236,0.72)] hover:bg-[rgba(232,194,122,0.10)] hover:text-[#E8C27A] transition-colors"
@@ -165,15 +154,6 @@ export function UserMenu({ variant = "default" }: UserMenuProps) {
             >
               <IconCoins className="w-4 h-4" />
               {t('navigation.main.credits')}
-            </Link>
-
-            <Link
-              href={`/${locale}/profile`}
-              onClick={() => setIsOpen(false)}
-              className="flex items-center gap-3 px-4 py-2 text-sm text-[rgba(255,247,236,0.72)] hover:bg-[rgba(232,194,122,0.10)] hover:text-[#E8C27A] transition-colors"
-            >
-              <IconUser className="w-4 h-4" />
-              {t('navigation.main.profile')}
             </Link>
 
             <div className="border-t border-[rgba(255,247,236,0.08)] mt-1 pt-1">

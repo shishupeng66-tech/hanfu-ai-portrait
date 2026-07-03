@@ -242,6 +242,28 @@ export default function SettingsPage() {
         }
       )
     : t("sections.billing.noRenewal");
+  const settingsSubtitle =
+    locale === "zh"
+      ? "管理你的个人资料、账户和使用偏好。"
+      : "Manage your profile, account, and usage preferences.";
+  const preferenceItems = [
+    {
+      label: locale === "zh" ? "语言" : "Language",
+      value: locale === "zh" ? "简体中文" : "English",
+    },
+    {
+      label: locale === "zh" ? "通知偏好" : "Notification preference",
+      value: locale === "zh" ? "站内通知与邮件提醒" : "In-app and email alerts",
+    },
+    {
+      label: locale === "zh" ? "默认创作模板" : "Default creation template",
+      value: locale === "zh" ? "盛唐金影" : "Tang Glamour",
+    },
+    {
+      label: locale === "zh" ? "默认图片数量" : "Default image count",
+      value: locale === "zh" ? "4 张" : "4 images",
+    },
+  ];
 
   if (loading && !displayUser) {
     return (
@@ -278,7 +300,7 @@ export default function SettingsPage() {
             <h1 className="mb-4 text-4xl font-bold text-foreground md:text-6xl">
               {t("title")}
             </h1>
-            <p className="text-xl text-muted-foreground">{t("subtitle")}</p>
+            <p className="text-xl text-muted-foreground">{settingsSubtitle}</p>
           </div>
 
           <div className="grid grid-cols-1 gap-6 lg:grid-cols-3">
@@ -464,10 +486,38 @@ export default function SettingsPage() {
             </motion.section>
 
             <motion.section
-              id="security"
+              id="preferences"
               initial={{ y: 40, opacity: 0 }}
               animate={{ y: 0, opacity: 1 }}
               transition={{ ease: "easeOut", duration: 0.5, delay: 0.2 }}
+              className="rounded-3xl border border-border bg-card/50 p-6 backdrop-blur-md lg:col-span-3"
+            >
+              <h2 className="text-2xl font-semibold text-card-foreground">
+                {locale === "zh" ? "偏好设置" : "Preferences"}
+              </h2>
+              <p className="mt-2 text-sm text-muted-foreground">
+                {locale === "zh"
+                  ? "管理语言、通知和默认创作偏好。"
+                  : "Manage language, notifications, and default creation preferences."}
+              </p>
+
+              <div className="mt-6 grid grid-cols-1 gap-4 md:grid-cols-2 lg:grid-cols-4">
+                {preferenceItems.map((item) => (
+                  <div key={item.label} className="rounded-2xl bg-muted/50 p-4">
+                    <p className="text-sm text-muted-foreground">{item.label}</p>
+                    <p className="mt-1 text-lg font-semibold text-card-foreground">
+                      {item.value}
+                    </p>
+                  </div>
+                ))}
+              </div>
+            </motion.section>
+
+            <motion.section
+              id="security"
+              initial={{ y: 40, opacity: 0 }}
+              animate={{ y: 0, opacity: 1 }}
+              transition={{ ease: "easeOut", duration: 0.5, delay: 0.25 }}
               className="rounded-3xl border border-border bg-card/50 p-6 backdrop-blur-md lg:col-span-3"
             >
               <h2 className="text-2xl font-semibold text-card-foreground">
@@ -507,12 +557,6 @@ export default function SettingsPage() {
               </div>
 
               <div className="mt-6 flex flex-col gap-3 md:flex-row">
-                <Button
-                  variant="outline"
-                  onClick={() => router.push(`/${locale}/profile`)}
-                >
-                  {t("sections.security.viewProfile")}
-                </Button>
                 <Button variant="simple" onClick={handleSignOut}>
                   {t("sections.security.signOut")}
                 </Button>

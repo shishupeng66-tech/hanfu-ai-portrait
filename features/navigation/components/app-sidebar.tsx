@@ -8,7 +8,6 @@ import {
   Image,
   Coins,
   Crown,
-  User,
   Settings,
   Bell,
   LogOut,
@@ -64,7 +63,6 @@ function getNavGroups(locale: string): NavGroupData[] {
       {
         heading: '个人中心',
         items: [
-          { id: 'profile', title: '个人资料', icon: User, href: '/profile' },
           { id: 'notifications', title: '通知消息', icon: Bell, href: '/notifications' },
         ]
       }
@@ -94,7 +92,6 @@ function getNavGroups(locale: string): NavGroupData[] {
     {
       heading: 'Profile',
       items: [
-        { id: 'profile', title: 'Profile', icon: User, href: '/profile' },
         { id: 'notifications', title: 'Notifications', icon: Bell, href: '/notifications' },
       ]
     }
