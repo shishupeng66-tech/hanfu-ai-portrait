@@ -104,12 +104,12 @@ function getNavGroups(locale: string): NavGroupData[] {
 function getBottomItems(locale: string): NavItemData[] {
   if (locale === 'zh') {
     return [
-      { id: 'settings', title: '设置', icon: Settings, shortcut: '⌘,' },
+      { id: 'settings', title: '设置', icon: Settings, shortcut: '⌘,', href: '/settings' },
       { id: 'logout', title: '退出登录', icon: LogOut },
     ];
   }
   return [
-    { id: 'settings', title: 'Settings', icon: Settings, shortcut: '⌘,' },
+    { id: 'settings', title: 'Settings', icon: Settings, shortcut: '⌘,', href: '/settings' },
     { id: 'logout', title: 'Log out', icon: LogOut },
   ];
 }
