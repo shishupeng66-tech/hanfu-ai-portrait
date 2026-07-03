@@ -329,6 +329,16 @@ export default function GeneratePage() {
     .map((templateId) => styleTemplates.find((template) => template.id === templateId))
     .filter((template): template is StyleTemplate => Boolean(template));
 
+  useEffect(() => {
+    const templateParam = new URLSearchParams(window.location.search).get("template");
+    if (!templateParam) return;
+    const matchedTemplate = styleTemplates.find((template) => template.id === templateParam);
+    if (matchedTemplate) {
+      setSelectedTemplate(matchedTemplate.id);
+      setGenerationError(null);
+    }
+  }, [styleTemplates]);
+
   function handleFileChange(event: ChangeEvent<HTMLInputElement>) {
     const nextFile = event.target.files?.[0] || null;
     setGenerationError(null);
