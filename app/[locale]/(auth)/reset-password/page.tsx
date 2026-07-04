@@ -5,6 +5,7 @@ import { useRouter, useSearchParams } from "next/navigation";
 import { z } from "zod";
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
+import { useLocale, useTranslations } from "next-intl";
 import { Button } from "@/components/button";
 import { LocaleLink } from "@/components/locale-link";
 import { FormShell } from "@/features/forms/components/form-shell";
@@ -13,25 +14,34 @@ import { FormControl, FormField, FormItem, FormLabel, FormMessage } from "@/comp
 import { Input } from "@/features/forms/components/input";
 import { toast } from "sonner";
 
-const resetPasswordSchema = z.object({
-  password: z.string().min(8, "Password must be at least 8 characters"),
-  confirmPassword: z.string(),
-}).refine((data) => data.password === data.confirmPassword, {
-  message: "Passwords don't match",
-  path: ["confirmPassword"],
-});
+const createResetPasswordSchema = (messages: {
+  passwordMin: string;
+  passwordMismatch: string;
+}) =>
+  z.object({
+    password: z.string().min(8, messages.passwordMin),
+    confirmPassword: z.string(),
+  }).refine((data) => data.password === data.confirmPassword, {
+    message: messages.passwordMismatch,
+    path: ["confirmPassword"],
+  });
 
-type ResetPasswordInput = z.infer<typeof resetPasswordSchema>;
+type ResetPasswordInput = z.infer<ReturnType<typeof createResetPasswordSchema>>;
 
 export default function ResetPasswordPage() {
   const router = useRouter();
   const searchParams = useSearchParams();
+  const locale = useLocale();
+  const t = useTranslations("auth.resetPassword");
   const [isLoading, setIsLoading] = useState(false);
   const [isValidToken, setIsValidToken] = useState<boolean | null>(null);
   const token = searchParams.get("token");
 
   const form = useForm<ResetPasswordInput>({
-    resolver: zodResolver(resetPasswordSchema),
+    resolver: zodResolver(createResetPasswordSchema({
+      passwordMin: t("passwordMin"),
+      passwordMismatch: t("passwordMismatch"),
+    })),
     defaultValues: {
       password: "",
       confirmPassword: "",
@@ -57,7 +67,7 @@ export default function ResetPasswordPage() {
 
   const onSubmit = async (data: ResetPasswordInput) => {
     if (!token) {
-      toast.error("Invalid reset link");
+      toast.error(t("invalidLinkToast"));
       return;
     }
 
@@ -73,16 +83,15 @@ export default function ResetPasswordPage() {
       });
 
       if (response.ok) {
-        toast.success("Password reset successfully!");
+        toast.success(t("successToast"));
         setTimeout(() => {
-          router.push("/login");
+          router.push(`/${locale}/login`);
         }, 2000);
       } else {
-        const error = await response.json();
-        toast.error(error.message || "Failed to reset password");
+        toast.error(t("errorToast"));
       }
     } catch {
-      toast.error("An error occurred. Please try again.");
+      toast.error(t("errorToast"));
     } finally {
       setIsLoading(false);
     }
@@ -91,8 +100,8 @@ export default function ResetPasswordPage() {
   if (isValidToken === null) {
     return (
       <AuthMessageCard
-        title="Verifying..."
-        description="Please wait while we verify your reset link."
+        title={t("verifyingTitle")}
+        description={t("verifyingDescription")}
       >
         <div className="flex justify-center py-8">
           <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-foreground"></div>
@@ -104,20 +113,20 @@ export default function ResetPasswordPage() {
   if (isValidToken === false) {
     return (
       <AuthMessageCard
-        title="Invalid or Expired Link"
-        description="This password reset link is invalid or has expired."
+        title={t("invalidTitle")}
+        description={t("invalidDescription")}
       >
         <p className="text-sm text-muted-foreground">
-          Please request a new password reset link.
+          {t("requestNewDescription")}
         </p>
         <LocaleLink href="/forgot-password">
           <Button className="w-full">
-            Request New Link
+            {t("requestNew")}
           </Button>
         </LocaleLink>
         <LocaleLink href="/login">
           <Button variant="outline" className="w-full">
-            Back to Login
+            {t("backToLogin")}
           </Button>
         </LocaleLink>
       </AuthMessageCard>
@@ -127,11 +136,11 @@ export default function ResetPasswordPage() {
   return (
     <FormShell<ResetPasswordInput>
       form={form}
-      title="Reset your password"
-      description="Enter your new password below."
+      title={t("title")}
+      description={t("description")}
       onSubmit={onSubmit}
-      submitText="Reset Password"
-      submitLoadingText="Resetting..."
+      submitText={t("submit")}
+      submitLoadingText={t("submitting")}
       isLoading={isLoading}
       footer={
         <div className="text-center">
@@ -139,7 +148,7 @@ export default function ResetPasswordPage() {
             href="/login"
             className="text-sm text-muted-foreground hover:text-foreground"
           >
-            Back to Login
+            {t("backToLogin")}
           </LocaleLink>
         </div>
       }
@@ -149,11 +158,11 @@ export default function ResetPasswordPage() {
         name="password"
         render={({ field }) => (
           <FormItem>
-            <FormLabel>New Password</FormLabel>
+            <FormLabel>{t("newPasswordLabel")}</FormLabel>
             <FormControl>
               <Input
                 type="password"
-                placeholder="Enter new password"
+                placeholder={t("newPasswordPlaceholder")}
                 disabled={isLoading}
                 {...field}
               />
@@ -168,11 +177,11 @@ export default function ResetPasswordPage() {
         name="confirmPassword"
         render={({ field }) => (
           <FormItem>
-            <FormLabel>Confirm Password</FormLabel>
+            <FormLabel>{t("confirmPasswordLabel")}</FormLabel>
             <FormControl>
               <Input
                 type="password"
-                placeholder="Confirm new password"
+                placeholder={t("confirmPasswordPlaceholder")}
                 disabled={isLoading}
                 {...field}
               />

@@ -4,6 +4,7 @@ import { useState } from "react";
 import { z } from "zod";
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
+import { useTranslations } from "next-intl";
 import { Button } from "@/components/button";
 import { LocaleLink } from "@/components/locale-link";
 import { FormShell } from "@/features/forms/components/form-shell";
@@ -12,18 +13,20 @@ import { FormControl, FormField, FormItem, FormLabel, FormMessage } from "@/comp
 import { Input } from "@/features/forms/components/input";
 import { toast } from "sonner";
 
-const forgotPasswordSchema = z.object({
-  email: z.string().email("Please enter a valid email address"),
-});
+const createForgotPasswordSchema = (invalidEmailMessage: string) =>
+  z.object({
+    email: z.string().email(invalidEmailMessage),
+  });
 
-type ForgotPasswordInput = z.infer<typeof forgotPasswordSchema>;
+type ForgotPasswordInput = z.infer<ReturnType<typeof createForgotPasswordSchema>>;
 
 export default function ForgotPasswordPage() {
+  const t = useTranslations("auth.forgotPassword");
   const [isLoading, setIsLoading] = useState(false);
   const [emailSent, setEmailSent] = useState(false);
 
   const form = useForm<ForgotPasswordInput>({
-    resolver: zodResolver(forgotPasswordSchema),
+    resolver: zodResolver(createForgotPasswordSchema(t("invalidEmail"))),
     defaultValues: {
       email: "",
     },
@@ -40,13 +43,12 @@ export default function ForgotPasswordPage() {
 
       if (response.ok) {
         setEmailSent(true);
-        toast.success("Password reset email sent!");
+        toast.success(t("successToast"));
       } else {
-        const error = await response.json();
-        toast.error(error.message || "Failed to send reset email");
+        toast.error(t("errorToast"));
       }
     } catch {
-      toast.error("An error occurred. Please try again.");
+      toast.error(t("errorToast"));
     } finally {
       setIsLoading(false);
     }
@@ -55,22 +57,22 @@ export default function ForgotPasswordPage() {
   if (emailSent) {
     return (
       <AuthMessageCard
-        title="Check your email"
-        description="We&apos;ve sent you a password reset link. Please check your email."
+        title={t("sentTitle")}
+        description={t("sentDescription")}
       >
         <p className="text-sm text-muted-foreground">
-          Didn&apos;t receive an email? Check your spam folder or try again.
+          {t("sentHelp")}
         </p>
         <Button
           variant="outline"
           onClick={() => setEmailSent(false)}
           className="w-full"
         >
-          Try Again
+          {t("tryAgain")}
         </Button>
         <LocaleLink href="/login">
           <Button variant="simple" className="w-full">
-            Back to Login
+            {t("backToLogin")}
           </Button>
         </LocaleLink>
       </AuthMessageCard>
@@ -80,11 +82,11 @@ export default function ForgotPasswordPage() {
   return (
     <FormShell<ForgotPasswordInput>
       form={form}
-      title="Forgot password?"
-      description="Enter your email address and we&apos;ll send you a reset link."
+      title={t("title")}
+      description={t("description")}
       onSubmit={onSubmit}
-      submitText="Send Reset Link"
-      submitLoadingText="Sending..."
+      submitText={t("submit")}
+      submitLoadingText={t("submitting")}
       isLoading={isLoading}
       footer={
         <div className="text-center">
@@ -92,7 +94,7 @@ export default function ForgotPasswordPage() {
             href="/login"
             className="text-sm text-muted-foreground hover:text-foreground"
           >
-            Remember your password? Sign in
+            {t("backToLogin")}
           </LocaleLink>
         </div>
       }
@@ -102,11 +104,11 @@ export default function ForgotPasswordPage() {
         name="email"
         render={({ field }) => (
           <FormItem>
-            <FormLabel>Email</FormLabel>
+            <FormLabel>{t("emailLabel")}</FormLabel>
             <FormControl>
               <Input
                 type="email"
-                placeholder="Enter your email"
+                placeholder={t("emailPlaceholder")}
                 disabled={isLoading}
                 {...field}
               />

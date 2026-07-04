@@ -20,17 +20,17 @@ export default function VerifyEmailPage() {
       
       if (!token) {
         setStatus('error');
-        setMessage('Invalid verification link. Please check your email for the correct link.');
+        setMessage(t('invalidLinkMessage'));
         return;
       }
 
       try {
         const response = await fetch(`/api/auth/verify-email?token=${token}`);
-        const data = await response.json();
+        await response.json().catch(() => null);
 
         if (response.ok) {
           setStatus('success');
-          setMessage('Your email has been successfully verified! Redirecting to login...');
+          setMessage(t('successMessage'));
           
           // Redirect to login after 3 seconds
           setTimeout(() => {
@@ -38,16 +38,16 @@ export default function VerifyEmailPage() {
           }, 3000);
         } else {
           setStatus('error');
-          setMessage(data.error || 'Verification failed. The link may have expired.');
+          setMessage(t('failedMessage'));
         }
       } catch {
         setStatus('error');
-        setMessage('An error occurred while verifying your email. Please try again.');
+        setMessage(t('failedMessage'));
       }
     };
 
     verifyEmail();
-  }, [searchParams, router, locale]);
+  }, [searchParams, router, locale, t]);
 
   return (
     <div className="min-h-screen flex items-center justify-center bg-gradient-to-br from-muted to-background">
