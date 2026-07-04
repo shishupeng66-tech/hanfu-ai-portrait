@@ -55,10 +55,6 @@ export const marketingNavigation: NavigationItem[] = [
     href: "/pricing",
   },
   {
-    title: "Blog",
-    href: "/blog",
-  },
-  {
     title: "Contact",
     href: "/contact",
   },

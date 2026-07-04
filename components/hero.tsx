@@ -58,7 +58,7 @@ export const Hero = () => {
         }}
         className="flex justify-center"
       >
-        <Badge onClick={() => router.push(`/${locale}/blog/top-5-llm-of-all-time`)}>
+        <Badge onClick={() => router.push(`/${locale}/generate`)}>
           {t('badge')}
         </Badge>
       </motion.div>

@@ -674,11 +674,11 @@
   },
   "testimonials": {
     "title": "Success Stories from Vibe Coders",
-    "subtitle": "Real developers and non-technical founders sharing their experience building AI SaaS products with Sistine and Vibe Coding.",
+    "subtitle": "Real users share how they create AI Hanfu portraits with Han Portrait.",
     "items": [
       {
         "name": "Alex Chen",
-        "quote": "I'm not a developer. I'm a marketer. But I shipped my AI SaaS in 3 days using Sistine + Cursor. Now making $5K MRR.",
+        "quote": "I uploaded one clear portrait and got a polished Hanfu look that felt ready for social profiles and sharing.",
         "designation": "Marketing Manager turned Founder"
       },
       {
@@ -688,17 +688,17 @@
       },
       {
         "name": "Alice Johnson",
-        "quote": "From idea to $10K MRR in 2 months. All vibes, no code. Sistine made it possible to compete with funded startups.",
+        "quote": "The Tang and Dunhuang styles feel more like complete portrait concepts than ordinary filters.",
         "designation": "Serial Entrepreneur"
       },
       {
         "name": "Bob Smith",
-        "quote": "Built and launched 3 different AI SaaS products this quarter alone. Vibe Coding with Sistine is my secret weapon.",
+        "quote": "Choosing a template, uploading a photo, and generating a result all felt smooth and focused.",
         "designation": "Indie Hacker"
       },
       {
         "name": "Cathy Lee",
-        "quote": "I describe features in plain English to Claude Code. Sistine handles the rest. Shipping has never been this fast.",
+        "quote": "It is a quick way to explore Hanfu styling ideas before planning a real photoshoot.",
         "designation": "Product Manager"
       },
       {
@@ -879,7 +879,7 @@
   },
   "demo": {
     "badge": "Try Before You Buy",
-    "title": "Experience Sistine AI",
+    "title": "Experience Han Portrait",
     "description": "Test our powerful AI features without signing up. Get 3 free trials to explore what we can do.",
     "limitReached": "You've reached the demo limit. Sign up to continue using our AI tools with full features!",
     "signUpNow": "Sign Up Now",
@@ -1411,8 +1411,8 @@
     "subtitle": "We'd love to hear from you. Send us a message and we'll respond as soon as possible.",
     "description": "Please reach out to us and we will get back to you at the speed of light.",
     "testimonial": {
-      "title": "Sistine AI is used by thousands of users",
-      "description": "With lots of AI applications around, Sistine AI stands out with its state of the art AI capabilities."
+      "title": "Contact Han Portrait",
+      "description": "For partnership, payment, account, or AI Hanfu portrait generation questions, please contact us through this page."
     },
     "form": {
       "nameLabel": "Full Name",

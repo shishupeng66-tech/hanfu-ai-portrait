@@ -1,52 +1,52 @@
 {
   "home": {
-    "title": "Sistine AI - Vibe Code Your AI SaaS to Production",
-    "description": "Sistine AI is a platform that provides a wide range of AI tools and services to help you stay on top of your business. Generate images, text and everything else that you need to get your business off the ground.",
-    "ogImage": "https://ai-saas-template-aceternity.vercel.app/banner.png"
+    "title": "Han Portrait - AI Hanfu Portrait Generator",
+    "description": "Upload a clear front-facing photo, choose a Hanfu style, and generate your own AI Hanfu portrait in minutes.",
+    "ogImage": "/images/hero-bg/hero-bg-1.png"
   },
   "pricing": {
-    "title": "Pricing - Sistine AI SaaS Starter",
-    "description": "Choose the perfect plan for your AI SaaS. This pricing section is built with Sistine Starter - fully integrated with Creem for recurring payments.",
-    "ogImage": "https://ai-saas-template-aceternity.vercel.app/banner.png"
+    "title": "Pricing - Han Portrait",
+    "description": "Explore Han Portrait memberships and credit packs for AI Hanfu portrait generation, including credit costs and plan benefits.",
+    "ogImage": "/images/hero-bg/hero-bg-1.png"
   },
   "blog": {
-    "title": "Blog - Sistine AI",
-    "description": "Latest insights and updates from our team. Learn about AI SaaS development, vibe coding, and best practices for building production-ready applications.",
-    "ogImage": "https://ai-saas-template-aceternity.vercel.app/banner.png"
+    "title": "Blog - Han Portrait",
+    "description": "Read articles about AI Hanfu portraits, Hanfu culture, upload tips, and creative inspiration.",
+    "ogImage": "/images/hero-bg/hero-bg-1.png"
   },
   "contact": {
-    "title": "Contact Us - Sistine AI",
-    "description": "Get in touch with the Sistine AI team. We'd love to hear from you and respond as quickly as possible.",
-    "ogImage": "https://ai-saas-template-aceternity.vercel.app/banner.png"
+    "title": "Contact - Han Portrait",
+    "description": "Contact Han Portrait for partnership, payment, account, or AI Hanfu portrait generation questions.",
+    "ogImage": "/images/hero-bg/hero-bg-1.png"
   },
   "login": {
-    "title": "Login - Sistine AI",
-    "description": "Sign in to your Sistine AI account to access powerful AI tools and services for your business.",
-    "ogImage": "https://ai-saas-template-aceternity.vercel.app/banner.png"
+    "title": "Login - Han Portrait",
+    "description": "Sign in to your Han Portrait account to manage credits, templates, works, and AI Hanfu portrait creations.",
+    "ogImage": "/images/hero-bg/hero-bg-1.png"
   },
   "signup": {
-    "title": "Sign Up - Sistine AI",
-    "description": "Create your Sistine AI account and start building your AI SaaS product today with our powerful tools.",
-    "ogImage": "https://ai-saas-template-aceternity.vercel.app/banner.png"
+    "title": "Sign Up - Han Portrait",
+    "description": "Create a Han Portrait account, upload your photo, and start generating your own AI Hanfu portraits.",
+    "ogImage": "/images/hero-bg/hero-bg-1.png"
   },
   "terms": {
-    "title": "Terms of Service - Sistine AI",
-    "description": "Read our terms of service to understand the rules and guidelines for using Sistine AI platform.",
-    "ogImage": "https://ai-saas-template-aceternity.vercel.app/banner.png"
+    "title": "Terms of Service - Han Portrait",
+    "description": "Read the Han Portrait terms for accounts, credits, memberships, and AI Hanfu portrait generation.",
+    "ogImage": "/images/hero-bg/hero-bg-1.png"
   },
   "privacy": {
-    "title": "Privacy Policy - Sistine AI",
-    "description": "Learn how Sistine AI collects, uses, and protects your personal information and data.",
-    "ogImage": "https://ai-saas-template-aceternity.vercel.app/banner.png"
+    "title": "Privacy Policy - Han Portrait",
+    "description": "Learn how Han Portrait collects, uses, and protects account information, uploaded photos, generation records, credits, and subscription data.",
+    "ogImage": "/images/hero-bg/hero-bg-1.png"
   },
   "cookies": {
-    "title": "Cookie Policy - Sistine AI",
-    "description": "Understand how Sistine AI uses cookies and similar tracking technologies on our platform.",
-    "ogImage": "https://ai-saas-template-aceternity.vercel.app/banner.png"
+    "title": "Cookie Policy - Han Portrait",
+    "description": "Understand how Han Portrait uses cookies to keep you signed in, remember language preferences, support checkout returns, and improve the service.",
+    "ogImage": "/images/hero-bg/hero-bg-1.png"
   },
   "refund": {
-    "title": "Refund Policy - Sistine AI",
-    "description": "Review our refund policy to understand the conditions and process for requesting refunds.",
-    "ogImage": "https://ai-saas-template-aceternity.vercel.app/banner.png"
+    "title": "Refund Policy - Han Portrait",
+    "description": "Review how Han Portrait handles memberships, credit packs, AI generation failures, and payment issues.",
+    "ogImage": "/images/hero-bg/hero-bg-1.png"
   }
 }

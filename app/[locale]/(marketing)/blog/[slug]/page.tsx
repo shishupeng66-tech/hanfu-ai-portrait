@@ -1,8 +1,10 @@
 import type { Metadata } from "next";
 import { notFound } from "next/navigation";
 
-import { getAllBlogs, getBlogModule } from "@/lib/blog";
-import { locales, type Locale } from "@/i18n.config";
+import { getBlogModule } from "@/lib/blog";
+import { type Locale } from "@/i18n.config";
+
+const publishedBlogSlugs: string[] = [];
 
 interface PageProps {
   params: Promise<{
@@ -12,19 +14,16 @@ interface PageProps {
 }
 
 export async function generateStaticParams() {
-  const blogs = await getAllBlogs();
-
-  return blogs.flatMap((blog) =>
-    locales.map((locale) => ({
-      slug: blog.slug,
-      locale,
-    }))
-  );
+  return [];
 }
 
 export async function generateMetadata(props: PageProps): Promise<Metadata> {
   const params = await props.params;
   const { slug, locale } = params;
+
+  if (!publishedBlogSlugs.includes(slug)) {
+    notFound();
+  }
 
   const blogModule = await getBlogModule(slug, locale);
 
@@ -50,6 +49,10 @@ export async function generateMetadata(props: PageProps): Promise<Metadata> {
 export default async function BlogPostPage(props: PageProps) {
   const params = await props.params;
   const { slug, locale } = params;
+
+  if (!publishedBlogSlugs.includes(slug)) {
+    notFound();
+  }
 
   const blogModule = await getBlogModule(slug, locale);
 

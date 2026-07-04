@@ -1,7 +1,126 @@
-/* eslint-disable react/no-unescaped-entities */
 import { Metadata } from "next";
-import { getTranslations } from 'next-intl/server';
+import { getTranslations } from "next-intl/server";
 import type { Locale } from "@/i18n.config";
+
+type LegalSection = {
+  title: string;
+  body: string[];
+};
+
+const content = {
+  zh: {
+    title: "服务条款",
+    updatedAt: "最后更新：2026 年 7 月 4 日",
+    intro:
+      "欢迎使用汉韵写真。使用本网站、账户系统、积分、会员订阅、模板库和 AI 汉服写真生成服务，即表示你同意以下条款。",
+    sections: [
+      {
+        title: "1. 服务说明",
+        body: [
+          "汉韵写真提供基于用户上传照片生成 AI 汉服写真图片的在线服务。你可以上传清晰正脸照，选择不同汉服风格模板，并消耗积分生成写真结果。",
+          "我们会持续优化模型、模板、预览体验和作品管理功能，具体功能以页面实际展示为准。",
+        ],
+      },
+      {
+        title: "2. 账户、会员与积分",
+        body: [
+          "部分功能需要注册或登录账户后使用。你需要妥善保管账户登录信息，并对账户下发生的操作负责。",
+          "生成写真会消耗积分。积分可通过会员方案、积分包或平台活动获得。不同方案的权益、价格和发放规则以定价页和结算页展示为准。",
+        ],
+      },
+      {
+        title: "3. 用户上传内容",
+        body: [
+          "你应确保自己有权上传相关照片，不得上传违法、侵权、冒用他人身份、侵犯他人隐私或未经授权的人像照片。",
+          "你不得使用本服务生成、传播违法、有害、骚扰、欺诈、侵权或违反公序良俗的内容。",
+        ],
+      },
+      {
+        title: "4. 生成内容与使用范围",
+        body: [
+          "生成结果主要供你个人欣赏、社交分享或合理的非违法用途使用。你在使用生成结果时仍需遵守适用法律法规和第三方平台规则。",
+          "由于 AI 生成具有不确定性，结果可能与上传照片、所选模板或你的期待存在差异。我们不保证每次生成都完全符合预期。",
+        ],
+      },
+      {
+        title: "5. 服务变更与可用性",
+        body: [
+          "我们可能根据产品运营需要调整模板、模型、积分规则、会员权益、页面功能或服务入口。",
+          "我们会尽力保持服务稳定，但不承诺服务不会中断或完全无错误。维护、升级、网络故障或第三方服务异常可能影响使用。",
+        ],
+      },
+      {
+        title: "6. 免责声明",
+        body: [
+          "汉韵写真按照现有能力提供服务。除法律明确规定外，我们不对生成结果的准确性、审美效果、商业适用性或特定用途作出保证。",
+          "因用户上传不当内容、未经授权使用他人照片或违法传播生成结果造成的责任，由用户自行承担。",
+        ],
+      },
+      {
+        title: "7. 联系方式",
+        body: [
+          "如果你对本服务条款、账户、积分或生成结果有疑问，可以通过网站的联系我们页面与我们取得联系。",
+        ],
+      },
+    ],
+  },
+  en: {
+    title: "Terms of Service",
+    updatedAt: "Last updated: July 4, 2026",
+    intro:
+      "Welcome to Han Portrait. By using our website, accounts, credits, subscriptions, template library, and AI Hanfu portrait generation service, you agree to these terms.",
+    sections: [
+      {
+        title: "1. Service Description",
+        body: [
+          "Han Portrait provides an online service that generates AI Hanfu portrait images from user-uploaded photos. You can upload a clear front-facing photo, choose a Hanfu style template, and spend credits to create results.",
+          "We may improve models, templates, preview experiences, and gallery features over time. Available features are determined by what is shown in the product.",
+        ],
+      },
+      {
+        title: "2. Accounts, Memberships, and Credits",
+        body: [
+          "Some features require an account. You are responsible for keeping your login information secure and for activities under your account.",
+          "Generating portraits consumes credits. Credits may be provided through memberships, credit packs, or promotions. Plan benefits, pricing, and grant rules are shown on the pricing and checkout pages.",
+        ],
+      },
+      {
+        title: "3. User Uploads",
+        body: [
+          "You must have the right to upload each photo. Do not upload illegal, infringing, impersonating, privacy-invasive, or unauthorized images of other people.",
+          "You may not use the service to create or distribute unlawful, harmful, harassing, fraudulent, infringing, or abusive content.",
+        ],
+      },
+      {
+        title: "4. Generated Content",
+        body: [
+          "Generated results are intended for personal enjoyment, social sharing, and lawful uses. You remain responsible for complying with laws and third-party platform rules when using them.",
+          "AI generation is probabilistic. Results may differ from your uploaded photo, selected template, or expectations, and we do not guarantee that every generation will match your preferences.",
+        ],
+      },
+      {
+        title: "5. Service Changes and Availability",
+        body: [
+          "We may adjust templates, models, credit rules, membership benefits, product features, or access points as the service evolves.",
+          "We try to keep the service reliable, but maintenance, upgrades, network issues, or third-party service interruptions may affect availability.",
+        ],
+      },
+      {
+        title: "6. Disclaimer",
+        body: [
+          "Han Portrait is provided as available. To the extent permitted by law, we do not guarantee the accuracy, aesthetic quality, commercial fitness, or suitability of generated results for a specific purpose.",
+          "Users are responsible for consequences caused by improper uploads, unauthorized use of another person’s photo, or unlawful distribution of generated content.",
+        ],
+      },
+      {
+        title: "7. Contact",
+        body: [
+          "If you have questions about these terms, accounts, credits, or generated results, please contact us through the contact page.",
+        ],
+      },
+    ],
+  },
+} satisfies Record<Locale, { title: string; updatedAt: string; intro: string; sections: LegalSection[] }>;
 
 export async function generateMetadata(
   props: {
@@ -9,167 +128,48 @@ export async function generateMetadata(
   }
 ): Promise<Metadata> {
   const params = await props.params;
-  const t = await getTranslations({ locale: params.locale, namespace: 'seo' });
+  const t = await getTranslations({ locale: params.locale, namespace: "seo" });
 
   return {
-    title: t('terms.title'),
-    description: t('terms.description'),
+    title: t("terms.title"),
+    description: t("terms.description"),
     openGraph: {
-      images: [t('terms.ogImage')],
+      images: [t("terms.ogImage")],
     },
   };
 }
 
-export default function TermsPage() {
+export default async function TermsPage(
+  props: {
+    params: Promise<{ locale: Locale }>;
+  }
+) {
+  const { locale } = await props.params;
+  const page = content[locale] ?? content.zh;
+
   return (
-    <div className="container mx-auto max-w-4xl px-4 py-16">
-      <div className="prose prose-gray dark:prose-invert max-w-none">
-        <h1 className="text-4xl font-bold mb-8">Terms of Service</h1>
-        
-        <p className="text-muted-foreground mb-8">
-          Effective Date: [Date]
-        </p>
-
-        <section className="mb-8">
-          <h2 className="text-2xl font-semibold mb-4">1. Introduction</h2>
-          <p>
-            Welcome to [Your Company Name] ("[Company]", "we", "our", or "us"). These Terms of Service ("Terms") govern your use of our website and services (collectively, the "Service") located at [Your Domain].
-          </p>
-          <p>
-            By accessing or using our Service, you agree to be bound by these Terms. If you disagree with any part of these terms, then you may not access the Service.
-          </p>
-        </section>
-
-        <section className="mb-8">
-          <h2 className="text-2xl font-semibold mb-4">2. Service Description</h2>
-          <p>
-            [Your Company Name] provides [describe your service/product]. Our Service allows you to:
-          </p>
-          <ul className="list-disc pl-6 space-y-2">
-            <li>[Feature/capability 1]</li>
-            <li>[Feature/capability 2]</li>
-            <li>[Feature/capability 3]</li>
-            <li>[Additional features as needed]</li>
-          </ul>
-        </section>
-
-        <section className="mb-8">
-          <h2 className="text-2xl font-semibold mb-4">3. User Accounts</h2>
-          <p>
-            To access certain features of our Service, you may be required to create an account. When creating an account, you must:
-          </p>
-          <ul className="list-disc pl-6 space-y-2">
-            <li>Provide accurate, current, and complete information</li>
-            <li>Maintain the security of your password and account</li>
-            <li>Promptly update your account information to keep it accurate</li>
-            <li>Accept all risks of unauthorized access to your account</li>
-            <li>Be at least 18 years old or the age of legal consent in your jurisdiction</li>
-          </ul>
-          <p className="mt-4">
-            You are responsible for all activities that occur under your account. We reserve the right to refuse service, terminate accounts, or remove content at our sole discretion.
-          </p>
-        </section>
-
-        <section className="mb-8">
-          <h2 className="text-2xl font-semibold mb-4">4. Acceptable Use</h2>
-          <p>
-            You agree not to use the Service to:
-          </p>
-          <ul className="list-disc pl-6 space-y-2">
-            <li>Violate any laws or regulations</li>
-            <li>Infringe upon the rights of others</li>
-            <li>Upload or transmit viruses or malicious code</li>
-            <li>Engage in any activity that disrupts or interferes with the Service</li>
-            <li>Attempt to gain unauthorized access to any portion of the Service</li>
-            <li>Harass, abuse, or harm another person</li>
-            <li>Use the Service for any illegal or unauthorized purpose</li>
-            <li>Violate any applicable laws in your jurisdiction</li>
-          </ul>
-        </section>
-
-        <section className="mb-8">
-          <h2 className="text-2xl font-semibold mb-4">5. Intellectual Property Rights</h2>
-          <p>
-            The Service and its original content, features, and functionality are and will remain the exclusive property of [Your Company Name] and its licensors. The Service is protected by copyright, trademark, and other laws. Our trademarks and trade dress may not be used in connection with any product or service without our prior written consent.
-          </p>
-          <p className="mt-4">
-            You retain ownership of any content you submit to the Service. By submitting content, you grant us a worldwide, non-exclusive, royalty-free license to use, reproduce, modify, and distribute your content in connection with operating and providing the Service.
-          </p>
-        </section>
-
-        <section className="mb-8">
-          <h2 className="text-2xl font-semibold mb-4">6. Payment Terms</h2>
-          <p>
-            If you purchase any services from us, you agree to pay all applicable fees as described at the time of purchase. All payments are:
-          </p>
-          <ul className="list-disc pl-6 space-y-2">
-            <li>Processed through secure third-party payment providers</li>
-            <li>Subject to the payment provider's terms and conditions</li>
-            <li>Non-refundable except as required by law or as explicitly stated in our Refund Policy</li>
-            <li>Subject to applicable taxes which you are responsible for</li>
-          </ul>
-        </section>
-
-        <section className="mb-8">
-          <h2 className="text-2xl font-semibold mb-4">7. Disclaimers and Limitations of Liability</h2>
-          <p>
-            THE SERVICE IS PROVIDED ON AN "AS IS" AND "AS AVAILABLE" BASIS. WE DISCLAIM ALL WARRANTIES, WHETHER EXPRESS OR IMPLIED, INCLUDING THE IMPLIED WARRANTIES OF MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE, AND NON-INFRINGEMENT.
-          </p>
-          <p className="mt-4">
-            IN NO EVENT SHALL [YOUR COMPANY NAME], ITS DIRECTORS, EMPLOYEES, PARTNERS, AGENTS, OR AFFILIATES BE LIABLE FOR ANY INDIRECT, INCIDENTAL, SPECIAL, CONSEQUENTIAL, OR PUNITIVE DAMAGES, INCLUDING WITHOUT LIMITATION, LOSS OF PROFITS, DATA, USE, GOODWILL, OR OTHER INTANGIBLE LOSSES.
-          </p>
-        </section>
-
-        <section className="mb-8">
-          <h2 className="text-2xl font-semibold mb-4">8. Indemnification</h2>
-          <p>
-            You agree to defend, indemnify, and hold harmless [Your Company Name] and its affiliates from and against any claims, liabilities, damages, judgments, awards, losses, costs, expenses, or fees arising out of or relating to your violation of these Terms or your use of the Service.
-          </p>
-        </section>
-
-        <section className="mb-8">
-          <h2 className="text-2xl font-semibold mb-4">9. Termination</h2>
-          <p>
-            We may terminate or suspend your account and access to the Service immediately, without prior notice or liability, for any reason whatsoever, including without limitation if you breach the Terms.
-          </p>
-          <p className="mt-4">
-            Upon termination, your right to use the Service will immediately cease. All provisions of the Terms which by their nature should survive termination shall survive termination.
-          </p>
-        </section>
-
-        <section className="mb-8">
-          <h2 className="text-2xl font-semibold mb-4">10. Privacy Policy</h2>
-          <p>
-            Your use of the Service is also governed by our Privacy Policy. Please review our Privacy Policy, which also governs the Site and informs users of our data collection practices.
-          </p>
-        </section>
-
-        <section className="mb-8">
-          <h2 className="text-2xl font-semibold mb-4">11. Changes to Terms</h2>
-          <p>
-            We reserve the right to modify or replace these Terms at any time. If a revision is material, we will provide at least 30 days notice prior to any new terms taking effect.
-          </p>
-        </section>
-
-        <section className="mb-8">
-          <h2 className="text-2xl font-semibold mb-4">12. Governing Law</h2>
-          <p>
-            These Terms shall be governed and construed in accordance with the laws of [Your Jurisdiction], without regard to its conflict of law provisions. Any legal action or proceeding arising under these Terms will be brought exclusively in courts located in [Your Jurisdiction].
-          </p>
-        </section>
-
-        <section className="mb-8">
-          <h2 className="text-2xl font-semibold mb-4">13. Contact Information</h2>
-          <p>
-            If you have any questions about these Terms, please contact us at:
-          </p>
-          <ul className="list-none space-y-2 mt-4">
-            <li>Email: [Your Email]</li>
-            <li>Website: [Your Website]</li>
-            <li>Address: [Your Address]</li>
-          </ul>
-        </section>
-      </div>
+    <div className="mx-auto max-w-4xl px-4 py-16 sm:px-6 lg:px-8">
+      <article className="rounded-3xl border border-[rgba(255,247,236,0.08)] bg-[rgba(17,17,20,0.82)] p-8 text-[rgba(255,247,236,0.72)] shadow-[0_24px_80px_rgba(0,0,0,0.28)] md:p-10">
+        <p className="mb-4 text-sm font-medium text-[#E8C27A]">{page.updatedAt}</p>
+        <h1 className="mb-5 text-4xl font-semibold tracking-tight text-[rgba(255,247,236,0.92)]">
+          {page.title}
+        </h1>
+        <p className="mb-10 text-base leading-8 text-[rgba(255,247,236,0.64)]">{page.intro}</p>
+        <div className="space-y-8">
+          {page.sections.map((section) => (
+            <section key={section.title}>
+              <h2 className="mb-3 text-xl font-semibold text-[rgba(255,247,236,0.9)]">{section.title}</h2>
+              <div className="space-y-3">
+                {section.body.map((paragraph) => (
+                  <p key={paragraph} className="leading-8">
+                    {paragraph}
+                  </p>
+                ))}
+              </div>
+            </section>
+          ))}
+        </div>
+      </article>
     </div>
   );
 }

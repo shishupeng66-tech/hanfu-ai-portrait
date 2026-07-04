@@ -1,52 +1,52 @@
 {
   "home": {
-    "title": "Sistine AI - 通过 Vibe Coding 将您的 AI SaaS 产品投入生产",
-    "description": "Sistine AI 是一个提供广泛 AI 工具和服务的平台,帮助您掌控业务。生成图像、文本以及启动业务所需的一切。",
-    "ogImage": "https://ai-saas-template-aceternity.vercel.app/banner.png"
+    "title": "汉韵写真 - AI 汉服写真生成器",
+    "description": "上传一张清晰正脸照，选择汉服风格模板，几分钟生成专属于你的 AI 汉服写真。",
+    "ogImage": "/images/hero-bg/hero-bg-1.png"
   },
   "pricing": {
-    "title": "定价方案 - Sistine AI SaaS 入门套件",
-    "description": "为您的 AI SaaS 选择完美的方案。此定价模块由 Sistine Starter 构建 - 与 Creem 完全集成,支持订阅支付。",
-    "ogImage": "https://ai-saas-template-aceternity.vercel.app/banner.png"
+    "title": "定价 - 汉韵写真",
+    "description": "查看汉韵写真会员方案和积分包，了解 AI 汉服写真生成的积分消耗、会员权益和购买方式。",
+    "ogImage": "/images/hero-bg/hero-bg-1.png"
   },
   "blog": {
-    "title": "博客 - Sistine AI",
-    "description": "来自我们团队的最新见解与更新。了解 AI SaaS 开发、vibe coding 以及构建生产级应用的最佳实践。",
-    "ogImage": "https://ai-saas-template-aceternity.vercel.app/banner.png"
+    "title": "博客 - 汉韵写真",
+    "description": "阅读关于 AI 汉服写真、汉服文化、照片上传技巧和创作灵感的内容。",
+    "ogImage": "/images/hero-bg/hero-bg-1.png"
   },
   "contact": {
-    "title": "联系我们 - Sistine AI",
-    "description": "与 Sistine AI 团队取得联系。我们很乐意倾听您的声音,并会尽快回复。",
-    "ogImage": "https://ai-saas-template-aceternity.vercel.app/banner.png"
+    "title": "联系我们 - 汉韵写真",
+    "description": "如有合作、支付、账户或 AI 汉服写真生成相关问题，请通过联系页面与汉韵写真团队联系。",
+    "ogImage": "/images/hero-bg/hero-bg-1.png"
   },
   "login": {
-    "title": "登录 - Sistine AI",
-    "description": "登录您的 Sistine AI 账户,访问为您业务提供的强大 AI 工具和服务。",
-    "ogImage": "https://ai-saas-template-aceternity.vercel.app/banner.png"
+    "title": "登录 - 汉韵写真",
+    "description": "登录你的汉韵写真账户，继续管理积分、模板、作品和 AI 汉服写真创作。",
+    "ogImage": "/images/hero-bg/hero-bg-1.png"
   },
   "signup": {
-    "title": "注册 - Sistine AI",
-    "description": "创建您的 Sistine AI 账户,立即使用我们强大的工具开始构建您的 AI SaaS 产品。",
-    "ogImage": "https://ai-saas-template-aceternity.vercel.app/banner.png"
+    "title": "注册 - 汉韵写真",
+    "description": "创建汉韵写真账户，上传照片并开始生成专属于你的 AI 汉服写真。",
+    "ogImage": "/images/hero-bg/hero-bg-1.png"
   },
   "terms": {
-    "title": "服务条款 - Sistine AI",
-    "description": "阅读我们的服务条款,了解使用 Sistine AI 平台的规则和指南。",
-    "ogImage": "https://ai-saas-template-aceternity.vercel.app/banner.png"
+    "title": "服务条款 - 汉韵写真",
+    "description": "阅读汉韵写真服务条款，了解账户、积分、会员订阅和 AI 汉服写真生成服务的使用规则。",
+    "ogImage": "/images/hero-bg/hero-bg-1.png"
   },
   "privacy": {
-    "title": "隐私政策 - Sistine AI",
-    "description": "了解 Sistine AI 如何收集、使用和保护您的个人信息和数据。",
-    "ogImage": "https://ai-saas-template-aceternity.vercel.app/banner.png"
+    "title": "隐私政策 - 汉韵写真",
+    "description": "了解汉韵写真如何收集、使用和保护账户信息、上传照片、生成记录、积分和订阅相关数据。",
+    "ogImage": "/images/hero-bg/hero-bg-1.png"
   },
   "cookies": {
-    "title": "Cookie 政策 - Sistine AI",
-    "description": "了解 Sistine AI 如何在我们的平台上使用 cookies 和类似的跟踪技术。",
-    "ogImage": "https://ai-saas-template-aceternity.vercel.app/banner.png"
+    "title": "Cookie 政策 - 汉韵写真",
+    "description": "了解汉韵写真如何使用 Cookie 维持登录状态、保存语言偏好、支持支付回跳和改善服务体验。",
+    "ogImage": "/images/hero-bg/hero-bg-1.png"
   },
   "refund": {
-    "title": "退款政策 - Sistine AI",
-    "description": "查看我们的退款政策,了解申请退款的条件和流程。",
-    "ogImage": "https://ai-saas-template-aceternity.vercel.app/banner.png"
+    "title": "退款政策 - 汉韵写真",
+    "description": "查看汉韵写真关于会员订阅、积分包、AI 写真生成失败和支付异常的退款处理原则。",
+    "ogImage": "/images/hero-bg/hero-bg-1.png"
   }
 }

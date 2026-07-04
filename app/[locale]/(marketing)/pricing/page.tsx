@@ -4,7 +4,6 @@ import { Heading } from "@/components/heading";
 import { Subheading } from "@/components/subheading";
 import { Pricing } from "@/components/pricing";
 import { BackButton } from "./back-button";
-import { Companies } from "@/components/companies";
 import { Metadata } from "next";
 import { getTranslations } from 'next-intl/server';
 import type { Locale } from "@/i18n.config";
@@ -53,7 +52,6 @@ export default async function PricingPage(
           </Subheading>
         </div>
         <Pricing />
-        <Companies />
       </Container>
     </div>
   );

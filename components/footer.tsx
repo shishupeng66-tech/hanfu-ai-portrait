@@ -13,10 +13,6 @@ export const Footer = () => {
       href: "/pricing",
     },
     {
-      name: t('navigation.main.blog'),
-      href: "/blog",
-    },
-    {
       name: t('navigation.main.contact'),
       href: "/contact",
     },

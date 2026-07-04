@@ -9,7 +9,10 @@ import { Toaster } from "sonner";
 import Analytics from "@/src/analytics/analytics";
 import "../globals.css";
 
+const metadataBase = new URL(process.env.NEXT_PUBLIC_APP_URL || "http://localhost:3000");
+
 export const metadata = {
+  metadataBase,
   title: "Han Portrait",
   description: "Create professional AI Hanfu portraits from one photo.",
   icons: {

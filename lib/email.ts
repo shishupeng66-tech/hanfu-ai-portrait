@@ -9,7 +9,7 @@ const getDefaultFromEmail = () => {
   
   // 2. 开发环境使用 Resend 测试邮箱
   if (process.env.NODE_ENV === 'development') {
-    return 'Sistine AI <onboarding@resend.dev>';
+    return 'Han Portrait <onboarding@resend.dev>';
   }
   
   // 3. 生产环境要求必须配置
@@ -22,7 +22,7 @@ const getDefaultFromEmail = () => {
   }
   
   // 4. 使用配置的域名和应用名称
-  const appName = process.env.NEXT_PUBLIC_APP_NAME || 'Sistine AI';
+  const appName = process.env.NEXT_PUBLIC_APP_NAME || 'Han Portrait';
   const fromName = process.env.RESEND_FROM_NAME || appName;
   return `${fromName} <noreply@${process.env.RESEND_VERIFIED_DOMAIN}>`;
 };
@@ -93,18 +93,18 @@ export async function sendVerificationEmail(email: string, token: string) {
   
   return sendEmail({
     to: email,
-    subject: 'Verify your email - Sistine AI',
+    subject: '验证你的汉韵写真账户',
     html: `
       <div style="font-family: sans-serif; max-width: 600px; margin: 0 auto;">
-        <h1 style="color: #333;">Welcome to Sistine AI!</h1>
-        <p>Please click the link below to verify your email address:</p>
+        <h1 style="color: #333;">验证你的汉韵写真账户</h1>
+        <p>点击下方按钮完成邮箱验证，开始创作 AI 汉服写真。</p>
         <a href="${verificationUrl}" style="display: inline-block; padding: 12px 24px; background-color: #000; color: #fff; text-decoration: none; border-radius: 6px; margin: 20px 0;">
-          Verify Email
+          完成邮箱验证
         </a>
-        <p>Or copy this link to your browser:</p>
+        <p>你也可以复制以下链接到浏览器打开：</p>
         <p style="color: #666; word-break: break-all;">${verificationUrl}</p>
         <p style="color: #999; font-size: 14px; margin-top: 30px;">
-          If you didn't sign up for Sistine AI, you can safely ignore this email.
+          如果你没有注册汉韵写真账户，可以忽略这封邮件。
         </p>
       </div>
     `,
@@ -117,18 +117,18 @@ export async function sendPasswordResetEmail(email: string, token: string) {
   
   return sendEmail({
     to: email,
-    subject: 'Reset your password - Sistine AI',
+    subject: '重置你的汉韵写真密码',
     html: `
       <div style="font-family: sans-serif; max-width: 600px; margin: 0 auto;">
-        <h1 style="color: #333;">Password Reset Request</h1>
-        <p>We received a request to reset your password. Click the link below to reset it:</p>
+        <h1 style="color: #333;">重置你的汉韵写真密码</h1>
+        <p>我们收到了重置密码请求，请点击下方按钮设置新密码。</p>
         <a href="${resetUrl}" style="display: inline-block; padding: 12px 24px; background-color: #000; color: #fff; text-decoration: none; border-radius: 6px; margin: 20px 0;">
-          Reset Password
+          重置密码
         </a>
-        <p>Or copy this link to your browser:</p>
+        <p>你也可以复制以下链接到浏览器打开：</p>
         <p style="color: #666; word-break: break-all;">${resetUrl}</p>
         <p style="color: #999; font-size: 14px; margin-top: 30px;">
-          This link will expire in 1 hour. If you didn't request a password reset, you can safely ignore this email.
+          此链接将在 1 小时后失效。如果你没有请求重置密码，可以忽略这封邮件。
         </p>
       </div>
     `,
@@ -139,23 +139,23 @@ export async function sendPasswordResetEmail(email: string, token: string) {
 export async function sendWelcomeEmail(email: string, name?: string) {
   return sendEmail({
     to: email,
-    subject: 'Welcome to Sistine AI!',
+    subject: '欢迎来到汉韵写真',
     html: `
       <div style="font-family: sans-serif; max-width: 600px; margin: 0 auto;">
-        <h1 style="color: #333;">Welcome to Sistine AI${name ? ', ' + name : ''}!</h1>
-        <p>Thank you for joining us! We're excited to have you on board.</p>
-        <p>Here's what you can do next:</p>
+        <h1 style="color: #333;">欢迎来到汉韵写真${name ? ', ' + name : ''}</h1>
+        <p>感谢加入汉韵写真。你现在可以上传照片，选择模板，开始创作 AI 汉服写真。</p>
+        <p>你可以继续：</p>
         <ul style="line-height: 1.8;">
-          <li>Complete your profile</li>
-          <li>Explore our features</li>
-          <li>Try the demo</li>
-          <li>Check out our documentation</li>
+          <li>完善账户资料</li>
+          <li>浏览汉服模板库</li>
+          <li>开始生成写真</li>
+          <li>查看积分与会员权益</li>
         </ul>
-        <a href="${process.env.NEXT_PUBLIC_APP_URL}/dashboard" style="display: inline-block; padding: 12px 24px; background-color: #000; color: #fff; text-decoration: none; border-radius: 6px; margin: 20px 0;">
-          Go to Dashboard
+        <a href="${process.env.NEXT_PUBLIC_APP_URL}/zh/generate" style="display: inline-block; padding: 12px 24px; background-color: #000; color: #fff; text-decoration: none; border-radius: 6px; margin: 20px 0;">
+          开始创作
         </a>
         <p style="color: #999; font-size: 14px; margin-top: 30px;">
-          If you have any questions, feel free to contact our support team.
+          如有问题，请通过联系我们页面与我们联系。
         </p>
       </div>
     `,
@@ -170,23 +170,23 @@ export async function sendPurchaseEmail(email: string, orderDetails: PurchaseEma
 
   return sendEmail({
     to: email,
-    subject: 'Purchase Confirmation - Sistine AI',
+    subject: '汉韵写真购买确认',
     html: `
       <div style="font-family: sans-serif; max-width: 600px; margin: 0 auto;">
-        <h1 style="color: #333;">Purchase Successful!</h1>
-        <p>Thank you for your purchase. Here are your order details:</p>
+        <h1 style="color: #333;">购买成功</h1>
+        <p>感谢购买汉韵写真服务。以下是你的订单信息：</p>
         <div style="background-color: #f5f5f5; padding: 20px; border-radius: 8px; margin: 20px 0;">
-          <p><strong>Order ID:</strong> ${orderDetails.orderId}</p>
-          <p><strong>Product:</strong> ${planName}</p>
-          <p><strong>Amount:</strong> ${orderDetails.amount}</p>
-          <p><strong>Credits Added:</strong> ${orderDetails.credits}</p>
-          ${orderDetails.type === 'subscription' ? '<p><strong>Type:</strong> Monthly Subscription</p>' : ''}
+          <p><strong>订单 ID:</strong> ${orderDetails.orderId}</p>
+          <p><strong>产品:</strong> ${planName}</p>
+          <p><strong>金额:</strong> ${orderDetails.amount}</p>
+          <p><strong>到账积分:</strong> ${orderDetails.credits}</p>
+          ${orderDetails.type === 'subscription' ? '<p><strong>类型:</strong> 会员订阅</p>' : ''}
         </div>
-        <a href="${process.env.NEXT_PUBLIC_APP_URL}/dashboard" style="display: inline-block; padding: 12px 24px; background-color: #000; color: #fff; text-decoration: none; border-radius: 6px; margin: 20px 0;">
-          View Dashboard
+        <a href="${process.env.NEXT_PUBLIC_APP_URL}/zh/credits" style="display: inline-block; padding: 12px 24px; background-color: #000; color: #fff; text-decoration: none; border-radius: 6px; margin: 20px 0;">
+          查看积分中心
         </a>
         <p style="color: #999; font-size: 14px; margin-top: 30px;">
-          Thank you for choosing Sistine AI!
+          感谢选择汉韵写真。
         </p>
       </div>
     `,
@@ -197,17 +197,17 @@ export async function sendPurchaseEmail(email: string, orderDetails: PurchaseEma
 export async function sendSubscriptionExpiryReminder(email: string, daysRemaining: number) {
   return sendEmail({
     to: email,
-    subject: `Your subscription expires in ${daysRemaining} days - Sistine AI`,
+    subject: `你的汉韵写真会员将在 ${daysRemaining} 天后到期`,
     html: `
       <div style="font-family: sans-serif; max-width: 600px; margin: 0 auto;">
-        <h1 style="color: #333;">Subscription Expiry Reminder</h1>
-        <p>Your Sistine AI subscription will expire in <strong>${daysRemaining} days</strong>.</p>
-        <p>To continue enjoying uninterrupted access to our services, please renew your subscription.</p>
-        <a href="${process.env.NEXT_PUBLIC_APP_URL}/pricing" style="display: inline-block; padding: 12px 24px; background-color: #000; color: #fff; text-decoration: none; border-radius: 6px; margin: 20px 0;">
-          Renew Subscription
+        <h1 style="color: #333;">会员到期提醒</h1>
+        <p>你的汉韵写真会员将在 <strong>${daysRemaining} 天</strong>后到期。</p>
+        <p>如需继续使用会员模板和权益，请前往定价页续订。</p>
+        <a href="${process.env.NEXT_PUBLIC_APP_URL}/zh/pricing" style="display: inline-block; padding: 12px 24px; background-color: #000; color: #fff; text-decoration: none; border-radius: 6px; margin: 20px 0;">
+          查看订阅计划
         </a>
         <p style="color: #999; font-size: 14px; margin-top: 30px;">
-          If you have any questions, please contact our support team.
+          如有问题，请通过联系我们页面与我们联系。
         </p>
       </div>
     `,
@@ -218,17 +218,17 @@ export async function sendSubscriptionExpiryReminder(email: string, daysRemainin
 export async function sendLowCreditsNotification(email: string, remainingCredits: number) {
   return sendEmail({
     to: email,
-    subject: 'Low Credits Alert - Sistine AI',
+    subject: '汉韵写真积分不足提醒',
     html: `
       <div style="font-family: sans-serif; max-width: 600px; margin: 0 auto;">
-        <h1 style="color: #ff6b6b;">Low Credits Alert</h1>
-        <p>You have only <strong>${remainingCredits} credits</strong> remaining in your account.</p>
-        <p>To continue using our AI services without interruption, consider purchasing more credits.</p>
-        <a href="${process.env.NEXT_PUBLIC_APP_URL}/pricing" style="display: inline-block; padding: 12px 24px; background-color: #000; color: #fff; text-decoration: none; border-radius: 6px; margin: 20px 0;">
-          Buy More Credits
+        <h1 style="color: #ff6b6b;">积分不足提醒</h1>
+        <p>你的账户仅剩 <strong>${remainingCredits} 积分</strong>。</p>
+        <p>如需继续生成 AI 汉服写真，可以购买积分包或会员方案。</p>
+        <a href="${process.env.NEXT_PUBLIC_APP_URL}/zh/pricing" style="display: inline-block; padding: 12px 24px; background-color: #000; color: #fff; text-decoration: none; border-radius: 6px; margin: 20px 0;">
+          购买积分
         </a>
         <p style="color: #999; font-size: 14px; margin-top: 30px;">
-          Need help? Contact our support team.
+          如需帮助，请通过联系我们页面与我们联系。
         </p>
       </div>
     `,

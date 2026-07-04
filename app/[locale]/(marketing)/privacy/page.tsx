@@ -1,7 +1,142 @@
-/* eslint-disable react/no-unescaped-entities */
 import { Metadata } from "next";
-import { getTranslations } from 'next-intl/server';
+import { getTranslations } from "next-intl/server";
 import type { Locale } from "@/i18n.config";
+
+type LegalSection = {
+  title: string;
+  body: string[];
+};
+
+const content = {
+  zh: {
+    title: "隐私政策",
+    updatedAt: "最后更新：2026 年 7 月 4 日",
+    intro:
+      "汉韵写真重视你的隐私。本政策说明我们在提供 AI 汉服写真生成、账户、积分、订阅和作品管理服务时如何收集、使用和保护信息。",
+    sections: [
+      {
+        title: "1. 我们收集的信息",
+        body: [
+          "账户信息：例如邮箱、登录状态、头像、显示名称和偏好设置。",
+          "创作信息：例如你上传的照片、选择的模板、生成记录、作品链接和相关操作日志。",
+          "支付与权益信息：例如积分余额、会员状态、订单状态、支付成功或失败记录。完整支付卡信息由 Creem 等第三方支付服务处理，我们不保存完整卡号。",
+          "技术信息：例如设备、浏览器、语言偏好、访问时间、错误日志和基础安全日志。",
+        ],
+      },
+      {
+        title: "2. 信息用途",
+        body: [
+          "我们使用信息来生成 AI 汉服写真、管理账户、发放积分或订阅权益、展示历史作品、处理客服请求并维护服务安全。",
+          "我们也可能使用汇总或匿名化数据分析产品使用情况，改进模板、生成质量和页面体验。",
+        ],
+      },
+      {
+        title: "3. 图片处理",
+        body: [
+          "你上传的照片用于完成你请求的 AI 写真生成、结果预览和作品管理。除非你主动分享或授权，我们不会把你的上传照片或生成结果公开展示为案例。",
+          "请不要上传你无权使用的他人照片，或包含敏感、违法、侵权内容的图片。",
+        ],
+      },
+      {
+        title: "4. 支付信息",
+        body: [
+          "支付由 Creem 等第三方支付服务处理。我们会接收必要的支付状态、订单标识和权益发放信息，用于开通会员或增加积分。",
+          "我们不会在平台服务器保存完整银行卡号、完整支付凭证或敏感支付认证信息。",
+        ],
+      },
+      {
+        title: "5. 数据共享",
+        body: [
+          "为了提供服务，我们可能与必要的基础设施、认证、存储、邮件、支付和安全服务提供方处理相关数据。",
+          "我们不会出售你的个人信息。仅在提供服务所必需、法律要求、保护平台安全或获得你授权的情况下，我们才会共享必要信息。",
+        ],
+      },
+      {
+        title: "6. 数据安全",
+        body: [
+          "我们会采取合理的技术和管理措施保护数据安全，包括访问控制、传输加密、权限管理和异常监控。",
+          "互联网服务无法保证绝对安全。如果你发现账户或数据存在异常，请及时通过联系我们页面告知。",
+        ],
+      },
+      {
+        title: "7. 用户权利",
+        body: [
+          "你可以联系我们请求查询、更正或删除与账户相关的数据。部分数据可能因账务、安全、合规或争议处理需要保留一段时间。",
+          "你可以通过浏览器或系统设置管理 Cookie 和部分偏好信息。",
+        ],
+      },
+      {
+        title: "8. 联系方式",
+        body: [
+          "如对隐私政策或数据处理有疑问，请通过网站的联系我们页面与我们联系。",
+        ],
+      },
+    ],
+  },
+  en: {
+    title: "Privacy Policy",
+    updatedAt: "Last updated: July 4, 2026",
+    intro:
+      "Han Portrait respects your privacy. This policy explains how we collect, use, and protect information when providing AI Hanfu portrait generation, accounts, credits, subscriptions, and gallery features.",
+    sections: [
+      {
+        title: "1. Information We Collect",
+        body: [
+          "Account information such as email address, login status, avatar, display name, and preferences.",
+          "Creation information such as uploaded photos, selected templates, generation records, work URLs, and related activity logs.",
+          "Payment and entitlement information such as credit balance, membership status, order status, and payment result records. Full card details are processed by third-party payment providers such as Creem and are not stored by us.",
+          "Technical information such as device, browser, language preference, access time, error logs, and basic security logs.",
+        ],
+      },
+      {
+        title: "2. How We Use Information",
+        body: [
+          "We use information to generate AI Hanfu portraits, manage accounts, grant credits or subscriptions, display past works, handle support requests, and maintain service security.",
+          "We may use aggregated or anonymized data to understand product usage and improve templates, generation quality, and user experience.",
+        ],
+      },
+      {
+        title: "3. Photo Processing",
+        body: [
+          "Uploaded photos are used to fulfill your generation request, provide previews, and manage your works. We do not publicly display your uploads or results as examples unless you choose to share or authorize it.",
+          "Do not upload photos you do not have the right to use, or images containing sensitive, illegal, or infringing content.",
+        ],
+      },
+      {
+        title: "4. Payment Information",
+        body: [
+          "Payments are handled by third-party payment providers such as Creem. We receive necessary payment status, order identifiers, and entitlement information to activate memberships or add credits.",
+          "We do not store full card numbers, full payment credentials, or sensitive payment authentication data on our servers.",
+        ],
+      },
+      {
+        title: "5. Data Sharing",
+        body: [
+          "We may process data with necessary infrastructure, authentication, storage, email, payment, and security providers to operate the service.",
+          "We do not sell your personal information. We only share necessary information when required to provide the service, comply with law, protect the platform, or with your authorization.",
+        ],
+      },
+      {
+        title: "6. Security",
+        body: [
+          "We use reasonable technical and organizational measures, including access controls, encrypted transport, permission management, and monitoring.",
+          "No internet service is perfectly secure. If you notice unusual account or data activity, contact us through the contact page.",
+        ],
+      },
+      {
+        title: "7. Your Rights",
+        body: [
+          "You may contact us to request access, correction, or deletion of account-related data. Some data may be retained for billing, security, compliance, or dispute handling.",
+          "You can manage cookies and certain preferences through your browser or system settings.",
+        ],
+      },
+      {
+        title: "8. Contact",
+        body: ["If you have questions about this policy or data processing, please contact us through the contact page."],
+      },
+    ],
+  },
+} satisfies Record<Locale, { title: string; updatedAt: string; intro: string; sections: LegalSection[] }>;
 
 export async function generateMetadata(
   props: {
@@ -9,248 +144,48 @@ export async function generateMetadata(
   }
 ): Promise<Metadata> {
   const params = await props.params;
-  const t = await getTranslations({ locale: params.locale, namespace: 'seo' });
+  const t = await getTranslations({ locale: params.locale, namespace: "seo" });
 
   return {
-    title: t('privacy.title'),
-    description: t('privacy.description'),
+    title: t("privacy.title"),
+    description: t("privacy.description"),
     openGraph: {
-      images: [t('privacy.ogImage')],
+      images: [t("privacy.ogImage")],
     },
   };
 }
 
-export default function PrivacyPage() {
+export default async function PrivacyPage(
+  props: {
+    params: Promise<{ locale: Locale }>;
+  }
+) {
+  const { locale } = await props.params;
+  const page = content[locale] ?? content.zh;
+
   return (
-    <div className="container mx-auto max-w-4xl px-4 py-16">
-      <div className="prose prose-gray dark:prose-invert max-w-none">
-        <h1 className="text-4xl font-bold mb-8">Privacy Policy</h1>
-        
-        <p className="text-muted-foreground mb-8">
-          Effective Date: [Date]
-        </p>
-
-        <section className="mb-8">
-          <h2 className="text-2xl font-semibold mb-4">1. Introduction</h2>
-          <p>
-            [Your Company Name] ("[Company]", "we", "our", or "us") is committed to protecting your privacy. This Privacy Policy explains how we collect, use, disclose, and safeguard your information when you visit our website and use our services.
-          </p>
-          <p>
-            Please read this privacy policy carefully. If you do not agree with the terms of this privacy policy, please do not access the site.
-          </p>
-        </section>
-
-        <section className="mb-8">
-          <h2 className="text-2xl font-semibold mb-4">2. Information We Collect</h2>
-          
-          <h3 className="text-xl font-semibold mb-3">Personal Information</h3>
-          <p>We may collect personal information that you provide directly to us, such as:</p>
-          <ul className="list-disc pl-6 space-y-2">
-            <li>Name and contact information (email address, phone number)</li>
-            <li>Account credentials (username, password)</li>
-            <li>Payment information (processed through secure third-party providers)</li>
-            <li>Profile information (avatar, preferences)</li>
-            <li>Communications with us (support tickets, emails)</li>
-          </ul>
-
-          <h3 className="text-xl font-semibold mb-3 mt-4">Automatically Collected Information</h3>
-          <p>When you visit our Service, we automatically collect certain information, including:</p>
-          <ul className="list-disc pl-6 space-y-2">
-            <li>Device information (IP address, browser type, operating system)</li>
-            <li>Usage data (pages visited, time spent, clicks)</li>
-            <li>Cookies and similar tracking technologies</li>
-            <li>Log data (access times, referring URLs)</li>
-          </ul>
-
-          <h3 className="text-xl font-semibold mb-3 mt-4">Information from Third-Party Services</h3>
-          <p>If you authenticate using OAuth providers (Google, GitHub, etc.), we may receive:</p>
-          <ul className="list-disc pl-6 space-y-2">
-            <li>Basic profile information (name, email, profile picture)</li>
-            <li>Authentication tokens</li>
-            <li>Any additional information you authorize</li>
-          </ul>
-        </section>
-
-        <section className="mb-8">
-          <h2 className="text-2xl font-semibold mb-4">3. How We Use Your Information</h2>
-          <p>We use the information we collect to:</p>
-          <ul className="list-disc pl-6 space-y-2">
-            <li>Provide, operate, and maintain our Service</li>
-            <li>Process transactions and manage your account</li>
-            <li>Send administrative information and updates</li>
-            <li>Respond to your comments, questions, and support requests</li>
-            <li>Improve and personalize your experience</li>
-            <li>Monitor and analyze usage patterns and trends</li>
-            <li>Develop new products, services, and features</li>
-            <li>Prevent fraud and enhance security</li>
-            <li>Comply with legal obligations</li>
-            <li>Send marketing communications (with your consent)</li>
-          </ul>
-        </section>
-
-        <section className="mb-8">
-          <h2 className="text-2xl font-semibold mb-4">4. How We Share Your Information</h2>
-          <p>We may share your information in the following situations:</p>
-          
-          <h3 className="text-xl font-semibold mb-3">With Service Providers</h3>
-          <p>We share information with third-party vendors who perform services on our behalf, such as:</p>
-          <ul className="list-disc pl-6 space-y-2">
-            <li>Payment processors (Creem, PayPal)</li>
-            <li>Cloud hosting providers</li>
-            <li>Analytics services</li>
-            <li>Customer support tools</li>
-            <li>Email service providers</li>
-          </ul>
-
-          <h3 className="text-xl font-semibold mb-3 mt-4">For Legal Purposes</h3>
-          <p>We may disclose your information when required by law or to:</p>
-          <ul className="list-disc pl-6 space-y-2">
-            <li>Comply with legal obligations</li>
-            <li>Respond to lawful requests from public authorities</li>
-            <li>Protect our rights, privacy, safety, or property</li>
-            <li>Enforce our terms and agreements</li>
-          </ul>
-
-          <h3 className="text-xl font-semibold mb-3 mt-4">Business Transfers</h3>
-          <p>
-            In the event of a merger, acquisition, reorganization, or sale of assets, your information may be transferred as part of that transaction.
-          </p>
-
-          <h3 className="text-xl font-semibold mb-3 mt-4">With Your Consent</h3>
-          <p>
-            We may share your information for any other purpose with your explicit consent.
-          </p>
-        </section>
-
-        <section className="mb-8">
-          <h2 className="text-2xl font-semibold mb-4">5. Data Security</h2>
-          <p>
-            We implement appropriate technical and organizational security measures to protect your personal information, including:
-          </p>
-          <ul className="list-disc pl-6 space-y-2">
-            <li>Encryption of data in transit (SSL/TLS)</li>
-            <li>Encryption of sensitive data at rest</li>
-            <li>Regular security audits and assessments</li>
-            <li>Access controls and authentication requirements</li>
-            <li>Employee training on data protection</li>
-            <li>Incident response procedures</li>
-          </ul>
-          <p className="mt-4">
-            However, no method of transmission over the Internet or electronic storage is 100% secure. While we strive to protect your personal information, we cannot guarantee absolute security.
-          </p>
-        </section>
-
-        <section className="mb-8">
-          <h2 className="text-2xl font-semibold mb-4">6. Data Retention</h2>
-          <p>
-            We retain your personal information for as long as necessary to:
-          </p>
-          <ul className="list-disc pl-6 space-y-2">
-            <li>Provide our services to you</li>
-            <li>Comply with legal obligations</li>
-            <li>Resolve disputes and enforce agreements</li>
-            <li>Maintain business records</li>
-          </ul>
-          <p className="mt-4">
-            When we no longer need your information, we will securely delete or anonymize it in accordance with our data retention policies.
-          </p>
-        </section>
-
-        <section className="mb-8">
-          <h2 className="text-2xl font-semibold mb-4">7. Your Rights and Choices</h2>
-          <p>Depending on your location, you may have the following rights regarding your personal information:</p>
-          
-          <h3 className="text-xl font-semibold mb-3">Access and Portability</h3>
-          <p>You can request access to your personal information and receive a copy in a structured, machine-readable format.</p>
-
-          <h3 className="text-xl font-semibold mb-3 mt-4">Correction and Update</h3>
-          <p>You can request that we correct or update inaccurate or incomplete personal information.</p>
-
-          <h3 className="text-xl font-semibold mb-3 mt-4">Deletion</h3>
-          <p>You can request deletion of your personal information, subject to certain exceptions.</p>
-
-          <h3 className="text-xl font-semibold mb-3 mt-4">Objection and Restriction</h3>
-          <p>You can object to or request that we restrict processing of your personal information.</p>
-
-          <h3 className="text-xl font-semibold mb-3 mt-4">Marketing Communications</h3>
-          <p>You can opt-out of marketing emails by clicking the unsubscribe link or contacting us directly.</p>
-
-          <h3 className="text-xl font-semibold mb-3 mt-4">Cookies</h3>
-          <p>You can manage cookie preferences through your browser settings. See our Cookie Policy for more information.</p>
-        </section>
-
-        <section className="mb-8">
-          <h2 className="text-2xl font-semibold mb-4">8. International Data Transfers</h2>
-          <p>
-            Your information may be transferred to and processed in countries other than your country of residence. These countries may have different data protection laws than your country.
-          </p>
-          <p className="mt-4">
-            We take appropriate safeguards to ensure that your personal information remains protected in accordance with this Privacy Policy.
-          </p>
-        </section>
-
-        <section className="mb-8">
-          <h2 className="text-2xl font-semibold mb-4">9. California Privacy Rights (CCPA)</h2>
-          <p>
-            If you are a California resident, you have specific rights under the California Consumer Privacy Act (CCPA), including:
-          </p>
-          <ul className="list-disc pl-6 space-y-2">
-            <li>The right to know what personal information we collect, use, and disclose</li>
-            <li>The right to request deletion of your personal information</li>
-            <li>The right to opt-out of the sale of personal information (we do not sell personal information)</li>
-            <li>The right to non-discrimination for exercising your privacy rights</li>
-          </ul>
-        </section>
-
-        <section className="mb-8">
-          <h2 className="text-2xl font-semibold mb-4">10. European Privacy Rights (GDPR)</h2>
-          <p>
-            If you are located in the European Economic Area (EEA) or United Kingdom, you have additional rights under the General Data Protection Regulation (GDPR), including:
-          </p>
-          <ul className="list-disc pl-6 space-y-2">
-            <li>The right to be informed about data processing</li>
-            <li>The right to rectification of inaccurate data</li>
-            <li>The right to erasure ("right to be forgotten")</li>
-            <li>The right to data portability</li>
-            <li>The right to object to processing</li>
-            <li>Rights related to automated decision-making</li>
-            <li>The right to lodge a complaint with supervisory authorities</li>
-          </ul>
-        </section>
-
-        <section className="mb-8">
-          <h2 className="text-2xl font-semibold mb-4">11. Children's Privacy</h2>
-          <p>
-            Our Service is not intended for children under 18 years of age. We do not knowingly collect personal information from children under 18. If you become aware that a child has provided us with personal information, please contact us immediately.
-          </p>
-        </section>
-
-        <section className="mb-8">
-          <h2 className="text-2xl font-semibold mb-4">12. Changes to This Privacy Policy</h2>
-          <p>
-            We may update our Privacy Policy from time to time. We will notify you of any changes by posting the new Privacy Policy on this page and updating the "Effective Date" at the top.
-          </p>
-          <p className="mt-4">
-            For significant changes, we will provide additional notice through email or a prominent notice on our Service.
-          </p>
-        </section>
-
-        <section className="mb-8">
-          <h2 className="text-2xl font-semibold mb-4">13. Contact Us</h2>
-          <p>
-            If you have any questions or concerns about this Privacy Policy or our data practices, please contact us at:
-          </p>
-          <ul className="list-none space-y-2 mt-4">
-            <li>Email: [Privacy Email]</li>
-            <li>Support: [Support Email]</li>
-            <li>Website: [Your Website]</li>
-            <li>Address: [Your Address]</li>
-          </ul>
-          <p className="mt-4">
-            For data protection inquiries, you may also contact our Data Protection Officer at: [DPO Email]
-          </p>
-        </section>
-      </div>
+    <div className="mx-auto max-w-4xl px-4 py-16 sm:px-6 lg:px-8">
+      <article className="rounded-3xl border border-[rgba(255,247,236,0.08)] bg-[rgba(17,17,20,0.82)] p-8 text-[rgba(255,247,236,0.72)] shadow-[0_24px_80px_rgba(0,0,0,0.28)] md:p-10">
+        <p className="mb-4 text-sm font-medium text-[#E8C27A]">{page.updatedAt}</p>
+        <h1 className="mb-5 text-4xl font-semibold tracking-tight text-[rgba(255,247,236,0.92)]">
+          {page.title}
+        </h1>
+        <p className="mb-10 text-base leading-8 text-[rgba(255,247,236,0.64)]">{page.intro}</p>
+        <div className="space-y-8">
+          {page.sections.map((section) => (
+            <section key={section.title}>
+              <h2 className="mb-3 text-xl font-semibold text-[rgba(255,247,236,0.9)]">{section.title}</h2>
+              <div className="space-y-3">
+                {section.body.map((paragraph) => (
+                  <p key={paragraph} className="leading-8">
+                    {paragraph}
+                  </p>
+                ))}
+              </div>
+            </section>
+          ))}
+        </div>
+      </article>
     </div>
   );
 }

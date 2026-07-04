@@ -23,31 +23,31 @@ export const VerificationEmail = ({
   return (
     <Html>
       <Head />
-      <Preview>Verify your email address for Sistine AI</Preview>
+      <Preview>验证你的汉韵写真账户</Preview>
       <Body style={main}>
         <Container style={container}>
-          <Heading style={h1}>Welcome to Sistine AI!</Heading>
-          
+          <Heading style={h1}>验证你的汉韵写真账户</Heading>
+
           <Text style={text}>
-            Thanks for signing up! Please verify your email address to get started.
+            点击下方按钮完成邮箱验证，开始创作 AI 汉服写真。
           </Text>
 
           <Section style={buttonContainer}>
             <Button style={button} href={verificationUrl}>
-              Verify Email Address
+              完成邮箱验证
             </Button>
           </Section>
 
           <Text style={text}>
-            Or copy and paste this URL into your browser:
+            你也可以复制以下链接到浏览器打开：
           </Text>
-          
+
           <Link href={verificationUrl} style={link}>
             {verificationUrl}
           </Link>
 
           <Text style={footer}>
-            If you didn&apos;t sign up for Sistine AI, you can safely ignore this email.
+            如果你没有注册汉韵写真账户，可以忽略这封邮件。
           </Text>
         </Container>
       </Body>

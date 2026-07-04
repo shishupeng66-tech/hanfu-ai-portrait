@@ -1,6 +1,5 @@
 import { Background } from "@/components/background";
 import { Metadata } from "next";
-import { FeaturedTestimonials } from "@/components/featured-testimonials";
 import { cn } from "@/lib/utils";
 import { HorizontalGradient } from "@/components/horizontal-gradient";
 import { ContactForm } from "@/features/marketing/components/contact-form";
@@ -43,18 +42,17 @@ export default async function ContactPage(
         <Background />
         <ContactForm />
         <div className="relative w-full z-20 hidden md:flex border-l border-border overflow-hidden bg-background items-center justify-center">
-          <div className="max-w-sm mx-auto">
-            <FeaturedTestimonials />
+          <div className="max-w-sm mx-auto rounded-3xl border border-[rgba(255,247,236,0.08)] bg-[rgba(17,17,20,0.72)] p-8">
             <p
               className={cn(
-                "font-semibold text-xl text-center text-muted-foreground"
+                "font-semibold text-xl text-center text-[rgba(255,247,236,0.92)]"
               )}
             >
               {t('testimonial.title')}
             </p>
             <p
               className={cn(
-                "font-normal text-base text-center text-foreground mt-8"
+                "font-normal text-base text-center text-muted-foreground mt-6 leading-7"
               )}
             >
               {t('testimonial.description')}

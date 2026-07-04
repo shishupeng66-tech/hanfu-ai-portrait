@@ -1,9 +1,8 @@
 "use client";
 
-import Link from "next/link";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useForm } from "react-hook-form";
-import { useTranslations } from 'next-intl';
+import { useLocale, useTranslations } from 'next-intl';
 
 import { FormShell } from "@/features/forms/components/form-shell";
 import {
@@ -11,29 +10,9 @@ import {
   FormTextField,
 } from "@/features/forms/components/form-text-field";
 import { ContactInput, contactSchema } from "@/features/marketing/schemas";
-import {
-  IconBrandGithub,
-  IconBrandX,
-} from "@tabler/icons-react";
-
-const socials = [
-  {
-    title: "twitter",
-    href: "https://x.com/bourneliu66",
-    icon: (
-      <IconBrandX className="h-5 w-5 text-muted-foreground transition-colors hover:text-foreground" />
-    ),
-  },
-  {
-    title: "github",
-    href: "https://github.com/Idea-To-Business/sistine-starter-vibe-to-production",
-    icon: (
-      <IconBrandGithub className="h-5 w-5 text-muted-foreground transition-colors hover:text-foreground" />
-    ),
-  },
-];
 
 export function ContactForm() {
+  const locale = useLocale();
   const t = useTranslations('contact');
   const form = useForm<ContactInput>({
     resolver: zodResolver(contactSchema),
@@ -60,19 +39,11 @@ export function ContactForm() {
       className="relative z-20"
       headerSlot={null}
       footer={
-        <div className="flex items-center justify-center space-x-4 pt-4">
-          {socials.map((social) => (
-            <Link
-              href={social.href}
-              key={social.title}
-              className="inline-flex items-center justify-center"
-              target="_blank"
-              rel="noopener noreferrer"
-            >
-              {social.icon}
-            </Link>
-          ))}
-        </div>
+        <p className="pt-4 text-center text-sm text-muted-foreground">
+          {locale === "zh"
+            ? "如有合作、支付或账户问题，请通过此页面联系我们。"
+            : "For partnership, payment, or account questions, please contact us through this page."}
+        </p>
       }
     >
       <FormTextField

@@ -23,37 +23,35 @@ export const ResetPasswordEmail = ({
   return (
     <Html>
       <Head />
-      <Preview>Reset your password for Sistine AI</Preview>
+      <Preview>重置你的汉韵写真密码</Preview>
       <Body style={main}>
         <Container style={container}>
-          <Heading style={h1}>Password Reset Request</Heading>
-          
+          <Heading style={h1}>重置你的汉韵写真密码</Heading>
+
           <Text style={text}>
-            We received a request to reset your password for your Sistine AI account.
-            Click the button below to reset it.
+            我们收到了重置密码请求，请点击下方按钮设置新密码。
           </Text>
 
           <Section style={buttonContainer}>
             <Button style={button} href={resetUrl}>
-              Reset Password
+              重置密码
             </Button>
           </Section>
 
           <Text style={text}>
-            Or copy and paste this URL into your browser:
+            你也可以复制以下链接到浏览器打开：
           </Text>
-          
+
           <Link href={resetUrl} style={link}>
             {resetUrl}
           </Link>
 
           <Text style={warning}>
-            ⚠️ This link will expire in 1 hour for security reasons.
+            此链接将在 1 小时后失效。
           </Text>
 
           <Text style={footer}>
-            If you didn&apos;t request a password reset, you can safely ignore this email.
-            Your password won&apos;t be changed.
+            如果你没有请求重置密码，可以忽略这封邮件。你的密码不会被更改。
           </Text>
         </Container>
       </Body>

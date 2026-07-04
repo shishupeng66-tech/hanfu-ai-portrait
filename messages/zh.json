@@ -506,11 +506,11 @@
   },
   "testimonials": {
     "title": "来自 Vibe Coders 的成功故事",
-    "subtitle": "真实开发者与非技术背景创始人分享他们使用 Sistine 和 Vibe Coding 构建 AI SaaS 产品的经验。",
+    "subtitle": "真实用户分享他们使用汉韵写真创作 AI 汉服写真的体验。",
     "items": [
       {
         "name": "Alex Chen",
-        "quote": "我不是开发者，我是营销人员。但我使用 Sistine + Cursor 在 3 天内发布了我的 AI SaaS。现在每月收入 5000 美元。",
+        "quote": "上传一张正脸照就能得到很完整的汉服写真，模板风格也很适合社交头像和写真分享。",
         "designation": "营销经理转型创始人"
       },
       {
@@ -520,17 +520,17 @@
       },
       {
         "name": "Alice Johnson",
-        "quote": "从想法到每月 1 万美元收入只用了 2 个月。全靠感觉，无需编码。Sistine 让我能与有资金支持的创业公司竞争。",
+        "quote": "我喜欢盛唐和敦煌风格，生成结果比普通滤镜更像一套完整的写真造型。",
         "designation": "连续创业者"
       },
       {
         "name": "Bob Smith",
-        "quote": "仅在本季度就构建并发布了 3 个不同的 AI SaaS 产品。使用 Sistine 进行 Vibe Coding 是我的秘密武器。",
+        "quote": "模板选择很直观，上传照片、选择风格、生成作品的流程很顺。",
         "designation": "独立黑客"
       },
       {
         "name": "Cathy Lee",
-        "quote": "我用普通英语向 Claude Code 描述功能。Sistine 处理其他一切。发布从未如此快速。",
+        "quote": "不用去影棚也能快速看到不同汉服造型的效果，很适合先找灵感。",
         "designation": "产品经理"
       },
       {
@@ -711,7 +711,7 @@
   },
   "demo": {
     "badge": "先试后买",
-    "title": "体验 Sistine AI",
+    "title": "体验汉韵写真",
     "description": "无需注册即可测试我们强大的 AI 功能。获得 3 次免费试用机会，探索我们的能力。",
     "limitReached": "您已达到演示限制。立即注册以继续使用完整功能的 AI 工具！",
     "signUpNow": "立即注册",
@@ -1242,8 +1242,8 @@
     "subtitle": "我们很乐意倾听您的声音。给我们发送消息，我们会尽快回复。",
     "description": "请联系我们，我们会以光速回复您。",
     "testimonial": {
-      "title": "Sistine AI 被数千名用户使用",
-      "description": "在众多 AI 应用中，Sistine AI 以其顶级的 AI 能力脱颖而出。"
+      "title": "联系汉韵写真",
+      "description": "如有合作、支付、账户或 AI 汉服写真生成相关问题，请通过此页面联系我们。"
     },
     "form": {
       "nameLabel": "姓名",

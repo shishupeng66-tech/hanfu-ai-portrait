@@ -70,12 +70,12 @@ export async function POST(request: NextRequest) {
       // Send reactivation confirmation
       await sendEmail({
         to: email,
-        subject: "Welcome back to Sistine AI Newsletter!",
+        subject: "Welcome back to Han Portrait Newsletter!",
         html: `
           <div style="font-family: sans-serif; max-width: 600px; margin: 0 auto;">
             <h1 style="color: #333;">Welcome Back!</h1>
-            <p>You've successfully resubscribed to the Sistine AI newsletter.</p>
-            <p>You'll receive our latest updates and insights directly in your inbox.</p>
+            <p>You've successfully resubscribed to the Han Portrait newsletter.</p>
+            <p>You'll receive product updates and Hanfu portrait inspiration directly in your inbox.</p>
             <p style="color: #999; font-size: 12px; margin-top: 30px;">
               To unsubscribe, click <a href="${process.env.NEXT_PUBLIC_APP_URL}/api/newsletter/unsubscribe?token=${subscription.unsubscribeToken}">here</a>
             </p>
@@ -118,17 +118,17 @@ export async function POST(request: NextRequest) {
     // Send welcome email
     await sendEmail({
       to: email,
-      subject: "Welcome to Sistine AI Newsletter!",
+      subject: "Welcome to Han Portrait Newsletter!",
       html: `
         <div style="font-family: sans-serif; max-width: 600px; margin: 0 auto;">
-          <h1 style="color: #333;">Welcome to Sistine AI Newsletter!</h1>
-          <p>Thank you for subscribing! You'll receive our latest updates and insights directly in your inbox.</p>
+          <h1 style="color: #333;">Welcome to Han Portrait Newsletter!</h1>
+          <p>Thank you for subscribing. You'll receive product updates and Hanfu portrait inspiration directly in your inbox.</p>
           <h3>What to expect:</h3>
           <ul>
-            <li>Product updates and new features</li>
-            <li>AI industry insights</li>
-            <li>Tips and tutorials</li>
-            <li>Exclusive offers for subscribers</li>
+            <li>New Hanfu portrait templates</li>
+            <li>Creation tips and photo guidance</li>
+            <li>Product updates and feature releases</li>
+            <li>Occasional member offers</li>
           </ul>
           <p style="color: #999; font-size: 12px; margin-top: 30px;">
             You can unsubscribe at any time by clicking <a href="${process.env.NEXT_PUBLIC_APP_URL}/api/newsletter/unsubscribe?token=${unsubscribeToken}">here</a>

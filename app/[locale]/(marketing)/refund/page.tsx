@@ -1,7 +1,112 @@
-/* eslint-disable react/no-unescaped-entities */
 import { Metadata } from "next";
-import { getTranslations } from 'next-intl/server';
+import { getTranslations } from "next-intl/server";
 import type { Locale } from "@/i18n.config";
+
+type LegalSection = {
+  title: string;
+  body: string[];
+};
+
+const content = {
+  zh: {
+    title: "退款政策",
+    updatedAt: "最后更新：2026 年 7 月 4 日",
+    intro:
+      "本政策说明汉韵写真会员订阅、积分包和 AI 汉服写真生成服务的退款处理原则。我们会尽力公平处理支付异常和服务故障。",
+    sections: [
+      {
+        title: "1. 积分包",
+        body: [
+          "积分包属于数字权益。积分成功发放后，如果已经被用于生成写真，通常不支持退款。",
+          "如果出现积分未到账、重复扣款、订单状态异常等情况，请通过联系我们页面提交账户邮箱、订单信息和问题说明，我们会协助核查。",
+        ],
+      },
+      {
+        title: "2. 会员订阅",
+        body: [
+          "会员订阅可按平台提供的入口取消。取消后，当前计费周期内已开通的权益通常会保留至周期结束。",
+          "已经开始的订阅周期一般不按单日自动折算退款，除非适用法律要求或平台确认存在重复扣款、权益未开通等异常。",
+        ],
+      },
+      {
+        title: "3. AI 生成结果",
+        body: [
+          "AI 图片生成存在不确定性。由于单次结果不满意、风格差异、五官细节不完全符合预期等原因，通常不会自动退款。",
+          "如果生成失败且系统未交付结果，或因平台故障导致积分异常扣除，我们会核查并视情况补发积分或处理退款。",
+        ],
+      },
+      {
+        title: "4. 特殊情况",
+        body: [
+          "对于重复扣费、支付成功但权益长时间未到账、平台系统故障、账户异常扣减等情况，我们会根据订单记录和系统日志进行处理。",
+          "为便于核查，请尽量提供账户邮箱、支付时间、订单号、截图和问题描述。",
+        ],
+      },
+      {
+        title: "5. 第三方支付",
+        body: [
+          "支付由 Creem 等第三方支付服务处理。退款到账时间可能受支付渠道、银行或地区规则影响。",
+          "如果你通过支付机构发起争议或拒付，账户权益可能会被暂停或调整，直至争议处理完成。",
+        ],
+      },
+      {
+        title: "6. 联系方式",
+        body: [
+          "如需申请处理支付或退款问题，请通过网站的联系我们页面提交信息。我们会在合理时间内回复并协助核查。",
+        ],
+      },
+    ],
+  },
+  en: {
+    title: "Refund Policy",
+    updatedAt: "Last updated: July 4, 2026",
+    intro:
+      "This policy explains how Han Portrait handles refunds for memberships, credit packs, and AI Hanfu portrait generation. We aim to handle payment issues and service failures fairly.",
+    sections: [
+      {
+        title: "1. Credit Packs",
+        body: [
+          "Credit packs are digital entitlements. Once credits have been granted and used for portrait generation, they are generally not refundable.",
+          "If credits are not delivered, you are charged twice, or an order status looks incorrect, contact us with your account email, order information, and issue description.",
+        ],
+      },
+      {
+        title: "2. Membership Subscriptions",
+        body: [
+          "Memberships may be canceled through the available product or billing flow. After cancellation, benefits for the current billing period generally remain available until the period ends.",
+          "Started subscription periods are generally not automatically prorated by day unless required by law or we confirm duplicate charges, failed entitlement activation, or another payment issue.",
+        ],
+      },
+      {
+        title: "3. AI Generation Results",
+        body: [
+          "AI image generation is probabilistic. A refund is generally not automatic solely because one result is unsatisfactory, stylistically different, or not exactly as expected.",
+          "If generation fails without delivering a result, or a platform issue causes an abnormal credit deduction, we will review the case and may restore credits or process a refund where appropriate.",
+        ],
+      },
+      {
+        title: "4. Special Cases",
+        body: [
+          "Duplicate charges, successful payment without entitlement delivery, platform failures, or abnormal account deductions will be reviewed based on order records and system logs.",
+          "Please provide your account email, payment time, order ID, screenshots, and a description to help us investigate.",
+        ],
+      },
+      {
+        title: "5. Third-Party Payments",
+        body: [
+          "Payments are processed by third-party payment providers such as Creem. Refund timing may depend on the payment channel, bank, or regional rules.",
+          "If you initiate a dispute or chargeback through a payment provider, account benefits may be paused or adjusted until the dispute is resolved.",
+        ],
+      },
+      {
+        title: "6. Contact",
+        body: [
+          "To request help with a payment or refund issue, contact us through the contact page. We will respond and investigate within a reasonable time.",
+        ],
+      },
+    ],
+  },
+} satisfies Record<Locale, { title: string; updatedAt: string; intro: string; sections: LegalSection[] }>;
 
 export async function generateMetadata(
   props: {
@@ -9,281 +114,48 @@ export async function generateMetadata(
   }
 ): Promise<Metadata> {
   const params = await props.params;
-  const t = await getTranslations({ locale: params.locale, namespace: 'seo' });
+  const t = await getTranslations({ locale: params.locale, namespace: "seo" });
 
   return {
-    title: t('refund.title'),
-    description: t('refund.description'),
+    title: t("refund.title"),
+    description: t("refund.description"),
     openGraph: {
-      images: [t('refund.ogImage')],
+      images: [t("refund.ogImage")],
     },
   };
 }
 
-export default function RefundPage() {
+export default async function RefundPage(
+  props: {
+    params: Promise<{ locale: Locale }>;
+  }
+) {
+  const { locale } = await props.params;
+  const page = content[locale] ?? content.zh;
+
   return (
-    <div className="container mx-auto max-w-4xl px-4 py-16">
-      <div className="prose prose-gray dark:prose-invert max-w-none">
-        <h1 className="text-4xl font-bold mb-8">Refund Policy</h1>
-        
-        <p className="text-muted-foreground mb-8">
-          Effective Date: [Date]
-        </p>
-
-        <section className="mb-8">
-          <h2 className="text-2xl font-semibold mb-4">1. Overview</h2>
-          <p>
-            At [Your Company Name], we strive to ensure customer satisfaction with our products and services. This Refund Policy outlines the conditions under which you may request a refund and the process for doing so.
-          </p>
-          <p>
-            We believe in the quality of our service and want you to be completely satisfied with your purchase. If you're not satisfied, we're here to help.
-          </p>
-        </section>
-
-        <section className="mb-8">
-          <h2 className="text-2xl font-semibold mb-4">2. Refund Eligibility</h2>
-          
-          <h3 className="text-xl font-semibold mb-3">Full Refunds Are Available For:</h3>
-          <ul className="list-disc pl-6 space-y-2">
-            <li><strong>Technical Issues:</strong> Service failures preventing access or use of core features</li>
-            <li><strong>Billing Errors:</strong> Duplicate charges, incorrect amounts, or unauthorized transactions</li>
-            <li><strong>Non-Delivery:</strong> Failure to provide purchased services or products</li>
-            <li><strong>Misrepresentation:</strong> Service significantly different from advertised capabilities</li>
-            <li><strong>Account Issues:</strong> Extended inability to access your paid account (&gt;48 hours)</li>
-            <li><strong>Pre-Launch Purchases:</strong> Cancellations before service activation</li>
-          </ul>
-
-          <h3 className="text-xl font-semibold mb-3 mt-4">Partial Refunds May Be Considered For:</h3>
-          <ul className="list-disc pl-6 space-y-2">
-            <li>Service interruptions or degraded performance</li>
-            <li>Features temporarily unavailable</li>
-            <li>Quality issues not meeting reasonable expectations</li>
-            <li>Partial month of unused subscription service</li>
-          </ul>
-
-          <h3 className="text-xl font-semibold mb-3 mt-4">Refunds Are NOT Available For:</h3>
-          <ul className="list-disc pl-6 space-y-2">
-            <li><strong>Change of Mind:</strong> Simply deciding you no longer want the service</li>
-            <li><strong>Used Services:</strong> Credits, tokens, or resources already consumed</li>
-            <li><strong>User Error:</strong> Mistakes in usage or misunderstanding of features</li>
-            <li><strong>External Factors:</strong> Issues with third-party integrations or services</li>
-            <li><strong>Terms Violations:</strong> Account suspension due to Terms of Service violations</li>
-            <li><strong>Late Requests:</strong> Refund requests beyond the specified timeframe</li>
-            <li><strong>Custom Work:</strong> Completed custom development or consulting services</li>
-            <li><strong>Downloaded Content:</strong> Digital products already downloaded or accessed</li>
-          </ul>
-        </section>
-
-        <section className="mb-8">
-          <h2 className="text-2xl font-semibold mb-4">3. Refund Request Timeframe</h2>
-          
-          <h3 className="text-xl font-semibold mb-3">Standard Products and Services:</h3>
-          <ul className="list-disc pl-6 space-y-2">
-            <li><strong>One-time purchases:</strong> Within 30 days of purchase</li>
-            <li><strong>Subscriptions:</strong> Within 14 days of renewal</li>
-            <li><strong>Annual plans:</strong> Within 30 days of purchase</li>
-            <li><strong>Digital downloads:</strong> Within 7 days if not accessed</li>
-          </ul>
-
-          <h3 className="text-xl font-semibold mb-3 mt-4">Special Circumstances:</h3>
-          <p>
-            Extended timeframes may apply for:
-          </p>
-          <ul className="list-disc pl-6 space-y-2">
-            <li>Service outages lasting more than 72 hours</li>
-            <li>Documented billing errors</li>
-            <li>Legal requirements in your jurisdiction</li>
-          </ul>
-        </section>
-
-        <section className="mb-8">
-          <h2 className="text-2xl font-semibold mb-4">4. How to Request a Refund</h2>
-          
-          <h3 className="text-xl font-semibold mb-3">Step 1: Contact Support</h3>
-          <p>
-            Send an email to [Support Email] with the following information:
-          </p>
-          <ul className="list-disc pl-6 space-y-2">
-            <li>Your account email address</li>
-            <li>Order number or transaction ID</li>
-            <li>Date of purchase</li>
-            <li>Detailed reason for refund request</li>
-            <li>Any relevant screenshots or documentation</li>
-          </ul>
-
-          <h3 className="text-xl font-semibold mb-3 mt-4">Step 2: Review Process</h3>
-          <p>
-            Our support team will:
-          </p>
-          <ul className="list-disc pl-6 space-y-2">
-            <li>Acknowledge your request within 1-2 business days</li>
-            <li>Review your eligibility based on this policy</li>
-            <li>Request additional information if needed</li>
-            <li>Attempt to resolve issues before processing refund</li>
-          </ul>
-
-          <h3 className="text-xl font-semibold mb-3 mt-4">Step 3: Resolution</h3>
-          <p>
-            Once approved, refunds are processed as follows:
-          </p>
-          <ul className="list-disc pl-6 space-y-2">
-            <li>Decision communicated within 5 business days</li>
-            <li>Refunds issued to original payment method</li>
-            <li>Processing time: 5-10 business days</li>
-            <li>Bank processing may add 3-5 additional days</li>
-          </ul>
-        </section>
-
-        <section className="mb-8">
-          <h2 className="text-2xl font-semibold mb-4">5. Refund Methods</h2>
-          
-          <h3 className="text-xl font-semibold mb-3">Original Payment Method</h3>
-          <p>
-            Refunds are typically issued to the original payment method:
-          </p>
-          <ul className="list-disc pl-6 space-y-2">
-            <li><strong>Credit/Debit Cards:</strong> 5-10 business days</li>
-            <li><strong>PayPal:</strong> 3-5 business days</li>
-            <li><strong>Bank Transfer:</strong> 5-7 business days</li>
-            <li><strong>Cryptocurrency:</strong> Not refundable due to transaction nature</li>
-          </ul>
-
-          <h3 className="text-xl font-semibold mb-3 mt-4">Alternative Options</h3>
-          <p>
-            In certain cases, we may offer:
-          </p>
-          <ul className="list-disc pl-6 space-y-2">
-            <li>Account credits for future use</li>
-            <li>Service extensions or upgrades</li>
-            <li>Transfer to different products/services</li>
-            <li>Charitable donation of refund amount</li>
-          </ul>
-        </section>
-
-        <section className="mb-8">
-          <h2 className="text-2xl font-semibold mb-4">6. Subscription Cancellations</h2>
-          
-          <h3 className="text-xl font-semibold mb-3">Cancellation vs. Refund</h3>
-          <p>
-            Cancelling a subscription is different from requesting a refund:
-          </p>
-          <ul className="list-disc pl-6 space-y-2">
-            <li><strong>Cancellation:</strong> Stops future charges, service continues until end of billing period</li>
-            <li><strong>Refund:</strong> Returns payment for unused or unsatisfactory service</li>
-          </ul>
-
-          <h3 className="text-xl font-semibold mb-3 mt-4">Pro-Rated Refunds</h3>
-          <p>
-            For eligible subscription refunds:
-          </p>
-          <ul className="list-disc pl-6 space-y-2">
-            <li>Annual plans: Pro-rated for unused months</li>
-            <li>Monthly plans: Generally no pro-rating</li>
-            <li>Usage-based plans: Refund for unused credits only</li>
-          </ul>
-        </section>
-
-        <section className="mb-8">
-          <h2 className="text-2xl font-semibold mb-4">7. Dispute Resolution</h2>
-          
-          <p>
-            If you disagree with our refund decision:
-          </p>
-          
-          <h3 className="text-xl font-semibold mb-3">Internal Review</h3>
-          <ul className="list-disc pl-6 space-y-2">
-            <li>Request escalation to management</li>
-            <li>Provide additional documentation</li>
-            <li>Allow 5 business days for review</li>
-          </ul>
-
-          <h3 className="text-xl font-semibold mb-3 mt-4">External Options</h3>
-          <ul className="list-disc pl-6 space-y-2">
-            <li>File a dispute with your payment provider</li>
-            <li>Contact consumer protection agencies</li>
-            <li>Seek resolution through small claims court</li>
-            <li>Report to Better Business Bureau (if applicable)</li>
-          </ul>
-        </section>
-
-        <section className="mb-8">
-          <h2 className="text-2xl font-semibold mb-4">8. Special Circumstances</h2>
-          
-          <h3 className="text-xl font-semibold mb-3">Promotional Offers</h3>
-          <p>
-            Products purchased with promotional discounts:
-          </p>
-          <ul className="list-disc pl-6 space-y-2">
-            <li>Refunded at the discounted price paid</li>
-            <li>May have different refund terms</li>
-            <li>Bundle deals refunded proportionally</li>
-          </ul>
-
-          <h3 className="text-xl font-semibold mb-3 mt-4">Enterprise Accounts</h3>
-          <p>
-            Business and enterprise customers may have:
-          </p>
-          <ul className="list-disc pl-6 space-y-2">
-            <li>Custom refund terms in their contracts</li>
-            <li>Service level agreement (SLA) credits</li>
-            <li>Different dispute resolution procedures</li>
-          </ul>
-
-          <h3 className="text-xl font-semibold mb-3 mt-4">Free Trials</h3>
-          <p>
-            Free trial conversions:
-          </p>
-          <ul className="list-disc pl-6 space-y-2">
-            <li>Full refund if charged before trial ends</li>
-            <li>Refund for accidental conversion within 48 hours</li>
-            <li>No refund after actively using paid features</li>
-          </ul>
-        </section>
-
-        <section className="mb-8">
-          <h2 className="text-2xl font-semibold mb-4">9. Fraudulent Refund Requests</h2>
-          <p>
-            We reserve the right to:
-          </p>
-          <ul className="list-disc pl-6 space-y-2">
-            <li>Deny refunds for suspected fraudulent activity</li>
-            <li>Suspend accounts with excessive refund requests</li>
-            <li>Report fraudulent behavior to authorities</li>
-            <li>Pursue legal action for chargebacks deemed fraudulent</li>
-          </ul>
-        </section>
-
-        <section className="mb-8">
-          <h2 className="text-2xl font-semibold mb-4">10. Policy Modifications</h2>
-          <p>
-            We reserve the right to modify this refund policy at any time. Changes will be:
-          </p>
-          <ul className="list-disc pl-6 space-y-2">
-            <li>Posted on this page with updated effective date</li>
-            <li>Communicated via email for significant changes</li>
-            <li>Applied to new purchases after the effective date</li>
-            <li>Honored under previous terms for existing purchases</li>
-          </ul>
-        </section>
-
-        <section className="mb-8">
-          <h2 className="text-2xl font-semibold mb-4">11. Contact Information</h2>
-          <p>
-            For refund requests and questions about this policy:
-          </p>
-          <ul className="list-none space-y-2 mt-4">
-            <li><strong>Support Email:</strong> [Support Email]</li>
-            <li><strong>Billing Disputes:</strong> [Billing Email]</li>
-            <li><strong>Response Time:</strong> 1-2 business days</li>
-            <li><strong>Business Hours:</strong> [Your Business Hours]</li>
-            <li><strong>Website:</strong> [Your Website]</li>
-          </ul>
-          
-          <p className="mt-6 p-4 bg-primary/10 rounded-lg">
-            <strong>Note:</strong> This refund policy is part of our commitment to customer satisfaction. We encourage you to contact us with any concerns before requesting a refund, as we may be able to resolve your issue quickly.
-          </p>
-        </section>
-      </div>
+    <div className="mx-auto max-w-4xl px-4 py-16 sm:px-6 lg:px-8">
+      <article className="rounded-3xl border border-[rgba(255,247,236,0.08)] bg-[rgba(17,17,20,0.82)] p-8 text-[rgba(255,247,236,0.72)] shadow-[0_24px_80px_rgba(0,0,0,0.28)] md:p-10">
+        <p className="mb-4 text-sm font-medium text-[#E8C27A]">{page.updatedAt}</p>
+        <h1 className="mb-5 text-4xl font-semibold tracking-tight text-[rgba(255,247,236,0.92)]">
+          {page.title}
+        </h1>
+        <p className="mb-10 text-base leading-8 text-[rgba(255,247,236,0.64)]">{page.intro}</p>
+        <div className="space-y-8">
+          {page.sections.map((section) => (
+            <section key={section.title}>
+              <h2 className="mb-3 text-xl font-semibold text-[rgba(255,247,236,0.9)]">{section.title}</h2>
+              <div className="space-y-3">
+                {section.body.map((paragraph) => (
+                  <p key={paragraph} className="leading-8">
+                    {paragraph}
+                  </p>
+                ))}
+              </div>
+            </section>
+          ))}
+        </div>
+      </article>
     </div>
   );
 }

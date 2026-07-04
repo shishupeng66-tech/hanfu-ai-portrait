@@ -189,9 +189,6 @@ export const Navbar5 = () => {
                     Templates
                   </a>
                   <a href="#" className="font-medium">
-                    Blog
-                  </a>
-                  <a href="#" className="font-medium">
                     Pricing
                   </a>
                 </div>

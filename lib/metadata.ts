@@ -1,6 +1,7 @@
-import { Metadata } from 'next'
+﻿import { Metadata } from 'next'
 
 const baseUrl = process.env.NEXT_PUBLIC_APP_URL || 'http://localhost:3000'
+const metadataBase = new URL(baseUrl)
 
 interface GenerateMetadataProps {
   locale: string
@@ -30,6 +31,7 @@ export function generatePageMetadata({
   }
 
   return {
+    metadataBase,
     title,
     description,
     alternates,
@@ -37,7 +39,7 @@ export function generatePageMetadata({
       title,
       description,
       url: canonicalUrl,
-      siteName: 'SISTINE AI',
+      siteName: 'Han Portrait',
       images: [
         {
           url: ogImage,

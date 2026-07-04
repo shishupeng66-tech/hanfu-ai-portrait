@@ -1,10 +1,9 @@
 import { type Metadata } from "next";
-import { getAllBlogs } from "@/lib/blog";
 import { Background } from "@/components/background";
 import { Container } from "@/components/container";
 import { Heading } from "@/components/heading";
 import { Subheading } from "@/components/subheading";
-import { BlogCard } from "@/components/blog-card";
+import { LocaleLink } from "@/components/locale-link";
 import { getTranslations } from 'next-intl/server';
 import { type Locale } from '@/i18n.config';
 import { generatePageMetadata } from "@/lib/metadata";
@@ -33,30 +32,31 @@ interface PageProps {
 
 export default async function ArticlesIndex(props: PageProps) {
   const params = await props.params;
-  const t = await getTranslations({ locale: params.locale, namespace: 'blog' });
-  const blogs = await getAllBlogs(params.locale);
+  const isZh = params.locale === "zh";
+  const title = isZh ? "博客即将上线" : "Blog coming soon";
+  const subtitle = isZh
+    ? "我们正在准备关于 AI 汉服写真、汉服文化与创作技巧的内容。"
+    : "We're preparing articles about AI Hanfu portraits, Hanfu culture, and creative tips.";
+  const cta = isZh ? "开始创作" : "Start creating";
 
   return (
     <div className="relative overflow-hidden py-20 md:py-0">
       <Background />
-      <Container className="flex flex-col items-center justify-between pb-20">
-        <div className="relative z-20 py-10 md:pt-40">
-          <Heading as="h1">{t('title')}</Heading>
-          <Subheading className="text-center">
-            {t('subtitle')}
+      <Container className="flex min-h-[70vh] flex-col items-center justify-center pb-20">
+        <div className="relative z-20 flex max-w-3xl flex-col items-center rounded-[32px] border border-[rgba(255,247,236,0.08)] bg-[rgba(17,17,20,0.72)] px-8 py-14 text-center shadow-[0_24px_80px_rgba(0,0,0,0.38)] md:px-14">
+          <div className="mb-5 rounded-full border border-[rgba(232,194,122,0.22)] bg-[rgba(232,194,122,0.08)] px-4 py-1 text-xs font-medium text-[#E8C27A]">
+            Han Portrait Journal
+          </div>
+          <Heading as="h1">{title}</Heading>
+          <Subheading className="mx-auto mt-5 max-w-2xl text-center">
+            {subtitle}
           </Subheading>
-        </div>
-
-        <div className="grid grid-cols-1 md:grid-cols-2 gap-10 relative z-20 w-full mb-10">
-          {blogs.slice(0, 2).map((blog, index) => (
-            <BlogCard blog={blog} key={blog.title + index} />
-          ))}
-        </div>
-
-        <div className="grid grid-cols-1 md:grid-cols-3 gap-10 w-full relative z-20">
-          {blogs.slice(2).map((blog, index) => (
-            <BlogCard blog={blog} key={blog.title + index} />
-          ))}
+          <LocaleLink
+            href="/generate"
+            className="mt-8 inline-flex h-12 items-center justify-center rounded-full bg-[#E8C27A] px-8 text-sm font-semibold text-[#111114] transition hover:bg-[#F2D38A]"
+          >
+            {cta}
+          </LocaleLink>
         </div>
       </Container>
     </div>
