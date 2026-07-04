@@ -4,138 +4,16 @@ import Image from "next/image";
 import Link from "next/link";
 import { useMemo, useState } from "react";
 import { useLocale } from "next-intl";
+import { useRouter } from "next/navigation";
 import { cn } from "@/lib/utils";
-
-type TemplateCategory = "唐" | "宋" | "元" | "明" | "清" | "新中式" | "敦煌" | "旗袍";
-type TemplateFilter = "热门" | "最新" | "会员专属" | "免费可用" | "已收藏";
-
-type TemplateCard = {
-  id: string;
-  name: string;
-  category: TemplateCategory;
-  style: string;
-  image: string;
-  credits: number;
-  filters: TemplateFilter[];
-  premium?: boolean;
-};
+import {
+  templateLibraryData,
+  type TemplateCategory,
+  type TemplateFilter,
+} from "@/features/templates/template-data";
 
 const categoryTabs: Array<"全部" | TemplateCategory> = ["全部", "唐", "宋", "元", "明", "清", "新中式", "敦煌", "旗袍"];
 const filterChips: TemplateFilter[] = ["热门", "最新", "会员专属", "免费可用", "已收藏"];
-
-const templateLibraryData: TemplateCard[] = [
-  {
-    id: "tangGlamour",
-    name: "盛唐金影",
-    category: "唐",
-    style: "唐风",
-    image: "/images/hanfu-hero/palace-red-02.jpg",
-    credits: 10,
-    filters: ["热门", "最新"],
-  },
-  {
-    id: "songElegance",
-    name: "宋韵清婉",
-    category: "宋",
-    style: "宋韵",
-    image: "/images/hanfu-hero/palace-red-03.jpg",
-    credits: 10,
-    filters: ["免费可用"],
-  },
-  {
-    id: "qinHanNoir",
-    name: "秦汉玄色",
-    category: "元",
-    style: "秦汉",
-    image: "/images/hanfu-hero/palace-red-01.jpg",
-    credits: 10,
-    filters: ["热门"],
-  },
-  {
-    id: "drunkenFlower",
-    name: "醉花影",
-    category: "唐",
-    style: "国风",
-    image: "/images/hanfu-hero/festival-lantern-01.jpg",
-    credits: 10,
-    filters: ["热门"],
-  },
-  {
-    id: "pearBlossom",
-    name: "梨花幽韵",
-    category: "新中式",
-    style: "新中式",
-    image: "/images/hanfu-hero/spring-pink-01.jpg",
-    credits: 10,
-    filters: ["免费可用"],
-  },
-  {
-    id: "dunhuangMuse",
-    name: "敦煌飞天",
-    category: "敦煌",
-    style: "敦煌",
-    image: "/images/hanfu-hero/jade-temple-01.jpg",
-    credits: 10,
-    filters: ["会员专属", "热门"],
-    premium: true,
-  },
-  {
-    id: "bluePorcelain",
-    name: "青花瓷影",
-    category: "新中式",
-    style: "青花",
-    image: "/images/hanfu-hero/jade-temple-01.jpg",
-    credits: 10,
-    filters: ["热门", "最新"],
-  },
-  {
-    id: "winterRed",
-    name: "冬雪红妆",
-    category: "清",
-    style: "清韵",
-    image: "/images/hanfu-hero/festival-lantern-01.jpg",
-    credits: 10,
-    filters: ["热门"],
-  },
-  {
-    id: "palaceLantern",
-    name: "宫灯夜宴",
-    category: "唐",
-    style: "唐风",
-    image: "/images/hanfu-hero/festival-lantern-01.jpg",
-    credits: 10,
-    filters: ["会员专属"],
-    premium: true,
-  },
-  {
-    id: "modernQipao",
-    name: "现代旗袍",
-    category: "旗袍",
-    style: "旗袍",
-    image: "/images/hanfu-hero/spring-pink-01.jpg",
-    credits: 10,
-    filters: ["免费可用", "最新"],
-  },
-  {
-    id: "courtyardShadow",
-    name: "庭院清影",
-    category: "宋",
-    style: "宋韵",
-    image: "/images/hanfu-hero/palace-red-02.jpg",
-    credits: 10,
-    filters: ["免费可用"],
-  },
-  {
-    id: "phoenixCrown",
-    name: "凤冠霞帔",
-    category: "明",
-    style: "明制",
-    image: "/images/hanfu-hero/palace-red-02.jpg",
-    credits: 10,
-    filters: ["会员专属", "热门"],
-    premium: true,
-  },
-];
 
 function SearchIcon() {
   return (
@@ -156,6 +34,7 @@ function HeartIcon({ filled }: { filled: boolean }) {
 
 export default function TemplatesPage() {
   const locale = useLocale();
+  const router = useRouter();
   const [searchTerm, setSearchTerm] = useState("");
   const [activeCategory, setActiveCategory] = useState<"全部" | TemplateCategory>("全部");
   const [activeFilter, setActiveFilter] = useState<TemplateFilter | null>(null);
@@ -167,8 +46,8 @@ export default function TemplatesPage() {
     return templateLibraryData.filter((template) => {
       const matchesSearch =
         !normalizedSearch ||
-        `${template.name} ${template.category} ${template.style} ${template.filters.join(" ")}`.toLowerCase().includes(normalizedSearch);
-      const matchesCategory = activeCategory === "全部" || template.category === activeCategory || template.style === activeCategory;
+        `${template.name} ${template.category} ${template.label} ${template.styleTags.join(" ")} ${template.filters.join(" ")}`.toLowerCase().includes(normalizedSearch);
+      const matchesCategory = activeCategory === "全部" || template.category === activeCategory || template.label === activeCategory;
       const matchesFilter =
         !activeFilter ||
         (activeFilter === "已收藏" ? favoriteIds.has(template.id) : template.filters.includes(activeFilter));
@@ -193,6 +72,10 @@ export default function TemplatesPage() {
     setSearchTerm("");
     setActiveCategory("全部");
     setActiveFilter(null);
+  };
+
+  const goToTemplateDetail = (templateId: string) => {
+    router.push(`/${locale}/templates/${templateId}`);
   };
 
   return (
@@ -264,11 +147,20 @@ export default function TemplatesPage() {
               return (
                 <article
                   key={template.id}
+                  role="link"
+                  tabIndex={0}
+                  onClick={() => goToTemplateDetail(template.id)}
+                  onKeyDown={(event) => {
+                    if (event.key === "Enter" || event.key === " ") {
+                      event.preventDefault();
+                      goToTemplateDetail(template.id);
+                    }
+                  }}
                   className="group relative overflow-hidden rounded-[22px] border border-[rgba(255,247,236,0.08)] bg-[#111114] shadow-[0_16px_54px_rgba(0,0,0,0.24)] transition hover:-translate-y-0.5 hover:border-[rgba(232,194,122,0.26)]"
                 >
                   <div className="relative aspect-[3/4] overflow-hidden">
                     <Image
-                      src={template.image}
+                      src={template.previewUrl}
                       alt={template.name}
                       fill
                       className="object-cover transition duration-500 group-hover:scale-[1.04] group-hover:brightness-110"
@@ -278,7 +170,10 @@ export default function TemplatesPage() {
 
                     <button
                       type="button"
-                      onClick={() => toggleFavorite(template.id)}
+                      onClick={(event) => {
+                        event.stopPropagation();
+                        toggleFavorite(template.id);
+                      }}
                       className={cn(
                         "absolute right-3 top-3 flex h-9 w-9 items-center justify-center rounded-full border backdrop-blur transition",
                         isFavorite
@@ -290,7 +185,7 @@ export default function TemplatesPage() {
                       <HeartIcon filled={isFavorite} />
                     </button>
 
-                    {template.premium && (
+                    {template.isPremium && (
                       <span className="absolute left-3 top-3 rounded-full border border-[rgba(232,194,122,0.22)] bg-[rgba(11,11,13,0.66)] px-2.5 py-1 text-xs text-[#E8C27A] backdrop-blur">
                         会员专属
                       </span>
@@ -298,6 +193,7 @@ export default function TemplatesPage() {
 
                     <Link
                       href={`/${locale}/generate?template=${template.id}`}
+                      onClick={(event) => event.stopPropagation()}
                       className="absolute inset-x-4 bottom-4 flex h-11 translate-y-2 items-center justify-center rounded-xl bg-[#E8C27A] text-sm font-semibold text-[#0B0B0D] opacity-0 shadow-[0_14px_38px_rgba(0,0,0,0.28)] transition group-hover:translate-y-0 group-hover:opacity-100 hover:bg-[#F2D38A]"
                     >
                       使用此模板
@@ -308,10 +204,10 @@ export default function TemplatesPage() {
                     <div className="mb-3 flex items-start justify-between gap-3">
                       <div className="min-w-0">
                         <h2 className="truncate text-lg font-semibold text-[rgba(255,247,236,0.92)]">{template.name}</h2>
-                        <p className="mt-1 text-sm text-[rgba(255,247,236,0.45)]">{template.category} · {template.style}</p>
+                        <p className="mt-1 text-sm text-[rgba(255,247,236,0.45)]">{template.category} · {template.label}</p>
                       </div>
                       <span className="shrink-0 rounded-full border border-[rgba(232,194,122,0.16)] px-2 py-1 text-xs text-[#E8C27A]">
-                        {template.credits} 积分
+                        {template.creditCost} 积分
                       </span>
                     </div>
                     <div className="flex flex-wrap gap-2">

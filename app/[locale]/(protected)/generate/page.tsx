@@ -5,259 +5,14 @@ import { ChangeEvent, useState, useMemo, useEffect, useCallback } from "react";
 import { cn } from "@/lib/utils";
 import { useLocale } from "next-intl";
 import { useSession } from "@/lib/auth-client";
-
-type StyleTemplate = {
-  id: string;
-  apiTemplateKey: "nightLanternRedBlackHanfu";
-  name: string;
-  dynasty: "唐" | "宋" | "元" | "明" | "清" | "新中式";
-  label: string;
-  previewUrl: string;
-};
+import {
+  dynastyTabs,
+  featuredTemplateIds,
+  hanfuTemplates,
+  type HanfuTemplate,
+} from "@/features/templates/template-data";
 
 const GENERATION_COST = 10;
-
-const templateData: StyleTemplate[] = [
-  {
-    id: "tangGlamour",
-    apiTemplateKey: "nightLanternRedBlackHanfu",
-    name: "盛唐金影",
-    dynasty: "唐",
-    label: "唐风",
-    previewUrl: "/images/hanfu-hero/palace-red-02.jpg",
-  },
-  {
-    id: "palaceLantern",
-    apiTemplateKey: "nightLanternRedBlackHanfu",
-    name: "宫灯夜宴",
-    dynasty: "唐",
-    label: "唐风",
-    previewUrl: "/images/hanfu-hero/festival-lantern-01.jpg",
-  },
-  {
-    id: "tangLady",
-    apiTemplateKey: "nightLanternRedBlackHanfu",
-    name: "唐风仕女",
-    dynasty: "唐",
-    label: "唐风",
-    previewUrl: "/images/hanfu-hero/palace-red-03.jpg",
-  },
-  {
-    id: "goldHairpin",
-    apiTemplateKey: "nightLanternRedBlackHanfu",
-    name: "华服金钗",
-    dynasty: "唐",
-    label: "唐风",
-    previewUrl: "/images/hanfu-hero/palace-red-01.jpg",
-  },
-  {
-    id: "songElegance",
-    apiTemplateKey: "nightLanternRedBlackHanfu",
-    name: "宋韵清婉",
-    dynasty: "宋",
-    label: "宋韵",
-    previewUrl: "/images/hanfu-hero/palace-red-03.jpg",
-  },
-  {
-    id: "teaGathering",
-    apiTemplateKey: "nightLanternRedBlackHanfu",
-    name: "茶席雅集",
-    dynasty: "宋",
-    label: "宋韵",
-    previewUrl: "/images/hanfu-hero/spring-pink-01.jpg",
-  },
-  {
-    id: "landscapePlain",
-    apiTemplateKey: "nightLanternRedBlackHanfu",
-    name: "山水素衣",
-    dynasty: "宋",
-    label: "宋韵",
-    previewUrl: "/images/hanfu-hero/jade-temple-01.jpg",
-  },
-  {
-    id: "courtyardShadow",
-    apiTemplateKey: "nightLanternRedBlackHanfu",
-    name: "庭院清影",
-    dynasty: "宋",
-    label: "宋韵",
-    previewUrl: "/images/hanfu-hero/palace-red-02.jpg",
-  },
-  {
-    id: "grasslandHu",
-    apiTemplateKey: "nightLanternRedBlackHanfu",
-    name: "草原胡风",
-    dynasty: "元",
-    label: "元风",
-    previewUrl: "/images/hanfu-hero/palace-red-01.jpg",
-  },
-  {
-    id: "yuanPalace",
-    apiTemplateKey: "nightLanternRedBlackHanfu",
-    name: "元宫华服",
-    dynasty: "元",
-    label: "元风",
-    previewUrl: "/images/hanfu-hero/festival-lantern-01.jpg",
-  },
-  {
-    id: "frontierMoon",
-    apiTemplateKey: "nightLanternRedBlackHanfu",
-    name: "塞外明月",
-    dynasty: "元",
-    label: "元风",
-    previewUrl: "/images/hanfu-hero/jade-temple-01.jpg",
-  },
-  {
-    id: "brocadeRider",
-    apiTemplateKey: "nightLanternRedBlackHanfu",
-    name: "锦袍骑影",
-    dynasty: "元",
-    label: "元风",
-    previewUrl: "/images/hanfu-hero/palace-red-03.jpg",
-  },
-  {
-    id: "mingFormal",
-    apiTemplateKey: "nightLanternRedBlackHanfu",
-    name: "明制端庄",
-    dynasty: "明",
-    label: "明制",
-    previewUrl: "/images/hanfu-hero/jade-temple-01.jpg",
-  },
-  {
-    id: "phoenixCrown",
-    apiTemplateKey: "nightLanternRedBlackHanfu",
-    name: "凤冠霞帔",
-    dynasty: "明",
-    label: "明制",
-    previewUrl: "/images/hanfu-hero/palace-red-02.jpg",
-  },
-  {
-    id: "boudoirLady",
-    apiTemplateKey: "nightLanternRedBlackHanfu",
-    name: "庭院闺秀",
-    dynasty: "明",
-    label: "明制",
-    previewUrl: "/images/hanfu-hero/spring-pink-01.jpg",
-  },
-  {
-    id: "redWallSnow",
-    apiTemplateKey: "nightLanternRedBlackHanfu",
-    name: "朱墙雪景",
-    dynasty: "明",
-    label: "明制",
-    previewUrl: "/images/hanfu-hero/palace-red-03.jpg",
-  },
-  {
-    id: "qingPalace",
-    apiTemplateKey: "nightLanternRedBlackHanfu",
-    name: "清宫雅韵",
-    dynasty: "清",
-    label: "清韵",
-    previewUrl: "/images/hanfu-hero/jade-temple-01.jpg",
-  },
-  {
-    id: "qipaoFlower",
-    apiTemplateKey: "nightLanternRedBlackHanfu",
-    name: "旗装花影",
-    dynasty: "清",
-    label: "清韵",
-    previewUrl: "/images/hanfu-hero/spring-pink-01.jpg",
-  },
-  {
-    id: "palacePortrait",
-    apiTemplateKey: "nightLanternRedBlackHanfu",
-    name: "宫廷肖像",
-    dynasty: "清",
-    label: "清韵",
-    previewUrl: "/images/hanfu-hero/palace-red-01.jpg",
-  },
-  {
-    id: "winterRed",
-    apiTemplateKey: "nightLanternRedBlackHanfu",
-    name: "冬雪红妆",
-    dynasty: "清",
-    label: "清韵",
-    previewUrl: "/images/hanfu-hero/festival-lantern-01.jpg",
-  },
-  {
-    id: "bluePorcelain",
-    apiTemplateKey: "nightLanternRedBlackHanfu",
-    name: "青花瓷",
-    dynasty: "新中式",
-    label: "新中式",
-    previewUrl: "/images/hanfu-hero/jade-temple-01.jpg",
-  },
-  {
-    id: "modernQipao",
-    apiTemplateKey: "nightLanternRedBlackHanfu",
-    name: "现代旗袍",
-    dynasty: "新中式",
-    label: "新中式",
-    previewUrl: "/images/hanfu-hero/spring-pink-01.jpg",
-  },
-  {
-    id: "modernGuofeng",
-    apiTemplateKey: "nightLanternRedBlackHanfu",
-    name: "国风时尚",
-    dynasty: "新中式",
-    label: "新中式",
-    previewUrl: "/images/hanfu-hero/palace-red-03.jpg",
-  },
-  {
-    id: "orientalMagazine",
-    apiTemplateKey: "nightLanternRedBlackHanfu",
-    name: "东方杂志",
-    dynasty: "新中式",
-    label: "新中式",
-    previewUrl: "/images/hanfu-hero/palace-red-02.jpg",
-  },
-  {
-    id: "qinHanNoir",
-    apiTemplateKey: "nightLanternRedBlackHanfu",
-    name: "秦汉玄色",
-    dynasty: "明",
-    label: "秦汉",
-    previewUrl: "/images/hanfu-hero/palace-red-01.jpg",
-  },
-  {
-    id: "drunkenFlower",
-    apiTemplateKey: "nightLanternRedBlackHanfu",
-    name: "醉花影",
-    dynasty: "新中式",
-    label: "国风",
-    previewUrl: "/images/hanfu-hero/festival-lantern-01.jpg",
-  },
-  {
-    id: "pearBlossom",
-    apiTemplateKey: "nightLanternRedBlackHanfu",
-    name: "梨花幽韵",
-    dynasty: "清",
-    label: "旗袍",
-    previewUrl: "/images/hanfu-hero/spring-pink-01.jpg",
-  },
-  {
-    id: "dunhuangMuse",
-    apiTemplateKey: "nightLanternRedBlackHanfu",
-    name: "敦煌飞天",
-    dynasty: "唐",
-    label: "敦煌",
-    previewUrl: "/images/hanfu-hero/jade-temple-01.jpg",
-  },
-];
-
-const dynastyTabs: StyleTemplate["dynasty"][] = ["唐", "宋", "元", "明", "清", "新中式"];
-
-const featuredTemplateIds = [
-  "tangGlamour",
-  "songElegance",
-  "qinHanNoir",
-  "drunkenFlower",
-  "pearBlossom",
-  "dunhuangMuse",
-  "bluePorcelain",
-  "winterRed",
-  "palaceLantern",
-  "modernQipao",
-];
 
 function UploadIcon() {
   return (
@@ -320,14 +75,14 @@ export default function GeneratePage() {
     fetchUserCredits();
   }, [fetchUserCredits]);
 
-  const styleTemplates: StyleTemplate[] = useMemo(() => templateData, []);
+  const styleTemplates: HanfuTemplate[] = useMemo(() => hanfuTemplates, []);
   const activeTemplate = styleTemplates.find((template) => template.id === selectedTemplate) ?? null;
   const selectedTemplateName = activeTemplate?.name || "盛唐金影";
   const selectedDynasty = activeTemplate?.dynasty || "唐";
   const activeDynastyTemplates = styleTemplates.filter((template) => template.dynasty === selectedDynasty);
   const featuredTemplates = featuredTemplateIds
     .map((templateId) => styleTemplates.find((template) => template.id === templateId))
-    .filter((template): template is StyleTemplate => Boolean(template));
+    .filter((template): template is HanfuTemplate => Boolean(template));
 
   useEffect(() => {
     const templateParam = new URLSearchParams(window.location.search).get("template");

@@ -59,6 +59,10 @@ export function TopBar({
       return locale === "zh" ? "作品详情" : "Work Details";
     }
 
+    if (pathname.startsWith(`/${locale}/templates/`)) {
+      return locale === "zh" ? "模板详情" : "Template Details";
+    }
+
     const pathMap: Record<string, string> = {
       [`/${locale}/dashboard`]: locale === "zh" ? "首页" : "Home",
       [`/${locale}/generate`]: locale === "zh" ? "创作" : "Generate",
