@@ -55,6 +55,10 @@ export function TopBar({
 
   // Map pathname to page title
   const getPageTitle = () => {
+    if (pathname.startsWith(`/${locale}/works/`)) {
+      return locale === "zh" ? "作品详情" : "Work Details";
+    }
+
     const pathMap: Record<string, string> = {
       [`/${locale}/dashboard`]: locale === "zh" ? "首页" : "Home",
       [`/${locale}/generate`]: locale === "zh" ? "创作" : "Generate",

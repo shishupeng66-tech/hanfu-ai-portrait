@@ -428,7 +428,7 @@ export const MiniNavbar = () => {
                         </Link>
 
                         <Link
-                          href={`/${locale}/generate`}
+                          href={`/${locale}/works`}
                           onClick={() => setIsMenuOpen(false)}
                           className="group relative flex items-center gap-3 overflow-hidden px-3 py-2.5 rounded-xl text-sm font-medium transition-all duration-200"
                           style={{
@@ -449,7 +449,7 @@ export const MiniNavbar = () => {
                         >
                           <span className="pointer-events-none absolute left-1.5 top-1/2 h-5 w-[2px] -translate-y-1/2 rounded-full bg-[#E8C27A] opacity-0 transition-opacity duration-200 group-hover:opacity-100" />
                           <Images size={16} strokeWidth={1.8} style={{ width: 18, flexShrink: 0 }} />
-                          {isZh ? "我的作品" : "My Gallery"}
+                          {isZh ? "我的作品" : "My Works"}
                         </Link>
 
                         <Link

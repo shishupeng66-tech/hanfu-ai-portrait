@@ -21,6 +21,7 @@ import {
 import Link from 'next/link';
 import { useLocale } from 'next-intl';
 import { usePathname, useRouter } from 'next/navigation';
+import { signOut } from '@/lib/auth-client';
 
 export type NavItemData = {
   id: string;
@@ -193,11 +194,17 @@ function NavItem({
   const router = useRouter();
   const locale = useLocale();
 
-  const handleClick = () => {
+  const handleClick = async () => {
     if (hasChildren) {
       setIsOpen(!isOpen);
     } else {
       onSelect(item.id);
+      if (item.id === 'logout') {
+        await signOut();
+        router.refresh();
+        router.push(`/${locale}`);
+        return;
+      }
       if (item.href) {
         const href = item.href.startsWith('/') ? `/${locale}${item.href}` : item.href;
         router.push(href);
@@ -395,6 +402,10 @@ export function AppSidebar({
   const locale = useLocale();
 
   const getActiveIdFromPathname = () => {
+    if (pathname.startsWith(`/${locale}/works/`)) {
+      return 'works';
+    }
+
     const pathToIdMap: Record<string, string> = {
       [`/${locale}/dashboard`]: 'home',
       [`/${locale}/generate`]: 'create',
