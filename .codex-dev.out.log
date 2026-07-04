@@ -1,0 +1,28 @@
+
+> hanfu-ai-portrait@0.1.0 predev D:\github desktop仓库\hanfu-ai-portrait
+> pnpm run sync:fumadocs-style
+
+
+> hanfu-ai-portrait@0.1.0 sync:fumadocs-style D:\github desktop仓库\hanfu-ai-portrait
+> node scripts/sync-fumadocs-style.mjs
+
+Synced Fumadocs stylesheet to public\fumadocs-style.css
+
+> hanfu-ai-portrait@0.1.0 dev D:\github desktop仓库\hanfu-ai-portrait
+> node scripts/run-dev.mjs
+
+▲ Next.js 16.2.2 (Turbopack)
+- Local:         http://localhost:3000
+- Network:       http://192.168.1.149:3000
+- Environments: .env.local
+✓ Ready in 306ms
+[MDX] generated files in 22.997400000000084ms
+[MDX] started dev server
+
+ GET /zh/privacy 200 in 1028ms (next.js: 641ms, proxy.ts: 155ms, application-code: 232ms)
+ GET /zh 200 in 550ms (next.js: 372ms, proxy.ts: 7ms, application-code: 172ms)
+ GET /zh 200 in 110ms (next.js: 12ms, proxy.ts: 4ms, application-code: 94ms)
+  Reload env: .env.local
+ GET /zh/privacy 200 in 296ms (next.js: 114ms, proxy.ts: 58ms, application-code: 124ms)
+ GET /zh/privacy 200 in 96ms (next.js: 5ms, proxy.ts: 4ms, application-code: 87ms)
+ GET /zh/privacy 200 in 60ms (next.js: 13ms, proxy.ts: 4ms, application-code: 42ms)
