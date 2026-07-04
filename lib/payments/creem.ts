@@ -26,15 +26,14 @@ export async function createCheckoutSession(params: CreateCheckoutParams): Promi
   const simulate = process.env.CREEM_SIMULATE === "true";
 
   if (simulate) {
-    // In simulate mode, go through a placeholder endpoint that redirects back with success=1
-    return { url: "/api/payments/creem/redirect-placeholder?success=1" };
+    // In simulate mode, go through a placeholder endpoint that redirects back to the configured success page.
+    return { url: `/api/payments/creem/redirect-placeholder?redirectTo=${encodeURIComponent(params.successUrl)}` };
   }
 
   // Create payload according to Creem API documentation
   const payload: Record<string, unknown> = {
     product_id: params.creemPriceId, // Creem expects product_id
     success_url: params.successUrl,
-    cancel_url: params.cancelUrl,
     metadata: {
       userId: params.userId,
       key: params.key,

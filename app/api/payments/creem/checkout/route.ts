@@ -8,6 +8,7 @@ type Body = {
   kind: "subscription" | "one_time";
   key: string; // plan or pack key
   cancelUrl?: string; // optional cancel URL, defaults to /pricing
+  locale?: string;
 };
 
 export async function POST(req: NextRequest) {
@@ -23,16 +24,17 @@ export async function POST(req: NextRequest) {
     const userId = access.user.id;
 
     let creemPriceId: string | undefined;
-    // Add success=1 so client has a stable success signal on return
-    const successUrl = `${process.env.NEXT_PUBLIC_APP_URL || "http://localhost:3000"}/dashboard?success=1`;
+    const locale = body.locale === "en" || body.locale === "zh" ? body.locale : "zh";
+    const appUrl = (process.env.NEXT_PUBLIC_APP_URL || "http://localhost:3000").replace(/\/$/, "");
+    const successUrl = `${appUrl}/${locale}/checkout/success`;
     let cancelUrl: string;
     if (body.cancelUrl) {
       // If cancelUrl already starts with http(s), use as is; otherwise prepend base URL
       cancelUrl = body.cancelUrl.startsWith('http') 
         ? body.cancelUrl
-        : `${process.env.NEXT_PUBLIC_APP_URL || "http://localhost:3000"}${body.cancelUrl}`;
+        : `${appUrl}${body.cancelUrl}`;
     } else {
-      cancelUrl = `${process.env.NEXT_PUBLIC_APP_URL || "http://localhost:3000"}/pricing`;
+      cancelUrl = `${appUrl}/${locale}/pricing`;
     }
 
     if (kind === "subscription") {

@@ -285,6 +285,7 @@ export function Pricing() {
         body: JSON.stringify({ 
           kind, 
           key,
+          locale,
           cancelUrl: `/${locale}/pricing?tab=${kind === "one_time" ? "packs" : "membership"}`
         }),
       });

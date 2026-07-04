@@ -63,6 +63,14 @@ export function TopBar({
       return locale === "zh" ? "模板详情" : "Template Details";
     }
 
+    if (pathname === `/${locale}/checkout/success`) {
+      return locale === "zh" ? "支付成功" : "Payment Successful";
+    }
+
+    if (pathname === `/${locale}/checkout/cancel`) {
+      return locale === "zh" ? "支付取消" : "Payment Canceled";
+    }
+
     const pathMap: Record<string, string> = {
       [`/${locale}/dashboard`]: locale === "zh" ? "首页" : "Home",
       [`/${locale}/generate`]: locale === "zh" ? "创作" : "Generate",

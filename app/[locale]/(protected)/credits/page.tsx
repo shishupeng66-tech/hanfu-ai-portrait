@@ -191,6 +191,7 @@ export default function CreditsPage() {
           body: JSON.stringify({ 
             key: planKey, 
             kind: "one_time",
+            locale,
             cancelUrl: `/${locale}/credits`
           }),
         });
