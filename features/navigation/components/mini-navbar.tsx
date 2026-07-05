@@ -124,7 +124,7 @@ export const MiniNavbar = () => {
         )}
       >
         <nav
-          className="flex items-center"
+          className="flex items-center justify-between gap-6"
           style={{
             height: "52px",
             width: "min(1180px, calc(100vw - 48px))",
@@ -140,10 +140,11 @@ export const MiniNavbar = () => {
           }}
           aria-label="Main navigation"
         >
+          <div className="flex min-w-0 items-center" style={{ gap: 42 }}>
           {/* Logo */}
           <LocaleLink
             href="/"
-            className="flex items-center whitespace-nowrap transition-colors duration-200"
+            className="flex shrink-0 items-center whitespace-nowrap transition-colors duration-200"
             aria-label="Han Portrait home"
             style={{ gap: 12 }}
           >
@@ -181,7 +182,7 @@ export const MiniNavbar = () => {
           </LocaleLink>
 
           {/* Navigation Links */}
-          <nav className="flex items-center" aria-label="Primary navigation" style={{ marginLeft: 42, gap: 12 }}>
+          <nav className="flex shrink-0 items-center" aria-label="Primary navigation" style={{ gap: 12 }}>
             <LocaleLink
               href="/#hanfu-styles"
               onClick={(e) => handleAnchorClick(e, "hanfu-styles")}
@@ -266,9 +267,10 @@ export const MiniNavbar = () => {
               {isZh ? "价格" : "Pricing"}
             </LocaleLink>
           </nav>
+          </div>
 
           {/* Right side: language → credits → avatar (logged in) / language → login (logged out) */}
-          <div className="ml-auto flex items-center" style={{ gap: 12 }}>
+          <div className="ml-auto flex shrink-0 items-center justify-end" style={{ gap: 12 }}>
             {isLoggedIn ? (
               <>
                 {/* Language switcher */}
@@ -276,13 +278,14 @@ export const MiniNavbar = () => {
 
                 {/* Credits pill */}
                 <CreditsBadge
+                  className="shrink-0"
                   credits={userProfile?.credits ?? 0}
                   locale={locale}
                   planName={planDisplayInfo.displayNameShort}
                 />
 
                 {/* Avatar + dropdown */}
-                <div className="relative" ref={menuRef}>
+                <div className="relative shrink-0" ref={menuRef}>
                   <button
                     type="button"
                     onClick={(e) => {
