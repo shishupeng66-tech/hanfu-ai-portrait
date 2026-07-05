@@ -168,13 +168,6 @@ export const MobileNavbar = () => {
                   >
                     {t('settings')}
                   </Link>
-                  <Link
-                    href={`/${locale}/profile`}
-                    onClick={() => setOpen(false)}
-                    className="text-[15px] font-medium text-white/60 py-2 hover:text-white transition-colors"
-                  >
-                    {t('profile')}
-                  </Link>
                   <button
                     onClick={async () => {
                       await signOut();

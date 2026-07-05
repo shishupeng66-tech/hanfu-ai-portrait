@@ -119,10 +119,10 @@ export const ShuffleHero = () => {
               Try Now — It&apos;s Free
             </LocaleLink>
             <LocaleLink
-              href="/gallery"
+              href="/pricing"
               className="text-sm text-white/60 hover:text-white/90 transition-colors underline underline-offset-4 decoration-white/30"
             >
-              View Gallery →
+              View Pricing →
             </LocaleLink>
           </motion.div>
 

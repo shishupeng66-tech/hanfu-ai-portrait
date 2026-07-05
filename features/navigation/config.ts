@@ -38,18 +38,10 @@ export const appNavigationKeys: NavigationKeyItem[] = [
     key: "settings",
     href: "/settings",
   },
-  {
-    key: "profile",
-    href: "/profile",
-  },
 ];
 
 // Legacy exports for compatibility
 export const marketingNavigation: NavigationItem[] = [
-  {
-    title: "Demo",
-    href: "/demo",
-  },
   {
     title: "Pricing",
     href: "/pricing",
@@ -57,11 +49,6 @@ export const marketingNavigation: NavigationItem[] = [
   {
     title: "Contact",
     href: "/contact",
-  },
-  {
-    title: "Docs",
-    href: "/docs",
-    target: "_blank",
   },
 ];
 
@@ -73,9 +60,5 @@ export const appNavigation: NavigationItem[] = [
   {
     title: "Settings",
     href: "/settings",
-  },
-  {
-    title: "Profile",
-    href: "/profile",
   },
 ];

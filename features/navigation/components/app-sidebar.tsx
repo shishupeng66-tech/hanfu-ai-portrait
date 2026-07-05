@@ -413,7 +413,6 @@ export function AppSidebar({
       [`/${locale}/works`]: 'works',
       [`/${locale}/credits`]: 'credits',
       [`/${locale}/pricing`]: 'subscription',
-      [`/${locale}/profile`]: 'profile',
       [`/${locale}/notifications`]: 'notifications',
       [`/${locale}/settings`]: 'settings',
     };

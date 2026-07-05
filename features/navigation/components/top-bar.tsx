@@ -79,7 +79,6 @@ export function TopBar({
       [`/${locale}/credits`]: locale === "zh" ? "积分" : "Credits",
       [`/${locale}/pricing`]: locale === "zh" ? "订阅" : "Subscription",
       [`/${locale}/settings`]: locale === "zh" ? "设置" : "Settings",
-      [`/${locale}/profile`]: locale === "zh" ? "个人资料" : "Profile",
       [`/${locale}/notifications`]: locale === "zh" ? "通知中心" : "Notifications",
     };
     return pathMap[pathname] || "";

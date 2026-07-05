@@ -1,6 +1,7 @@
 "use client";
 
 import { MenuIcon } from "lucide-react";
+import Link from "next/link";
 
 import {
   Accordion,
@@ -31,32 +32,32 @@ export const Navbar5 = () => {
     {
       title: "Dashboard",
       description: "Overview of your activity",
-      href: "#",
+      href: "/generate",
     },
     {
       title: "Analytics",
       description: "Track your performance",
-      href: "#",
+      href: "/generate",
     },
     {
       title: "Settings",
       description: "Configure your preferences",
-      href: "#",
+      href: "/settings",
     },
     {
       title: "Integrations",
       description: "Connect with other tools",
-      href: "#",
+      href: "/generate",
     },
     {
       title: "Storage",
       description: "Manage your files",
-      href: "#",
+      href: "/generate",
     },
     {
       title: "Support",
       description: "Get help when needed",
-      href: "#",
+      href: "/contact",
     },
   ];
 
@@ -64,19 +65,11 @@ export const Navbar5 = () => {
     <section className="py-4">
       <div className="container">
         <nav className="flex items-center justify-between">
-          <a
-            href="https://www.shadcnblocks.com"
-            className="flex items-center gap-2"
-          >
-            <img
-              src="https://shadcnblocks.com/images/block/logos/shadcnblockscom-icon.svg"
-              className="max-h-8"
-              alt="Shadcn UI Navbar"
-            />
+          <Link href="/" className="flex items-center gap-2">
             <span className="text-lg font-semibold tracking-tighter">
-              Shadcnblocks.com
+              Hanfu AI Portrait
             </span>
-          </a>
+          </Link>
           <NavigationMenu className="hidden lg:block">
             <NavigationMenuList>
               <NavigationMenuItem>
@@ -85,18 +78,20 @@ export const Navbar5 = () => {
                   <div className="grid w-[600px] grid-cols-2 p-3">
                     {features.map((feature, index) => (
                       <NavigationMenuLink
-                        href={feature.href}
+                        asChild
                         key={index}
                         className="rounded-md p-3 transition-colors hover:bg-muted/70"
                       >
-                        <div key={feature.title}>
-                          <p className="mb-1 font-semibold text-foreground">
-                            {feature.title}
-                          </p>
-                          <p className="text-sm text-muted-foreground">
-                            {feature.description}
-                          </p>
-                        </div>
+                        <Link href={feature.href}>
+                          <div key={feature.title}>
+                            <p className="mb-1 font-semibold text-foreground">
+                              {feature.title}
+                            </p>
+                            <p className="text-sm text-muted-foreground">
+                              {feature.description}
+                            </p>
+                          </div>
+                        </Link>
                       </NavigationMenuLink>
                     ))}
                   </div>
@@ -104,33 +99,37 @@ export const Navbar5 = () => {
               </NavigationMenuItem>
               <NavigationMenuItem>
                 <NavigationMenuLink
-                  href="#"
+                  asChild
                   className={navigationMenuTriggerStyle()}
                 >
-                  Products
+                  <Link href="/generate">Products</Link>
                 </NavigationMenuLink>
               </NavigationMenuItem>
               <NavigationMenuItem>
                 <NavigationMenuLink
-                  href="#"
+                  asChild
                   className={navigationMenuTriggerStyle()}
                 >
-                  Resources
+                  <Link href="/pricing">Resources</Link>
                 </NavigationMenuLink>
               </NavigationMenuItem>
               <NavigationMenuItem>
                 <NavigationMenuLink
-                  href="#"
+                  asChild
                   className={navigationMenuTriggerStyle()}
                 >
-                  Contact
+                  <Link href="/contact">Contact</Link>
                 </NavigationMenuLink>
               </NavigationMenuItem>
             </NavigationMenuList>
           </NavigationMenu>
           <div className="hidden items-center gap-4 lg:flex">
-            <Button variant="outline">Sign in</Button>
-            <Button>Start for free</Button>
+            <Button variant="outline" asChild>
+              <Link href="/pricing">Pricing</Link>
+            </Button>
+            <Button asChild>
+              <Link href="/generate">Start for free</Link>
+            </Button>
           </div>
           <Sheet>
             <SheetTrigger asChild className="lg:hidden">
@@ -141,19 +140,11 @@ export const Navbar5 = () => {
             <SheetContent side="top" className="max-h-screen overflow-auto">
               <SheetHeader>
                 <SheetTitle>
-                  <a
-                    href="https://www.shadcnblocks.com"
-                    className="flex items-center gap-2"
-                  >
-                    <img
-                      src="https://shadcnblocks.com/images/block/logos/shadcnblockscom-icon.svg"
-                      className="max-h-8"
-                      alt="Shadcnblocks"
-                    />
+                  <Link href="/" className="flex items-center gap-2">
                     <span className="text-lg font-semibold tracking-tighter">
-                      Shadcnblocks.com
+                      Hanfu AI Portrait
                     </span>
-                  </a>
+                  </Link>
                 </SheetTitle>
               </SheetHeader>
               <div className="flex flex-col p-4">
@@ -165,7 +156,7 @@ export const Navbar5 = () => {
                     <AccordionContent>
                       <div className="grid md:grid-cols-2">
                         {features.map((feature, index) => (
-                          <a
+                          <Link
                             href={feature.href}
                             key={index}
                             className="rounded-md p-3 transition-colors hover:bg-muted/70"
@@ -178,23 +169,27 @@ export const Navbar5 = () => {
                                 {feature.description}
                               </p>
                             </div>
-                          </a>
+                          </Link>
                         ))}
                       </div>
                     </AccordionContent>
                   </AccordionItem>
                 </Accordion>
                 <div className="flex flex-col gap-6">
-                  <a href="#" className="font-medium">
-                    Templates
-                  </a>
-                  <a href="#" className="font-medium">
+                  <Link href="/generate" className="font-medium">
+                    Generate
+                  </Link>
+                  <Link href="/pricing" className="font-medium">
                     Pricing
-                  </a>
+                  </Link>
                 </div>
                 <div className="mt-6 flex flex-col gap-4">
-                  <Button variant="outline">Sign in</Button>
-                  <Button>Start for free</Button>
+                  <Button variant="outline" asChild>
+                    <Link href="/pricing">Pricing</Link>
+                  </Button>
+                  <Button asChild>
+                    <Link href="/generate">Start for free</Link>
+                  </Button>
                 </div>
               </div>
             </SheetContent>
