@@ -20,20 +20,19 @@ const Password = forwardRef<HTMLInputElement, PasswordProps>(
           className
         )}
       />
-      <div className="absolute right-3 top-[30%]">
-        {!show && (
-          <EyeIcon
-            onClick={() => setShow(true)}
-            className="text-muted-foreground cursor-pointer h-4"
-          />
+      <button
+        type="button"
+        aria-label={show ? "Hide password" : "Show password"}
+        aria-pressed={show}
+        className="absolute right-3 top-1/2 -translate-y-1/2 text-muted-foreground"
+        onClick={() => setShow((value) => !value)}
+      >
+        {show ? (
+          <EyeOffIcon className="h-4 cursor-pointer" />
+        ) : (
+          <EyeIcon className="h-4 cursor-pointer" />
         )}
-        {show && (
-          <EyeOffIcon
-            onClick={() => setShow(false)}
-            className="text-muted-foreground cursor-pointer h-4"
-          />
-        )}
-      </div>
+      </button>
     </div>
   );
 });

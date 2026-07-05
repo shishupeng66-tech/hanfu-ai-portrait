@@ -7,6 +7,21 @@ const withNextIntl = createNextIntlPlugin('./lib/i18n.ts');
 const withMDX = createMDX();
 const rootDir = path.dirname(fileURLToPath(import.meta.url));
 
+function envHostname(value) {
+  if (!value) return null;
+
+  try {
+    return new URL(value).hostname;
+  } catch {
+    return null;
+  }
+}
+
+const allowedDevOrigins = [
+  envHostname(process.env.NEXT_PUBLIC_APP_URL),
+  envHostname(process.env.BETTER_AUTH_URL),
+].filter(Boolean);
+
 /** @type {import('next').NextConfig} */
 const nextConfig = {
   images: {
@@ -29,6 +44,7 @@ const nextConfig = {
   turbopack: {
     root: rootDir,
   },
+  allowedDevOrigins,
 };
 
 export default withNextIntl(withMDX(nextConfig));

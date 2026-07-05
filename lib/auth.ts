@@ -5,13 +5,30 @@ import { db } from "./db";
 import { refundCredits } from "./credits";
 import { getGoogleAuthProvider } from "./auth/google-auth";
 
-const defaultTrustedOrigins = ["http://localhost:3000"];
+function parseOrigin(value: string | undefined) {
+  if (!value) return null;
 
-const trustedOrigins = process.env.BETTER_AUTH_TRUSTED_ORIGINS
-  ? process.env.BETTER_AUTH_TRUSTED_ORIGINS.split(",")
-      .map((origin) => origin.trim())
-      .filter(Boolean)
-  : defaultTrustedOrigins;
+  try {
+    return new URL(value).origin;
+  } catch {
+    return null;
+  }
+}
+
+const trustedOrigins = Array.from(
+  new Set(
+    [
+      "http://localhost:3000",
+      parseOrigin(process.env.BETTER_AUTH_URL),
+      parseOrigin(process.env.NEXT_PUBLIC_APP_URL),
+      ...(process.env.BETTER_AUTH_TRUSTED_ORIGINS
+        ? process.env.BETTER_AUTH_TRUSTED_ORIGINS.split(",")
+            .map((origin) => origin.trim())
+            .filter(Boolean)
+        : []),
+    ].filter((origin): origin is string => Boolean(origin)),
+  ),
+);
 
 const googleAuthProvider = getGoogleAuthProvider();
 
