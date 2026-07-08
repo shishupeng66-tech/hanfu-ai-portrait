@@ -45,6 +45,10 @@ function SparkIcon({ className }: { className?: string }) {
 export default function GeneratePage() {
   const locale = useLocale();
   const t = useTranslations('generate');
+  type PhotoTipKey = 'clearFace' | 'goodLighting' | 'noObstruction' | 'simpleBackground';
+
+const photoTipKeys: PhotoTipKey[] = ['clearFace', 'goodLighting', 'noObstruction', 'simpleBackground'];
+
   const tTips = useTranslations('generate.uploadSection.photoTips');
 
   const [viewMode, setViewMode] = useState<"create" | "preview">("create");
@@ -407,10 +411,10 @@ export default function GeneratePage() {
               </div>
 
               <div className="mt-5 flex flex-wrap items-center justify-center gap-2.5">
-                {['clearFace', 'goodLighting', 'noObstruction', 'simpleBackground'].map((tip) => (
+                {photoTipKeys.map((tip) => (
                   <span key={tip} className="inline-flex items-center gap-2 rounded-full border border-[rgba(255,247,236,0.08)] bg-[rgba(255,247,236,0.04)] px-3 py-1.5 text-xs text-[rgba(255,247,236,0.55)]">
                     <span className="h-1.5 w-1.5 rounded-full bg-[#E8C27A]" />
-                    {tTips(tip as any)}
+                    {tTips(tip)}
                   </span>
                 ))}
               </div>
