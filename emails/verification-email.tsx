@@ -23,23 +23,23 @@ export const VerificationEmail = ({
   return (
     <Html>
       <Head />
-      <Preview>验证你的汉韵写真账户</Preview>
+      <Preview>Verify your Han Portrait account</Preview>
       <Body style={main}>
         <Container style={container}>
-          <Heading style={h1}>验证你的汉韵写真账户</Heading>
+          <Heading style={h1}>Verify your Han Portrait account</Heading>
 
           <Text style={text}>
-            点击下方按钮完成邮箱验证，开始创作 AI 汉服写真。
+            Click the button below to verify your email and start creating AI Hanfu portraits.
           </Text>
 
           <Section style={buttonContainer}>
             <Button style={button} href={verificationUrl}>
-              完成邮箱验证
+              Verify Email
             </Button>
           </Section>
 
           <Text style={text}>
-            你也可以复制以下链接到浏览器打开：
+            Or copy and paste this link into your browser:
           </Text>
 
           <Link href={verificationUrl} style={link}>
@@ -47,7 +47,7 @@ export const VerificationEmail = ({
           </Link>
 
           <Text style={footer}>
-            如果你没有注册汉韵写真账户，可以忽略这封邮件。
+            If you didn't create a Han Portrait account, you can safely ignore this email.
           </Text>
         </Container>
       </Body>

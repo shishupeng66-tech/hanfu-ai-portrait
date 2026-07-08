@@ -93,18 +93,18 @@ export async function sendVerificationEmail(email: string, token: string) {
   
   return sendEmail({
     to: email,
-    subject: '验证你的汉韵写真账户',
+    subject: 'Verify your Han Portrait account',
     html: `
       <div style="font-family: sans-serif; max-width: 600px; margin: 0 auto;">
-        <h1 style="color: #333;">验证你的汉韵写真账户</h1>
-        <p>点击下方按钮完成邮箱验证，开始创作 AI 汉服写真。</p>
+        <h1 style="color: #333;">Verify your Han Portrait account</h1>
+        <p>Click the button below to verify your email and start creating AI Hanfu portraits.</p>
         <a href="${verificationUrl}" style="display: inline-block; padding: 12px 24px; background-color: #000; color: #fff; text-decoration: none; border-radius: 6px; margin: 20px 0;">
-          完成邮箱验证
+          Verify Email
         </a>
-        <p>你也可以复制以下链接到浏览器打开：</p>
+        <p>Or copy and paste this link into your browser:</p>
         <p style="color: #666; word-break: break-all;">${verificationUrl}</p>
         <p style="color: #999; font-size: 14px; margin-top: 30px;">
-          如果你没有注册汉韵写真账户，可以忽略这封邮件。
+          If you didn't create a Han Portrait account, you can safely ignore this email.
         </p>
       </div>
     `,
@@ -117,18 +117,18 @@ export async function sendPasswordResetEmail(email: string, token: string) {
   
   return sendEmail({
     to: email,
-    subject: '重置你的汉韵写真密码',
+    subject: 'Reset your Han Portrait password',
     html: `
       <div style="font-family: sans-serif; max-width: 600px; margin: 0 auto;">
-        <h1 style="color: #333;">重置你的汉韵写真密码</h1>
-        <p>我们收到了重置密码请求，请点击下方按钮设置新密码。</p>
+        <h1 style="color: #333;">Reset your password</h1>
+        <p>We received a request to reset your password. Click the button below to set a new password.</p>
         <a href="${resetUrl}" style="display: inline-block; padding: 12px 24px; background-color: #000; color: #fff; text-decoration: none; border-radius: 6px; margin: 20px 0;">
-          重置密码
+          Reset Password
         </a>
-        <p>你也可以复制以下链接到浏览器打开：</p>
+        <p>Or copy and paste this link into your browser:</p>
         <p style="color: #666; word-break: break-all;">${resetUrl}</p>
         <p style="color: #999; font-size: 14px; margin-top: 30px;">
-          此链接将在 1 小时后失效。如果你没有请求重置密码，可以忽略这封邮件。
+          This link will expire in 1 hour. If you didn't request a password reset, you can safely ignore this email.
         </p>
       </div>
     `,
@@ -139,23 +139,23 @@ export async function sendPasswordResetEmail(email: string, token: string) {
 export async function sendWelcomeEmail(email: string, name?: string) {
   return sendEmail({
     to: email,
-    subject: '欢迎来到汉韵写真',
+    subject: 'Welcome to Han Portrait',
     html: `
       <div style="font-family: sans-serif; max-width: 600px; margin: 0 auto;">
-        <h1 style="color: #333;">欢迎来到汉韵写真${name ? ', ' + name : ''}</h1>
-        <p>感谢加入汉韵写真。你现在可以上传照片，选择模板，开始创作 AI 汉服写真。</p>
-        <p>你可以继续：</p>
+        <h1 style="color: #333;">Welcome to Han Portrait${name ? ', ' + name : ''}</h1>
+        <p>Thank you for joining Han Portrait. You can now upload photos, choose styles, and start creating AI Hanfu portraits.</p>
+        <p>Here's what you can do next:</p>
         <ul style="line-height: 1.8;">
-          <li>完善账户资料</li>
-          <li>浏览汉服模板库</li>
-          <li>开始生成写真</li>
-          <li>查看积分与会员权益</li>
+          <li>Complete your account profile</li>
+          <li>Explore the Hanfu template gallery</li>
+          <li>Start generating portraits</li>
+          <li>Review your credits and membership benefits</li>
         </ul>
-        <a href="${process.env.NEXT_PUBLIC_APP_URL}/zh/generate" style="display: inline-block; padding: 12px 24px; background-color: #000; color: #fff; text-decoration: none; border-radius: 6px; margin: 20px 0;">
-          开始创作
+        <a href="${process.env.NEXT_PUBLIC_APP_URL}/en/generate" style="display: inline-block; padding: 12px 24px; background-color: #000; color: #fff; text-decoration: none; border-radius: 6px; margin: 20px 0;">
+          Start Creating
         </a>
         <p style="color: #999; font-size: 14px; margin-top: 30px;">
-          如有问题，请通过联系我们页面与我们联系。
+          If you have any questions, please contact us through our support page.
         </p>
       </div>
     `,
@@ -170,23 +170,23 @@ export async function sendPurchaseEmail(email: string, orderDetails: PurchaseEma
 
   return sendEmail({
     to: email,
-    subject: '汉韵写真购买确认',
+    subject: 'Your Han Portrait purchase confirmation',
     html: `
       <div style="font-family: sans-serif; max-width: 600px; margin: 0 auto;">
-        <h1 style="color: #333;">购买成功</h1>
-        <p>感谢购买汉韵写真服务。以下是你的订单信息：</p>
+        <h1 style="color: #333;">Purchase Successful</h1>
+        <p>Thank you for purchasing Han Portrait services. Here are your order details:</p>
         <div style="background-color: #f5f5f5; padding: 20px; border-radius: 8px; margin: 20px 0;">
-          <p><strong>订单 ID:</strong> ${orderDetails.orderId}</p>
-          <p><strong>产品:</strong> ${planName}</p>
-          <p><strong>金额:</strong> ${orderDetails.amount}</p>
-          <p><strong>到账积分:</strong> ${orderDetails.credits}</p>
-          ${orderDetails.type === 'subscription' ? '<p><strong>类型:</strong> 会员订阅</p>' : ''}
+          <p><strong>Order ID:</strong> ${orderDetails.orderId}</p>
+          <p><strong>Product:</strong> ${planName}</p>
+          <p><strong>Amount:</strong> ${orderDetails.amount}</p>
+          <p><strong>Credits added:</strong> ${orderDetails.credits}</p>
+          ${orderDetails.type === 'subscription' ? '<p><strong>Type:</strong> Membership subscription</p>' : ''}
         </div>
-        <a href="${process.env.NEXT_PUBLIC_APP_URL}/zh/credits" style="display: inline-block; padding: 12px 24px; background-color: #000; color: #fff; text-decoration: none; border-radius: 6px; margin: 20px 0;">
-          查看积分中心
+        <a href="${process.env.NEXT_PUBLIC_APP_URL}/en/credits" style="display: inline-block; padding: 12px 24px; background-color: #000; color: #fff; text-decoration: none; border-radius: 6px; margin: 20px 0;">
+          View Credits
         </a>
         <p style="color: #999; font-size: 14px; margin-top: 30px;">
-          感谢选择汉韵写真。
+          Thank you for choosing Han Portrait.
         </p>
       </div>
     `,
@@ -197,17 +197,17 @@ export async function sendPurchaseEmail(email: string, orderDetails: PurchaseEma
 export async function sendSubscriptionExpiryReminder(email: string, daysRemaining: number) {
   return sendEmail({
     to: email,
-    subject: `你的汉韵写真会员将在 ${daysRemaining} 天后到期`,
+    subject: `Your Han Portrait membership expires in ${daysRemaining} days`,
     html: `
       <div style="font-family: sans-serif; max-width: 600px; margin: 0 auto;">
-        <h1 style="color: #333;">会员到期提醒</h1>
-        <p>你的汉韵写真会员将在 <strong>${daysRemaining} 天</strong>后到期。</p>
-        <p>如需继续使用会员模板和权益，请前往定价页续订。</p>
-        <a href="${process.env.NEXT_PUBLIC_APP_URL}/zh/pricing" style="display: inline-block; padding: 12px 24px; background-color: #000; color: #fff; text-decoration: none; border-radius: 6px; margin: 20px 0;">
-          查看订阅计划
+        <h1 style="color: #333;">Membership Expiration Reminder</h1>
+        <p>Your Han Portrait membership will expire in <strong>${daysRemaining} day${daysRemaining > 1 ? 's' : ''}</strong>.</p>
+        <p>To continue accessing premium templates and benefits, please visit our pricing page to renew.</p>
+        <a href="${process.env.NEXT_PUBLIC_APP_URL}/en/pricing" style="display: inline-block; padding: 12px 24px; background-color: #000; color: #fff; text-decoration: none; border-radius: 6px; margin: 20px 0;">
+          View Subscription Plans
         </a>
         <p style="color: #999; font-size: 14px; margin-top: 30px;">
-          如有问题，请通过联系我们页面与我们联系。
+          If you have any questions, please contact us through our support page.
         </p>
       </div>
     `,
@@ -218,17 +218,17 @@ export async function sendSubscriptionExpiryReminder(email: string, daysRemainin
 export async function sendLowCreditsNotification(email: string, remainingCredits: number) {
   return sendEmail({
     to: email,
-    subject: '汉韵写真积分不足提醒',
+    subject: 'Low credits notification from Han Portrait',
     html: `
       <div style="font-family: sans-serif; max-width: 600px; margin: 0 auto;">
-        <h1 style="color: #ff6b6b;">积分不足提醒</h1>
-        <p>你的账户仅剩 <strong>${remainingCredits} 积分</strong>。</p>
-        <p>如需继续生成 AI 汉服写真，可以购买积分包或会员方案。</p>
-        <a href="${process.env.NEXT_PUBLIC_APP_URL}/zh/pricing" style="display: inline-block; padding: 12px 24px; background-color: #000; color: #fff; text-decoration: none; border-radius: 6px; margin: 20px 0;">
-          购买积分
+        <h1 style="color: #ff6b6b;">Low Credits Reminder</h1>
+        <p>You have <strong>${remainingCredits} credit${remainingCredits > 1 ? 's' : ''}</strong> remaining in your account.</p>
+        <p>To continue generating AI Hanfu portraits, you can purchase a credit pack or subscribe to a membership plan.</p>
+        <a href="${process.env.NEXT_PUBLIC_APP_URL}/en/pricing" style="display: inline-block; padding: 12px 24px; background-color: #000; color: #fff; text-decoration: none; border-radius: 6px; margin: 20px 0;">
+          Purchase Credits
         </a>
         <p style="color: #999; font-size: 14px; margin-top: 30px;">
-          如需帮助，请通过联系我们页面与我们联系。
+          If you need assistance, please contact us through our support page.
         </p>
       </div>
     `,

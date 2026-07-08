@@ -2,7 +2,6 @@
 
 import Image from "next/image";
 import { ChangeEvent, useState, useMemo, useEffect, useCallback } from "react";
-import { cn } from "@/lib/utils";
 import { useLocale } from "next-intl";
 import { useSession } from "@/lib/auth-client";
 import {
@@ -11,6 +10,7 @@ import {
   hanfuTemplates,
   type HanfuTemplate,
 } from "@/features/templates/template-data";
+import { useTranslations } from 'next-intl';
 
 const GENERATION_COST = 10;
 
@@ -44,6 +44,8 @@ function SparkIcon({ className }: { className?: string }) {
 
 export default function GeneratePage() {
   const locale = useLocale();
+  const t = useTranslations('generate');
+  const tTips = useTranslations('generate.uploadSection.photoTips');
 
   const [viewMode, setViewMode] = useState<"create" | "preview">("create");
   const [selectedTemplate, setSelectedTemplate] = useState<string>("tangGlamour");
@@ -77,8 +79,8 @@ export default function GeneratePage() {
 
   const styleTemplates: HanfuTemplate[] = useMemo(() => hanfuTemplates, []);
   const activeTemplate = styleTemplates.find((template) => template.id === selectedTemplate) ?? null;
-  const selectedTemplateName = activeTemplate?.name || "盛唐金影";
-  const selectedDynasty = activeTemplate?.dynasty || "唐";
+  const selectedTemplateName = activeTemplate?.name || "Tang Glamour";
+  const selectedDynasty = activeTemplate?.dynasty || "tang";
   const activeDynastyTemplates = styleTemplates.filter((template) => template.dynasty === selectedDynasty);
   const featuredTemplates = featuredTemplateIds
     .map((templateId) => styleTemplates.find((template) => template.id === templateId))
@@ -112,17 +114,17 @@ export default function GeneratePage() {
     const apiTemplateKey = getApiTemplateKey(selectedTemplate);
 
     if (!file) {
-      setGenerationError("请先上传一张面部照片。");
+      setGenerationError(t('errors.uploadRequired'));
       return;
     }
 
     if (!apiTemplateKey) {
-      setGenerationError("当前模板暂不可用，请重新选择一个模板。");
+      setGenerationError(t('errors.notAvailable'));
       return;
     }
 
     if (userCredits < GENERATION_COST) {
-      setGenerationError("积分不足，无法开始生成。");
+      setGenerationError(t('errors.insufficientCredits'));
       return;
     }
 
@@ -156,7 +158,7 @@ export default function GeneratePage() {
       fetchUserCredits();
     } catch (err) {
       console.error(err);
-      setGenerationError("生成失败，请稍后重试。");
+      setGenerationError(t('errors.generationFailed'));
     } finally {
       setIsGenerating(false);
     }
@@ -206,30 +208,30 @@ export default function GeneratePage() {
               className="mb-6 inline-flex h-10 items-center gap-2 rounded-full border border-[rgba(232,194,122,0.18)] bg-[rgba(17,17,20,0.76)] px-4 text-sm text-[#E8C27A] transition hover:border-[rgba(232,194,122,0.38)] hover:bg-[rgba(232,194,122,0.06)]"
             >
               <ChevronIcon direction="left" />
-              返回创作
+              {t('navigation.backToCreate')}
             </button>
 
             <div className="mb-8 text-center">
               <div className="mb-4 inline-flex items-center gap-2 rounded-full border border-[rgba(232,194,122,0.16)] bg-[rgba(20,20,24,0.72)] px-4 py-1.5 text-xs text-[#E8C27A] shadow-[0_12px_40px_rgba(0,0,0,0.22)] backdrop-blur">
                 <SparkIcon className="h-3.5 w-3.5" />
-                汉韵写真 · 作品预览
+                {t('navigation.previewBadge')}
               </div>
-              <h1 className="text-4xl font-semibold tracking-normal text-[rgba(255,247,236,0.94)] md:text-5xl">生成结果</h1>
-              <p className="mx-auto mt-4 max-w-2xl text-sm leading-6 text-[rgba(255,247,236,0.52)] md:text-base">你的 AI 汉服写真已生成完成</p>
+              <h1 className="text-4xl font-semibold tracking-normal text-[rgba(255,247,236,0.94)] md:text-5xl">{t('previewSection.title')}</h1>
+              <p className="mx-auto mt-4 max-w-2xl text-sm leading-6 text-[rgba(255,247,236,0.52)] md:text-base">{t('previewSection.subtitle')}</p>
             </div>
 
             <div className="grid gap-6 lg:grid-cols-[minmax(0,1fr)_320px]">
               <div className="rounded-[24px] border border-[rgba(232,194,122,0.16)] bg-[rgba(17,17,20,0.92)] p-4 shadow-[0_28px_110px_rgba(0,0,0,0.36)] md:p-6">
                 <div className="flex items-center justify-center gap-4">
-                  <button type="button" onClick={handlePrevImage} className="flex h-11 w-11 shrink-0 items-center justify-center rounded-full border border-[rgba(232,194,122,0.22)] bg-[rgba(232,194,122,0.07)] text-[#E8C27A] transition hover:bg-[rgba(232,194,122,0.13)]" aria-label="上一张">
+                  <button type="button" onClick={handlePrevImage} className="flex h-11 w-11 shrink-0 items-center justify-center rounded-full border border-[rgba(232,194,122,0.22)] bg-[rgba(232,194,122,0.07)] text-[#E8C27A] transition hover:bg-[rgba(232,194,122,0.13)]" aria-label={t('previewSection.title')}>
                     <ChevronIcon direction="left" />
                   </button>
 
                   <div className="relative aspect-[3/4] h-[min(680px,72vh)] max-h-[680px] min-h-[520px] overflow-hidden rounded-[24px] border border-[rgba(232,194,122,0.16)] bg-[#111114] shadow-[0_28px_100px_rgba(0,0,0,0.48)]">
-                    <Image src={resultUrls[currentPreviewIndex]} alt="生成的汉服写真" fill className="object-contain" unoptimized />
+                    <Image src={resultUrls[currentPreviewIndex]} alt={t('previewSection.title')} fill className="object-contain" unoptimized />
                   </div>
 
-                  <button type="button" onClick={handleNextImage} className="flex h-11 w-11 shrink-0 items-center justify-center rounded-full border border-[rgba(232,194,122,0.22)] bg-[rgba(232,194,122,0.07)] text-[#E8C27A] transition hover:bg-[rgba(232,194,122,0.13)]" aria-label="下一张">
+                  <button type="button" onClick={handleNextImage} className="flex h-11 w-11 shrink-0 items-center justify-center rounded-full border border-[rgba(232,194,122,0.22)] bg-[rgba(232,194,122,0.07)] text-[#E8C27A] transition hover:bg-[rgba(232,194,122,0.13)]" aria-label={t('previewSection.title')}>
                     <ChevronIcon direction="right" />
                   </button>
                 </div>
@@ -242,7 +244,7 @@ export default function GeneratePage() {
                       onClick={() => setCurrentPreviewIndex(idx)}
                       className="h-2.5 w-2.5 rounded-full transition"
                       style={{ background: idx === currentPreviewIndex ? "#E8C27A" : "rgba(255,247,236,0.25)" }}
-                      aria-label={`查看第 ${idx + 1} 张`}
+                      aria-label={`${t('previewSection.title')} ${idx + 1}`}
                     />
                   ))}
                 </div>
@@ -255,24 +257,24 @@ export default function GeneratePage() {
                 <div className="rounded-[24px] border border-[rgba(255,247,236,0.08)] bg-[rgba(17,17,20,0.90)] p-5">
                   <h2 className="mb-4 flex items-center gap-2 text-lg font-semibold text-[rgba(255,247,236,0.92)]">
                     <SparkIcon className="h-4 w-4 text-[#E8C27A]" />
-                    作品信息
+                    {t('previewSection.infoTitle')}
                   </h2>
                   <div className="space-y-3 text-sm">
                     <div className="flex items-center justify-between gap-4">
-                      <span className="text-[rgba(255,247,236,0.45)]">当前模板</span>
+                      <span className="text-[rgba(255,247,236,0.45)]">{t('previewSection.templateLabel')}</span>
                       <span className="text-right font-medium text-[#E8C27A]">{selectedDynasty} · {selectedTemplateName}</span>
                     </div>
                     <div className="flex items-center justify-between gap-4">
-                      <span className="text-[rgba(255,247,236,0.45)]">消耗积分</span>
-                      <span className="font-medium text-[#E8C27A]">{GENERATION_COST} 积分</span>
+                      <span className="text-[rgba(255,247,236,0.45)]">{t('previewSection.creditsLabel')}</span>
+                      <span className="font-medium text-[#E8C27A]">{GENERATION_COST} credits</span>
                     </div>
                     <div className="flex items-center justify-between gap-4">
-                      <span className="text-[rgba(255,247,236,0.45)]">生成数量</span>
-                      <span className="text-[rgba(255,247,236,0.72)]">{resultUrls.length} 张</span>
+                      <span className="text-[rgba(255,247,236,0.45)]">{t('previewSection.countLabel')}</span>
+                      <span className="text-[rgba(255,247,236,0.72)]">{resultUrls.length} images</span>
                     </div>
                     <div className="flex items-center justify-between gap-4">
-                      <span className="text-[rgba(255,247,236,0.45)]">状态</span>
-                      <span className="text-[rgba(255,247,236,0.72)]">生成完成</span>
+                      <span className="text-[rgba(255,247,236,0.45)]">{t('previewSection.statusLabel')}</span>
+                      <span className="text-[rgba(255,247,236,0.72)]">{t('previewSection.statusCompleted')}</span>
                     </div>
                   </div>
                 </div>
@@ -280,7 +282,7 @@ export default function GeneratePage() {
                 <div className="rounded-[24px] border border-[rgba(255,247,236,0.08)] bg-[rgba(17,17,20,0.90)] p-5">
                   <div className="grid gap-3">
                     <button type="button" onClick={handleDownloadImage} className="h-11 rounded-xl border border-[rgba(232,194,122,0.22)] bg-[rgba(232,194,122,0.08)] px-4 text-sm font-medium text-[#E8C27A] transition hover:border-[rgba(232,194,122,0.42)] hover:bg-[rgba(232,194,122,0.13)]">
-                      下载图片
+                      {t('actions.download')}
                     </button>
                     <button
                       type="button"
@@ -289,16 +291,16 @@ export default function GeneratePage() {
                       className="flex h-11 items-center justify-center gap-2 rounded-xl bg-[#E8C27A] px-4 text-sm font-semibold text-[#0B0B0D] transition hover:bg-[#F2D38A] disabled:cursor-not-allowed disabled:opacity-70"
                     >
                       {isGenerating && <LoadingSpinner />}
-                      {isGenerating ? "生成中..." : "重新生成"}
+                      {isGenerating ? t('actions.regenerating') : t('actions.regenerate')}
                     </button>
                     <button type="button" onClick={() => setViewMode("create")} className="h-11 rounded-xl border border-[rgba(255,247,236,0.08)] bg-[rgba(255,247,236,0.04)] px-4 text-sm text-[rgba(255,247,236,0.72)] transition hover:bg-[rgba(255,247,236,0.07)]">
-                      返回创作
+                      {t('actions.backToCreate')}
                     </button>
                     <a href={`/${locale}/works`} className="flex h-11 items-center justify-center rounded-xl border border-[rgba(255,247,236,0.08)] bg-[rgba(255,247,236,0.04)] px-4 text-sm text-[rgba(255,247,236,0.72)] transition hover:bg-[rgba(255,247,236,0.07)]">
-                      查看我的作品
+                      {t('actions.viewWorks')}
                     </a>
                   </div>
-                  {isGenerating && <p className="mt-3 text-center text-xs text-[rgba(255,247,236,0.45)]">AI 正在为你生成汉服写真，请稍候</p>}
+                  {isGenerating && <p className="mt-3 text-center text-xs text-[rgba(255,247,236,0.45)]">{t('styleSelection.generating')}</p>}
                   {generationError && <p className="mt-3 text-center text-xs text-[#E8C27A]">{generationError}</p>}
                 </div>
               </aside>
@@ -309,31 +311,31 @@ export default function GeneratePage() {
             <section className="text-center">
               <div className="mb-4 inline-flex items-center gap-2 rounded-full border border-[rgba(232,194,122,0.16)] bg-[rgba(20,20,24,0.72)] px-4 py-1.5 text-xs text-[#E8C27A] shadow-[0_12px_40px_rgba(0,0,0,0.22)] backdrop-blur">
                 <SparkIcon className="h-3.5 w-3.5" />
-                汉韵写真 · 开始创作
+                {t('uploadSection.badge')}
               </div>
-              <h1 className="text-4xl font-semibold tracking-normal text-[rgba(255,247,236,0.94)] md:text-5xl">创作您的汉服写真</h1>
+              <h1 className="text-4xl font-semibold tracking-normal text-[rgba(255,247,236,0.94)] md:text-5xl">{t('uploadSection.title')}</h1>
               <p className="mx-auto mt-4 max-w-2xl text-sm leading-6 text-[rgba(255,247,236,0.52)] md:text-base">
-                上传一张清晰正脸照，选择模板，生成专属于你的 AI 汉服写真。
+                {t('uploadSection.subtitle')}
               </p>
             </section>
 
             <section className="mx-auto mt-8 w-full max-w-[1040px] rounded-[24px] border border-[rgba(255,247,236,0.08)] bg-[rgba(17,17,20,0.88)] p-5 shadow-[0_28px_110px_rgba(0,0,0,0.36)] backdrop-blur md:p-7">
               <div className="grid gap-6 lg:grid-cols-[0.48fr_0.52fr]">
                 <div className="min-w-0">
-                  <h2 className="mb-3 text-base font-semibold text-[rgba(255,247,236,0.92)]">上传面部照片</h2>
+                  <h2 className="mb-3 text-base font-semibold text-[rgba(255,247,236,0.92)]">{t('uploadCard.title')}</h2>
                   <label className="block cursor-pointer">
                     <input type="file" accept="image/*" className="hidden" onChange={handleFileChange} />
                     <div className="relative flex h-[268px] items-center justify-center overflow-hidden rounded-2xl border border-dashed border-[rgba(232,194,122,0.30)] bg-[#0B0B0D] text-center transition hover:border-[rgba(232,194,122,0.55)] hover:bg-[rgba(232,194,122,0.035)] md:h-[292px]">
                       {previewUrl ? (
-                        <Image src={previewUrl} alt="上传预览" fill className="object-contain p-4" unoptimized />
+                        <Image src={previewUrl} alt={t('uploadCard.title')} fill className="object-contain p-4" unoptimized />
                       ) : (
                         <div className="flex flex-col items-center px-6">
                           <div className="mb-4 flex h-[68px] w-[68px] items-center justify-center rounded-full border border-[rgba(232,194,122,0.24)] bg-[rgba(232,194,122,0.08)] text-[#E8C27A] shadow-[0_0_34px_rgba(232,194,122,0.10)]">
                             <UploadIcon />
                           </div>
-                          <p className="text-lg font-semibold text-[rgba(255,247,236,0.94)]">点击上传面部照片</p>
+                          <p className="text-lg font-semibold text-[rgba(255,247,236,0.94)]">{t('uploadCard.cta')}</p>
                           <p className="mt-2 max-w-[280px] text-sm leading-5 text-[rgba(255,247,236,0.48)]">
-                            支持 JPG、PNG、WebP，建议使用清晰正脸照
+                            {t('uploadCard.hint')}
                           </p>
                         </div>
                       )}
@@ -342,7 +344,7 @@ export default function GeneratePage() {
                 </div>
 
                 <div className="min-w-0 rounded-2xl border border-[rgba(255,247,236,0.08)] bg-[#141418] p-4">
-                  <h2 className="mb-3 text-base font-semibold text-[rgba(255,247,236,0.92)]">选择写真风格</h2>
+                  <h2 className="mb-3 text-base font-semibold text-[rgba(255,247,236,0.92)]">{t('styleSelection.title')}</h2>
                   <div className="flex flex-wrap gap-2">
                     {dynastyTabs.map((dynasty) => {
                       const isSelected = selectedDynasty === dynasty;
@@ -360,12 +362,12 @@ export default function GeneratePage() {
                           }}
                           className="rounded-full border px-4 py-2 text-sm transition"
                           style={{
-                            background: isSelected ? "rgba(232,194,122,0.16)" : "rgba(255,247,236,0.04)",
+                            background: isSelected ? "rgba(232,194,122,0.16)" : "rgba(255,247,236,0.03)",
                             borderColor: isSelected ? "rgba(232,194,122,0.58)" : "rgba(255,247,236,0.08)",
                             color: isSelected ? "#E8C27A" : "rgba(255,247,236,0.62)",
                           }}
                         >
-                          {dynasty}
+                          {dynasty.charAt(0).toUpperCase() + dynasty.slice(1)}
                         </button>
                       );
                     })}
@@ -385,7 +387,7 @@ export default function GeneratePage() {
                           }}
                           className="rounded-full border px-3 py-2 text-sm transition hover:border-[rgba(232,194,122,0.34)]"
                           style={{
-                            background: isSelected ? "rgba(232,194,122,0.10)" : "rgba(255,247,236,0.04)",
+                            background: isSelected ? "rgba(232,194,122,0.10)" : "rgba(255,247,236,0.03)",
                             borderColor: isSelected ? "rgba(232,194,122,0.68)" : "rgba(255,247,236,0.08)",
                             color: isSelected ? "#E8C27A" : "rgba(255,247,236,0.62)",
                           }}
@@ -397,7 +399,7 @@ export default function GeneratePage() {
                   </div>
 
                   <div className="mt-5 rounded-xl border border-[rgba(232,194,122,0.12)] bg-[rgba(232,194,122,0.045)] px-4 py-3 text-sm text-[rgba(255,247,236,0.56)]">
-                    当前选择：<span className="font-medium text-[#E8C27A]">{selectedDynasty}</span>
+                    {t('styleSelection.currentSelection')}: <span className="font-medium text-[#E8C27A]">{selectedDynasty}</span>
                     <span className="px-1 text-[rgba(255,247,236,0.28)]">·</span>
                     <span className="font-medium text-[#E8C27A]">{selectedTemplateName}</span>
                   </div>
@@ -405,10 +407,10 @@ export default function GeneratePage() {
               </div>
 
               <div className="mt-5 flex flex-wrap items-center justify-center gap-2.5">
-                {["正脸清晰", "光线充足", "面部无遮挡", "背景简洁"].map((tip) => (
+                {['clearFace', 'goodLighting', 'noObstruction', 'simpleBackground'].map((tip) => (
                   <span key={tip} className="inline-flex items-center gap-2 rounded-full border border-[rgba(255,247,236,0.08)] bg-[rgba(255,247,236,0.04)] px-3 py-1.5 text-xs text-[rgba(255,247,236,0.55)]">
                     <span className="h-1.5 w-1.5 rounded-full bg-[#E8C27A]" />
-                    {tip}
+                    {tTips(tip as any)}
                   </span>
                 ))}
               </div>
@@ -418,39 +420,32 @@ export default function GeneratePage() {
                   type="button"
                   onClick={handleGenerate}
                   disabled={isGenerating}
-                  className={cn(
-                    "flex h-[58px] w-[280px] items-center justify-center gap-2 rounded-xl px-8 text-base font-semibold text-[#0B0B0D] transition disabled:cursor-not-allowed disabled:opacity-70 md:w-[332px]",
-                    !isGenerating && file ? "hover:brightness-110" : "opacity-60"
-                  )}
+                  className="flex h-[58px] w-[280px] items-center justify-center gap-2 rounded-xl px-8 text-base font-semibold text-[#0B0B0D] transition disabled:cursor-not-allowed disabled:opacity-70 md:w-[332px]"
                   style={{
                     background: "linear-gradient(180deg, #F4D18B 0%, #E8C27A 48%, #C99A43 100%)",
                     boxShadow: "inset 0 1px 0 rgba(255,255,255,0.34), 0 16px 42px rgba(232,194,122,0.15)",
                   }}
                 >
                   {isGenerating ? <LoadingSpinner /> : <SparkIcon className="h-5 w-5" />}
-                  {isGenerating ? "生成中..." : "生成写真"}
+                  {isGenerating ? t('styleSelection.generating') : t('styleTemplates.generateButton')}
                 </button>
-                <p className={cn("mt-3 min-h-5 text-sm", generationError ? "text-[#E8C27A]" : "text-[rgba(255,247,236,0.45)]")}>
+                <p className="mt-3 min-h-5 text-sm" style={{ color: generationError ? '#E8C27A' : 'rgba(255,247,236,0.45)' }}>
                   {generationError || (
                     <>
-                      当前模板：<span className="font-medium text-[#E8C27A]">{selectedDynasty} · {selectedTemplateName}</span> · 消耗{" "}
-                      <span className="font-semibold text-[#E8C27A]">{GENERATION_COST} 积分</span>
+                      {t('styleSelection.currentSelection')}: <span className="font-medium text-[#E8C27A]">{selectedDynasty} · {selectedTemplateName}</span> · {t('styleSelection.generationCost')}{" "}
+                      <span className="font-semibold text-[#E8C27A]">{GENERATION_COST} credits</span>
                     </>
                   )}
                 </p>
-                {isGenerating && <p className="mt-1 text-xs text-[rgba(255,247,236,0.45)]">AI 正在为你生成汉服写真，请稍候</p>}
+                {isGenerating && <p className="mt-1 text-xs text-[rgba(255,247,236,0.45)]">{t('styleSelection.generating')}</p>}
               </div>
             </section>
 
             <section className="mt-9 pb-12">
               <div className="mb-6 flex flex-col gap-2 md:flex-row md:items-end md:justify-between">
                 <div>
-                  <h2 className="text-2xl font-semibold text-[rgba(255,247,236,0.92)]">热门汉服写真模板</h2>
-                  <p className="mt-2 text-sm text-[rgba(255,247,236,0.48)]">随机推荐 10 套风格，浏览更多灵感。</p>
+                  <h2 className="text-2xl font-semibold text-[rgba(255,247,236,0.92)]">{t('styleSelection.featuredTemplates')}</h2>
                 </div>
-                <span className="text-sm text-[rgba(255,247,236,0.45)]">
-                  当前 <span className="font-medium text-[#E8C27A]">{selectedDynasty} · {selectedTemplateName}</span>
-                </span>
               </div>
 
               <div className="flex gap-5 overflow-x-auto overflow-y-hidden pb-4 [scrollbar-width:none] [&::-webkit-scrollbar]:hidden">
@@ -480,7 +475,7 @@ export default function GeneratePage() {
                         <p className="truncate text-base font-semibold text-[rgba(255,247,236,0.92)]">{template.name}</p>
                       </div>
                       {isSelected && (
-                        <span className="absolute right-2 top-2 flex h-7 w-7 items-center justify-center rounded-full bg-[#E8C27A] text-[#0B0B0D] shadow-[0_8px_24px_rgba(0,0,0,0.24)]">
+                        <span className="absolute right-2 top-2 flex h-7 w-7 items-center justify-center rounded-full bg-[#E8C27A] text-[#0B0B0D]" style={{ boxShadow: "0 8px 24px rgba(0,0,0,0.24)" }}>
                           <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="3">
                             <path d="m20 6-11 11-5-5" />
                           </svg>

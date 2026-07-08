@@ -52,8 +52,8 @@ export const GridFeatures = () => {
       icon: <IconAdjustmentsBolt />,
     },
     {
-      title: t('vibeCoding.title'),
-      description: t('vibeCoding.description'),
+      title: t('creative.title'),
+      description: t('creative.description'),
       icon: <IconHeart />,
     },
   ];

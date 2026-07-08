@@ -164,7 +164,49 @@
     "errors": {
       "uploadRequired": "Please upload a clear face photo.",
       "generationFailed": "Generation failed. Please try again later.",
-      "noResult": "Generation succeeded but no images returned."
+      "noResult": "Generation succeeded but no images returned.",
+      "notAvailable": "This template is temporarily unavailable. Please choose another one.",
+      "insufficientCredits": "Insufficient credits to generate portrait."
+    },
+    "previewSection": {
+      "title": "Preview Result",
+      "subtitle": "Your AI Hanfu portrait has been generated successfully",
+      "infoTitle": "Portrait Information",
+      "templateLabel": "Template",
+      "creditsLabel": "Credits Used",
+      "countLabel": "Images Generated",
+      "statusLabel": "Status",
+      "statusCompleted": "Completed"
+    },
+    "actions": {
+      "download": "Download Image",
+      "regenerate": "Regenerate",
+      "regenerating": "Regenerating...",
+      "backToCreate": "Back to Create",
+      "viewWorks": "View My Works",
+      "goToCreate": "Start Creating"
+    },
+    "uploadSection": {
+      "badge": "Han Portrait · Start Creating",
+      "title": "Create Your Hanfu Portrait",
+      "subtitle": "Upload a clear front-facing photo, choose a style, and generate your AI Hanfu portrait.",
+      "photoTips": {
+        "clearFace": "Clear front-facing",
+        "goodLighting": "Well-lit",
+        "noObstruction": "No face obstruction",
+        "simpleBackground": "Simple background"
+      }
+    },
+    "styleSelection": {
+      "title": "Choose Your Style",
+      "currentSelection": "Current Selection",
+      "featuredTemplates": "Featured Templates",
+      "generationCost": "Generation Cost",
+      "generating": "AI is generating your Hanfu portrait, please wait..."
+    },
+    "navigation": {
+      "backToCreate": "Back to Create",
+      "previewBadge": "Han Portrait · Preview Result"
     }
   },
   "common": {
@@ -211,7 +253,6 @@
       "contact": "Contact",
       "docs": "Docs",
       "dashboard": "Dashboard",
-      "demo": "Demo",
       "chat": "Chat",
       "image": "Image",
       "video": "Video",
@@ -231,24 +272,6 @@
         "linkedin": "LinkedIn",
         "github": "GitHub"
       }
-    }
-  },
-  "hero": {
-    "badge": "AI-Powered Hanfu Portrait Studio",
-    "title": "Transform Into Hanfu Elegance with AI",
-    "description": "Upload your photo, choose a Hanfu style, and get a professional AI-generated portrait in minutes. Experience the beauty of traditional Chinese fashion with modern AI technology.",
-    "cta": {
-      "primary": "Try Now",
-      "secondary": "Learn More"
-    },
-    "modal": {
-      "eyebrow": "Get Started",
-      "title": "Create Your First Hanfu Portrait",
-      "description": "Sign up to unlock unlimited AI-generated Hanfu portraits and premium features.",
-      "instruction": "Upload your photo and let our AI transform you into a traditional Chinese beauty.",
-      "linkLabel": "Sign Up Now",
-      "linkHint": "Start your Hanfu portrait journey today",
-      "close": "Close"
     }
   },
   "hanfuHome": {
@@ -330,7 +353,7 @@
         "period": "+",
         "description": "One-time credit top-up, no membership benefits.",
         "feature1": "One-time purchase, instant delivery",
-        "feature2": "Use on standard portrait templates",
+        "feature2": "Use standard portrait templates",
         "feature3": "Does not unlock member-only templates",
         "feature4": "Great for temporary credit boosts",
         "cta": "View Credit Packs"
@@ -341,10 +364,10 @@
     },
     "testimonials": {
       "title": "Loved by Hanfu Enthusiasts Worldwide",
-      "subtitle": "See what our users say about their HanPortrait experience",
+      "subtitle": "See what our users say about their Han Portrait experience",
       "item1": {
         "name": "Sophie Laurent",
-        "quote": "I've always been fascinated by Chinese culture. HanPortrait let me see myself in Tang dynasty hanfu — the result was breathtaking. My friends thought I had a professional photoshoot!",
+        "quote": "I've always been fascinated by Chinese culture. Han Portrait let me see myself in Tang dynasty hanfu — the result was breathtaking. My friends thought I had a professional photoshoot!",
         "designation": "Photography Enthusiast, Paris"
       },
       "item2": {
@@ -359,7 +382,7 @@
       },
       "item4": {
         "name": "Emma Williams",
-        "quote": "As someone who loves historical fashion, HanPortrait is a dream come true. Being able to try different dynasty styles without buying expensive costumes is incredible.",
+        "quote": "As someone who loves historical fashion, Han Portrait is a dream come true. Being able to try different dynasty styles without buying expensive costumes is incredible.",
         "designation": "Fashion Designer, London"
       },
       "item5": {
@@ -375,10 +398,10 @@
     },
     "faq": {
       "title": "Frequently Asked Questions",
-      "subtitle": "Everything you need to know about HanPortrait",
+      "subtitle": "Everything you need to know about Han Portrait",
       "q1": {
-        "question": "What is HanPortrait?",
-        "answer": "HanPortrait is an AI-powered platform that transforms your photos into stunning traditional Chinese Hanfu portraits. Upload a photo, and our AI will dress you in authentic hanfu styles from various Chinese dynasties."
+        "question": "What is Han Portrait?",
+        "answer": "Han Portrait is an AI-powered platform that transforms your photos into stunning traditional Chinese Hanfu portraits. Upload a photo, and our AI will dress you in authentic hanfu styles from various Chinese dynasties."
       },
       "q2": {
         "question": "How does the AI generation work?",
@@ -432,7 +455,7 @@
   },
   "pricing": {
     "title": "Pricing Plans",
-    "subtitle": "Simple, transparent pricing that scales with your business",
+    "subtitle": "Simple, transparent pricing that scales with your needs",
     "description": "Choose a membership plan or a one-time credit pack. Membership unlocks premium portrait templates, while credit packs only add more generation credits.",
     "popular": "Popular",
     "recommended": "Recommended",
@@ -636,126 +659,7 @@
       "yearlyInstallments": "Annual billing releases {credits} credits each month",
       "oneTimeCredits": "{credits} credits in one payment",
       "oneTimeDelivery": "One-time checkout, credits added instantly"
-    },
-    "tiers": {
-      "starter": {
-        "name": "Starter",
-        "description": "For validating an AI product before you need high volume.",
-        "cta": "Choose Starter",
-        "features": [
-          "Access chat, image, and video generation",
-          "1,000 credits on monthly billing",
-          "Annual plan releases 1,000 credits each month",
-          "Buy extra credit packs whenever you need a top-up"
-        ]
-      },
-      "pro": {
-        "name": "Pro",
-        "description": "For teams and products that need more generation capacity.",
-        "cta": "Choose Pro",
-        "features": [
-          "Access chat, image, and video generation",
-          "10,000 credits on monthly billing",
-          "Annual plan releases 10,000 credits each month",
-          "Better fit for heavier production usage"
-        ]
-      },
-      "credits": {
-        "name": "Credits Pack",
-        "description": "One-time credits you can stack on top of any plan.",
-        "cta": "Buy {credits} Credits",
-        "features": [
-          "Credits are added immediately after payment",
-          "Keeps your current subscription unchanged",
-          "Useful for launches, spikes, and one-off bursts"
-        ]
-      }
     }
-  },
-  "testimonials": {
-    "title": "Success Stories from Vibe Coders",
-    "subtitle": "Real users share how they create AI Hanfu portraits with Han Portrait.",
-    "items": [
-      {
-        "name": "Alex Chen",
-        "quote": "I uploaded one clear portrait and got a polished Hanfu look that felt ready for social profiles and sharing.",
-        "designation": "Marketing Manager turned Founder"
-      },
-      {
-        "name": "Jordan Lee",
-        "quote": "Spent years learning to code. Now my non-technical co-founder ships features faster than me using Vibe Coding. This is the future.",
-        "designation": "Technical Co-founder"
-      },
-      {
-        "name": "Alice Johnson",
-        "quote": "The Tang and Dunhuang styles feel more like complete portrait concepts than ordinary filters.",
-        "designation": "Serial Entrepreneur"
-      },
-      {
-        "name": "Bob Smith",
-        "quote": "Choosing a template, uploading a photo, and generating a result all felt smooth and focused.",
-        "designation": "Indie Hacker"
-      },
-      {
-        "name": "Cathy Lee",
-        "quote": "It is a quick way to explore Hanfu styling ideas before planning a real photoshoot.",
-        "designation": "Product Manager"
-      },
-      {
-        "name": "David Wright",
-        "quote": "The authentication, payments, and deployment just work. I focus on unique features. My SaaS was profitable week one.",
-        "designation": "Solo Founder"
-      },
-      {
-        "name": "Eva Green",
-        "quote": "The efficiency it brings is unmatched. It's a vital tool that has helped us cut costs and improve our end product significantly.",
-        "designation": "Operations Director"
-      },
-      {
-        "name": "Frank Moore",
-        "quote": "A robust solution that fits perfectly into our workflow. It has enhanced our team's capabilities and allowed us to tackle more complex projects.",
-        "designation": "Project Manager"
-      },
-      {
-        "name": "Grace Hall",
-        "quote": "It's incredibly intuitive and easy to use. Even those without technical expertise can leverage its power to improve their workflows.",
-        "designation": "Marketing Specialist"
-      },
-      {
-        "name": "Henry Ford",
-        "quote": "It has saved us countless hours. Highly recommended for anyone looking to enhance their efficiency and productivity.",
-        "designation": "Operations Analyst"
-      },
-      {
-        "name": "Ivy Wilson",
-        "quote": "A must-have tool for any professional. It's revolutionized the way we approach problem-solving and decision-making.",
-        "designation": "Business Consultant"
-      },
-      {
-        "name": "Jack Brown",
-        "quote": "The results are always impressive. This AI has helped us to not only meet but exceed our performance targets.",
-        "designation": "Performance Manager"
-      },
-      {
-        "name": "Kathy Adams",
-        "quote": "It helps us achieve what was once thought impossible. The AI's capabilities are groundbreaking and have opened new avenues for us.",
-        "designation": "Innovation Lead"
-      },
-      {
-        "name": "Leo Carter",
-        "quote": "Transformative technology with real impact. It has streamlined our operations and brought unprecedented efficiency to our processes.",
-        "designation": "Technology Strategist"
-      },
-      {
-        "name": "Mia Turner",
-        "quote": "It's simply revolutionary! The way it integrates with our existing systems and enhances them is nothing short of miraculous.",
-        "designation": "Systems Integrator"
-      }
-    ]
-  },
-  "companies": {
-    "title": "Built with Industry-Leading Technologies",
-    "subtitle": "Built on modern stack trusted by the world's best teams"
   },
   "gridFeatures": {
     "aiReady": {
@@ -784,16 +688,16 @@
     },
     "seo": {
       "title": "Social Ready",
-      "description": "Perfect sizes for Instagram, Facebook, WeChat, and other social platforms."
+      "description": "Perfect sizes for Instagram, Facebook, and other social platforms."
     },
-    "vibeCoding": {
+    "creative": {
       "title": "Unlimited Creativity",
       "description": "Try different styles, backgrounds, and accessories. Create your perfect Hanfu look."
     }
   },
   "cta": {
     "title": "Ready to Create Your Hanfu Portrait?",
-    "description": "Join thousands of users who transformed their photos with HanPortrait AI.",
+    "description": "Join thousands of users who transformed their photos with Han Portrait AI.",
     "button": "Get Started"
   },
   "auth": {
@@ -918,332 +822,11 @@
       "signOutLink": "Sign out and try a different account"
     }
   },
-  "demo": {
-    "badge": "Try Before You Buy",
-    "title": "Experience Han Portrait",
-    "description": "Test our powerful AI features without signing up. Get 3 free trials to explore what we can do.",
-    "limitReached": "You've reached the demo limit. Sign up to continue using our AI tools with full features!",
-    "signUpNow": "Sign Up Now",
-    "tryNow": "Try Now",
-    "backToFeatures": "Back to Features",
-    "send": "Send",
-    "generate": "Generate",
-    "usageInfo": "{used}/{max} trials used",
-    "demoNote": "This is a demo preview. Real results are much better!",
-    "responses": {
-      "chat": "This is a demo response for: \"{query}\". In the full version, you'll get intelligent AI responses powered by advanced language models."
-    },
-    "features": {
-      "chat": {
-        "title": "AI Chat Assistant",
-        "description": "Have intelligent conversations with our AI. Ask questions, get help, or just chat!",
-        "placeholder": "Start a conversation...",
-        "inputPlaceholder": "Type your message..."
-      },
-      "image": {
-        "title": "AI Image Generation",
-        "description": "Create stunning images from text descriptions using state-of-the-art AI models.",
-        "inputPlaceholder": "Describe the image you want to create..."
-      },
-      "video": {
-        "title": "AI Video Creation",
-        "description": "Generate professional videos from text prompts with our advanced AI technology.",
-        "inputPlaceholder": "Describe the video you want to create..."
-      }
-    },
-    "cta": {
-      "title": "Ready for the Full Experience?",
-      "description": "Unlock unlimited AI generations, premium features, and priority support.",
-      "signUp": "Start Free Trial",
-      "viewPricing": "View Pricing"
-    },
-    "subtitle": "Explore the real product demos without logging in.",
-    "credits": "Credits",
-    "backToDashboard": "Back to Dashboard",
-    "insufficientCredits": "Insufficient credits",
-    "startChat": "Start a conversation",
-    "startChatDescription": "Ask anything to explore what our assistants can do.",
-    "sendHint": "Press Enter to send",
-    "tabs": {
-      "chat": "Chat",
-      "image": "Image",
-      "video": "Video"
-    },
-    "chat": {
-      "title": "AI Chat Playground",
-      "description": "Try streaming responses from our chat assistant.",
-      "placeholder": "Type your message..."
-    },
-    "image": {
-      "title": "Image Generation",
-      "description": "Upload a reference image and describe the edits you want to preview.",
-      "placeholder": "Describe how you want to transform this image...",
-      "downloadImage": "Download image",
-      "promptLabel": "Prompt",
-      "promptPlaceholder": "Describe how you want to transform this image...",
-      "enterHint": "Press Enter to generate",
-      "charCount": "{count}/{max}",
-      "suggestionsTitle": "Suggestions",
-      "suggestions": {
-        "portrait": "Professional portrait photography, soft lighting, shallow depth of field, 8K details",
-        "architecture": "Modern architecture photography, golden hour, dramatic lighting, architectural details",
-        "cinematic": "Cinematic shot, widescreen composition, professional color grading, dramatic lighting",
-        "product": "Product render, studio lighting, minimalist background, commercial photography",
-        "artistic": "Artistic creation, oil painting texture, impressionist style, fine brushwork"
-      },
-      "reference": {
-        "label": "Reference Image",
-        "cta": "Click to upload a reference image",
-        "hint": "JPG or PNG up to 10MB",
-        "replace": "Replace",
-        "remove": "Remove",
-        "previewAlt": "Reference image preview"
-      },
-      "errors": {
-        "invalidFileType": "Please upload a valid image file.",
-        "fileTooLarge": "Image must be smaller than 10MB.",
-        "uploadFailed": "Failed to upload image. Please try again.",
-        "missingReferenceImage": "Please upload a reference image to continue."
-      },
-      "settings": {
-        "title": "Settings",
-        "resolution": "Resolution",
-        "watermark": "Watermark",
-        "adaptiveSize": "Matches your reference image"
-      },
-      "generate": {
-        "button": "Generate",
-        "loading": "Generating...",
-        "cost": "{amount} credits"
-      },
-      "gallery": {
-        "title": "Demo Images",
-        "autoplayPause": "Pause autoplay",
-        "autoplayStart": "Start autoplay",
-        "usePromptHint": "Click to use this prompt",
-        "presetBadge": "Preset Example",
-        "userBadge": "Your Generation",
-        "generating": "Generating image...",
-        "noImageAvailable": "No image available",
-        "empty": "No images generated yet",
-        "sourceImage": "Source image"
-      }
-    },
-    "video": {
-      "title": "Video Generation",
-      "description": "Transform text or images into stunning videos.",
-      "placeholder": "Describe the video you want to create...",
-      "downloadVideo": "Download video",
-      "processing": "Processing video...",
-      "configuration": "Configuration",
-      "generationMode": "Generation Mode",
-      "modes": {
-        "text": "Text to Video",
-        "image": "Image to Video"
-      },
-      "text": {
-        "descriptionLabel": "Video Description",
-        "quickPromptsLabel": "Quick prompts:",
-        "prompt1": "Sunset over mountains with moving clouds",
-        "prompt2": "Ocean waves crashing on beach",
-        "prompt3": "City street at night with neon lights",
-        "prompt4": "Forest with gentle wind through trees"
-      },
-      "imageUpload": {
-        "label": "Source Image",
-        "cta": "Click to upload image",
-        "limit": "JPG, PNG up to 10MB",
-        "motionLabel": "Motion Description (Optional)",
-        "motionPlaceholder": "Describe the motion you want..."
-      },
-      "advanced": {
-        "toggle": "Advanced Settings",
-        "resolution": "Resolution",
-        "resolutionOptions": {
-          "480p": "480p - Standard",
-          "720p": "720p - HD",
-          "1080p": "1080p - Full HD"
-        },
-        "durationLabel": "Duration: {seconds} seconds",
-        "rangeStart": "3s",
-        "rangeEnd": "10s",
-        "watermark": "Add watermark"
-      },
-      "generate": {
-        "loading": "Generating...",
-        "button": "Generate Video ({amount} Credits)"
-      },
-      "gallery": {
-        "title": "Demo Videos",
-        "autoplayPause": "Pause autoplay",
-        "autoplayStart": "Start autoplay",
-        "usePromptHint": "Click to use this prompt",
-        "presetBadge": "Preset Example",
-        "userBadge": "Your Generation",
-        "fullscreen": "Fullscreen",
-        "download": "Download",
-        "processing": "Processing video...",
-        "failed": "Video generation failed",
-        "empty": "No videos generated yet"
-      }
-    }
-  },
-  "Admin": {
-    "sidebar": {
-      "title": "Admin Panel",
-      "subtitle": "System Management",
-      "dashboard": "Dashboard",
-      "users": "User Management",
-      "subscriptions": "Subscriptions",
-      "credits": "Credits Management",
-      "backToDashboard": "Back to User Dashboard"
-    },
-    "header": {
-      "welcome": "Welcome",
-      "adminBadge": "Admin"
-    },
-    "dashboard": {
-      "title": "Admin Dashboard",
-      "totalUsers": "Total Users",
-      "activeUsers": "Active Users",
-      "totalRevenue": "Total Revenue",
-      "totalPayments": "Total Payments",
-      "totalChats": "Total Chats",
-      "creditsUsed": "Credits Used",
-      "recentUsers": "Recent Users",
-      "recentPayments": "Recent Payments",
-      "credits": "Credits",
-      "viewAllUsers": "View All Users",
-      "viewAllPayments": "View All Payments",
-      "unknownUser": "Unknown User"
-    },
-    "users": {
-      "title": "User Management",
-      "searchPlaceholder": "Search by name or email...",
-      "searchAction": "Search",
-      "clearSearch": "Clear",
-      "totalUsers": "{count} users",
-      "matchingUsers": "{count} matching users for \"{query}\"",
-      "pageSummary": "Showing {from}-{to} of {total}",
-      "emptyState": "No users found yet",
-      "emptySearchState": "No users match this search",
-      "user": "User",
-      "role": "Role",
-      "credits": "Credits",
-      "status": "Status",
-      "joined": "Joined",
-      "actions": "Actions",
-      "admin": "Admin",
-      "banned": "Banned",
-      "active": "Active",
-      "unverified": "Unverified",
-      "edit": "Edit",
-      "ban": "Ban",
-      "unban": "Unban",
-      "viewDetails": "View Details",
-      "enterCredits": "Enter new credit amount",
-      "banReason": "Ban Reason",
-      "banExpires": "Ban Expires",
-      "userDetails": "User Details",
-      "name": "Name",
-      "email": "Email",
-      "lastActive": "Last Active",
-      "close": "Close",
-      "roleUpdated": "Role updated successfully",
-      "roleUpdateFailed": "Failed to update role",
-      "userBanned": "User has been banned",
-      "userUnbanned": "User has been unbanned",
-      "banFailed": "Failed to ban/unban user",
-      "creditsUpdated": "Credits updated successfully",
-      "creditsUpdateFailed": "Failed to update credits",
-      "subscription": "Subscription",
-      "manage": "Manage",
-      "adjust": "Adjust",
-      "adjustCredits": "Adjust Credits",
-      "currentCredits": "Current Credits",
-      "adjustment": "Adjustment",
-      "newBalance": "New Balance",
-      "reason": "Reason",
-      "manualAdjustment": "Manual Adjustment",
-      "refund": "Refund",
-      "bonus": "Bonus",
-      "compensation": "Compensation",
-      "cancel": "Cancel",
-      "addCredits": "Add Credits",
-      "deductCredits": "Deduct Credits",
-      "manageSubscription": "Manage Subscription",
-      "currentPlan": "Current Plan",
-      "selectPlan": "Select Plan",
-      "updateSubscription": "Update Subscription",
-      "subscriptionUpdated": "Subscription updated successfully",
-      "subscriptionUpdateFailed": "Failed to update subscription",
-      "pagination": {
-        "previous": "Previous",
-        "next": "Next",
-        "page": "Page {{current}} of {{total}}"
-      }
-    },
-    "subscriptions": {
-      "title": "Subscription Management",
-      "totalSubscriptions": "Total Subscriptions",
-      "activeSubscriptions": "Active Subscriptions",
-      "canceledSubscriptions": "Canceled",
-      "expiredSubscriptions": "Expired",
-      "searchPlaceholder": "Search user, plan...",
-      "allStatus": "All Status",
-      "active": "Active",
-      "canceled": "Canceled",
-      "expired": "Expired",
-      "trial": "Trial",
-      "user": "User",
-      "plan": "Plan",
-      "status": "Status",
-      "expiryDate": "Expiry Date",
-      "createdAt": "Created At",
-      "daysRemaining": "{{days}} days remaining",
-      "unknownUser": "Unknown User",
-      "noSubscriptions": "No subscriptions found",
-      "pagination": {
-        "previous": "Previous",
-        "next": "Next",
-        "page": "Page {{current}} of {{total}}"
-      }
-    },
-    "credits": {
-      "title": "Credits Management",
-      "totalIssued": "Total Issued",
-      "totalUsed": "Total Used",
-      "totalTransactions": "Total Transactions",
-      "avgUsage": "Avg Usage",
-      "searchPlaceholder": "Search user, reason...",
-      "allTypes": "All Types",
-      "earned": "Earned",
-      "spent": "Spent",
-      "user": "User",
-      "change": "Change",
-      "reason": "Reason",
-      "balance": "Balance",
-      "date": "Time",
-      "subscriptionCycle": "Subscription Cycle",
-      "subscriptionSchedule": "Subscription Installment",
-      "oneTimePack": "Credit Pack",
-      "chatUsage": "Chat Usage",
-      "adjustment": "Manual Adjustment",
-      "unknownUser": "Unknown User",
-      "noTransactions": "No transactions found",
-      "topUsers": "Top Users",
-      "pagination": {
-        "previous": "Previous",
-        "next": "Next",
-        "page": "Page {{current}} of {{total}}"
-      }
-    }
-  },
   "dashboard": {
     "title": "Dashboard",
     "welcome": "Welcome back",
     "welcomeBonus": {
-      "title": "🎉 Welcome to HanPortrait!",
+      "title": "🎉 Welcome to Han Portrait!",
       "message": "Congratulations on your successful registration! We've added 3 credits welcome bonus to your account.",
       "description": "Use these credits to create beautiful Hanfu portraits with our AI.",
       "ctaButton": "Try Now",
@@ -1447,6 +1030,53 @@
       }
     }
   },
+  "works": {
+    "title": "My Portraits",
+    "subtitle": "View, manage, and download your Hanfu portraits",
+    "tabs": {
+      "all": "All",
+      "completed": "Completed",
+      "processing": "Processing",
+      "failed": "Failed",
+      "favorited": "Favorited"
+    },
+    "sort": {
+      "label": "Sort by",
+      "newest": "Newest",
+      "oldest": "Oldest",
+      "credits": "Credits Used",
+      "style": "Style Name"
+    },
+    "search": {
+      "placeholder": "Search portraits..."
+    },
+    "empty": {
+      "title": "No portraits yet",
+      "description": "Upload a photo and start creating your first AI Hanfu portrait",
+      "cta": "Start Creating"
+    },
+    "status": {
+      "completed": "Completed",
+      "processing": "Processing",
+      "failed": "Failed",
+      "favorited": "Favorited"
+    },
+    "actions": {
+      "viewDetails": "View Details",
+      "download": "Download",
+      "regenerate": "Regenerate",
+      "delete": "Delete",
+      "toggleFavorite": "Toggle favorite"
+    },
+    "info": {
+      "style": "Style",
+      "creditsUsed": "Credits used",
+      "imageCount": "Images",
+      "created": "Created at",
+      "total": "{count} portraits total"
+    },
+    "loading": "AI is generating..."
+  },
   "contact": {
     "title": "Contact Us",
     "subtitle": "We'd love to hear from you. Send us a message and we'll respond as soon as possible.",
@@ -1492,34 +1122,6 @@
       "message": "Something unexpected happened. Please try again.",
       "tryAgain": "Try Again"
     }
-  },
-  "featuredTestimonials": {
-    "people": [
-      {
-        "name": "John Doe",
-        "designation": "Software Engineer"
-      },
-      {
-        "name": "Robert Johnson",
-        "designation": "Product Manager"
-      },
-      {
-        "name": "Jane Smith",
-        "designation": "Data Scientist"
-      },
-      {
-        "name": "Emily Davis",
-        "designation": "UX Designer"
-      },
-      {
-        "name": "Taylor Brooks",
-        "designation": "Full-Stack Developer"
-      },
-      {
-        "name": "Dora",
-        "designation": "The Explorer"
-      }
-    ]
   },
   "footer": {
     "tagline": "Transform your photos into stunning Hanfu portraits with AI.",

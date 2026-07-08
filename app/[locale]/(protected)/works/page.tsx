@@ -22,53 +22,34 @@ import {
   X,
   Check
 } from 'lucide-react';
+import { useTranslations } from 'next-intl';
 
-// ============ Tabs & Sort Options ============
-const TAB_OPTIONS = [
-  { id: 'all', label: '全部', labelEn: 'All' },
-  { id: 'completed', label: '已完成', labelEn: 'Completed' },
-  { id: 'processing', label: '生成中', labelEn: 'Processing' },
-  { id: 'failed', label: '失败', labelEn: 'Failed' },
-  { id: 'favorited', label: '已收藏', labelEn: 'Favorited' },
-];
-
-const SORT_OPTIONS = [
-  { id: 'newest', label: '最新生成', labelEn: 'Newest' },
-  { id: 'oldest', label: '最早生成', labelEn: 'Oldest' },
-  { id: 'credits', label: '消耗积分', labelEn: 'Credits' },
-  { id: 'style', label: '风格名称', labelEn: 'Style Name' },
-];
-
-// ============ Components ============
-function StatusBadge({ status, isZh }: { status: WorkStatus; isZh: boolean }) {
-  const configs: Record<WorkStatus, { bg: string; color: string; icon: React.ComponentType<{ className?: string }>; label: string; labelEn: string }> = {
+function StatusBadge({ status }: { status: WorkStatus }) {
+  const t = useTranslations('works.status');
+  const configs: Record<WorkStatus, { bg: string; color: string; icon: React.ComponentType<{ className?: string }>; label: string }> = {
     completed: {
       bg: 'rgba(34, 197, 94, 0.15)',
       color: '#22c55e',
       icon: Check,
-      label: '已完成',
-      labelEn: 'Completed'
+      label: 'completed'
     },
     processing: {
       bg: 'rgba(232, 194, 122, 0.15)',
       color: '#E8C27A',
       icon: Loader2,
-      label: '生成中',
-      labelEn: 'Processing'
+      label: 'processing'
     },
     failed: {
       bg: 'rgba(239, 68, 68, 0.15)',
       color: '#ef4444',
       icon: AlertCircle,
-      label: '失败',
-      labelEn: 'Failed'
+      label: 'failed'
     },
     favorited: {
       bg: 'rgba(232, 194, 122, 0.15)',
       color: '#E8C27A',
       icon: Heart,
-      label: '已收藏',
-      labelEn: 'Favorited'
+      label: 'favorited'
     },
   };
 
@@ -81,14 +62,13 @@ function StatusBadge({ status, isZh }: { status: WorkStatus; isZh: boolean }) {
       style={{ background: config.bg, color: config.color }}
     >
       <Icon className={`w-3.5 h-3.5 ${status === 'processing' ? 'animate-spin' : ''}`} />
-      {isZh ? config.label : config.labelEn}
+      {t(config.label)}
     </span>
   );
 }
 
 function WorkCard({
   work,
-  isZh,
   onToggleFavorite,
   onViewDetail,
   onRegenerate,
@@ -96,13 +76,13 @@ function WorkCard({
   onDelete,
 }: {
   work: MockWork;
-  isZh: boolean;
   onToggleFavorite: (id: string) => void;
   onViewDetail: (id: string) => void;
   onRegenerate: (id: string) => void;
   onDownload: (id: string) => void;
   onDelete: (id: string) => void;
 }) {
+  const t = useTranslations('works.actions');
   const [showActions, setShowActions] = useState(false);
 
   return (
@@ -153,7 +133,7 @@ function WorkCard({
           >
             <Loader2 className="w-10 h-10 animate-spin mb-3" style={{ color: '#E8C27A' }} />
             <p className="text-sm" style={{ color: 'rgba(255, 247, 236, 0.6)' }}>
-              {isZh ? 'AI 正在生成中...' : 'AI is generating...'}
+              AI is generating...
             </p>
           </div>
         ) : (
@@ -163,17 +143,14 @@ function WorkCard({
           >
             <AlertCircle className="w-10 h-10 mb-3" style={{ color: '#ef4444' }} />
             <p className="text-sm font-medium mb-1" style={{ color: 'rgba(255, 247, 236, 0.8)' }}>
-              {isZh ? '生成失败' : 'Generation Failed'}
-            </p>
-            <p className="text-xs" style={{ color: 'rgba(255, 247, 236, 0.45)' }}>
-              {work.errorMessage}
+              Generation Failed
             </p>
           </div>
         )}
 
         {/* Status Badge */}
         <div className="absolute top-3 left-3">
-          <StatusBadge status={work.status} isZh={isZh} />
+          <StatusBadge status={work.status} />
         </div>
 
         {/* Hover Overlay for Actions */}
@@ -188,7 +165,7 @@ function WorkCard({
             onClick={() => onViewDetail(work.id)}
             className="w-10 h-10 rounded-full flex items-center justify-center transition-all hover:scale-110"
             style={{ background: 'rgba(255, 247, 236, 0.15)' }}
-            title={isZh ? '查看详情' : 'View Details'}
+            title={t('viewDetails')}
           >
             <Eye className="w-5 h-5" style={{ color: 'rgba(255, 247, 236, 0.9)' }} />
           </button>
@@ -196,7 +173,7 @@ function WorkCard({
             onClick={() => onDownload(work.id)}
             className="w-10 h-10 rounded-full flex items-center justify-center transition-all hover:scale-110"
             style={{ background: 'rgba(255, 247, 236, 0.15)' }}
-            title={isZh ? '下载' : 'Download'}
+            title={t('download')}
           >
             <Download className="w-5 h-5" style={{ color: 'rgba(255, 247, 236, 0.9)' }} />
           </button>
@@ -204,7 +181,7 @@ function WorkCard({
             onClick={() => onRegenerate(work.id)}
             className="w-10 h-10 rounded-full flex items-center justify-center transition-all hover:scale-110"
             style={{ background: 'rgba(232, 194, 122, 0.2)' }}
-            title={isZh ? '再次生成' : 'Regenerate'}
+            title={t('regenerate')}
           >
             <RefreshCw className="w-5 h-5" style={{ color: '#E8C27A' }} />
           </button>
@@ -212,7 +189,7 @@ function WorkCard({
             onClick={() => onDelete(work.id)}
             className="w-10 h-10 rounded-full flex items-center justify-center transition-all hover:scale-110"
             style={{ background: 'rgba(239, 68, 68, 0.15)' }}
-            title={isZh ? '删除' : 'Delete'}
+            title={t('delete')}
           >
             <Trash2 className="w-5 h-5" style={{ color: '#ef4444' }} />
           </button>
@@ -228,10 +205,6 @@ function WorkCard({
           <span className="text-xs" style={{ color: 'rgba(255, 247, 236, 0.45)' }}>
             {work.styleName}
           </span>
-          <div className="flex items-center gap-1 text-xs" style={{ color: 'rgba(255, 247, 236, 0.45)' }}>
-            <ImageIcon className="w-3.5 h-3.5" />
-            <span>{work.imageCount > 0 ? `${work.imageCount} ${isZh ? '张' : 'images'}` : '-'}</span>
-          </div>
         </div>
         <p className="text-xs mt-2" style={{ color: 'rgba(255, 247, 236, 0.35)' }}>
           {work.createdAt}
@@ -241,7 +214,9 @@ function WorkCard({
   );
 }
 
-function EmptyState({ isZh, onStartCreate }: { isZh: boolean; onStartCreate: () => void }) {
+function EmptyState({ onStartCreate }: { onStartCreate: () => void }) {
+  const t = useTranslations('works.empty');
+
   return (
     <motion.div
       initial={{ y: 20, opacity: 0 }}
@@ -256,12 +231,10 @@ function EmptyState({ isZh, onStartCreate }: { isZh: boolean; onStartCreate: () 
         <ImageIcon className="w-12 h-12" style={{ color: 'rgba(255, 247, 236, 0.25)' }} />
       </div>
       <h3 className="text-xl font-semibold mb-2" style={{ color: 'rgba(255, 247, 236, 0.92)' }}>
-        {isZh ? '还没有作品' : 'No works yet'}
+        {t('title')}
       </h3>
       <p className="text-sm mb-6 text-center max-w-md" style={{ color: 'rgba(255, 247, 236, 0.55)' }}>
-        {isZh
-          ? '上传一张照片，开始生成你的第一套汉服写真'
-          : 'Upload a photo and start creating your first Hanfu portrait'}
+        {t('description')}
       </p>
       <Button
         onClick={onStartCreate}
@@ -272,17 +245,16 @@ function EmptyState({ isZh, onStartCreate }: { isZh: boolean; onStartCreate: () 
         }}
       >
         <Sparkles className="w-4 h-4 mr-2" />
-        {isZh ? '开始创作' : 'Start Creating'}
+        {t('cta')}
       </Button>
     </motion.div>
   );
 }
 
-// ============ Main Page ============
 export default function WorksPage() {
+  const t = useTranslations('works');
   const router = useRouter();
   const locale = useLocale();
-  const isZh = locale === 'zh';
   const [works, setWorks] = useState<MockWork[]>(MOCK_WORKS);
   const [activeTab, setActiveTab] = useState('all');
   const [searchQuery, setSearchQuery] = useState('');
@@ -360,9 +332,16 @@ export default function WorksPage() {
   };
 
   const getCurrentSortLabel = () => {
-    const option = SORT_OPTIONS.find(o => o.id === sortBy);
-    return option ? (isZh ? option.label : option.labelEn) : '';
+    const option = [
+      { id: 'newest', label: 'sort.newest' },
+      { id: 'oldest', label: 'sort.oldest' },
+      { id: 'credits', label: 'sort.credits' },
+      { id: 'style', label: 'sort.style' },
+    ].find(o => o.id === sortBy);
+    return option ? t(option.label) : '';
   };
+
+  const tabs = ['all', 'completed', 'processing', 'failed', 'favorited'];
 
   return (
     <div className="min-h-screen" style={{ background: '#0B0B0D' }}>
@@ -375,10 +354,10 @@ export default function WorksPage() {
           className="mb-8"
         >
           <h1 className="text-2xl md:text-3xl font-bold mb-2" style={{ color: 'rgba(255, 247, 236, 0.92)' }}>
-            {isZh ? '我的作品' : 'My Works'}
+            {t('title')}
           </h1>
           <p className="text-base" style={{ color: 'rgba(255, 247, 236, 0.55)' }}>
-            {isZh ? '查看、管理和下载你生成的汉服写真' : 'View, manage, and download your Hanfu portraits'}
+            {t('subtitle')}
           </p>
         </motion.div>
 
@@ -391,18 +370,18 @@ export default function WorksPage() {
         >
           {/* Tabs */}
           <div className="flex gap-1 overflow-x-auto pb-2 [&::-webkit-scrollbar]:hidden">
-            {TAB_OPTIONS.map(tab => (
+            {tabs.map(tab => (
               <button
-                key={tab.id}
-                onClick={() => setActiveTab(tab.id)}
+                key={tab}
+                onClick={() => setActiveTab(tab)}
                 className="px-4 py-2 rounded-lg text-sm font-medium whitespace-nowrap transition-all duration-200"
                 style={{
-                  background: activeTab === tab.id ? 'rgba(232, 194, 122, 0.12)' : 'transparent',
-                  color: activeTab === tab.id ? '#E8C27A' : 'rgba(255, 247, 236, 0.65)',
-                  border: activeTab === tab.id ? '1px solid rgba(232, 194, 122, 0.2)' : '1px solid transparent',
+                  background: activeTab === tab ? 'rgba(232, 194, 122, 0.12)' : 'transparent',
+                  color: activeTab === tab ? '#E8C27A' : 'rgba(255, 247, 236, 0.65)',
+                  border: activeTab === tab ? '1px solid rgba(232, 194, 122, 0.2)' : '1px solid transparent',
                 }}
               >
-                {isZh ? tab.label : tab.labelEn}
+                {t(`tabs.${tab}`)}
               </button>
             ))}
           </div>
@@ -417,7 +396,7 @@ export default function WorksPage() {
               />
               <input
                 type="text"
-                placeholder={isZh ? '搜索作品...' : 'Search works...'}
+                placeholder={t('search.placeholder')}
                 value={searchQuery}
                 onChange={e => setSearchQuery(e.target.value)}
                 className="w-[200px] md:w-[260px] pl-10 pr-4 py-2 rounded-lg text-sm outline-none transition-all duration-200"
@@ -425,12 +404,6 @@ export default function WorksPage() {
                   background: 'rgba(255, 247, 236, 0.03)',
                   border: '1px solid rgba(255, 247, 236, 0.08)',
                   color: 'rgba(255, 247, 236, 0.9)',
-                }}
-                onFocus={e => {
-                  e.target.style.borderColor = 'rgba(232, 194, 122, 0.3)';
-                }}
-                onBlur={e => {
-                  e.target.style.borderColor = 'rgba(255, 247, 236, 0.08)';
                 }}
               />
               {searchQuery && (
@@ -467,19 +440,19 @@ export default function WorksPage() {
                     boxShadow: '0 8px 32px rgba(0, 0, 0, 0.4)',
                   }}
                 >
-                  {SORT_OPTIONS.map(option => (
+                  {['newest', 'oldest', 'credits', 'style'].map(option => (
                     <button
-                      key={option.id}
+                      key={option}
                       onClick={() => {
-                        setSortBy(option.id);
+                        setSortBy(option);
                         setShowSortDropdown(false);
                       }}
                       className="w-full px-4 py-2.5 text-left text-sm transition-all duration-200 hover:bg-white/5"
                       style={{
-                        color: sortBy === option.id ? '#E8C27A' : 'rgba(255, 247, 236, 0.7)',
+                        color: sortBy === option ? '#E8C27A' : 'rgba(255, 247, 236, 0.7)',
                       }}
                     >
-                      {isZh ? option.label : option.labelEn}
+                      {t(`sort.${option}`)}
                     </button>
                   ))}
                 </div>
@@ -495,7 +468,6 @@ export default function WorksPage() {
               <WorkCard
                 key={work.id}
                 work={work}
-                isZh={isZh}
                 onToggleFavorite={handleToggleFavorite}
                 onViewDetail={handleViewDetail}
                 onRegenerate={handleRegenerate}
@@ -505,7 +477,7 @@ export default function WorksPage() {
             ))}
           </div>
         ) : (
-          <EmptyState isZh={isZh} onStartCreate={handleStartCreate} />
+          <EmptyState onStartCreate={handleStartCreate} />
         )}
 
         {/* Results Count */}
@@ -517,9 +489,7 @@ export default function WorksPage() {
             className="mt-8 text-sm text-center"
             style={{ color: 'rgba(255, 247, 236, 0.4)' }}
           >
-            {isZh
-              ? `共 ${filteredWorks.length} 个作品`
-              : `${filteredWorks.length} works total`}
+            {t('info.total', { count: filteredWorks.length })}
           </motion.p>
         )}
       </div>

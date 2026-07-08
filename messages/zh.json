@@ -505,28 +505,28 @@
     }
   },
   "testimonials": {
-    "title": "来自 Vibe Coders 的成功故事",
-    "subtitle": "真实用户分享他们使用汉韵写真创作 AI 汉服写真的体验。",
+    "title": "来自汉服爱好者的真实体验",
+    "subtitle": "看看用户们如何用汉韵写真创作出惊艳的汉服写真。",
     "items": [
       {
         "name": "Alex Chen",
         "quote": "上传一张正脸照就能得到很完整的汉服写真，模板风格也很适合社交头像和写真分享。",
-        "designation": "营销经理转型创始人"
+        "designation": "摄影爱好者"
       },
       {
         "name": "Jordan Lee",
-        "quote": "我花了多年学习编码。现在我的非技术联合创始人使用 Vibe Coding 发布功能比我还快。这就是未来。",
-        "designation": "技术联合创始人"
+        "quote": "我试过很多AI写真工具，但汉韵写真的汉服效果是最真实的，细节处理非常到位。",
+        "designation": "设计师"
       },
       {
         "name": "Alice Johnson",
         "quote": "我喜欢盛唐和敦煌风格，生成结果比普通滤镜更像一套完整的写真造型。",
-        "designation": "连续创业者"
+        "designation": "内容创作者"
       },
       {
         "name": "Bob Smith",
         "quote": "模板选择很直观，上传照片、选择风格、生成作品的流程很顺。",
-        "designation": "独立黑客"
+        "designation": "自由职业者"
       },
       {
         "name": "Cathy Lee",
@@ -535,52 +535,52 @@
       },
       {
         "name": "David Wright",
-        "quote": "身份验证、支付和部署都可以直接使用。我专注于独特的功能。我的 SaaS 第一周就盈利了。",
-        "designation": "独立创始人"
+        "quote": "第一次用就爱上了，唐代的雍容华贵完美呈现，已经推荐给所有朋友了。",
+        "designation": "创业者"
       },
       {
         "name": "Eva Green",
-        "quote": "它带来的效率是无与伦比的。这是一个重要的工具，帮助我们削减成本并显著改善了最终产品。",
+        "quote": "它带来的效率是无与伦比的。以前想拍汉服写真要花大半天，现在几分钟就搞定了。",
         "designation": "运营总监"
       },
       {
         "name": "Frank Moore",
-        "quote": "一个完美融入我们工作流程的强大解决方案。它增强了我们团队的能力，让我们能够处理更复杂的项目。",
+        "quote": "一个完美融入我们工作流程的强大解决方案。团队活动用汉韵写真拍合影，效果惊艳。",
         "designation": "项目经理"
       },
       {
         "name": "Grace Hall",
-        "quote": "它非常直观且易于使用。即使没有技术专业知识的人也可以利用它的强大功能来改善工作流程。",
+        "quote": "它非常直观且易于使用。即使没有技术专业知识的人也可以轻松创作出绝美汉服写真。",
         "designation": "市场营销专家"
       },
       {
         "name": "Henry Ford",
-        "quote": "它为我们节省了无数小时。强烈推荐给任何想要提高效率和生产力的人。",
+        "quote": "为我们节省了无数小时。强烈推荐给任何想要体验汉服之美的人。",
         "designation": "运营分析师"
       },
       {
         "name": "Ivy Wilson",
-        "quote": "任何专业人士的必备工具。它彻底改变了我们解决问题和决策的方式。",
+        "quote": "任何汉服爱好者的必备工具。它彻底改变了我们体验传统文化的方式。",
         "designation": "商业顾问"
       },
       {
         "name": "Jack Brown",
-        "quote": "结果总是令人印象深刻。这个 AI 不仅帮助我们达到了性能目标，还超越了预期。",
+        "quote": "结果总是令人印象深刻。AI不仅帮我实现了汉服梦，还超越了预期效果。",
         "designation": "绩效经理"
       },
       {
         "name": "Kathy Adams",
-        "quote": "它帮助我们实现了曾经被认为不可能的事情。AI 的能力是突破性的，为我们开辟了新的道路。",
+        "quote": "它帮助我们实现了曾经被认为不可能的事情。AI的能力是突破性的，为传统文化传播开辟了新道路。",
         "designation": "创新负责人"
       },
       {
         "name": "Leo Carter",
-        "quote": "具有真正影响力的变革性技术。它简化了我们的运营，为我们的流程带来了前所未有的效率。",
+        "quote": "具有真正影响力的变革性技术。让传统文化以更现代的方式被更多人了解和喜爱。",
         "designation": "技术策略师"
       },
       {
         "name": "Mia Turner",
-        "quote": "简直是革命性的！它与我们现有系统的集成和增强方式简直是奇迹。",
+        "quote": "简直是革命性的！它让我能够轻松尝试各种朝代汉服，找到最适合自己的风格。",
         "designation": "系统集成师"
       }
     ]
@@ -618,7 +618,7 @@
       "title": "社交就绪",
       "description": "完美尺寸适用于Instagram、Facebook、微信和其他社交平台。"
     },
-    "vibeCoding": {
+    "creative": {
       "title": "无限创意",
       "description": "尝试不同的风格、背景和配饰。创造您完美的汉服造型。"
     }
@@ -1457,6 +1457,73 @@
         "name": "敦煌飞天",
         "description": "敦煌灵感、金色壁画、飞天意境"
       }
+    },
+    "sidebar": {
+      "create": "创作",
+      "generatePortrait": "生成写真",
+      "styleTemplates": "风格模板",
+      "myGallery": "我的作品",
+      "hanfuStyles": "汉服风格",
+      "tangGlamour": "盛唐金影",
+      "songElegance": "宋韵清雅",
+      "qinHanNoir": "秦汉玄色",
+      "bluePorcelain": "青花瓷",
+      "modernQipao": "现代旗袍",
+      "dunhuangMuse": "敦煌飞天",
+      "enhance": "增强画质",
+      "upscale": "高清放大",
+      "regenerate": "重新生成",
+      "faceRestore": "面部修复",
+      "account": "账户",
+      "credits": "积分",
+      "history": "历史记录"
+    },
+    "errors": {
+      "uploadRequired": "请上传一张清晰的面部照片。",
+      "generationFailed": "生成失败，请稍后重试。",
+      "noResult": "生成成功但未返回图片。",
+      "notAvailable": "该模板暂不可用，请选择其他模板。",
+      "insufficientCredits": "积分不足，无法生成写真。"
+    },
+    "previewSection": {
+      "title": "预览结果",
+      "subtitle": "您的 AI 汉服写真已生成成功",
+      "infoTitle": "写真信息",
+      "templateLabel": "模板",
+      "creditsLabel": "已消耗积分",
+      "countLabel": "生成图片数",
+      "statusLabel": "状态",
+      "statusCompleted": "已完成"
+    },
+    "actions": {
+      "download": "下载图片",
+      "regenerate": "重新生成",
+      "regenerating": "重新生成中...",
+      "backToCreate": "返回创作",
+      "viewWorks": "查看我的作品",
+      "goToCreate": "开始创作"
+    },
+    "uploadSection": {
+      "badge": "汉韵写真 · 开始创作",
+      "title": "创作您的汉服写真",
+      "subtitle": "上传一张清晰正面照，选择风格，生成您的 AI 汉服写真。",
+      "photoTips": {
+        "clearFace": "清晰正面照",
+        "goodLighting": "光线充足",
+        "noObstruction": "无面部遮挡",
+        "simpleBackground": "背景简洁"
+      }
+    },
+    "styleSelection": {
+      "title": "选择风格",
+      "currentSelection": "当前选择",
+      "featuredTemplates": "精选模板",
+      "generationCost": "生成消耗",
+      "generating": "AI 正在生成您的汉服写真，请耐心等待..."
+    },
+    "navigation": {
+      "backToCreate": "返回创作",
+      "previewBadge": "汉韵写真 · 预览结果"
     }
   },
   "brand": {
