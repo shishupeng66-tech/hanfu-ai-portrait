@@ -58,7 +58,7 @@ export default function SettingsPage() {
     try {
       const response = await fetch("/api/user/profile");
       if (!response.ok) {
-        throw new Error("Failed to fetch profile");
+        throw new Error(t("fetchProfileError"));
       }
 
       const data = (await response.json()) as { user: UserProfile };
@@ -242,28 +242,6 @@ export default function SettingsPage() {
         }
       )
     : t("sections.billing.noRenewal");
-  const settingsSubtitle =
-    locale === "zh"
-      ? "管理你的个人资料、账户和使用偏好。"
-      : "Manage your profile, account, and usage preferences.";
-  const preferenceItems = [
-    {
-      label: locale === "zh" ? "语言" : "Language",
-      value: locale === "zh" ? "简体中文" : "English",
-    },
-    {
-      label: locale === "zh" ? "通知偏好" : "Notification preference",
-      value: locale === "zh" ? "站内通知与邮件提醒" : "In-app and email alerts",
-    },
-    {
-      label: locale === "zh" ? "默认创作模板" : "Default creation template",
-      value: locale === "zh" ? "盛唐金影" : "Tang Glamour",
-    },
-    {
-      label: locale === "zh" ? "默认图片数量" : "Default image count",
-      value: locale === "zh" ? "4 张" : "4 images",
-    },
-  ];
 
   if (loading && !displayUser) {
     return (
@@ -300,7 +278,7 @@ export default function SettingsPage() {
             <h1 className="mb-4 text-4xl font-bold text-foreground md:text-6xl">
               {t("title")}
             </h1>
-            <p className="text-xl text-muted-foreground">{settingsSubtitle}</p>
+            <p className="text-xl text-muted-foreground">{t("subtitle")}</p>
           </div>
 
           <div className="grid grid-cols-1 gap-6 lg:grid-cols-3">
@@ -329,7 +307,7 @@ export default function SettingsPage() {
                       {displayUser?.image ? (
                         <Image
                           src={displayUser.image}
-                          alt={displayUser.name || "Avatar"}
+                          alt={displayUser.name || t("sections.profile.avatarLabel")}
                           fill
                           sizes="80px"
                           className="object-cover"
@@ -342,7 +320,7 @@ export default function SettingsPage() {
                       )}
                       {isUploadingAvatar && (
                         <div className="absolute inset-0 flex items-center justify-center bg-black/40 text-xs font-medium text-white">
-                          ...
+                          {t("sections.profile.avatarUploading")}
                         </div>
                       )}
                     </div>
@@ -493,20 +471,23 @@ export default function SettingsPage() {
               className="rounded-3xl border border-border bg-card/50 p-6 backdrop-blur-md lg:col-span-3"
             >
               <h2 className="text-2xl font-semibold text-card-foreground">
-                {locale === "zh" ? "偏好设置" : "Preferences"}
+                {t("sections.preferences.title")}
               </h2>
               <p className="mt-2 text-sm text-muted-foreground">
-                {locale === "zh"
-                  ? "管理语言、通知和默认创作偏好。"
-                  : "Manage language, notifications, and default creation preferences."}
+                {t("sections.preferences.description")}
               </p>
 
               <div className="mt-6 grid grid-cols-1 gap-4 md:grid-cols-2 lg:grid-cols-4">
-                {preferenceItems.map((item) => (
+                {[
+                  { label: "sections.preferences.language", value: "sections.preferences.languageValue" },
+                  { label: "sections.preferences.notification", value: "sections.preferences.notificationValue" },
+                  { label: "sections.preferences.defaultTemplate", value: "sections.preferences.defaultTemplateValue" },
+                  { label: "sections.preferences.defaultImageCount", value: "sections.preferences.defaultImageCountValue" },
+                ].map((item) => (
                   <div key={item.label} className="rounded-2xl bg-muted/50 p-4">
-                    <p className="text-sm text-muted-foreground">{item.label}</p>
+                    <p className="text-sm text-muted-foreground">{t(item.label)}</p>
                     <p className="mt-1 text-lg font-semibold text-card-foreground">
-                      {item.value}
+                      {t(item.value)}
                     </p>
                   </div>
                 ))}

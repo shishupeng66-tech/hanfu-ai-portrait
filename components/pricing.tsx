@@ -293,10 +293,10 @@ export function Pricing() {
       if (data.url) {
         window.location.href = data.url;
       } else {
-        toast.error(t("checkoutError", { defaultValue: "跳转支付失败，请重试" }));
+        toast.error(t("checkoutError", { defaultValue: "Unable to redirect to checkout. Please try again." }));
       }
     } catch {
-      toast.error(t("checkoutError", { defaultValue: "跳转支付失败，请重试" }));
+      toast.error(t("checkoutError", { defaultValue: "Unable to redirect to checkout. Please try again." }));
     }
   }
 

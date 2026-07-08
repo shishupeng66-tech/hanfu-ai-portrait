@@ -1275,8 +1275,118 @@
         "memberSince": "注册时间",
         "viewProfile": "查看个人资料",
         "signOut": "退出登录"
+      },
+      "preferences": {
+        "title": "偏好设置",
+        "description": "管理语言、通知和默认创作偏好。",
+        "language": "语言",
+        "languageValue": "简体中文",
+        "notification": "通知偏好",
+        "notificationValue": "站内通知与邮件提醒",
+        "defaultTemplate": "默认创作模板",
+        "defaultTemplateValue": "盛唐金影",
+        "defaultImageCount": "默认图片数量",
+        "defaultImageCountValue": "4 张"
       }
+    },
+    "fetchProfileError": "获取用户信息失败"
+  },
+  "templates": {
+    "list": {
+      "title": "风格模板",
+      "subtitle": "浏览并选择您喜欢的汉服风格，开始创作写真",
+      "categories": {
+        "all": "全部",
+        "tang": "唐",
+        "song": "宋",
+        "yuan": "元",
+        "ming": "明",
+        "qing": "清",
+        "modern": "现代",
+        "dunhuang": "敦煌",
+        "qipao": "旗袍"
+      },
+      "filters": {
+        "popular": "热门",
+        "new": "上新",
+        "premium": "会员专属",
+        "free": "免费",
+        "favorited": "已收藏"
+      },
+      "empty": "未找到符合条件的模板。"
+    },
+    "detail": {
+      "notFound": "模板不存在",
+      "notFoundDescription": "该模板可能已下架或不存在。",
+      "backToTemplates": "返回模板库",
+      "credits": "积分",
+      "memberExclusive": "会员专属",
+      "free": "免费可用",
+      "templateInfo": "模板信息",
+      "dynasty": "朝代/风格",
+      "recommendedPhotoType": "推荐照片类型",
+      "imageCount": "生成张数",
+      "creditCost": "消耗积分",
+      "templateAccess": "模板权限",
+      "suitableFor": "适合人群",
+      "usageTips": "使用建议",
+      "useThisTemplate": "使用此模板",
+      "saved": "已收藏",
+      "saveTemplate": "收藏模板",
+      "viewMoreTemplates": "查看更多模板",
+      "morePreviews": "更多效果预览",
+      "morePreviewsSubtitle": "同一风格下的不同构图与光影参考。",
+      "preview": "效果预览",
+      "images": "张"
     }
+  },
+  "works": {
+    "title": "我的作品",
+    "subtitle": "查看、管理和下载您的汉服写真",
+    "tabs": {
+      "all": "全部",
+      "completed": "已完成",
+      "processing": "进行中",
+      "failed": "失败",
+      "favorited": "已收藏"
+    },
+    "sort": {
+      "label": "排序方式",
+      "newest": "最新",
+      "oldest": "最早",
+      "credits": "消耗积分",
+      "style": "风格名称"
+    },
+    "search": {
+      "placeholder": "搜索作品..."
+    },
+    "empty": {
+      "title": "还没有作品",
+      "description": "上传照片并开始创作您的第一张AI汉服写真",
+      "cta": "开始创作"
+    },
+    "status": {
+      "completed": "已完成",
+      "processing": "进行中",
+      "failed": "失败",
+      "favorited": "已收藏"
+    },
+    "actions": {
+      "viewDetails": "查看详情",
+      "download": "下载",
+      "regenerate": "重新生成",
+      "delete": "删除",
+      "toggleFavorite": "收藏/取消收藏"
+    },
+    "info": {
+      "style": "风格",
+      "creditsUsed": "消耗积分",
+      "imageCount": "图片数",
+      "created": "创建时间",
+      "total": "共 {count} 张作品"
+    },
+    "loading": "AI 正在生成...",
+    "failed": "生成失败"
   },
   "contact": {
     "title": "联系我们",

@@ -2,15 +2,12 @@
 
 import { useTranslations } from "next-intl";
 
-// Safety helper: if next-intl returns the raw key (translation missing),
-// show a friendly fallback instead of the ugly key string.
 function resolveValue(
   t: (key: string) => string,
   key: string,
   fallback: string
 ): string {
   const value = t(key);
-  // next-intl returns the raw key when translation is missing
   return value === key ? fallback : value;
 }
 
@@ -46,22 +43,22 @@ export function PricingTable({ mode }: { mode: Mode }) {
 
   const membershipRows: TableRow[] = [
     {
-      title: resolveValue(t, "table.rows.purchaseType", "购买类型"),
+      title: resolveValue(t, "table.rows.purchaseType", "Purchase type"),
       values: {
         basic: resolveValue(
           t,
           "table.membership.basic.purchaseType",
-          "订阅"
+          "Subscription"
         ),
         premium: resolveValue(
           t,
           "table.membership.premium.purchaseType",
-          "订阅"
+          "Subscription"
         ),
         proPlus: resolveValue(
           t,
           "table.membership.proPlus.purchaseType",
-          "年卡订阅"
+          "Annual subscription"
         ),
         small: "",
         common: "",
@@ -69,7 +66,7 @@ export function PricingTable({ mode }: { mode: Mode }) {
       },
     },
     {
-      title: resolveValue(t, "table.rows.price", "价格"),
+      title: resolveValue(t, "table.rows.price", "Price"),
       values: {
         basic: t("membership.basic.price"),
         premium: t("membership.premium.price"),
@@ -80,22 +77,22 @@ export function PricingTable({ mode }: { mode: Mode }) {
       },
     },
     {
-      title: resolveValue(t, "table.rows.billingCycle", "计费周期"),
+      title: resolveValue(t, "table.rows.billingCycle", "Billing cycle"),
       values: {
         basic: resolveValue(
           t,
           "table.membership.basic.billingCycle",
-          "每月"
+          "Monthly"
         ),
         premium: resolveValue(
           t,
           "table.membership.premium.billingCycle",
-          "每月"
+          "Monthly"
         ),
         proPlus: resolveValue(
           t,
           "table.membership.proPlus.billingCycle",
-          "每年"
+          "Yearly"
         ),
         small: "",
         common: "",
@@ -103,22 +100,22 @@ export function PricingTable({ mode }: { mode: Mode }) {
       },
     },
     {
-      title: resolveValue(t, "table.rows.creditsIncluded", "获得积分"),
+      title: resolveValue(t, "table.rows.creditsIncluded", "Credits included"),
       values: {
         basic: resolveValue(
           t,
           "table.membership.basic.creditsIncluded",
-          "每月 10 积分"
+          "10 credits monthly"
         ),
         premium: resolveValue(
           t,
           "table.membership.premium.creditsIncluded",
-          "每月 22 积分"
+          "22 credits monthly"
         ),
         proPlus: resolveValue(
           t,
           "table.membership.proPlus.creditsIncluded",
-          "每年 260 积分"
+          "260 credits yearly"
         ),
         small: "",
         common: "",
@@ -126,22 +123,22 @@ export function PricingTable({ mode }: { mode: Mode }) {
       },
     },
     {
-      title: resolveValue(t, "table.rows.premiumTemplates", "会员模板"),
+      title: resolveValue(t, "table.rows.premiumTemplates", "Premium templates"),
       values: {
         basic: resolveValue(
           t,
           "table.membership.basic.premiumTemplates",
-          "解锁会员专属模板"
+          "Member-only templates"
         ),
         premium: resolveValue(
           t,
           "table.membership.premium.premiumTemplates",
-          "解锁全部会员模板"
+          "All premium templates"
         ),
         proPlus: resolveValue(
           t,
           "table.membership.proPlus.premiumTemplates",
-          "解锁全部会员模板"
+          "All premium templates"
         ),
         small: "",
         common: "",
@@ -149,22 +146,22 @@ export function PricingTable({ mode }: { mode: Mode }) {
       },
     },
     {
-      title: resolveValue(t, "table.rows.newTemplates", "新模板权益"),
+      title: resolveValue(t, "table.rows.newTemplates", "New templates"),
       values: {
         basic: resolveValue(
           t,
           "table.membership.basic.newTemplates",
-          "普通更新"
+          "Regular updates"
         ),
         premium: resolveValue(
           t,
           "table.membership.premium.newTemplates",
-          "优先体验新写真模板"
+          "Early access to new templates"
         ),
         proPlus: resolveValue(
           t,
           "table.membership.proPlus.newTemplates",
-          "全年优先体验新模板"
+          "Year-round early access"
         ),
         small: "",
         common: "",
@@ -175,23 +172,23 @@ export function PricingTable({ mode }: { mode: Mode }) {
       title: resolveValue(
         t,
         "table.rows.extraCreditDiscount",
-        "额外积分优惠"
+        "Extra credit discount"
       ),
       values: {
         basic: resolveValue(
           t,
           "table.membership.basic.extraCreditDiscount",
-          "无"
+          "Not included"
         ),
         premium: resolveValue(
           t,
           "table.membership.premium.extraCreditDiscount",
-          "会员专属优惠"
+          "Member discount"
         ),
         proPlus: resolveValue(
           t,
           "table.membership.proPlus.extraCreditDiscount",
-          "会员专属优惠"
+          "Member discount"
         ),
         small: "",
         common: "",
@@ -199,22 +196,22 @@ export function PricingTable({ mode }: { mode: Mode }) {
       },
     },
     {
-      title: resolveValue(t, "table.rows.bestFor", "适合人群"),
+      title: resolveValue(t, "table.rows.bestFor", "Best for"),
       values: {
         basic: resolveValue(
           t,
           "table.membership.basic.bestFor",
-          "偶尔生成汉服写真"
+          "Occasional Hanfu portraits"
         ),
         premium: resolveValue(
           t,
           "table.membership.premium.bestFor",
-          "生成完整写真套图"
+          "Full portrait sets"
         ),
         proPlus: resolveValue(
           t,
           "table.membership.proPlus.bestFor",
-          "长期创作和高频使用"
+          "Long-term and frequent creation"
         ),
         small: "",
         common: "",
@@ -225,7 +222,7 @@ export function PricingTable({ mode }: { mode: Mode }) {
 
   const packRows: TableRow[] = [
     {
-      title: resolveValue(t, "table.rows.purchaseType", "购买类型"),
+      title: resolveValue(t, "table.rows.purchaseType", "Purchase type"),
       values: {
         basic: "",
         premium: "",
@@ -233,22 +230,22 @@ export function PricingTable({ mode }: { mode: Mode }) {
         small: resolveValue(
           t,
           "table.packs.small.purchaseType",
-          "一次性积分包"
+          "One-time credit pack"
         ),
         common: resolveValue(
           t,
           "table.packs.common.purchaseType",
-          "一次性积分包"
+          "One-time credit pack"
         ),
         large: resolveValue(
           t,
           "table.packs.large.purchaseType",
-          "一次性积分包"
+          "One-time credit pack"
         ),
       },
     },
     {
-      title: resolveValue(t, "table.rows.price", "价格"),
+      title: resolveValue(t, "table.rows.price", "Price"),
       values: {
         basic: "",
         premium: "",
@@ -259,7 +256,7 @@ export function PricingTable({ mode }: { mode: Mode }) {
       },
     },
     {
-      title: resolveValue(t, "table.rows.creditsIncluded", "获得积分"),
+      title: resolveValue(t, "table.rows.creditsIncluded", "Credits included"),
       values: {
         basic: "",
         premium: "",
@@ -267,33 +264,33 @@ export function PricingTable({ mode }: { mode: Mode }) {
         small: resolveValue(
           t,
           "table.packs.small.creditsIncluded",
-          "5 积分"
+          "5 credits"
         ),
         common: resolveValue(
           t,
           "table.packs.common.creditsIncluded",
-          "20 积分"
+          "20 credits"
         ),
         large: resolveValue(
           t,
           "table.packs.large.creditsIncluded",
-          "55 积分"
+          "55 credits"
         ),
       },
     },
     {
-      title: resolveValue(t, "table.rows.subscription", "是否订阅"),
+      title: resolveValue(t, "table.rows.subscription", "Subscription"),
       values: {
         basic: "",
         premium: "",
         proPlus: "",
-        small: resolveValue(t, "table.packs.small.subscription", "否"),
-        common: resolveValue(t, "table.packs.common.subscription", "否"),
-        large: resolveValue(t, "table.packs.large.subscription", "否"),
+        small: resolveValue(t, "table.packs.small.subscription", "No"),
+        common: resolveValue(t, "table.packs.common.subscription", "No"),
+        large: resolveValue(t, "table.packs.large.subscription", "No"),
       },
     },
     {
-      title: resolveValue(t, "table.rows.premiumTemplates", "会员模板"),
+      title: resolveValue(t, "table.rows.premiumTemplates", "Premium templates"),
       values: {
         basic: "",
         premium: "",
@@ -301,22 +298,22 @@ export function PricingTable({ mode }: { mode: Mode }) {
         small: resolveValue(
           t,
           "table.packs.small.premiumTemplates",
-          "否"
+          "No"
         ),
         common: resolveValue(
           t,
           "table.packs.common.premiumTemplates",
-          "否"
+          "No"
         ),
         large: resolveValue(
           t,
           "table.packs.large.premiumTemplates",
-          "否"
+          "No"
         ),
       },
     },
     {
-      title: resolveValue(t, "table.rows.delivery", "到账方式"),
+      title: resolveValue(t, "table.rows.delivery", "Delivery"),
       values: {
         basic: "",
         premium: "",
@@ -324,22 +321,22 @@ export function PricingTable({ mode }: { mode: Mode }) {
         small: resolveValue(
           t,
           "table.packs.small.delivery",
-          "支付成功后立即到账"
+          "Added instantly after payment"
         ),
         common: resolveValue(
           t,
           "table.packs.common.delivery",
-          "支付成功后立即到账"
+          "Added instantly after payment"
         ),
         large: resolveValue(
           t,
           "table.packs.large.delivery",
-          "支付成功后立即到账"
+          "Added instantly after payment"
         ),
       },
     },
     {
-      title: resolveValue(t, "table.rows.bestFor", "适合人群"),
+      title: resolveValue(t, "table.rows.bestFor", "Best for"),
       values: {
         basic: "",
         premium: "",
@@ -347,17 +344,17 @@ export function PricingTable({ mode }: { mode: Mode }) {
         small: resolveValue(
           t,
           "table.packs.small.bestFor",
-          "临时补充积分"
+          "Quick top-ups"
         ),
         common: resolveValue(
           t,
           "table.packs.common.bestFor",
-          "生成一组完整汉服写真"
+          "A complete Hanfu portrait set"
         ),
         large: resolveValue(
           t,
           "table.packs.large.bestFor",
-          "批量生成和多套风格测试"
+          "Batch generation and multiple styles"
         ),
       },
     },

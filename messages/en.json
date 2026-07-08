@@ -1027,7 +1027,69 @@
         "memberSince": "Member since",
         "viewProfile": "View profile",
         "signOut": "Sign out"
+      },
+      "preferences": {
+        "title": "Preferences",
+        "description": "Manage language, notifications, and default creation preferences.",
+        "language": "Language",
+        "languageValue": "English",
+        "notification": "Notification preference",
+        "notificationValue": "In-app and email alerts",
+        "defaultTemplate": "Default creation template",
+        "defaultTemplateValue": "Tang Glamour",
+        "defaultImageCount": "Default image count",
+        "defaultImageCountValue": "4 images"
       }
+    },
+    "fetchProfileError": "Failed to fetch profile"
+  },
+  "templates": {
+    "list": {
+      "title": "Style Templates",
+      "subtitle": "Browse and choose your favorite Hanfu style to create portraits",
+      "categories": {
+        "all": "All",
+        "tang": "Tang",
+        "song": "Song",
+        "yuan": "Yuan",
+        "ming": "Ming",
+        "qing": "Qing",
+        "modern": "Modern",
+        "dunhuang": "Dunhuang",
+        "qipao": "Qipao"
+      },
+      "filters": {
+        "popular": "Popular",
+        "new": "New",
+        "premium": "Premium",
+        "free": "Free",
+        "favorited": "Favorited"
+      },
+      "empty": "No templates found for this selection."
+    },
+    "detail": {
+      "notFound": "Template not found",
+      "notFoundDescription": "This template may have been removed or does not exist.",
+      "backToTemplates": "Back to Templates",
+      "credits": "credits",
+      "memberExclusive": "Member Exclusive",
+      "free": "Free",
+      "templateInfo": "Template Info",
+      "dynasty": "Dynasty / Style",
+      "recommendedPhotoType": "Recommended Photo Type",
+      "imageCount": "Image Count",
+      "creditCost": "Credit Cost",
+      "templateAccess": "Template Access",
+      "suitableFor": "Suitable For",
+      "usageTips": "Usage Tips",
+      "useThisTemplate": "Use This Template",
+      "saved": "Saved",
+      "saveTemplate": "Save Template",
+      "viewMoreTemplates": "View More Templates",
+      "morePreviews": "More Previews",
+      "morePreviewsSubtitle": "Different compositions and lighting variations in this style.",
+      "preview": "Preview",
+      "images": "images"
     }
   },
   "works": {
@@ -1075,7 +1137,8 @@
       "created": "Created at",
       "total": "{count} portraits total"
     },
-    "loading": "AI is generating..."
+    "loading": "AI is generating...",
+    "failed": "Generation Failed"
   },
   "contact": {
     "title": "Contact Us",

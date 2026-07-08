@@ -1,6 +1,6 @@
 "use client";
 
-import { useLocale } from 'next-intl';
+import { useLocale, useTranslations } from 'next-intl';
 import { useRouter } from 'next/navigation';
 import Image from 'next/image';
 import { useState, useMemo } from 'react';
@@ -22,7 +22,6 @@ import {
   X,
   Check
 } from 'lucide-react';
-import { useTranslations } from 'next-intl';
 
 function StatusBadge({ status }: { status: WorkStatus }) {
   const t = useTranslations('works.status');
@@ -83,6 +82,7 @@ function WorkCard({
   onDelete: (id: string) => void;
 }) {
   const t = useTranslations('works.actions');
+  const tWorks = useTranslations('works');
   const [showActions, setShowActions] = useState(false);
 
   return (
@@ -133,7 +133,7 @@ function WorkCard({
           >
             <Loader2 className="w-10 h-10 animate-spin mb-3" style={{ color: '#E8C27A' }} />
             <p className="text-sm" style={{ color: 'rgba(255, 247, 236, 0.6)' }}>
-              AI is generating...
+              {tWorks('loading')}
             </p>
           </div>
         ) : (
@@ -143,7 +143,7 @@ function WorkCard({
           >
             <AlertCircle className="w-10 h-10 mb-3" style={{ color: '#ef4444' }} />
             <p className="text-sm font-medium mb-1" style={{ color: 'rgba(255, 247, 236, 0.8)' }}>
-              Generation Failed
+              {tWorks('failed')}
             </p>
           </div>
         )}
