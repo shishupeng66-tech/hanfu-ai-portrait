@@ -1690,7 +1690,77 @@
       "currentSelection": "当前选择",
       "featuredTemplates": "精选模板",
       "generationCost": "生成消耗",
-      "generating": "AI 正在生成您的汉服写真，请耐心等待..."
+      "generating": "AI 正在生成您的汉服写真，请耐心等待...",
+      "credits": "积分",
+      "images": "张",
+      "dynasty": {
+        "tang": "唐",
+        "song": "宋",
+        "yuan": "元",
+        "ming": "明",
+        "qing": "清",
+        "modern": "现代",
+        "dunhuang": "敦煌",
+        "qipao": "旗袍"
+      },
+      "templates": {
+        "tangGlamour": {
+          "name": "大唐风华",
+          "label": "唐制汉服"
+        },
+        "palaceLantern": {
+          "name": "宫灯夜宴",
+          "label": "唐制汉服"
+        },
+        "songElegance": {
+          "name": "宋韵清雅",
+          "label": "宋制汉服"
+        },
+        "teaGathering": {
+          "name": "雅集茶会",
+          "label": "宋制汉服"
+        },
+        "landscapePlain": {
+          "name": "山水素影",
+          "label": "宋制汉服"
+        },
+        "mingFormal": {
+          "name": "明制礼服",
+          "label": "明制汉服"
+        },
+        "phoenixCrown": {
+          "name": "凤冠霞帔",
+          "label": "明制汉服"
+        },
+        "boudoirLady": {
+          "name": "闺阁佳人",
+          "label": "明制汉服"
+        },
+        "qingPalace": {
+          "name": "清宫华服",
+          "label": "清制汉服"
+        },
+        "modernQipao": {
+          "name": "现代旗袍",
+          "label": "现代风尚"
+        },
+        "bluePorcelain": {
+          "name": "青花瓷韵",
+          "label": "现代风尚"
+        },
+        "modernGuofeng": {
+          "name": "国风时尚",
+          "label": "现代风尚"
+        },
+        "orientalMagazine": {
+          "name": "东方杂志",
+          "label": "现代风尚"
+        },
+        "dunhuangMuse": {
+          "name": "敦煌飞天",
+          "label": "敦煌风格"
+        }
+      }
     },
     "navigation": {
       "backToCreate": "返回创作",

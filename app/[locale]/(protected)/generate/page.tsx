@@ -45,10 +45,8 @@ function SparkIcon({ className }: { className?: string }) {
 export default function GeneratePage() {
   const locale = useLocale();
   const t = useTranslations('generate');
-  type PhotoTipKey = 'clearFace' | 'goodLighting' | 'noObstruction' | 'simpleBackground';
 
-const photoTipKeys: PhotoTipKey[] = ['clearFace', 'goodLighting', 'noObstruction', 'simpleBackground'];
-
+  const photoTipKeys = ["clearFace", "goodLighting", "noObstruction", "simpleBackground"] as const;
   const tTips = useTranslations('generate.uploadSection.photoTips');
 
   const [viewMode, setViewMode] = useState<"create" | "preview">("create");
@@ -83,7 +81,6 @@ const photoTipKeys: PhotoTipKey[] = ['clearFace', 'goodLighting', 'noObstruction
 
   const styleTemplates: HanfuTemplate[] = useMemo(() => hanfuTemplates, []);
   const activeTemplate = styleTemplates.find((template) => template.id === selectedTemplate) ?? null;
-  const selectedTemplateName = activeTemplate?.name || "Tang Glamour";
   const selectedDynasty = activeTemplate?.dynasty || "tang";
   const activeDynastyTemplates = styleTemplates.filter((template) => template.dynasty === selectedDynasty);
   const featuredTemplates = featuredTemplateIds
@@ -209,7 +206,7 @@ const photoTipKeys: PhotoTipKey[] = ['clearFace', 'goodLighting', 'noObstruction
             <button
               type="button"
               onClick={() => setViewMode("create")}
-              className="mb-6 inline-flex h-10 items-center gap-2 rounded-full border border-[rgba(232,194,122,0.18)] bg-[rgba(17,17,20,0.76)] px-4 text-sm text-[#E8C27A] transition hover:border-[rgba(232,194,122,0.38)] hover:bg-[rgba(232,194,122,0.06)]"
+              className="mb-6 inline-flex h-10 items-center gap-2 rounded-full border border-[rgba(232,194,122,0.16)] bg-[rgba(20,20,24,0.72)] px-4 text-sm text-[#E8C27A] transition hover:border-[rgba(232,194,122,0.38)] hover:bg-[rgba(232,194,122,0.06)]"
             >
               <ChevronIcon direction="left" />
               {t('navigation.backToCreate')}
@@ -224,7 +221,7 @@ const photoTipKeys: PhotoTipKey[] = ['clearFace', 'goodLighting', 'noObstruction
               <p className="mx-auto mt-4 max-w-2xl text-sm leading-6 text-[rgba(255,247,236,0.52)] md:text-base">{t('previewSection.subtitle')}</p>
             </div>
 
-            <div className="grid gap-6 lg:grid-cols-[minmax(0,1fr)_320px]">
+            <div className="grid gap-6 lg:grid-cols-[minmax(0,1fr)_0.52fr]">
               <div className="rounded-[24px] border border-[rgba(232,194,122,0.16)] bg-[rgba(17,17,20,0.92)] p-4 shadow-[0_28px_110px_rgba(0,0,0,0.36)] md:p-6">
                 <div className="flex items-center justify-center gap-4">
                   <button type="button" onClick={handlePrevImage} className="flex h-11 w-11 shrink-0 items-center justify-center rounded-full border border-[rgba(232,194,122,0.22)] bg-[rgba(232,194,122,0.07)] text-[#E8C27A] transition hover:bg-[rgba(232,194,122,0.13)]" aria-label={t('previewSection.title')}>
@@ -232,7 +229,7 @@ const photoTipKeys: PhotoTipKey[] = ['clearFace', 'goodLighting', 'noObstruction
                   </button>
 
                   <div className="relative aspect-[3/4] h-[min(680px,72vh)] max-h-[680px] min-h-[520px] overflow-hidden rounded-[24px] border border-[rgba(232,194,122,0.16)] bg-[#111114] shadow-[0_28px_100px_rgba(0,0,0,0.48)]">
-                    <Image src={resultUrls[currentPreviewIndex]} alt={t('previewSection.title')} fill className="object-contain" unoptimized />
+                    <Image src={resultUrls[currentPreviewIndex]} alt={t('previewSection.title')} fill className="object-cover" unoptimized />
                   </div>
 
                   <button type="button" onClick={handleNextImage} className="flex h-11 w-11 shrink-0 items-center justify-center rounded-full border border-[rgba(232,194,122,0.22)] bg-[rgba(232,194,122,0.07)] text-[#E8C27A] transition hover:bg-[rgba(232,194,122,0.13)]" aria-label={t('previewSection.title')}>
@@ -259,22 +256,22 @@ const photoTipKeys: PhotoTipKey[] = ['clearFace', 'goodLighting', 'noObstruction
 
               <aside className="flex flex-col gap-4">
                 <div className="rounded-[24px] border border-[rgba(255,247,236,0.08)] bg-[rgba(17,17,20,0.90)] p-5">
-                  <h2 className="mb-4 flex items-center gap-2 text-lg font-semibold text-[rgba(255,247,236,0.92)]">
+                  <h2 className="mb-3 flex items-center gap-2 text-lg font-semibold text-[rgba(255,247,236,0.92)]">
                     <SparkIcon className="h-4 w-4 text-[#E8C27A]" />
                     {t('previewSection.infoTitle')}
                   </h2>
                   <div className="space-y-3 text-sm">
                     <div className="flex items-center justify-between gap-4">
                       <span className="text-[rgba(255,247,236,0.45)]">{t('previewSection.templateLabel')}</span>
-                      <span className="text-right font-medium text-[#E8C27A]">{selectedDynasty} · {selectedTemplateName}</span>
+                      <span className="text-right font-medium text-[#E8C27A]">{t(`styleSelection.dynasty.${selectedDynasty}`)} · {t(`styleSelection.templates.${selectedTemplate}.name`)}</span>
                     </div>
                     <div className="flex items-center justify-between gap-4">
                       <span className="text-[rgba(255,247,236,0.45)]">{t('previewSection.creditsLabel')}</span>
-                      <span className="font-medium text-[#E8C27A]">{GENERATION_COST} credits</span>
+                      <span className="font-medium text-[#E8C27A]">{GENERATION_COST} {t('styleSelection.credits')}</span>
                     </div>
                     <div className="flex items-center justify-between gap-4">
                       <span className="text-[rgba(255,247,236,0.45)]">{t('previewSection.countLabel')}</span>
-                      <span className="text-[rgba(255,247,236,0.72)]">{resultUrls.length} images</span>
+                      <span className="text-[rgba(255,247,236,0.72)]">{resultUrls.length} {t('styleSelection.images')}</span>
                     </div>
                     <div className="flex items-center justify-between gap-4">
                       <span className="text-[rgba(255,247,236,0.45)]">{t('previewSection.statusLabel')}</span>
@@ -324,22 +321,22 @@ const photoTipKeys: PhotoTipKey[] = ['clearFace', 'goodLighting', 'noObstruction
             </section>
 
             <section className="mx-auto mt-8 w-full max-w-[1040px] rounded-[24px] border border-[rgba(255,247,236,0.08)] bg-[rgba(17,17,20,0.88)] p-5 shadow-[0_28px_110px_rgba(0,0,0,0.36)] backdrop-blur md:p-7">
-              <div className="grid gap-6 lg:grid-cols-[0.48fr_0.52fr]">
+              <div className="grid gap-6 lg:grid-cols-[minmax(0,1fr)_minmax(0,1fr)]">
                 <div className="min-w-0">
-                  <h2 className="mb-3 text-base font-semibold text-[rgba(255,247,236,0.92)]">{t('uploadCard.title')}</h2>
+                  <h2 className="mb-3 text-base font-semibold text-[rgba(255,247,236,0.92)]">{t('uploadSection.label')}</h2>
                   <label className="block cursor-pointer">
                     <input type="file" accept="image/*" className="hidden" onChange={handleFileChange} />
                     <div className="relative flex h-[268px] items-center justify-center overflow-hidden rounded-2xl border border-dashed border-[rgba(232,194,122,0.30)] bg-[#0B0B0D] text-center transition hover:border-[rgba(232,194,122,0.55)] hover:bg-[rgba(232,194,122,0.035)] md:h-[292px]">
                       {previewUrl ? (
-                        <Image src={previewUrl} alt={t('uploadCard.title')} fill className="object-contain p-4" unoptimized />
+                        <Image src={previewUrl} alt={t('uploadSection.label')} fill className="object-cover p-4" unoptimized />
                       ) : (
                         <div className="flex flex-col items-center px-6">
                           <div className="mb-4 flex h-[68px] w-[68px] items-center justify-center rounded-full border border-[rgba(232,194,122,0.24)] bg-[rgba(232,194,122,0.08)] text-[#E8C27A] shadow-[0_0_34px_rgba(232,194,122,0.10)]">
                             <UploadIcon />
                           </div>
-                          <p className="text-lg font-semibold text-[rgba(255,247,236,0.94)]">{t('uploadCard.cta')}</p>
+                          <p className="text-lg font-semibold text-[rgba(255,247,236,0.94)]">{t('uploadSection.cta')}</p>
                           <p className="mt-2 max-w-[280px] text-sm leading-5 text-[rgba(255,247,236,0.48)]">
-                            {t('uploadCard.hint')}
+                            {t('uploadSection.hint')}
                           </p>
                         </div>
                       )}
@@ -371,7 +368,7 @@ const photoTipKeys: PhotoTipKey[] = ['clearFace', 'goodLighting', 'noObstruction
                             color: isSelected ? "#E8C27A" : "rgba(255,247,236,0.62)",
                           }}
                         >
-                          {dynasty.charAt(0).toUpperCase() + dynasty.slice(1)}
+                          {t(`styleSelection.dynasty.${dynasty}`)}
                         </button>
                       );
                     })}
@@ -396,16 +393,16 @@ const photoTipKeys: PhotoTipKey[] = ['clearFace', 'goodLighting', 'noObstruction
                             color: isSelected ? "#E8C27A" : "rgba(255,247,236,0.62)",
                           }}
                         >
-                          {template.name}
+                          {t(`styleSelection.templates.${template.id}.name`)}
                         </button>
                       );
                     })}
                   </div>
 
                   <div className="mt-5 rounded-xl border border-[rgba(232,194,122,0.12)] bg-[rgba(232,194,122,0.045)] px-4 py-3 text-sm text-[rgba(255,247,236,0.56)]">
-                    {t('styleSelection.currentSelection')}: <span className="font-medium text-[#E8C27A]">{selectedDynasty}</span>
+                    {t('styleSelection.currentSelection')}: <span className="font-medium text-[#E8C27A]">{t(`styleSelection.dynasty.${selectedDynasty}`)}</span>
                     <span className="px-1 text-[rgba(255,247,236,0.28)]">·</span>
-                    <span className="font-medium text-[#E8C27A]">{selectedTemplateName}</span>
+                    <span className="font-medium text-[#E8C27A]">{t(`styleSelection.templates.${selectedTemplate}.name`)}</span>
                   </div>
                 </div>
               </div>
@@ -436,8 +433,8 @@ const photoTipKeys: PhotoTipKey[] = ['clearFace', 'goodLighting', 'noObstruction
                 <p className="mt-3 min-h-5 text-sm" style={{ color: generationError ? '#E8C27A' : 'rgba(255,247,236,0.45)' }}>
                   {generationError || (
                     <>
-                      {t('styleSelection.currentSelection')}: <span className="font-medium text-[#E8C27A]">{selectedDynasty} · {selectedTemplateName}</span> · {t('styleSelection.generationCost')}{" "}
-                      <span className="font-semibold text-[#E8C27A]">{GENERATION_COST} credits</span>
+                      {t('styleSelection.currentSelection')}: <span className="font-medium text-[#E8C27A]">{t(`styleSelection.dynasty.${selectedDynasty}`)} · {t(`styleSelection.templates.${selectedTemplate}.name`)}</span> · {t('styleSelection.generationCost')}{" "}
+                      <span className="font-semibold text-[#E8C27A]">{GENERATION_COST} {t('styleSelection.credits')}</span>
                     </>
                   )}
                 </p>
@@ -471,12 +468,12 @@ const photoTipKeys: PhotoTipKey[] = ['clearFace', 'goodLighting', 'noObstruction
                       }}
                     >
                       <div className="relative aspect-[3/4] overflow-hidden">
-                        <Image src={template.previewUrl} alt={template.name} fill className="object-cover transition duration-500 group-hover:scale-[1.035] group-hover:brightness-110" sizes="180px" />
+                        <Image src={template.previewUrl} alt={t(`styleSelection.templates.${template.id}.name`)} fill className="object-cover transition duration-500 group-hover:scale-[1.035] group-hover:brightness-110" sizes="180px" />
                         <div className="absolute inset-x-0 bottom-0 h-16 bg-gradient-to-t from-[#111114] to-transparent" />
                       </div>
                       <div className="px-4 pb-4 pt-3">
-                        <div className="mb-2 inline-flex rounded-full border border-[rgba(232,194,122,0.16)] px-2 py-0.5 text-[11px] text-[#E8C27A]">{template.label}</div>
-                        <p className="truncate text-base font-semibold text-[rgba(255,247,236,0.92)]">{template.name}</p>
+                        <div className="mb-2 inline-flex rounded-full border border-[rgba(232,194,122,0.16)] px-2 py-0.5 text-[11px] text-[#E8C27A]">{t(`styleSelection.templates.${template.id}.label`)}</div>
+                        <p className="truncate text-base font-semibold text-[rgba(255,247,236,0.92)]">{t(`styleSelection.templates.${template.id}.name`)}</p>
                       </div>
                       {isSelected && (
                         <span className="absolute right-2 top-2 flex h-7 w-7 items-center justify-center rounded-full bg-[#E8C27A] text-[#0B0B0D]" style={{ boxShadow: "0 8px 24px rgba(0,0,0,0.24)" }}>

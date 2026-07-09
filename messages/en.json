@@ -201,8 +201,78 @@
       "title": "Choose Your Style",
       "currentSelection": "Current Selection",
       "featuredTemplates": "Featured Templates",
-      "generationCost": "Generation Cost",
-      "generating": "AI is generating your Hanfu portrait, please wait..."
+      "generationCost": "Consumes",
+      "generating": "AI is generating your Hanfu portrait, please wait...",
+      "credits": "credits",
+      "images": "images",
+      "dynasty": {
+        "tang": "Tang",
+        "song": "Song",
+        "yuan": "Yuan",
+        "ming": "Ming",
+        "qing": "Qing",
+        "modern": "Modern",
+        "dunhuang": "Dunhuang",
+        "qipao": "Qipao"
+      },
+      "templates": {
+        "tangGlamour": {
+          "name": "Tang Glamour",
+          "label": "Tang Dynasty"
+        },
+        "palaceLantern": {
+          "name": "Palace Lantern",
+          "label": "Tang Dynasty"
+        },
+        "songElegance": {
+          "name": "Song Elegance",
+          "label": "Song Dynasty"
+        },
+        "teaGathering": {
+          "name": "Tea Gathering",
+          "label": "Song Dynasty"
+        },
+        "landscapePlain": {
+          "name": "Landscape Scholar",
+          "label": "Song Dynasty"
+        },
+        "mingFormal": {
+          "name": "Ming Formal",
+          "label": "Ming Dynasty"
+        },
+        "phoenixCrown": {
+          "name": "Phoenix Crown",
+          "label": "Ming Dynasty"
+        },
+        "boudoirLady": {
+          "name": "Boudoir Lady",
+          "label": "Ming Dynasty"
+        },
+        "qingPalace": {
+          "name": "Qing Palace",
+          "label": "Qing Dynasty"
+        },
+        "modernQipao": {
+          "name": "Modern Qipao",
+          "label": "Modern Style"
+        },
+        "bluePorcelain": {
+          "name": "Blue Porcelain",
+          "label": "Modern Style"
+        },
+        "modernGuofeng": {
+          "name": "Guofeng Fashion",
+          "label": "Modern Style"
+        },
+        "orientalMagazine": {
+          "name": "Oriental Vogue",
+          "label": "Modern Style"
+        },
+        "dunhuangMuse": {
+          "name": "Dunhuang Muse",
+          "label": "Dunhuang Style"
+        }
+      }
     },
     "navigation": {
       "backToCreate": "Back to Create",
