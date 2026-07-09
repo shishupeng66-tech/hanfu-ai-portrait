@@ -11,7 +11,7 @@ export default function VerifyEmailPage() {
   const router = useRouter();
   const locale = useLocale();
   const t = useTranslations('auth.verifyEmail');
-  const [status, setStatus] = useState<'loading' | 'success' | 'error'>('loading');
+  const [status, setStatus] = useState<'loading' | 'success' | 'error' | 'alreadyVerified'>('loading');
   const [message, setMessage] = useState('');
 
   useEffect(() => {
@@ -26,16 +26,18 @@ export default function VerifyEmailPage() {
 
       try {
         const response = await fetch(`/api/auth/verify-email?token=${token}`);
-        await response.json().catch(() => null);
+        const data = await response.json().catch(() => null);
 
         if (response.ok) {
           setStatus('success');
           setMessage(t('successMessage'));
           
-          // Redirect to login after 3 seconds
           setTimeout(() => {
             router.push(`/${locale}/login`);
           }, 3000);
+        } else if (data?.error === 'already_verified') {
+          setStatus('alreadyVerified');
+          setMessage(t('alreadyVerifiedMessage'));
         } else {
           setStatus('error');
           setMessage(t('failedMessage'));
@@ -83,49 +85,47 @@ export default function VerifyEmailPage() {
             </div>
           )}
 
+          {status === 'alreadyVerified' && (
+            <div className="text-center">
+              <CheckCircle2 className="w-16 h-16 mx-auto mb-4 text-blue-500" />
+              <h1 className="text-2xl font-bold text-card-foreground mb-2">
+                {t('alreadyVerified')}
+              </h1>
+              <p className="text-muted-foreground mb-6">
+                {message}
+              </p>
+              <Link
+                href={`/${locale}/login`}
+                className="block px-6 py-3 bg-primary hover:bg-primary/90 text-primary-foreground font-medium rounded-lg transition-colors"
+              >
+                {t('goToLogin')}
+              </Link>
+            </div>
+          )}
+
           {status === 'error' && (
             <div className="text-center">
-              {message.includes('already been used') || message.includes('already verified') ? (
-                <>
-                  <CheckCircle2 className="w-16 h-16 mx-auto mb-4 text-blue-500" />
-                  <h1 className="text-2xl font-bold text-card-foreground mb-2">
-                    {t('alreadyVerified')}
-                  </h1>
-                  <p className="text-muted-foreground mb-6">
-                    {message}
-                  </p>
-                  <Link
-                    href={`/${locale}/login`}
-                    className="block px-6 py-3 bg-primary hover:bg-primary/90 text-primary-foreground font-medium rounded-lg transition-colors"
-                  >
-                    {t('goToLogin')}
-                  </Link>
-                </>
-              ) : (
-                <>
-                  <XCircle className="w-16 h-16 mx-auto mb-4 text-red-500" />
-                  <h1 className="text-2xl font-bold text-card-foreground mb-2">
-                    {t('failed')}
-                  </h1>
-                  <p className="text-muted-foreground mb-6">
-                    {message}
-                  </p>
-                  <div className="space-y-3">
-                    <Link
-                      href={`/${locale}/login`}
-                      className="block px-6 py-3 bg-primary hover:bg-primary/90 text-primary-foreground font-medium rounded-lg transition-colors"
-                    >
-                      {t('goToLogin')}
-                    </Link>
-                    <Link
-                      href={`/${locale}/check-email`}
-                      className="block px-6 py-3 border border-border hover:bg-muted text-card-foreground font-medium rounded-lg transition-colors"
-                    >
-                      {t('requestNew')}
-                    </Link>
-                  </div>
-                </>
-              )}
+              <XCircle className="w-16 h-16 mx-auto mb-4 text-red-500" />
+              <h1 className="text-2xl font-bold text-card-foreground mb-2">
+                {t('failed')}
+              </h1>
+              <p className="text-muted-foreground mb-6">
+                {message}
+              </p>
+              <div className="space-y-3">
+                <Link
+                  href={`/${locale}/login`}
+                  className="block px-6 py-3 bg-primary hover:bg-primary/90 text-primary-foreground font-medium rounded-lg transition-colors"
+                >
+                  {t('goToLogin')}
+                </Link>
+                <Link
+                  href={`/${locale}/check-email`}
+                  className="block px-6 py-3 border border-border hover:bg-muted text-card-foreground font-medium rounded-lg transition-colors"
+                >
+                  {t('requestNew')}
+                </Link>
+              </div>
             </div>
           )}
 

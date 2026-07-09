@@ -647,8 +647,8 @@
         "oneTimeCredits": "{credits} once",
         "yearlyInstallments": "{credits} released each month on annual billing",
         "instantAfterPayment": "Added instantly after payment",
-        "bestForStarter": "Shipping an MVP with recurring usage",
-        "bestForPro": "Heavier production workloads and frequent generation",
+        "bestForStarter": "Occasional Hanfu portrait creation",
+        "bestForPro": "Frequent creation with premium templates",
         "bestForCredits": "Top-ups without changing your subscription"
       }
     },
@@ -808,6 +808,7 @@
       "invalidLinkMessage": "Verification failed. The link may be invalid or expired.",
       "failedMessage": "Verification failed. The link may be invalid or expired.",
       "alreadyVerified": "Already Verified",
+      "alreadyVerifiedMessage": "This email has already been verified. You can sign in to your account.",
       "failed": "Verification Failed",
       "goToLogin": "Go to Login",
       "backToSignUp": "Back to Sign Up",
@@ -827,8 +828,9 @@
   "dashboard": {
     "title": "Dashboard",
     "welcome": "Welcome back",
+    "subtitle": "Ready to create your next Hanfu portrait?",
     "welcomeBonus": {
-      "title": "🎉 Welcome to Han Portrait!",
+      "title": "Welcome to Han Portrait!",
       "message": "Congratulations on your successful registration! We've added 3 credits welcome bonus to your account.",
       "description": "Use these credits to create beautiful Hanfu portraits with our AI.",
       "ctaButton": "Try Now",
@@ -870,7 +872,37 @@
         "viewCredits": "View Credits"
       }
     },
-    "paymentSuccess": "✅ Payment successful! Your credits will be updated shortly.",
+    "paymentSuccess": "Payment successful!",
+    "viewCredits": "View credits",
+    "credits": "Credits",
+    "currentPlan": "Current plan",
+    "createHeroTitle": "Create stunning Hanfu portraits",
+    "createHeroSubtitle": "Upload photos, choose templates, and let AI create exclusive Hanfu masterpieces for you",
+    "startCreating": "Start creating",
+    "generatedToday": "Generated today",
+    "vsYesterday": "vs yesterday",
+    "totalWorks": "Total works",
+    "vsLastMonth": "vs last month",
+    "remainingCredits": "Remaining credits",
+    "recharge": "Buy Credits",
+    "recentWorks": "Recent works",
+    "viewAll": "View all",
+    "completed": "Completed",
+    "quickActions": "Quick actions",
+    "quickActionsGenerate": "Start Creating",
+    "quickActionsGenerateSub": "Create a new Hanfu portrait",
+    "quickActionsTemplates": "Templates",
+    "quickActionsTemplatesSub": "Explore curated Hanfu styles",
+    "quickActionsCredits": "Buy Credits",
+    "quickActionsCreditsSub": "Top up your generation credits",
+    "quickActionsWorks": "My Portraits",
+    "quickActionsWorksSub": "View and manage your creations",
+    "recentWorkTitles": {
+      "tangDynasty": "Tang Dynasty Portrait",
+      "songTea": "Song Tea Portrait",
+      "inkWarrior": "Ink-Blue Warrior Portrait",
+      "redSnow": "Red Snow Hanfu Portrait"
+    },
     "creditHistory": {
       "title": "Credit History",
       "noRecords": "No credit history yet",
@@ -891,7 +923,7 @@
       "reasons": {
         "subscription_cycle": "Subscription Credits",
         "one_time_pack": "Credit Pack Purchase",
-        "chat_usage": "AI Chat Usage",
+        "portrait_generation": "Portrait Generation",
         "refund": "Refund Credits",
         "adjustment": "System Adjustment",
         "registration_bonus": "New User Welcome Bonus"
@@ -901,41 +933,6 @@
       "backHome": "Back home",
       "startCreating": "Start creating",
       "viewCredits": "View credits"
-    }
-  },
-  "dashboard": {
-    "paymentSuccess": "Payment successful!",
-    "viewCredits": "View credits",
-    "welcome": "Welcome back",
-    "subtitle": "Ready to create your next Hanfu portrait?",
-    "credits": "Credits",
-    "currentPlan": "Current plan",
-    "createHeroTitle": "Create stunning Hanfu portraits",
-    "createHeroSubtitle": "Upload photos, choose templates, and let AI create exclusive Hanfu masterpieces for you",
-    "startCreating": "Start creating",
-    "generatedToday": "Generated today",
-    "vsYesterday": "vs yesterday",
-    "totalWorks": "Total works",
-    "vsLastMonth": "vs last month",
-    "remainingCredits": "Remaining credits",
-    "recharge": "Recharge",
-    "recentWorks": "Recent works",
-    "viewAll": "View all",
-    "completed": "Completed",
-    "quickActions": "Quick actions",
-    "quickActionsGenerate": "Start Creating",
-    "quickActionsGenerateSub": "Create a new Hanfu portrait",
-    "quickActionsTemplates": "Templates",
-    "quickActionsTemplatesSub": "Explore curated Hanfu styles",
-    "quickActionsCredits": "Buy Credits",
-    "quickActionsCreditsSub": "Top up your generation credits",
-    "quickActionsWorks": "My Portraits",
-    "quickActionsWorksSub": "View and manage your creations",
-    "recentWorkTitles": {
-      "tangDynasty": "Tang Dynasty Portrait",
-      "songTea": "Song Tea Portrait",
-      "inkWarrior": "Ink-Blue Warrior Portrait",
-      "redSnow": "Red Snow Hanfu Portrait"
     }
   },
   "credits": {
@@ -978,9 +975,9 @@
       "reasons": {
         "subscription_cycle": "Subscription Credits",
         "one_time_pack": "Credit Pack Purchase",
-        "chat_usage": "AI Chat Usage",
-        "image_generation": "Image Generation",
-        "video_generation": "Video Generation",
+        "portrait_generation": "Portrait Generation",
+        "credit_purchase": "Credit Purchase",
+        "subscription_bonus": "Subscription Bonus",
         "refund": "Refund Credits",
         "adjustment": "System Adjustment",
         "registration_bonus": "New User Welcome Bonus",
@@ -1102,7 +1099,8 @@
         "free": "Free",
         "favorited": "Favorited"
       },
-      "empty": "No templates found for this selection."
+      "empty": "No templates found for this selection.",
+      "viewDetails": "View Details"
     },
     "detail": {
       "notFound": "Template not found",
@@ -1203,6 +1201,10 @@
   "blog": {
     "title": "Blog",
     "subtitle": "Latest insights and updates from our team",
+    "journal": "Han Portrait Journal",
+    "comingSoonTitle": "Blog coming soon",
+    "comingSoonSubtitle": "We're preparing articles about AI Hanfu portraits, Hanfu culture, and creative tips.",
+    "comingSoonCta": "Start creating",
     "readMore": "Read More",
     "minRead": "min read"
   },

@@ -36,7 +36,8 @@ export async function GET(request: NextRequest) {
       return NextResponse.json(
         { 
           success: false, 
-          error: "This verification link has already been used or is invalid. If your email is already verified, you can proceed to login." 
+          error: "already_verified",
+          message: "This verification link has already been used or is invalid. If your email is already verified, you can proceed to login." 
         },
         { status: 400 }
       );

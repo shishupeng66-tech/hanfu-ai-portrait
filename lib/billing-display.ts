@@ -21,7 +21,8 @@ export const MARKETING_SUBSCRIPTION_PLAN_FAMILIES = [
 ] as const;
 
 function formatUsdPrice(priceCents: number) {
-  return `$${(priceCents / 100).toFixed(0)}`;
+  const dollars = priceCents / 100;
+  return `$${dollars % 1 === 0 ? dollars.toFixed(0) : dollars.toFixed(2).replace(/\.?0+$/, '')}`;
 }
 
 function formatCredits(credits: number) {

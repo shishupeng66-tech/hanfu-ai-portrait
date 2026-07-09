@@ -154,7 +154,7 @@ export default function TemplatesPage() {
                         border: "1px solid rgba(232, 194, 122, 0.3)",
                       }}
                     >
-                      View Details
+                      {t("viewDetails")}
                     </span>
                   </div>
                 </div>

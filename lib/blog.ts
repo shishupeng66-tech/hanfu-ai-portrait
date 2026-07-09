@@ -29,7 +29,7 @@ type BlogModuleLoader = () => Promise<BlogModule>;
 type BlogModuleMap = Record<string, Record<string, BlogModuleLoader>>;
 
 const blogModuleMap: BlogModuleMap = Object.fromEntries(
-  Object.entries(blogModuleLoaders).map(([slug, locales]) => [
+  Object.entries(blogModuleLoaders as Record<string, Record<string, BlogModuleLoader>>).map(([slug, locales]) => [
     slug,
     Object.fromEntries(
       Object.entries(locales).map(([locale, loader]) => [

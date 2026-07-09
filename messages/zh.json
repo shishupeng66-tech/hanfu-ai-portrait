@@ -736,6 +736,7 @@
       "invalidLinkMessage": "邮箱验证失败，链接可能无效或已过期。",
       "failedMessage": "邮箱验证失败，链接可能无效或已过期。",
       "alreadyVerified": "已验证",
+      "alreadyVerifiedMessage": "该邮箱已验证通过，您可以直接登录账户。",
       "failed": "验证失败",
       "goToLogin": "前往登录",
       "backToSignUp": "返回注册",
@@ -1350,7 +1351,8 @@
         "free": "免费",
         "favorited": "已收藏"
       },
-      "empty": "未找到符合条件的模板。"
+      "empty": "未找到符合条件的模板。",
+      "viewDetails": "查看详情"
     },
     "detail": {
       "notFound": "模板不存在",
@@ -1451,10 +1453,14 @@
   "blog": {
     "title": "博客",
     "subtitle": "来自我们团队的最新见解与更新",
+    "journal": "汉韵写真 Journal",
+    "comingSoonTitle": "博客即将上线",
+    "comingSoonSubtitle": "我们正在准备关于 AI 汉服写真、汉服文化与创作技巧的内容。",
+    "comingSoonCta": "开始创作",
     "readMore": "阅读更多",
     "minRead": "分钟阅读"
-    },
-    "checkout": {
+  },
+  "checkout": {
       "success": {
         "title": "支付成功",
         "description": "你的积分或订阅已成功开通。",
