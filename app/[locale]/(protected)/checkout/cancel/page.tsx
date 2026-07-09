@@ -1,11 +1,12 @@
 "use client";
 
 import Link from "next/link";
-import { useLocale } from "next-intl";
+import { useLocale, useTranslations } from "next-intl";
 import { ArrowLeft, CreditCard, Crown } from "lucide-react";
 
 export default function CheckoutCancelPage() {
   const locale = useLocale();
+  const t = useTranslations("checkout.cancel");
 
   return (
     <div className="min-h-screen bg-[#0B0B0D] px-6 py-10 text-[rgba(255,247,236,0.92)]">
@@ -15,19 +16,19 @@ export default function CheckoutCancelPage() {
             <CreditCard className="h-8 w-8" strokeWidth={1.7} />
           </div>
           <h1 className="text-3xl font-semibold text-[rgba(255,247,236,0.94)] md:text-4xl">
-            支付已取消
+            {t("title")}
           </h1>
           <p className="mt-3 text-base text-[rgba(255,247,236,0.56)]">
-            你尚未完成本次支付。
+            {t("description")}
           </p>
         </div>
 
         <section className="w-full rounded-[24px] border border-[rgba(255,247,236,0.08)] bg-[#111114] p-6 text-center shadow-[0_24px_90px_rgba(0,0,0,0.30)] md:p-8">
           <h2 className="text-xl font-semibold text-[rgba(255,247,236,0.92)]">
-            本次支付已取消，你可以重新选择积分包或会员方案。
+            {t("message")}
           </h2>
           <p className="mx-auto mt-3 max-w-xl text-sm leading-6 text-[rgba(255,247,236,0.48)]">
-            账户不会产生扣款，也不会变更当前积分或订阅状态。
+            {t("subMessage")}
           </p>
 
           <div className="mt-8 flex flex-col items-center justify-center gap-3 sm:flex-row">
@@ -36,14 +37,14 @@ export default function CheckoutCancelPage() {
               className="inline-flex h-11 min-w-[150px] items-center justify-center gap-2 rounded-xl bg-[#E8C27A] px-5 text-sm font-semibold text-[#0B0B0D] transition hover:bg-[#F2D38A]"
             >
               <ArrowLeft className="h-4 w-4" />
-              返回积分中心
+              {t("backCredits")}
             </Link>
             <Link
               href={`/${locale}/pricing`}
               className="inline-flex h-11 min-w-[150px] items-center justify-center gap-2 rounded-xl border border-[rgba(232,194,122,0.18)] bg-[rgba(232,194,122,0.07)] px-5 text-sm font-medium text-[#E8C27A] transition hover:bg-[rgba(232,194,122,0.12)]"
             >
               <Crown className="h-4 w-4" />
-              查看订阅计划
+              {t("viewPlans")}
             </Link>
           </div>
         </section>

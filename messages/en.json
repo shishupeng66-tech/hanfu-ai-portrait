@@ -738,7 +738,9 @@
         "emailRequired": "Please enter email",
         "passwordRequired": "Please enter password",
         "signupFailed": "Sign up failed. Please try again.",
-        "googleSignupFailed": "Google sign up failed. Please try again."
+        "googleSignupFailed": "Google sign up failed. Please try again.",
+        "turnstileRequired": "Please complete the CAPTCHA verification",
+        "turnstileFailed": "CAPTCHA verification failed, please try again"
       }
     },
     "social": {
@@ -1168,6 +1170,24 @@
     "subtitle": "Latest insights and updates from our team",
     "readMore": "Read More",
     "minRead": "min read"
+  },
+  "checkout": {
+    "success": {
+      "title": "Payment Successful",
+      "description": "Your credits or subscription has been activated.",
+      "message": "Thank you for your purchase. The system is syncing your account benefits.",
+      "subMessage": "If credits don't appear immediately, please refresh the page or check the Credits Center shortly.",
+      "viewCredits": "View Credits",
+      "startCreating": "Start Creating"
+    },
+    "cancel": {
+      "title": "Payment Cancelled",
+      "description": "You have not completed this payment.",
+      "message": "This payment has been cancelled. You can re-select a credit pack or membership plan.",
+      "subMessage": "No charges will be made, and your current credits or subscription status will not change.",
+      "backCredits": "Back to Credits",
+      "viewPlans": "View Plans"
+    }
   },
   "errors": {
     "404": {

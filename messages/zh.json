@@ -666,7 +666,9 @@
         "emailRequired": "请输入邮箱地址",
         "passwordRequired": "请输入密码",
         "signupFailed": "注册失败，请重试。",
-        "googleSignupFailed": "Google 注册失败，请重试。"
+        "googleSignupFailed": "Google 注册失败，请重试。",
+        "turnstileRequired": "请完成人机验证",
+        "turnstileFailed": "人机验证失败，请重试"
       }
     },
     "social": {
@@ -1416,7 +1418,25 @@
     "subtitle": "来自我们团队的最新见解与更新",
     "readMore": "阅读更多",
     "minRead": "分钟阅读"
-  },
+    },
+    "checkout": {
+      "success": {
+        "title": "支付成功",
+        "description": "你的积分或订阅已成功开通。",
+        "message": "感谢你的购买，系统正在同步你的账户权益。",
+        "subMessage": "如果积分没有立即到账，请刷新页面或稍后查看积分中心。",
+        "viewCredits": "查看积分中心",
+        "startCreating": "开始创作"
+      },
+      "cancel": {
+        "title": "支付已取消",
+        "description": "你尚未完成本次支付。",
+        "message": "本次支付已取消，你可以重新选择积分包或会员方案。",
+        "subMessage": "账户不会产生扣款，也不会变更当前积分或订阅状态。",
+        "backCredits": "返回积分中心",
+        "viewPlans": "查看订阅计划"
+      }
+    },
   "errors": {
     "404": {
       "title": "404 - 页面未找到",

@@ -42,7 +42,7 @@ export function SignupForm({ showGoogleAuth = true }: SignupFormProps) {
       setError(null);
 
       if (!turnstileToken) {
-        setError("请完成人机验证");
+        setError(t('errors.turnstileRequired'));
         return;
       }
 
@@ -53,7 +53,7 @@ export function SignupForm({ showGoogleAuth = true }: SignupFormProps) {
         body: JSON.stringify({ token: turnstileToken }),
       });
       if (!verifyRes.ok) {
-        setError("人机验证失败，请重试");
+        setError(t('errors.turnstileFailed'));
         return;
       }
 
