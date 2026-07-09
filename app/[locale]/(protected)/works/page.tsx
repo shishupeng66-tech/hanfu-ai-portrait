@@ -6,7 +6,7 @@ import Image from 'next/image';
 import { useState, useMemo } from 'react';
 import { Button } from "@/components/button";
 import { motion } from "framer-motion";
-import { MOCK_WORKS, type MockWork, type WorkStatus } from "@/features/works/mock-works";
+import { getLocalizedWorks, type MockWork, type WorkStatus } from "@/features/works/mock-works";
 import {
   Search,
   ArrowUpDown,
@@ -255,7 +255,7 @@ export default function WorksPage() {
   const t = useTranslations('works');
   const router = useRouter();
   const locale = useLocale();
-  const [works, setWorks] = useState<MockWork[]>(MOCK_WORKS);
+  const [works, setWorks] = useState<MockWork[]>(() => getLocalizedWorks(locale));
   const [activeTab, setActiveTab] = useState('all');
   const [searchQuery, setSearchQuery] = useState('');
   const [sortBy, setSortBy] = useState('newest');

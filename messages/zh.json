@@ -1151,6 +1151,41 @@
       "viewCredits": "查看积分"
     }
   },
+  "dashboard": {
+    "paymentSuccess": "充值成功！",
+    "viewCredits": "查看积分",
+    "welcome": "欢迎回来",
+    "subtitle": "今天又是创作美好的一天，让我们开始吧！",
+    "credits": "剩余积分",
+    "currentPlan": "当前套餐",
+    "createHeroTitle": "创作精美的汉服写真",
+    "createHeroSubtitle": "上传照片，选择模板，AI 帮你生成专属汉服大片",
+    "startCreating": "开始生成汉服写真",
+    "generatedToday": "今日生成",
+    "vsYesterday": "较昨日",
+    "totalWorks": "总作品数",
+    "vsLastMonth": "较上月",
+    "remainingCredits": "剩余积分",
+    "recharge": "去充值",
+    "recentWorks": "最近作品",
+    "viewAll": "查看全部",
+    "completed": "已完成",
+    "quickActions": "快捷操作",
+    "quickActionsGenerate": "开始生成",
+    "quickActionsGenerateSub": "创建新作品",
+    "quickActionsTemplates": "模板库",
+    "quickActionsTemplatesSub": "探索精选模板",
+    "quickActionsCredits": "积分充值",
+    "quickActionsCreditsSub": "购买更多积分",
+    "quickActionsWorks": "我的作品",
+    "quickActionsWorksSub": "管理作品集",
+    "recentWorkTitles": {
+      "tangDynasty": "唐风仕女写真",
+      "songTea": "宋韵茶席写真",
+      "inkWarrior": "青黛侠客写真",
+      "redSnow": "红妆雪景写真"
+    }
+  },
   "credits": {
     "title": "积分详情",
     "subtitle": "管理您的积分并查看使用记录",

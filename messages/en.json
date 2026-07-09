@@ -903,8 +903,43 @@
       "viewCredits": "View credits"
     }
   },
+  "dashboard": {
+    "paymentSuccess": "Payment successful!",
+    "viewCredits": "View credits",
+    "welcome": "Welcome back",
+    "subtitle": "Ready to create your next Hanfu portrait?",
+    "credits": "Credits",
+    "currentPlan": "Current plan",
+    "createHeroTitle": "Create stunning Hanfu portraits",
+    "createHeroSubtitle": "Upload photos, choose templates, and let AI create exclusive Hanfu masterpieces for you",
+    "startCreating": "Start creating",
+    "generatedToday": "Generated today",
+    "vsYesterday": "vs yesterday",
+    "totalWorks": "Total works",
+    "vsLastMonth": "vs last month",
+    "remainingCredits": "Remaining credits",
+    "recharge": "Recharge",
+    "recentWorks": "Recent works",
+    "viewAll": "View all",
+    "completed": "Completed",
+    "quickActions": "Quick actions",
+    "quickActionsGenerate": "Start Creating",
+    "quickActionsGenerateSub": "Create a new Hanfu portrait",
+    "quickActionsTemplates": "Templates",
+    "quickActionsTemplatesSub": "Explore curated Hanfu styles",
+    "quickActionsCredits": "Buy Credits",
+    "quickActionsCreditsSub": "Top up your generation credits",
+    "quickActionsWorks": "My Portraits",
+    "quickActionsWorksSub": "View and manage your creations",
+    "recentWorkTitles": {
+      "tangDynasty": "Tang Dynasty Portrait",
+      "songTea": "Song Tea Portrait",
+      "inkWarrior": "Ink-Blue Warrior Portrait",
+      "redSnow": "Red Snow Hanfu Portrait"
+    }
+  },
   "credits": {
-    "title": "Credits Management",
+    "title": "Credits Center",
     "subtitle": "Manage your credits and view usage history",
     "balance": {
       "title": "Current Balance",
