@@ -26,7 +26,7 @@
 
     /* 柔和/禁用状态 */
     --muted: 240 5% 10%;
-    --muted-foreground: 36 100% 96%;
+    --muted-foreground: 36 5% 55%;
 
     /* 强调色 - 金色 */
     --accent: 40 62% 69%;
@@ -70,7 +70,7 @@
     --secondary-foreground: 240 6% 4%;
 
     --muted: 240 5% 10%;
-    --muted-foreground: 36 100% 96%;
+    --muted-foreground: 36 5% 55%;
 
     --accent: 40 62% 69%;
     --accent-foreground: 240 6% 4%;

@@ -73,6 +73,7 @@ function WorkCard({
   onDownload,
   onDelete,
 }: {
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
   work: Record<string, any>;
   onToggleFavorite: (id: string) => void;
   onViewDetail: (id: string) => void;
@@ -254,6 +255,7 @@ export default function WorksPage() {
   const t = useTranslations('works');
   const router = useRouter();
   const locale = useLocale();
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
   const [works, setWorks] = useState<Record<string, any>[]>([]);
   const [activeTab, setActiveTab] = useState('all');
   const [searchQuery, setSearchQuery] = useState('');
