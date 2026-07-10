@@ -3,6 +3,7 @@ import { Metadata } from "next";
 import { cn } from "@/lib/utils";
 import { HorizontalGradient } from "@/components/horizontal-gradient";
 import { ContactForm } from "@/features/marketing/components/contact-form";
+import { BackButton } from "./back-button";
 import { getTranslations } from 'next-intl/server';
 import type { Locale } from "@/i18n.config";
 import { generatePageMetadata } from "@/lib/metadata";
@@ -40,6 +41,9 @@ export default async function ContactPage(
     <div className="relative overflow-hidden py-20 md:py-0 px-4 md:px-20 bg-background">
       <div className="w-full min-h-screen grid grid-cols-1 md:grid-cols-2 relative overflow-hidden">
         <Background />
+        <div className="relative z-20 pt-8 md:pt-12 px-4 md:px-0">
+          <BackButton />
+        </div>
         <ContactForm />
         <div className="relative w-full z-20 hidden md:flex border-l border-border overflow-hidden bg-background items-center justify-center">
           <div className="max-w-sm mx-auto rounded-3xl border border-[rgba(255,247,236,0.08)] bg-[rgba(17,17,20,0.72)] p-8">
