@@ -1,7 +1,7 @@
 "use client";
 
 import { useState, useRef } from "react";
-import { motion, useInView, AnimatePresence } from "framer-motion";
+import { motion, useInView } from "framer-motion";
 import { useTranslations } from "next-intl";
 import { Heading } from "@/components/heading";
 import { Subheading } from "@/components/subheading";
@@ -78,24 +78,19 @@ function FAQItem({
         </span>
       </button>
 
-      <AnimatePresence initial={false}>
-        {isOpen && (
-          <motion.div
-            initial={{ height: 0, opacity: 0 }}
-            animate={{ height: "auto", opacity: 1 }}
-            exit={{ height: 0, opacity: 0 }}
-            transition={{ duration: 0.3, ease: "easeInOut" }}
-            className="overflow-hidden"
-          >
-            <div className="px-6 pb-5">
-              <div className="h-px bg-border/50 mb-4" />
-              <p className="text-sm text-muted-foreground leading-relaxed">
-                {answer}
-              </p>
-            </div>
-          </motion.div>
+      <div
+        className={cn(
+          "overflow-hidden transition-all duration-300 ease-in-out",
+          isOpen ? "max-h-96 opacity-100" : "max-h-0 opacity-0"
         )}
-      </AnimatePresence>
+      >
+        <div className="px-6 pb-5">
+          <div className="h-px bg-border/50 mb-4" />
+          <p className="text-sm text-muted-foreground leading-relaxed">
+            {answer}
+          </p>
+        </div>
+      </div>
     </motion.div>
   );
 }

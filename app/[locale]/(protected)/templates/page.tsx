@@ -23,6 +23,7 @@ function HeartIcon({ filled }: { filled: boolean }) {
 
 export default function TemplatesPage() {
   const t = useTranslations("templates.list");
+  const tTemplate = useTranslations("templates");
   const locale = useLocale();
   const router = useRouter();
 
@@ -126,7 +127,7 @@ export default function TemplatesPage() {
                 <div className="aspect-[3/4] relative overflow-hidden">
                   <Image
                     src={template.previewUrl}
-                    alt={template.name}
+                    alt={tTemplate(`templates.${template.id}.name`)}
                     fill
                     sizes="(max-width: 768px) 50vw, (max-width: 1200px) 33vw, 25vw"
                     className="object-cover transition-transform duration-500 group-hover:scale-105"
@@ -163,26 +164,30 @@ export default function TemplatesPage() {
                 <div className="p-4">
                   <div className="flex items-center justify-between mb-1">
                     <h4 className="font-semibold truncate" style={{ color: "rgba(255, 247, 236, 0.92)" }}>
-                      {template.name}
+                      {tTemplate(`templates.${template.id}.name`)}
                     </h4>
                     <HeartIcon filled={false} />
                   </div>
                   <p className="text-xs mb-2 line-clamp-2" style={{ color: "rgba(255, 247, 236, 0.45)" }}>
-                    {template.description}
+                    {tTemplate(`templates.${template.id}.description`)}
                   </p>
                   <div className="flex items-center gap-2 flex-wrap">
-                    {template.styleTags.slice(0, 3).map((tag) => (
-                      <span
-                        key={tag}
-                        className="px-2 py-0.5 rounded text-xs"
-                        style={{
-                          background: "rgba(255, 247, 236, 0.04)",
-                          color: "rgba(255, 247, 236, 0.4)",
-                        }}
-                      >
-                        {tag}
-                      </span>
-                    ))}
+                    {[0, 1, 2].map((idx) => {
+                      const tag = tTemplate(`templates.${template.id}.styleTags.${idx}`);
+                      if (!tag || tag.startsWith("templates.")) return null;
+                      return (
+                        <span
+                          key={idx}
+                          className="px-2 py-0.5 rounded text-xs"
+                          style={{
+                            background: "rgba(255, 247, 236, 0.04)",
+                            color: "rgba(255, 247, 236, 0.4)",
+                          }}
+                        >
+                          {tag}
+                        </span>
+                      );
+                    })}
                   </div>
                 </div>
               </button>

@@ -322,7 +322,7 @@
     },
     "packs": {
       "small": {
-        "name": "小积分包",
+        "name": "小额积分包",
         "price": "$5",
         "description": "适合临时补充积分，不需要订阅。",
         "features": [
@@ -335,7 +335,7 @@
         "cta": "购买 5 积分"
       },
       "common": {
-        "name": "常用积分包",
+        "name": "热门积分包",
         "price": "$19",
         "description": "适合生成一组完整汉服写真。",
         "features": [
@@ -348,7 +348,7 @@
         "cta": "购买 20 积分"
       },
       "large": {
-        "name": "大积分包",
+        "name": "大额积分包",
         "price": "$49",
         "description": "适合批量生成和多套风格测试。",
         "features": [
@@ -1077,6 +1077,7 @@
   "dashboard": {
     "title": "仪表盘",
     "welcome": "欢迎回来",
+    "subtitle": "今天又是创作美好的一天，让我们开始吧！",
     "welcomeBonus": {
       "title": "🎉 欢迎加入汉韵写真!",
       "message": "恭喜您成功注册！我们已为您的账户赠送 3 积分新人礼包。",
@@ -1111,52 +1112,16 @@
         },
         "plans": {
           "free": "免费版",
-          "plusMonthly": "Plus（月付）",
-          "proMonthly": "专业版 (月付)",
-          "proplusYearly": "Pro+（年付）"
+          "plusMonthly": "Plus",
+          "proMonthly": "Pro",
+          "proplusYearly": "Pro+"
         },
         "buyCredits": "购买 {credits} 点数 ({price})",
         "viewCredits": "查看积分"
       }
     },
-    "paymentSuccess": "✅ 支付成功！您的点数将很快更新。",
-    "creditHistory": {
-      "title": "积分记录",
-      "noRecords": "暂无积分记录",
-      "columns": {
-        "time": "时间",
-        "type": "类型",
-        "description": "说明",
-        "amount": "金额"
-      },
-      "types": {
-        "purchase": "购买",
-        "subscription": "订阅",
-        "usage": "消耗",
-        "refund": "退款",
-        "adjustment": "调整",
-        "other": "其他"
-      },
-      "reasons": {
-        "subscription_cycle": "订阅赠送积分",
-        "one_time_pack": "购买积分包",
-        "chat_usage": "AI 对话消耗",
-        "refund": "退款返还",
-        "adjustment": "系统调整",
-        "registration_bonus": "新人注册礼包"
-      }
-    },
-    "navigation": {
-      "backHome": "返回首页",
-      "startCreating": "开始创作",
-      "viewCredits": "查看积分"
-    }
-  },
-  "dashboard": {
     "paymentSuccess": "充值成功！",
     "viewCredits": "查看积分",
-    "welcome": "欢迎回来",
-    "subtitle": "今天又是创作美好的一天，让我们开始吧！",
     "credits": "剩余积分",
     "currentPlan": "当前套餐",
     "createHeroTitle": "创作精美的汉服写真",
@@ -1187,6 +1152,37 @@
       "songTea": "宋韵茶席写真",
       "inkWarrior": "青黛侠客写真",
       "redSnow": "红妆雪景写真"
+    },
+    "creditHistory": {
+      "title": "积分记录",
+      "noRecords": "暂无积分记录",
+      "columns": {
+        "time": "时间",
+        "type": "类型",
+        "description": "说明",
+        "amount": "金额"
+      },
+      "types": {
+        "purchase": "购买",
+        "subscription": "订阅",
+        "usage": "消耗",
+        "refund": "退款",
+        "adjustment": "调整",
+        "other": "其他"
+      },
+      "reasons": {
+        "subscription_cycle": "订阅赠送积分",
+        "one_time_pack": "购买积分包",
+        "chat_usage": "AI 对话消耗",
+        "refund": "退款返还",
+        "adjustment": "系统调整",
+        "registration_bonus": "新人注册礼包"
+      }
+    },
+    "navigation": {
+      "backHome": "返回首页",
+      "startCreating": "开始创作",
+      "viewCredits": "查看积分"
     }
   },
   "credits": {
@@ -1653,9 +1649,37 @@
   "studio": {
     "title": "创作您的汉服写真",
     "subtitle": "上传一张清晰正脸照，选择风格，生成您的 AI 汉服写真。",
-    "credits": "积分: 12",
+    "credits": "积分",
     "login": "登录",
     "sidebar": {
+      "billing": "账单",
+      "credits": "积分",
+      "plan": "当前套餐",
+      "renewalDate": "续费日期",
+      "paymentHistory": "支付记录",
+      "subscription": "订阅管理",
+      "cancelSubscription": "取消订阅",
+      "resumeSubscription": "恢复订阅",
+      "upgrade": "升级套餐",
+      "downgrade": "降级套餐",
+      "currentPlan": "当前套餐",
+      "changePlan": "更换套餐",
+      "manageCredits": "管理积分",
+      "buyMoreCredits": "购买更多积分",
+      "usageHistory": "使用记录",
+      "billingHistory": "账单记录",
+      "invoice": "发票",
+      "downloadInvoice": "下载发票",
+      "paymentMethod": "支付方式",
+      "updatePayment": "更新支付方式",
+      "addPayment": "添加支付方式",
+      "removePayment": "移除支付方式",
+      "defaultPayment": "默认支付方式",
+      "expiryDate": "过期日期",
+      "cardNumber": "卡号",
+      "lastFour": "尾号"
+    },
+    "styleSelection": {
       "works": "作品",
       "myGallery": "我的作品",
       "templates": "模板",
@@ -1677,7 +1701,7 @@
   "generate": {
     "title": "创作您的汉服写真",
     "subtitle": "上传一张清晰正脸照，选择风格，生成您的 AI 汉服写真。",
-    "credits": "积分: 12",
+    "credits": "积分",
     "uploadCard": {
       "title": "上传面部照片",
       "cta": "点击上传照片",

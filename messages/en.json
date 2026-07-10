@@ -10,7 +10,7 @@
     "templates": "Templates",
     "guide": "Guide",
     "pricing": "Pricing",
-    "credits": "Credits: 12",
+    "credits": "Credits",
     "login": "Login",
     "templatesDropdown": {
       "tang": "Tang",
@@ -71,7 +71,7 @@
   "studio": {
     "title": "Create Your Hanfu Portrait",
     "subtitle": "Upload one clear face photo, choose a style, and generate your AI Hanfu portrait.",
-    "credits": "Credits: 12",
+    "credits": "Credits",
     "login": "Login",
     "sidebar": {
       "works": "Works",
@@ -95,7 +95,7 @@
   "generate": {
     "title": "Create Your Hanfu Portrait",
     "subtitle": "Upload one clear face photo, choose a style, and generate your AI Hanfu portrait.",
-    "credits": "Credits: 12",
+    "credits": "Credits",
     "uploadCard": {
       "title": "Upload Face Photo",
       "cta": "Click to upload photo",
@@ -590,7 +590,7 @@
     },
     "packs": {
       "small": {
-        "name": "Small Credit Pack",
+        "name": "Small Pack",
         "price": "$5",
         "description": "For topping up credits without subscribing.",
         "features": [
@@ -603,7 +603,7 @@
         "cta": "Buy 5 credits"
       },
       "common": {
-        "name": "Popular Credit Pack",
+        "name": "Popular Pack",
         "price": "$19",
         "description": "Perfect for one full Hanfu portrait set.",
         "features": [
@@ -616,7 +616,7 @@
         "cta": "Buy 20 credits"
       },
       "large": {
-        "name": "Large Credit Pack",
+        "name": "Large Pack",
         "price": "$49",
         "description": "For batch generation and large style tests.",
         "features": [
@@ -941,9 +941,9 @@
         },
         "plans": {
           "free": "Free",
-          "plusMonthly": "Plus Monthly",
-          "proMonthly": "Pro Monthly",
-          "proplusYearly": "Pro+ Yearly"
+          "plusMonthly": "Plus",
+          "proMonthly": "Pro",
+          "proplusYearly": "Pro+"
         },
         "buyCredits": "Buy {credits} Credits ({price})",
         "viewCredits": "View Credits"
