@@ -45,6 +45,14 @@ export default function TemplateDetailPage() {
     );
   }
 
+  const tName = t(`templates.${id}.name`);
+  const tDescription = t(`templates.${id}.description`);
+  const tLabel = t(`templates.${id}.label`);
+  const tStyleTags = [0, 1, 2].map((i) => {
+    const tag = t(`templates.${id}.styleTags.${i}`);
+    return tag === `templates.${id}.styleTags.${i}` ? null : tag;
+  }).filter((tag): tag is string => tag !== null);
+
   return (
     <div className="min-h-screen" style={{ background: "#0B0B0D" }}>
       <div className="p-6 md:p-8 max-w-7xl mx-auto">
@@ -71,7 +79,7 @@ export default function TemplateDetailPage() {
             >
               <Image
                 src={template.previewUrl}
-                alt={template.name}
+                alt={tName}
                 fill
                 sizes="(max-width: 1024px) 100vw, 60vw"
                 className="object-cover"
@@ -148,15 +156,15 @@ export default function TemplateDetailPage() {
               }}
             >
               <h1 className="text-2xl font-bold mb-1" style={{ color: "rgba(255, 247, 236, 0.92)" }}>
-                {template.name}
+                {tName}
               </h1>
               <p className="text-sm mb-6" style={{ color: "rgba(255, 247, 236, 0.55)" }}>
-                {template.description}
+                {tDescription}
               </p>
 
               {/* Style Tags */}
               <div className="flex flex-wrap gap-2 mb-6">
-                {template.styleTags.map((tag) => (
+                {tStyleTags.map((tag) => (
                   <span
                     key={tag}
                     className="px-2.5 py-1 rounded-full text-xs"
@@ -176,7 +184,7 @@ export default function TemplateDetailPage() {
                   {t("templateInfo")}
                 </h3>
                 <div className="space-y-3">
-                  <InfoRow label={t("dynasty")} value={template.label} />
+                  <InfoRow label={t("dynasty")} value={tLabel} />
                   <InfoRow label={t("recommendedPhotoType")} value={template.recommendedPhotoType} />
                   <InfoRow label={t("imageCount")} value={`${template.generationCount} ${t("images")}`} />
                   <InfoRow label={t("creditCost")} value={`${template.creditCost} ${t("credits")}`} />

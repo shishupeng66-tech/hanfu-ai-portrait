@@ -190,6 +190,9 @@
       "badge": "Han Portrait · Start Creating",
       "title": "Create Your Hanfu Portrait",
       "subtitle": "Upload a clear front-facing photo, choose a style, and generate your AI Hanfu portrait.",
+      "label": "Upload a photo",
+      "cta": "Click to upload photo",
+      "hint": "Supports JPG, PNG, WebP",
       "photoTips": {
         "clearFace": "Clear front-facing",
         "goodLighting": "Well-lit",
@@ -252,20 +255,24 @@
           "name": "Qing Palace",
           "label": "Qing Dynasty"
         },
+        "qipaoFlower": {
+          "name": "Qipao Floral Portrait",
+          "label": "Modern Style"
+        },
         "modernQipao": {
           "name": "Modern Qipao",
           "label": "Modern Style"
         },
         "bluePorcelain": {
-          "name": "Blue Porcelain",
+          "name": "Blue Porcelain Style",
           "label": "Modern Style"
         },
         "modernGuofeng": {
-          "name": "Guofeng Fashion",
+          "name": "Modern Guofeng Fashion",
           "label": "Modern Style"
         },
         "orientalMagazine": {
-          "name": "Oriental Vogue",
+          "name": "Oriental Editorial",
           "label": "Modern Style"
         },
         "dunhuangMuse": {
@@ -1195,6 +1202,98 @@
       "morePreviewsSubtitle": "Different compositions and lighting variations in this style.",
       "preview": "Preview",
       "images": "images"
+    },
+    "templates": {
+      "tangGlamour": {
+        "name": "Tang Glamour",
+        "description": "Luxurious Tang Dynasty style with golden hair ornaments and palace photography.",
+        "label": "Tang Dynasty",
+        "styleTags": ["Tang", "Glamorous", "Traditional"]
+      },
+      "palaceLantern": {
+        "name": "Palace Lantern",
+        "description": "Red walls and lanterns, black-and-gold Hanfu, cinematic night scenes.",
+        "label": "Tang Dynasty",
+        "styleTags": ["Tang", "Palace", "Festive"]
+      },
+      "songElegance": {
+        "name": "Song Elegance",
+        "description": "Elegant and understated, negative space composition, Song Dynasty makeup.",
+        "label": "Song Dynasty",
+        "styleTags": ["Song", "Elegant", "Minimalist"]
+      },
+      "teaGathering": {
+        "name": "Tea Gathering",
+        "description": "Serene tea ceremony setting, flowing robes, Zen aesthetics.",
+        "label": "Song Dynasty",
+        "styleTags": ["Song", "Literary", "Scholarly"]
+      },
+      "landscapePlain": {
+        "name": "Landscape Scholar",
+        "description": "Ink painting landscapes, clean lines, scholarly elegance.",
+        "label": "Song Dynasty",
+        "styleTags": ["Song", "Literary", "Scholarly"]
+      },
+      "mingFormal": {
+        "name": "Ming Formal",
+        "description": "Intricate patterns and embroidery, Ming Dynasty formal wear.",
+        "label": "Ming Dynasty",
+        "styleTags": ["Ming", "Formal", "Regal"]
+      },
+      "phoenixCrown": {
+        "name": "Phoenix Crown",
+        "description": "Phoenix crown and ceremonial robes, the pinnacle of Hanfu elegance.",
+        "label": "Ming Dynasty",
+        "styleTags": ["Ming", "Royal", "Wedding"]
+      },
+      "boudoirLady": {
+        "name": "Boudoir Lady",
+        "description": "Intimate boudoir setting, delicate makeup, graceful femininity.",
+        "label": "Ming Dynasty",
+        "styleTags": ["Ming", "Graceful", "Traditional"]
+      },
+      "qingPalace": {
+        "name": "Qing Palace",
+        "description": "Qing Dynasty palace attire, bold colors, imperial grandeur.",
+        "label": "Qing Dynasty",
+        "styleTags": ["Qing", "Traditional", "Formal"]
+      },
+      "qipaoFlower": {
+        "name": "Qipao Floral Portrait",
+        "description": "Contemporary qipao with floral elements, soft and elegant.",
+        "label": "Modern Style",
+        "styleTags": ["Qipao", "Floral", "Modern"]
+      },
+      "modernQipao": {
+        "name": "Modern Qipao",
+        "description": "Oriental vintage with modern tailoring, elegant portraiture.",
+        "label": "Modern Style",
+        "styleTags": ["Qipao", "Modern", "Elegant"]
+      },
+      "bluePorcelain": {
+        "name": "Blue Porcelain Style",
+        "description": "Blue-and-white porcelain patterns, neo-Chinese fusion, fresh tones.",
+        "label": "Modern Style",
+        "styleTags": ["Porcelain", "Blue", "Modern"]
+      },
+      "modernGuofeng": {
+        "name": "Modern Guofeng Fashion",
+        "description": "Contemporary Chinese fashion, editorial style, bold and modern.",
+        "label": "Modern Style",
+        "styleTags": ["Fashion", "Contemporary", "Stylish"]
+      },
+      "orientalMagazine": {
+        "name": "Oriental Editorial",
+        "description": "Magazine-quality editorial, East-meets-West aesthetics.",
+        "label": "Modern Style",
+        "styleTags": ["Vogue", "Editorial", "Oriental"]
+      },
+      "dunhuangMuse": {
+        "name": "Dunhuang Muse",
+        "description": "Dunhuang-inspired, golden murals, flying apsara aesthetics.",
+        "label": "Dunhuang Style",
+        "styleTags": ["Dunhuang", "Fresco", "Artistic"]
+      }
     }
   },
   "works": {
