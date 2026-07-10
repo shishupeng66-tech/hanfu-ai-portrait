@@ -16,49 +16,6 @@ export interface Notification {
   isRead: boolean;
 }
 
-const MOCK_NOTIFICATIONS: Notification[] = [
-  {
-    id: "1",
-    type: "generation_complete",
-    title: "汉服写真生成完成",
-    description: "您的「唐风雅韵」主题写真已生成完成",
-    time: "2分钟前",
-    isRead: false,
-  },
-  {
-    id: "2",
-    type: "generation_failed",
-    title: "生成失败，积分已退回",
-    description: "由于网络问题生成失败，2积分已退回账户",
-    time: "15分钟前",
-    isRead: false,
-  },
-  {
-    id: "3",
-    type: "credits_added",
-    title: "积分充值成功",
-    description: "50积分已到账，现在可以开始创作了",
-    time: "1小时前",
-    isRead: true,
-  },
-  {
-    id: "4",
-    type: "template_new",
-    title: "新模板上架",
-    description: "「清明上河」系列汉服模板已上架",
-    time: "3小时前",
-    isRead: true,
-  },
-  {
-    id: "5",
-    type: "vip_template",
-    title: "VIP模板开放",
-    description: "「敦煌飞天」会员专属模板现在可以使用了",
-    time: "昨天",
-    isRead: true,
-  },
-];
-
 const getNotificationIcon = (type: NotificationType) => {
   const iconProps = { className: "w-4 h-4", strokeWidth: 1.5 };
   switch (type) {
@@ -81,7 +38,7 @@ export function NotificationDropdown() {
   const locale = useLocale();
   const router = useRouter();
   const [isOpen, setIsOpen] = useState(false);
-  const [notifications, setNotifications] = useState<Notification[]>(MOCK_NOTIFICATIONS);
+  const [notifications, setNotifications] = useState<Notification[]>([]);
   const dropdownRef = useRef<HTMLDivElement>(null);
   const buttonRef = useRef<HTMLButtonElement>(null);
 
@@ -178,7 +135,15 @@ export function NotificationDropdown() {
           </div>
 
           <div className="max-h-[360px] overflow-y-auto">
-            {notifications.slice(0, 5).map((notification) => (
+            {notifications.length === 0 ? (
+              <div className="flex flex-col items-center justify-center py-10 px-5">
+                <Bell className="w-8 h-8 mb-3" style={{ color: "rgba(255, 247, 236, 0.25)" }} strokeWidth={1.5} />
+                <p className="text-sm" style={{ color: "rgba(255, 247, 236, 0.45)" }}>
+                  {locale === "zh" ? "暂无通知" : "No notifications yet"}
+                </p>
+              </div>
+            ) : (
+              notifications.slice(0, 5).map((notification) => (
               <div
                 key={notification.id}
                 className="flex gap-3 px-5 py-3.5 cursor-pointer transition-colors"
@@ -214,7 +179,8 @@ export function NotificationDropdown() {
                   </p>
                 </div>
               </div>
-            ))}
+              ))
+            )}
           </div>
 
           <div className="px-5 py-4 border-t" style={{ borderColor: "rgba(255, 247, 236, 0.06)" }}>

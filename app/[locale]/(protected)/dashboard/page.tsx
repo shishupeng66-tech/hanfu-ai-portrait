@@ -3,7 +3,6 @@
 import { useSession } from "@/lib/auth-client";
 import { useRouter, useSearchParams } from "next/navigation";
 import Link from "next/link";
-import Image from "next/image";
 import { useLocale, useTranslations } from 'next-intl';
 import { Button } from "@/components/button";
 import { motion } from "framer-motion";
@@ -11,50 +10,10 @@ import { useCallback, useEffect, useState } from "react";
 import { getDefaultOneTimePack } from "@/lib/billing-display";
 import { getSubscriptionPlanDisplayInfo } from "@/lib/account-settings";
 import type { ClientUserProfile, UserProfileResponse } from "@/lib/client-api";
-import { Sparkles, Coins, GalleryVerticalEnd, Layers, CreditCard, FolderOpen } from "lucide-react";
+import { Sparkles, Coins, GalleryVerticalEnd, Layers, CreditCard, FolderOpen, ImageIcon } from "lucide-react";
 
-type RecentWorkTitleKey = "recentWorkTitles.tangDynasty" | "recentWorkTitles.songTea" | "recentWorkTitles.inkWarrior" | "recentWorkTitles.redSnow";
 type QuickActionKey = "quickActionsGenerate" | "quickActionsTemplates" | "quickActionsCredits" | "quickActionsWorks";
 type QuickActionSubKey = "quickActionsGenerateSub" | "quickActionsTemplatesSub" | "quickActionsCreditsSub" | "quickActionsWorksSub";
-
-interface MockRecentWork {
-  id: string;
-  titleKey: RecentWorkTitleKey;
-  image: string;
-  status: "completed";
-  createdAt: string;
-}
-
-const MOCK_RECENT_WORKS: MockRecentWork[] = [
-  {
-    id: "1",
-    titleKey: "recentWorkTitles.tangDynasty",
-    image: "/images/hanfu-hero/palace-red-01.jpg",
-    status: "completed",
-    createdAt: "2024-01-15 14:30",
-  },
-  {
-    id: "2",
-    titleKey: "recentWorkTitles.songTea",
-    image: "/images/hanfu-hero/jade-temple-01.jpg",
-    status: "completed",
-    createdAt: "2024-01-15 12:20",
-  },
-  {
-    id: "3",
-    titleKey: "recentWorkTitles.inkWarrior",
-    image: "/images/hanfu-hero/spring-pink-01.jpg",
-    status: "completed",
-    createdAt: "2024-01-14 18:45",
-  },
-  {
-    id: "4",
-    titleKey: "recentWorkTitles.redSnow",
-    image: "/images/hanfu-hero/palace-red-02.jpg",
-    status: "completed",
-    createdAt: "2024-01-14 10:15",
-  },
-];
 
 export default function DashboardPage() {
   const router = useRouter();
@@ -341,44 +300,26 @@ export default function DashboardPage() {
             </Link>
           </div>
 
-          <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
-            {MOCK_RECENT_WORKS.map((work) => (
-              <div
-                key={work.id}
-                className="group relative rounded-xl overflow-hidden cursor-pointer transition-all duration-300 hover:scale-[1.02]"
-                style={{ border: "1px solid rgba(255, 247, 236, 0.08)" }}
-              >
-                <div className="aspect-[3/4] relative">
-                  <Image
-                    src={work.image}
-                    alt={t(work.titleKey)}
-                    fill
-                    sizes="(max-width: 768px) 50vw, 25vw"
-                    className="object-cover"
-                  />
-                  <div className="absolute inset-0 bg-gradient-to-t from-black/60 via-transparent to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300" />
-
-                  <div className="absolute top-3 left-3">
-                    <span
-                      className="inline-flex items-center px-2 py-1 rounded-full text-xs font-medium"
-                      style={{ background: "rgba(34, 197, 94, 0.9)", color: "white" }}
-                    >
-                      <span className="w-1.5 h-1.5 rounded-full bg-white mr-1.5" />
-                      {t('completed')}
-                    </span>
-                  </div>
-
-                  <div className="absolute bottom-0 left-0 right-0 p-4 translate-y-full group-hover:translate-y-0 transition-transform duration-300">
-                    <p className="text-sm font-medium text-white truncate">
-                      {t(work.titleKey)}
-                    </p>
-                    <p className="text-xs text-white/60 mt-1">
-                      {work.createdAt}
-                    </p>
-                  </div>
-                </div>
-              </div>
-            ))}
+          <div className="col-span-full flex flex-col items-center justify-center py-16 rounded-xl" style={{ background: "rgba(255, 247, 236, 0.02)", border: "1px solid rgba(255, 247, 236, 0.06)" }}>
+            <div className="w-16 h-16 rounded-2xl flex items-center justify-center mb-4" style={{ background: "rgba(255, 247, 236, 0.04)" }}>
+              <ImageIcon className="w-8 h-8" style={{ color: "rgba(255, 247, 236, 0.25)" }} />
+            </div>
+            <p className="text-base font-medium mb-1" style={{ color: "rgba(255, 247, 236, 0.55)" }}>
+              {t('recentWorksEmpty')}
+            </p>
+            <p className="text-sm mb-4" style={{ color: "rgba(255, 247, 236, 0.35)" }}>
+              {t('recentWorksEmptySub')}
+            </p>
+            <Button
+              onClick={() => router.push(`/${locale}/generate`)}
+              style={{
+                background: "linear-gradient(135deg, #E8C27A 0%, #D4A84B 100%)",
+                color: "#1a1508",
+              }}
+            >
+              <Sparkles className="w-4 h-4 mr-2" />
+              {t('startCreating')}
+            </Button>
           </div>
         </motion.div>
 

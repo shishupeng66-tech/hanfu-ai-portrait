@@ -963,6 +963,8 @@
     "remainingCredits": "Remaining credits",
     "recharge": "Buy Credits",
     "recentWorks": "Recent works",
+    "recentWorksEmpty": "No recent portraits yet",
+    "recentWorksEmptySub": "Start creating your first Hanfu portrait.",
     "viewAll": "View all",
     "completed": "Completed",
     "quickActions": "Quick actions",

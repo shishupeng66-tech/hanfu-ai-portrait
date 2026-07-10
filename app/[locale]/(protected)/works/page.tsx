@@ -6,7 +6,6 @@ import Image from 'next/image';
 import { useState, useMemo } from 'react';
 import { Button } from "@/components/button";
 import { motion } from "framer-motion";
-import { getLocalizedWorks, type MockWork, type WorkStatus } from "@/features/works/mock-works";
 import {
   Search,
   ArrowUpDown,
@@ -23,9 +22,9 @@ import {
   Check
 } from 'lucide-react';
 
-function StatusBadge({ status }: { status: WorkStatus }) {
+function StatusBadge({ status }: { status: string }) {
   const t = useTranslations('works.status');
-  const configs: Record<WorkStatus, { bg: string; color: string; icon: React.ComponentType<{ className?: string }>; label: string }> = {
+  const configs: Record<string, { bg: string; color: string; icon: React.ComponentType<{ className?: string }>; label: string }> = {
     completed: {
       bg: 'rgba(34, 197, 94, 0.15)',
       color: '#22c55e',
@@ -74,7 +73,7 @@ function WorkCard({
   onDownload,
   onDelete,
 }: {
-  work: MockWork;
+  work: Record<string, any>;
   onToggleFavorite: (id: string) => void;
   onViewDetail: (id: string) => void;
   onRegenerate: (id: string) => void;
@@ -255,7 +254,7 @@ export default function WorksPage() {
   const t = useTranslations('works');
   const router = useRouter();
   const locale = useLocale();
-  const [works, setWorks] = useState<MockWork[]>(() => getLocalizedWorks(locale));
+  const [works, setWorks] = useState<Record<string, any>[]>([]);
   const [activeTab, setActiveTab] = useState('all');
   const [searchQuery, setSearchQuery] = useState('');
   const [sortBy, setSortBy] = useState('newest');

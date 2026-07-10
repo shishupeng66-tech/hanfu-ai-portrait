@@ -4,6 +4,7 @@ import { useState } from "react";
 import { useLocale } from "next-intl";
 import { motion } from "framer-motion";
 import { Bell, Image, Coins, Sparkles, Crown } from "lucide-react";
+
 type NotificationType = "generation_complete" | "generation_failed" | "credits_added" | "template_new" | "vip_template";
 
 interface Notification {
@@ -14,65 +15,6 @@ interface Notification {
   time: string;
   isRead: boolean;
 }
-
-const MOCK_NOTIFICATIONS: Notification[] = [
-  {
-    id: "1",
-    type: "generation_complete",
-    title: "汉服写真生成完成",
-    description: "您的「唐风雅韵」主题写真已生成完成，点击查看结果",
-    time: "2分钟前",
-    isRead: false,
-  },
-  {
-    id: "2",
-    type: "generation_failed",
-    title: "生成失败，积分已退回",
-    description: "由于网络问题生成失败，2积分已退回您的账户",
-    time: "15分钟前",
-    isRead: false,
-  },
-  {
-    id: "3",
-    type: "credits_added",
-    title: "积分充值成功",
-    description: "50积分已到账，现在可以开始创作更多汉服写真了",
-    time: "1小时前",
-    isRead: true,
-  },
-  {
-    id: "4",
-    type: "template_new",
-    title: "新模板上架",
-    description: "「清明上河」系列汉服模板已上架，包含3款全新造型",
-    time: "3小时前",
-    isRead: true,
-  },
-  {
-    id: "5",
-    type: "vip_template",
-    title: "VIP模板开放",
-    description: "「敦煌飞天」会员专属模板现在可以使用了，快去体验吧",
-    time: "昨天",
-    isRead: true,
-  },
-  {
-    id: "6",
-    type: "generation_complete",
-    title: "汉服写真生成完成",
-    description: "您的「仙侠情缘」主题写真已生成完成",
-    time: "昨天",
-    isRead: true,
-  },
-  {
-    id: "7",
-    type: "credits_added",
-    title: "每日签到积分到账",
-    description: "连续签到第7天，额外获得5积分奖励",
-    time: "2天前",
-    isRead: true,
-  },
-];
 
 const getNotificationIcon = (type: NotificationType) => {
   const iconProps = { className: "w-5 h-5", strokeWidth: 1.5 };
@@ -121,7 +63,7 @@ export default function NotificationsPage() {
     }
   };
 
-  const filteredNotifications = filterNotifications(MOCK_NOTIFICATIONS);
+  const filteredNotifications = filterNotifications([]);
 
   return (
     <div className="min-h-screen" style={{ background: "#0B0B0D" }}>
