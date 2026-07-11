@@ -4,6 +4,9 @@ import { user } from "@/lib/db/schema";
 import { eq } from "drizzle-orm";
 import { requireAdmin } from "@/lib/auth/admin";
 
+const validPlans = new Set(["free", "plus_monthly", "pro_monthly", "proplus_yearly"]);
+const validStatuses = new Set(["active", "inactive", "canceled"]);
+
 export async function POST(request: NextRequest, props: { params: Promise<{ userId: string }> }) {
   const params = await props.params;
   try {
@@ -12,14 +15,37 @@ export async function POST(request: NextRequest, props: { params: Promise<{ user
     const body = await request.json();
     const { planKey, status } = body;
     
-    if (!planKey || !status) {
+    if (typeof planKey !== "string" || typeof status !== "string") {
       return NextResponse.json(
         { error: "Plan key and status are required" },
         { status: 400 }
       );
     }
+
+    if (!validPlans.has(planKey) || !validStatuses.has(status)) {
+      return NextResponse.json(
+        { error: "Invalid plan key or status" },
+        { status: 400 }
+      );
+    }
+
+    if (planKey === "free" && status === "active") {
+      return NextResponse.json(
+        { error: "Free plan cannot be active subscription status" },
+        { status: 400 }
+      );
+    }
+
+    const targetUser = await db
+      .select({ id: user.id })
+      .from(user)
+      .where(eq(user.id, params.userId))
+      .limit(1);
+
+    if (targetUser.length === 0) {
+      return NextResponse.json({ error: "User not found" }, { status: 404 });
+    }
     
-    // Update user's subscription
     await db
       .update(user)
       .set({

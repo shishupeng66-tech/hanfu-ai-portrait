@@ -12,6 +12,7 @@ export async function POST(request: NextRequest, props: { params: Promise<{ user
     const body = await request.json();
     const { amount, reason } = body;
     const delta = Number(amount);
+    const normalizedReason = typeof reason === "string" ? reason.trim() : "";
 
     if (!Number.isFinite(delta) || delta === 0) {
       return NextResponse.json(
@@ -19,10 +20,32 @@ export async function POST(request: NextRequest, props: { params: Promise<{ user
         { status: 400 }
       );
     }
+
+    if (!normalizedReason) {
+      return NextResponse.json(
+        { error: "Reason is required" },
+        { status: 400 }
+      );
+    }
+
+    const targetUser = await db
+      .select({ credits: user.credits })
+      .from(user)
+      .where(eq(user.id, params.userId))
+      .limit(1);
+
+    if (targetUser.length === 0) {
+      return NextResponse.json({ error: "User not found" }, { status: 404 });
+    }
+
+    if (targetUser[0].credits + delta < 0) {
+      return NextResponse.json(
+        { error: "Credits cannot be negative" },
+        { status: 400 }
+      );
+    }
     
-    // Start transaction
     await db.transaction(async (tx) => {
-      // Update user's credits
       await tx
         .update(user)
         .set({
@@ -31,18 +54,16 @@ export async function POST(request: NextRequest, props: { params: Promise<{ user
         })
         .where(eq(user.id, params.userId));
       
-      // Add credit ledger entry
       const ledgerEntry: typeof creditLedger.$inferInsert = {
         id: crypto.randomUUID(),
         userId: params.userId,
         delta,
-        reason: reason || "adjustment",
+        reason: normalizedReason,
       };
 
       await tx.insert(creditLedger).values(ledgerEntry);
     });
     
-    // Get updated user
     const updatedUser = await db
       .select({ credits: user.credits })
       .from(user)

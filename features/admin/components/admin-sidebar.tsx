@@ -2,33 +2,45 @@
 
 import Link from "next/link";
 import { usePathname } from "next/navigation";
-import { useLocale, useTranslations } from "next-intl";
+import { useLocale } from "next-intl";
 import {
-  Users,
+  CreditCard,
+  Database,
   Home,
+  ImageIcon,
   ShoppingCart,
-  Database
+  Users,
 } from "lucide-react";
 import { cn } from "@/lib/utils";
 
 const adminNavItems = [
   {
-    title: "dashboard",
+    title: "工作台",
     href: "/admin",
     icon: Home,
   },
   {
-    title: "users",
+    title: "用户中心",
     href: "/admin/users",
     icon: Users,
   },
   {
-    title: "subscriptions",
+    title: "订单与支付",
+    href: "/admin/payments",
+    icon: CreditCard,
+  },
+  {
+    title: "AI生成任务",
+    href: "/admin/generations",
+    icon: ImageIcon,
+  },
+  {
+    title: "订阅管理",
     href: "/admin/subscriptions",
     icon: ShoppingCart,
   },
   {
-    title: "credits",
+    title: "积分流水",
     href: "/admin/credits",
     icon: Database,
   },
@@ -37,7 +49,6 @@ const adminNavItems = [
 export function AdminSidebar() {
   const pathname = usePathname();
   const locale = useLocale();
-  const t = useTranslations("Admin.sidebar");
 
   return (
     <div className="w-64 bg-background border-r border-border sticky top-0">
@@ -48,7 +59,7 @@ export function AdminSidebar() {
             className="flex items-center gap-2 justify-center w-full rounded-lg border border-border px-4 py-2 text-sm font-medium text-muted-foreground hover:bg-hover hover:text-hover-foreground transition-colors"
           >
             <Home className="h-4 w-4" />
-            {t("backToDashboard")}
+            返回用户仪表盘
           </Link>
         </div>
 
@@ -56,7 +67,6 @@ export function AdminSidebar() {
           {adminNavItems.map((item) => {
             const Icon = item.icon;
             const href = `/${locale}${item.href}`;
-            // 仪表板只精确匹配，其他页面允许子路径匹配
             const isActive =
               item.href === "/admin"
                 ? pathname === href
@@ -74,12 +84,11 @@ export function AdminSidebar() {
                 )}
               >
                 <Icon className="h-5 w-5" />
-                {t(item.title)}
+                {item.title}
               </Link>
             );
           })}
         </nav>
-
       </div>
     </div>
   );
