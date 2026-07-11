@@ -1,739 +1,405 @@
 "use client";
 
-import { type FormEvent, useEffect, useMemo, useState } from "react";
-import { usePathname, useRouter } from "next/navigation";
+import { useState } from "react";
 import { useTranslations } from "next-intl";
-import { Button } from "@/components/button";
+import { useRouter } from "next/navigation";
+import { useLocale } from "next-intl";
+import { format } from "date-fns";
+import { cn } from "@/lib/utils";
 import {
   Ban,
-  User,
-  MoreVertical,
-  CreditCard,
-  Mail,
-  Calendar,
-  Search,
+  CheckCircle,
+  Eye,
+  ChevronLeft,
+  ChevronRight,
   Plus,
   Minus,
-  Package
+  X,
+  CreditCard,
+  UserCog,
 } from "lucide-react";
+import { Button } from "@/components/button";
+import {
+  Dialog,
+  DialogContent,
+  DialogHeader,
+  DialogTitle,
+  DialogDescription,
+  DialogFooter,
+} from "@/components/ui/dialog";
+import { Label } from "@/components/ui/label";
 import { updateUserRole, banUser } from "@/features/admin/actions/user-actions";
-import { toast } from "sonner";
 import type { AdminUserListItem } from "@/lib/admin-user-directory";
 
-type User = AdminUserListItem;
-
 interface UsersTableProps {
-  users: User[];
-  query: string;
+  users: AdminUserListItem[];
   currentPage: number;
   pageSize: number;
   totalPages: number;
   totalUsers: number;
+  query: string;
+}
+
+const statusBadgeClasses: Record<string, string> = {
+  active: "bg-emerald-500/10 text-emerald-400 border-emerald-500/20",
+  banned: "bg-red-500/10 text-red-400 border-red-500/20",
+  unverified: "bg-amber-500/10 text-amber-400 border-amber-500/20",
+};
+
+function StatusBadge({ status }: { status: string }) {
+  return (
+    <span
+      className={cn(
+        "inline-flex items-center rounded-full border px-2 py-0.5 text-xs font-medium",
+        statusBadgeClasses[status] || "bg-muted text-muted-foreground border-border"
+      )}
+    >
+      {status}
+    </span>
+  );
 }
 
 export function UsersTable({
-  users: initialUsers,
-  query,
+  users,
   currentPage,
   pageSize,
   totalPages,
   totalUsers,
+  query,
 }: UsersTableProps) {
-  const router = useRouter();
-  const pathname = usePathname();
-  const [users, setUsers] = useState(initialUsers);
-  const [searchTerm, setSearchTerm] = useState(query);
-  const [selectedUser, setSelectedUser] = useState<User | null>(null);
-  const [isEditModalOpen, setIsEditModalOpen] = useState(false);
-  const [isCreditsModalOpen, setIsCreditsModalOpen] = useState(false);
-  const [isSubscriptionModalOpen, setIsSubscriptionModalOpen] = useState(false);
   const t = useTranslations("Admin.users");
-  const hasResults = users.length > 0;
-  const pageStart = totalUsers === 0 ? 0 : (currentPage - 1) * pageSize + 1;
-  const pageEnd = totalUsers === 0 ? 0 : Math.min(totalUsers, pageStart + users.length - 1);
-  const pageNumbers = useMemo(() => {
-    const maxButtons = 5;
-    if (totalPages <= maxButtons) {
-      return Array.from({ length: totalPages }, (_, index) => index + 1);
-    }
+  const tr = useTranslations("Admin.roles");
+  const locale = useLocale();
+  const router = useRouter();
 
-    const halfWindow = Math.floor(maxButtons / 2);
-    let start = Math.max(1, currentPage - halfWindow);
-    let end = start + maxButtons - 1;
+  const [searchQuery, setSearchQuery] = useState(query);
+  const [roleLoading, setRoleLoading] = useState<string | null>(null);
+  const [banLoading, setBanLoading] = useState<string | null>(null);
 
-    if (end > totalPages) {
-      end = totalPages;
-      start = end - maxButtons + 1;
-    }
+  const [selectedUser, setSelectedUser] = useState<AdminUserListItem | null>(null);
+  const [creditsUser, setCreditsUser] = useState<AdminUserListItem | null>(null);
+  const [adjustment, setAdjustment] = useState(0);
+  const [adjustReason, setAdjustReason] = useState("manualAdjustment");
+  const [creditsLoading, setCreditsLoading] = useState(false);
+  const [subscriptionUser, setSubscriptionUser] = useState<AdminUserListItem | null>(null);
+  const [selectedPlan, setSelectedPlan] = useState("");
+  const [subscriptionLoading, setSubscriptionLoading] = useState(false);
 
-    return Array.from({ length: end - start + 1 }, (_, index) => start + index);
-  }, [currentPage, totalPages]);
-
-  useEffect(() => {
-    setUsers(initialUsers);
-  }, [initialUsers]);
-
-  useEffect(() => {
-    setSearchTerm(query);
-  }, [query]);
-
-  const createUsersUrl = (nextQuery: string, nextPage: number) => {
+  const handleSearch = (e: React.FormEvent) => {
+    e.preventDefault();
     const params = new URLSearchParams();
-
-    if (nextQuery) {
-      params.set("query", nextQuery);
-    }
-
-    if (nextPage > 1) {
-      params.set("page", String(nextPage));
-    }
-
-    const queryString = params.toString();
-    return queryString ? `${pathname}?${queryString}` : pathname;
+    if (searchQuery.trim()) params.set("query", searchQuery.trim());
+    router.push(`/${locale}/admin/users?${params.toString()}`);
   };
 
-  const handleSearchSubmit = (event: FormEvent<HTMLFormElement>) => {
-    event.preventDefault();
-
-    const normalizedSearchTerm = searchTerm.trim();
-    router.replace(createUsersUrl(normalizedSearchTerm, 1), { scroll: false });
+  const clearSearch = () => {
+    setSearchQuery("");
+    router.push(`/${locale}/admin/users`);
   };
 
-  const handleClearSearch = () => {
-    setSearchTerm("");
-    router.replace(pathname, { scroll: false });
+  const goToPage = (page: number) => {
+    const params = new URLSearchParams();
+    if (query) params.set("query", query);
+    if (page > 1) params.set("page", String(page));
+    router.push(`/${locale}/admin/users?${params.toString()}`);
   };
 
-  const handlePageChange = (pageNumber: number) => {
-    if (pageNumber < 1 || pageNumber > totalPages || pageNumber === currentPage) {
-      return;
-    }
-
-    router.push(createUsersUrl(query, pageNumber), { scroll: false });
-  };
-
-  const handleUpdateRole = async (userId: string, newRole: string) => {
+  const handleRoleChange = async (userId: string, newRole: string) => {
+    setRoleLoading(userId);
     try {
       await updateUserRole(userId, newRole);
-      setUsers((currentUsers) =>
-        currentUsers.map((existingUser) =>
-          existingUser.id === userId ? { ...existingUser, role: newRole } : existingUser
-        )
-      );
-      toast.success(t("roleUpdated"));
+      router.refresh();
     } catch {
-      toast.error(t("roleUpdateFailed"));
+      // ignore
+    } finally {
+      setRoleLoading(null);
     }
   };
 
-  const handleBanUser = async (userId: string, banned: boolean, reason?: string) => {
+  const handleBan = async (userId: string, banned: boolean) => {
+    setBanLoading(userId);
     try {
-      await banUser(userId, banned, reason);
-      setUsers((currentUsers) =>
-        currentUsers.map((existingUser) =>
-          existingUser.id === userId
-            ? { ...existingUser, banned, banReason: reason || null }
-            : existingUser
-        )
-      );
-      toast.success(banned ? t("userBanned") : t("userUnbanned"));
+      await banUser(userId, banned);
+      router.refresh();
     } catch {
-      toast.error(t("banFailed"));
+      // ignore
+    } finally {
+      setBanLoading(null);
     }
   };
+
+  const handleCreditsAdjust = async () => {
+    if (!creditsUser) return;
+    setCreditsLoading(true);
+    try {
+      const res = await fetch(`/api/admin/users/${creditsUser.id}/credits`, {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ delta: adjustment, reason: adjustReason }),
+      });
+      if (res.ok) {
+        setCreditsUser(null);
+        setAdjustment(0);
+        setAdjustReason("manualAdjustment");
+        router.refresh();
+      }
+    } catch {
+      // ignore
+    } finally {
+      setCreditsLoading(false);
+    }
+  };
+
+  const handleSubscriptionUpdate = async () => {
+    if (!subscriptionUser || !selectedPlan) return;
+    setSubscriptionLoading(true);
+    try {
+      const res = await fetch(`/api/admin/users/${subscriptionUser.id}/subscription`, {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ planKey: selectedPlan }),
+      });
+      if (res.ok) {
+        setSubscriptionUser(null);
+        setSelectedPlan("");
+        router.refresh();
+      }
+    } catch {
+      // ignore
+    } finally {
+      setSubscriptionLoading(false);
+    }
+  };
+
+  const getUserStatus = (u: AdminUserListItem) => {
+    if (u.banned) return "banned";
+    if (!u.emailVerified) return "unverified";
+    return "active";
+  };
+
+  const from = (currentPage - 1) * pageSize + 1;
+  const to = Math.min(currentPage * pageSize, totalUsers);
+
+  const inputClass = "flex h-9 w-full rounded-lg border border-border bg-card px-3 py-1 text-sm shadow-sm transition-colors placeholder:text-muted-foreground focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-ring disabled:cursor-not-allowed disabled:opacity-50";
+  const selectClass = "flex h-9 w-full rounded-lg border border-border bg-card px-3 py-1 text-sm shadow-sm transition-colors focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-ring disabled:cursor-not-allowed disabled:opacity-50";
 
   return (
-    <div className="space-y-4">
+    <div className="space-y-6">
       {/* 搜索栏 */}
-      <form
-        onSubmit={handleSearchSubmit}
-        className="flex flex-col gap-3 lg:flex-row lg:items-center lg:justify-between"
-      >
-        <div className="relative flex-1 max-w-md">
-          <Search className="absolute left-4 top-1/2 -translate-y-1/2 h-4 w-4 text-muted-foreground" />
-          <input
-            type="text"
-            placeholder={t("searchPlaceholder")}
-            value={searchTerm}
-            onChange={(e) => setSearchTerm(e.target.value)}
-            className="w-full pl-11 pr-4 py-2 border border-border rounded-lg bg-background text-foreground focus:outline-none focus:ring-2 focus:ring-ring"
-          />
-        </div>
-        <div className="flex items-center gap-2">
-          <Button type="submit" size="sm" variant="outline">
-            {t("searchAction")}
+      <form onSubmit={handleSearch} className="flex gap-2">
+        <input
+          placeholder={t("searchPlaceholder")}
+          value={searchQuery}
+          onChange={(e) => setSearchQuery(e.target.value)}
+          className={cn(inputClass, "max-w-sm")}
+        />
+        <Button type="submit" variant="outline" size="sm">
+          <Eye className="h-4 w-4 mr-1" />
+          {t("searchAction")}
+        </Button>
+        {query && (
+          <Button type="button" variant="simple" size="sm" onClick={clearSearch}>
+            <X className="h-4 w-4 mr-1" />
+            {t("clearSearch")}
           </Button>
-          {query ? (
-            <Button type="button" size="sm" variant="simple" onClick={handleClearSearch}>
-              {t("clearSearch")}
-            </Button>
-          ) : null}
-        </div>
+        )}
       </form>
 
-      <div className="text-sm text-muted-foreground">
-        {query
-          ? t("matchingUsers", { count: totalUsers, query })
-          : t("totalUsers", { count: totalUsers })}
-        {hasResults ? ` | ${t("pageSummary", { from: pageStart, to: pageEnd, total: totalUsers })}` : ""}
-      </div>
-
-      {/* 用户表格 */}
-      <div className="bg-background rounded-lg border border-border overflow-hidden">
+      {/* 表格 */}
+      <div className="rounded-xl border border-border bg-card overflow-hidden">
         <div className="overflow-x-auto">
           <table className="w-full">
-            <thead className="bg-secondary">
-              <tr>
-                <th className="px-6 py-3 text-left text-xs font-medium text-muted-foreground uppercase tracking-wider">
-                  {t("user")}
-                </th>
-                <th className="px-6 py-3 text-left text-xs font-medium text-muted-foreground uppercase tracking-wider">
-                  {t("role")}
-                </th>
-                <th className="px-6 py-3 text-left text-xs font-medium text-muted-foreground uppercase tracking-wider">
-                  {t("subscription")}
-                </th>
-                <th className="px-6 py-3 text-left text-xs font-medium text-muted-foreground uppercase tracking-wider">
-                  {t("credits")}
-                </th>
-                <th className="px-6 py-3 text-left text-xs font-medium text-muted-foreground uppercase tracking-wider">
-                  {t("status")}
-                </th>
-                <th className="px-6 py-3 text-left text-xs font-medium text-muted-foreground uppercase tracking-wider">
-                  {t("joined")}
-                </th>
-                <th className="px-6 py-3 text-left text-xs font-medium text-muted-foreground uppercase tracking-wider">
-                  {t("actions")}
-                </th>
+            <thead>
+              <tr className="border-b border-amber-500/10 bg-muted/50">
+                <th className="px-4 py-3 text-left text-xs font-medium text-muted-foreground">{t("user")}</th>
+                <th className="px-4 py-3 text-left text-xs font-medium text-muted-foreground">{t("role")}</th>
+                <th className="px-4 py-3 text-right text-xs font-medium text-muted-foreground">{t("credits")}</th>
+                <th className="px-4 py-3 text-left text-xs font-medium text-muted-foreground">{t("status")}</th>
+                <th className="px-4 py-3 text-left text-xs font-medium text-muted-foreground hidden md:table-cell">{t("joined")}</th>
+                <th className="px-4 py-3 text-right text-xs font-medium text-muted-foreground">{t("actions")}</th>
               </tr>
             </thead>
-            <tbody className="divide-y divide-border">
-              {users.map((user) => (
-                <tr key={user.id} className="hover:bg-hover">
-                  <td className="px-6 py-4">
-                    <div className="flex items-center gap-6">
-                      <div className="h-10 w-10 flex-shrink-0">
-                        <div className="h-10 w-10 rounded-full bg-secondary flex items-center justify-center">
-                          <User className="h-5 w-5 text-muted-foreground" />
-                        </div>
+            <tbody className="divide-y divide-amber-500/5">
+              {users.map((u) => {
+                const status = getUserStatus(u);
+                return (
+                  <tr key={u.id} className="hover:bg-muted/30 transition-colors">
+                    <td className="px-4 py-3">
+                      <p className="text-sm font-medium text-foreground">{u.name || "—"}</p>
+                      <p className="text-xs text-muted-foreground">{u.email}</p>
+                    </td>
+                    <td className="px-4 py-3">
+                      <select
+                        value={u.role}
+                        onChange={(e) => handleRoleChange(u.id, e.target.value)}
+                        disabled={roleLoading === u.id}
+                        className={cn(selectClass, "h-8 w-28 text-xs bg-transparent")}
+                      >
+                        <option value="user">{tr("user")}</option>
+                        <option value="admin">{tr("admin")}</option>
+                      </select>
+                    </td>
+                    <td className="px-4 py-3 text-right">
+                      <span className="text-sm font-medium text-foreground">{u.credits.toLocaleString()}</span>
+                    </td>
+                    <td className="px-4 py-3">
+                      <StatusBadge status={status} />
+                    </td>
+                    <td className="px-4 py-3 hidden md:table-cell">
+                      <span className="text-xs text-muted-foreground">{format(new Date(u.createdAt), "yyyy-MM-dd")}</span>
+                    </td>
+                    <td className="px-4 py-3">
+                      <div className="flex items-center justify-end gap-0.5">
+                        <button
+                          title={t("viewDetails")}
+                          onClick={() => setSelectedUser(u)}
+                          className="p-1.5 rounded-md text-muted-foreground hover:text-foreground hover:bg-muted transition-colors"
+                        >
+                          <Eye className="h-4 w-4" />
+                        </button>
+                        <button
+                          title={t("adjustCredits")}
+                          onClick={() => { setCreditsUser(u); setAdjustment(0); setAdjustReason("manualAdjustment"); }}
+                          className="p-1.5 rounded-md text-muted-foreground hover:text-foreground hover:bg-muted transition-colors"
+                        >
+                          <CreditCard className="h-4 w-4" />
+                        </button>
+                        <button
+                          title={t("manageSubscription")}
+                          onClick={() => { setSubscriptionUser(u); setSelectedPlan(u.planKey || "free"); }}
+                          className="p-1.5 rounded-md text-muted-foreground hover:text-foreground hover:bg-muted transition-colors"
+                        >
+                          <UserCog className="h-4 w-4" />
+                        </button>
+                        <button
+                          title={u.banned ? t("unban") : t("ban")}
+                          onClick={() => handleBan(u.id, !u.banned)}
+                          disabled={banLoading === u.id}
+                          className="p-1.5 rounded-md text-muted-foreground hover:text-foreground hover:bg-muted transition-colors disabled:opacity-40"
+                        >
+                          {u.banned ? <CheckCircle className="h-4 w-4" /> : <Ban className="h-4 w-4" />}
+                        </button>
                       </div>
-                      <div className="space-y-1">
-                        <div className="text-sm font-medium text-foreground">
-                          {user.name}
-                        </div>
-                        <div className="text-sm text-muted-foreground flex items-center gap-1">
-                          <Mail className="h-3 w-3" />
-                          {user.email}
-                        </div>
-                      </div>
-                    </div>
-                  </td>
-                  <td className="px-6 py-4">
-                    <select
-                      value={user.role}
-                      onChange={(e) => handleUpdateRole(user.id, e.target.value)}
-                      className="px-3 py-1 text-sm rounded-lg border border-border bg-background text-foreground"
-                    >
-                      <option value="user">User</option>
-                      <option value="admin">Admin</option>
-                    </select>
-                  </td>
-                  <td className="px-6 py-4">
-                    <div className="flex items-center gap-2">
-                      <Package className="h-4 w-4 text-muted-foreground" />
-                      <span className="text-sm text-foreground">
-                        {user.planKey || "free"}
-                      </span>
-                      <button
-                        onClick={() => {
-                          setSelectedUser(user);
-                          setIsSubscriptionModalOpen(true);
-                        }}
-                        className="text-muted-foreground hover:text-hover-foreground text-xs"
-                      >
-                        {t("manage")}
-                      </button>
-                    </div>
-                  </td>
-                  <td className="px-6 py-4">
-                    <div className="flex items-center gap-2">
-                      <CreditCard className="h-4 w-4 text-muted-foreground" />
-                      <span className="text-sm text-foreground">
-                        {user.credits}
-                      </span>
-                      <button
-                        onClick={() => {
-                          setSelectedUser(user);
-                          setIsCreditsModalOpen(true);
-                        }}
-                        className="text-muted-foreground hover:text-hover-foreground text-xs"
-                      >
-                        {t("adjust")}
-                      </button>
-                    </div>
-                  </td>
-                  <td className="px-6 py-4">
-                    {user.banned ? (
-                      <span className="px-2 py-1 text-xs rounded-full bg-red-100 dark:bg-red-900/30 text-red-700 dark:text-red-400">
-                        {t("banned")}
-                      </span>
-                    ) : user.emailVerified ? (
-                      <span className="px-2 py-1 text-xs rounded-full bg-green-100 dark:bg-green-900/30 text-green-700 dark:text-green-400">
-                        {t("active")}
-                      </span>
-                    ) : (
-                      <span className="px-2 py-1 text-xs rounded-full bg-yellow-100 dark:bg-yellow-900/30 text-yellow-700 dark:text-yellow-400">
-                        {t("unverified")}
-                      </span>
-                    )}
-                  </td>
-                  <td className="px-6 py-4">
-                    <div className="flex items-center gap-1 text-sm text-muted-foreground">
-                      <Calendar className="h-3 w-3" />
-                      {new Date(user.createdAt).toLocaleDateString()}
-                    </div>
-                  </td>
-                  <td className="px-6 py-4">
-                    <div className="flex items-center gap-2">
-                      <button
-                        onClick={() => {
-                          if (user.banned) {
-                            handleBanUser(user.id, false);
-                          } else {
-                            const reason = prompt(t("banReason"));
-                            if (reason) {
-                              handleBanUser(user.id, true, reason);
-                            }
-                          }
-                        }}
-                        className={`p-1.5 rounded hover:bg-hover ${
-                          user.banned
-                            ? "text-green-600 dark:text-green-400"
-                            : "text-red-600 dark:text-red-400"
-                        }`}
-                        title={user.banned ? t("unban") : t("ban")}
-                      >
-                        <Ban className="h-4 w-4" />
-                      </button>
-                      <button
-                        onClick={() => {
-                          setSelectedUser(user);
-                          setIsEditModalOpen(true);
-                        }}
-                        className="p-1.5 rounded hover:bg-hover text-muted-foreground"
-                        title={t("viewDetails")}
-                      >
-                        <MoreVertical className="h-4 w-4" />
-                      </button>
-                    </div>
-                  </td>
-                </tr>
-              ))}
-              {!hasResults ? (
+                    </td>
+                  </tr>
+                );
+              })}
+              {users.length === 0 && (
                 <tr>
-                  <td colSpan={7} className="px-6 py-12 text-center text-sm text-muted-foreground">
+                  <td colSpan={6} className="px-4 py-12 text-center text-sm text-muted-foreground">
                     {query ? t("emptySearchState") : t("emptyState")}
                   </td>
                 </tr>
-              ) : null}
+              )}
             </tbody>
           </table>
         </div>
 
-        {totalUsers > 0 && (
-          <nav
-            className="flex items-center justify-between px-6 py-4 border-t border-border bg-secondary"
-            aria-label={t("pagination.page", { current: currentPage, total: totalPages })}
-          >
-            <button
-              type="button"
-              onClick={() => handlePageChange(currentPage - 1)}
-              disabled={currentPage === 1}
-              className="px-3 py-1.5 text-sm font-medium rounded-md border border-border text-muted-foreground hover:bg-hover disabled:opacity-40 disabled:cursor-not-allowed"
-            >
-              {t("pagination.previous")}
-            </button>
-
-            <div className="flex items-center gap-2">
-              {pageNumbers[0] > 1 && (
-                <button
-                  type="button"
-                  onClick={() => handlePageChange(1)}
-                  className={`px-3 py-1.5 text-sm font-medium rounded-md border border-border hover:bg-hover ${currentPage === 1 ? "bg-foreground text-background" : "text-muted-foreground"}`}
-                >
-                  1
-                </button>
-              )}
-              {pageNumbers[0] > 2 && <span className="text-sm text-muted-foreground">...</span>}
-
-              {pageNumbers.map((pageNumber) => (
-                <button
-                  key={pageNumber}
-                  type="button"
-                  onClick={() => handlePageChange(pageNumber)}
-                  className={`px-3 py-1.5 text-sm font-medium rounded-md border border-border hover:bg-hover ${
-                    currentPage === pageNumber ? "bg-foreground text-background" : "text-muted-foreground"
-                  }`}
-                  aria-current={currentPage === pageNumber ? "page" : undefined}
-                >
-                  {pageNumber}
-                </button>
-              ))}
-
-              {pageNumbers[pageNumbers.length - 1] < totalPages - 1 && (
-                <span className="text-sm text-muted-foreground">...</span>
-              )}
-              {pageNumbers[pageNumbers.length - 1] < totalPages && (
-                <button
-                  type="button"
-                  onClick={() => handlePageChange(totalPages)}
-                  className={`px-3 py-1.5 text-sm font-medium rounded-md border border-border hover:bg-hover ${currentPage === totalPages ? "bg-foreground text-background" : "text-muted-foreground"}`}
-                >
-                  {totalPages}
-                </button>
-              )}
+        {totalPages > 1 && (
+          <div className="flex items-center justify-between border-t border-amber-500/10 px-4 py-3">
+            <span className="text-xs text-muted-foreground">
+              {t("pageSummary", { from, to, total: totalUsers })}
+            </span>
+            <div className="flex items-center gap-1">
+              <Button variant="simple" size="sm" onClick={() => goToPage(currentPage - 1)} disabled={currentPage <= 1}>
+                <ChevronLeft className="h-4 w-4" />
+              </Button>
+              <span className="text-xs text-muted-foreground px-2">
+                {t("pagination.page", { current: currentPage, total: totalPages })}
+              </span>
+              <Button variant="simple" size="sm" onClick={() => goToPage(currentPage + 1)} disabled={currentPage >= totalPages}>
+                <ChevronRight className="h-4 w-4" />
+              </Button>
             </div>
-
-            <button
-              type="button"
-              onClick={() => handlePageChange(currentPage + 1)}
-              disabled={currentPage === totalPages}
-              className="px-3 py-1.5 text-sm font-medium rounded-md border border-border text-muted-foreground hover:bg-hover disabled:opacity-40 disabled:cursor-not-allowed"
-            >
-              {t("pagination.next")}
-            </button>
-          </nav>
+          </div>
         )}
       </div>
 
-      {/* 用户详情模态框 */}
-      {isEditModalOpen && selectedUser && (
-        <UserDetailModal
-          user={selectedUser}
-          onClose={() => {
-            setIsEditModalOpen(false);
-            setSelectedUser(null);
-          }}
-        />
-      )}
-
-      {/* 积分管理模态框 */}
-      {isCreditsModalOpen && selectedUser && (
-        <CreditsManagementModal
-          user={selectedUser}
-          onClose={() => {
-            setIsCreditsModalOpen(false);
-            setSelectedUser(null);
-          }}
-          onUpdate={(userId, newCredits) => {
-            setUsers(users.map(u => u.id === userId ? { ...u, credits: newCredits } : u));
-          }}
-        />
-      )}
-
-      {/* 订阅管理模态框 */}
-      {isSubscriptionModalOpen && selectedUser && (
-        <SubscriptionManagementModal
-          user={selectedUser}
-          onClose={() => {
-            setIsSubscriptionModalOpen(false);
-            setSelectedUser(null);
-          }}
-          onUpdate={(userId, newPlan) => {
-            setUsers(users.map(u => u.id === userId ? { ...u, planKey: newPlan } : u));
-          }}
-        />
-      )}
-    </div>
-  );
-}
-
-// 积分管理模态框
-function CreditsManagementModal({
-  user,
-  onClose,
-  onUpdate
-}: {
-  user: User;
-  onClose: () => void;
-  onUpdate: (userId: string, credits: number) => void;
-}) {
-  const [amount, setAmount] = useState(0);
-  const [reason, setReason] = useState("adjustment");
-  const t = useTranslations("Admin.users");
-
-  const handleAdjustCredits = async () => {
-    if (amount === 0) return;
-    
-    try {
-      const response = await fetch(`/api/admin/users/${user.id}/credits`, {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ amount, reason })
-      });
-      
-      if (response.ok) {
-        const data = await response.json();
-        onUpdate(user.id, data.credits);
-        toast.success(t("creditsUpdated"));
-        onClose();
-      } else {
-        toast.error(t("creditsUpdateFailed"));
-      }
-    } catch {
-      toast.error(t("creditsUpdateFailed"));
-    }
-  };
-
-  return (
-    <div className="fixed inset-0 bg-black/50 flex items-center justify-center z-50">
-      <div className="bg-background rounded-lg p-6 max-w-md w-full mx-4 border border-border">
-        <h2 className="text-xl font-bold text-foreground mb-4">
-          {t("adjustCredits")}
-        </h2>
-
-        <div className="space-y-4">
-          <div>
-            <label className="block text-sm font-medium text-muted-foreground mb-1">
-              {t("currentCredits")}
-            </label>
-            <p className="text-2xl font-bold text-foreground">{user.credits}</p>
-          </div>
-
-          <div>
-            <label className="block text-sm font-medium text-muted-foreground mb-1">
-              {t("adjustment")}
-            </label>
-            <div className="flex gap-2">
-              <button
-                onClick={() => setAmount(amount - 10)}
-                className="p-2 rounded bg-secondary hover:bg-hover text-foreground border border-border"
-              >
-                <Minus className="h-4 w-4" />
-              </button>
-              <input
-                type="number"
-                value={amount}
-                onChange={(e) => setAmount(parseInt(e.target.value) || 0)}
-                className="flex-1 px-3 py-2 rounded border border-border bg-background text-foreground"
-              />
-              <button
-                onClick={() => setAmount(amount + 10)}
-                className="p-2 rounded bg-secondary hover:bg-hover text-foreground border border-border"
-              >
-                <Plus className="h-4 w-4" />
-              </button>
-            </div>
-            {amount !== 0 && (
-              <p className="text-sm text-muted-foreground mt-1">
-                {t("newBalance")}: {user.credits + amount}
-              </p>
-            )}
-          </div>
-
-          <div>
-            <label className="block text-sm font-medium text-muted-foreground mb-1">
-              {t("reason")}
-            </label>
-            <select
-              value={reason}
-              onChange={(e) => setReason(e.target.value)}
-              className="w-full px-3 py-2 rounded border border-border bg-background text-foreground"
-            >
-              <option value="adjustment">{t("manualAdjustment")}</option>
-              <option value="refund">{t("refund")}</option>
-              <option value="bonus">{t("bonus")}</option>
-              <option value="compensation">{t("compensation")}</option>
-            </select>
-          </div>
-        </div>
-
-        <div className="mt-6 flex justify-end gap-3">
-          <Button variant="outline" onClick={onClose}>
-            {t("cancel")}
-          </Button>
-          <Button
-            onClick={handleAdjustCredits}
-            disabled={amount === 0}
-            className="bg-foreground text-background"
-          >
-            {amount > 0 ? t("addCredits") : t("deductCredits")}
-          </Button>
-        </div>
-      </div>
-    </div>
-  );
-}
-
-// 订阅管理模态框
-function SubscriptionManagementModal({
-  user,
-  onClose,
-  onUpdate
-}: {
-  user: User;
-  onClose: () => void;
-  onUpdate: (userId: string, plan: string) => void;
-}) {
-  const [selectedPlan, setSelectedPlan] = useState(user.planKey || "free");
-  const t = useTranslations("Admin.users");
-
-  const handleUpdateSubscription = async () => {
-    try {
-      const response = await fetch(`/api/admin/users/${user.id}/subscription`, {
-        method: selectedPlan === "free" ? "DELETE" : "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ planKey: selectedPlan, status: "active" })
-      });
-      
-      if (response.ok) {
-        onUpdate(user.id, selectedPlan);
-        toast.success(t("subscriptionUpdated"));
-        onClose();
-      } else {
-        toast.error(t("subscriptionUpdateFailed"));
-      }
-    } catch {
-      toast.error(t("subscriptionUpdateFailed"));
-    }
-  };
-
-  return (
-    <div className="fixed inset-0 bg-black/50 flex items-center justify-center z-50">
-      <div className="bg-background rounded-lg p-6 max-w-md w-full mx-4 border border-border">
-        <h2 className="text-xl font-bold text-foreground mb-4">
-          {t("manageSubscription")}
-        </h2>
-
-        <div className="space-y-4">
-          <div>
-            <label className="block text-sm font-medium text-muted-foreground mb-1">
-              {t("currentPlan")}
-            </label>
-            <p className="text-lg font-semibold text-foreground">
-              {user.planKey || "free"}
-            </p>
-          </div>
-
-          <div>
-            <label className="block text-sm font-medium text-muted-foreground mb-1">
-              {t("selectPlan")}
-            </label>
-            <div className="space-y-2">
-              {["free", "plus_monthly", "pro_monthly", "proplus_yearly", "enterprise"].map((plan) => (
-                <label key={plan} className="flex items-center gap-2 cursor-pointer">
-                  <input
-                    type="radio"
-                    value={plan}
-                    checked={selectedPlan === plan}
-                    onChange={(e) => setSelectedPlan(e.target.value)}
-                    className="text-foreground"
-                  />
-                  <span className="text-sm text-foreground">
-                    {plan.replace("_", " ").replace(/\b\w/g, l => l.toUpperCase())}
-                  </span>
-                </label>
-              ))}
-            </div>
-          </div>
-        </div>
-
-        <div className="mt-6 flex justify-end gap-3">
-          <Button variant="outline" onClick={onClose}>
-            {t("cancel")}
-          </Button>
-          <Button
-            onClick={handleUpdateSubscription}
-            className="bg-foreground text-background"
-          >
-            {t("updateSubscription")}
-          </Button>
-        </div>
-      </div>
-    </div>
-  );
-}
-
-function UserDetailModal({ 
-  user, 
-  onClose,
-}: { 
-  user: User; 
-  onClose: () => void;
-}) {
-  const t = useTranslations("Admin.users");
-
-  return (
-    <div className="fixed inset-0 bg-black/50 flex items-center justify-center z-50">
-      <div className="bg-background rounded-lg p-6 max-w-2xl w-full mx-4 border border-border">
-        <h2 className="text-xl font-bold text-foreground mb-4">
-          {t("userDetails")}
-        </h2>
-
-        <div className="space-y-4">
-          <div className="grid grid-cols-2 gap-4">
-            <div>
-              <label className="block text-sm font-medium text-muted-foreground">
-                {t("name")}
-              </label>
-              <p className="mt-1 text-foreground">{user.name}</p>
-            </div>
-            <div>
-              <label className="block text-sm font-medium text-muted-foreground">
-                {t("email")}
-              </label>
-              <p className="mt-1 text-foreground">{user.email}</p>
-            </div>
-            <div>
-              <label className="block text-sm font-medium text-muted-foreground">
-                {t("role")}
-              </label>
-              <p className="mt-1 text-foreground">{user.role}</p>
-            </div>
-            <div>
-              <label className="block text-sm font-medium text-muted-foreground">
-                {t("credits")}
-              </label>
-              <p className="mt-1 text-foreground">{user.credits}</p>
-            </div>
-            <div>
-              <label className="block text-sm font-medium text-muted-foreground">
-                {t("joined")}
-              </label>
-              <p className="mt-1 text-foreground">
-                {new Date(user.createdAt).toLocaleString()}
-              </p>
-            </div>
-            <div>
-              <label className="block text-sm font-medium text-muted-foreground">
-                {t("lastActive")}
-              </label>
-              <p className="mt-1 text-foreground">
-                {new Date(user.updatedAt).toLocaleString()}
-              </p>
-            </div>
-          </div>
-
-          {user.banned && (
-            <div className="p-4 bg-red-50 dark:bg-red-900/20 rounded-lg">
-              <p className="text-sm text-red-700 dark:text-red-400">
-                <strong>{t("banReason")}:</strong> {user.banReason}
-              </p>
-              {user.banExpires && (
-                <p className="text-sm text-red-700 dark:text-red-400 mt-1">
-                  <strong>{t("banExpires")}:</strong> {new Date(user.banExpires).toLocaleString()}
-                </p>
-              )}
+      {/* 用户详情弹窗 */}
+      <Dialog open={!!selectedUser} onOpenChange={() => setSelectedUser(null)}>
+        <DialogContent>
+          <DialogHeader>
+            <DialogTitle>{t("userDetails")}</DialogTitle>
+          </DialogHeader>
+          {selectedUser && (
+            <div className="space-y-3">
+              <div className="flex justify-between"><span className="text-sm text-muted-foreground">{t("name")}</span><span className="text-sm font-medium">{selectedUser.name || "-"}</span></div>
+              <div className="flex justify-between"><span className="text-sm text-muted-foreground">{t("email")}</span><span className="text-sm font-medium">{selectedUser.email}</span></div>
+              <div className="flex justify-between"><span className="text-sm text-muted-foreground">{t("role")}</span><span className="text-sm font-medium">{tr(selectedUser.role)}</span></div>
+              <div className="flex justify-between"><span className="text-sm text-muted-foreground">{t("credits")}</span><span className="text-sm font-medium">{selectedUser.credits.toLocaleString()}</span></div>
+              <div className="flex justify-between"><span className="text-sm text-muted-foreground">{t("joined")}</span><span className="text-sm font-medium">{format(new Date(selectedUser.createdAt), "yyyy-MM-dd HH:mm")}</span></div>
             </div>
           )}
-        </div>
+        </DialogContent>
+      </Dialog>
 
-        <div className="mt-6 flex justify-end gap-3">
-          <Button variant="outline" onClick={onClose}>
-            {t("close")}
-          </Button>
-        </div>
-      </div>
+      {/* 积分调整弹窗 */}
+      <Dialog open={!!creditsUser} onOpenChange={() => setCreditsUser(null)}>
+        <DialogContent>
+          <DialogHeader>
+            <DialogTitle>{t("adjustCredits")}</DialogTitle>
+            <DialogDescription>{t("currentCredits")}: {creditsUser?.credits.toLocaleString()}</DialogDescription>
+          </DialogHeader>
+          <div className="space-y-4">
+            <div className="space-y-2">
+              <Label>{t("adjustment")}</Label>
+              <div className="flex items-center gap-2">
+                <Button variant="outline" size="sm" onClick={() => setAdjustment((v) => v - 1)}><Minus className="h-4 w-4" /></Button>
+                <input
+                  type="number"
+                  value={adjustment}
+                  onChange={(e) => setAdjustment(Number(e.target.value))}
+                  className={cn(inputClass, "text-center w-24")}
+                />
+                <Button variant="outline" size="sm" onClick={() => setAdjustment((v) => v + 1)}><Plus className="h-4 w-4" /></Button>
+              </div>
+            </div>
+            <div className="space-y-2">
+              <Label>{t("reason")}</Label>
+              <select value={adjustReason} onChange={(e) => setAdjustReason(e.target.value)} className={selectClass}>
+                <option value="manualAdjustment">{t("manualAdjustment")}</option>
+                <option value="refund">{t("refund")}</option>
+                <option value="bonus">{t("bonus")}</option>
+                <option value="compensation">{t("compensation")}</option>
+              </select>
+            </div>
+            {creditsUser && (
+              <p className="text-sm text-muted-foreground">{t("newBalance")}: {(creditsUser.credits + adjustment).toLocaleString()}</p>
+            )}
+          </div>
+          <DialogFooter>
+            <Button variant="simple" onClick={() => setCreditsUser(null)}>{t("cancel")}</Button>
+            <Button onClick={handleCreditsAdjust} disabled={creditsLoading || adjustment === 0}>
+              {adjustment > 0 ? t("addCredits") : t("deductCredits")}
+            </Button>
+          </DialogFooter>
+        </DialogContent>
+      </Dialog>
+
+      {/* 订阅管理弹窗 */}
+      <Dialog open={!!subscriptionUser} onOpenChange={() => setSubscriptionUser(null)}>
+        <DialogContent>
+          <DialogHeader>
+            <DialogTitle>{t("manageSubscription")}</DialogTitle>
+            <DialogDescription>{t("currentPlan")}: {subscriptionUser?.planKey || "free"}</DialogDescription>
+          </DialogHeader>
+          <div className="space-y-4">
+            <div className="space-y-2">
+              <Label>{t("selectPlan")}</Label>
+              <select value={selectedPlan} onChange={(e) => setSelectedPlan(e.target.value)} className={selectClass}>
+                <option value="free">Free</option>
+                <option value="plus_monthly">Plus Monthly</option>
+                <option value="pro_monthly">Pro Monthly</option>
+                <option value="pro_plus_yearly">Pro+ Yearly</option>
+              </select>
+            </div>
+          </div>
+          <DialogFooter>
+            <Button variant="simple" onClick={() => setSubscriptionUser(null)}>{t("cancel")}</Button>
+            <Button onClick={handleSubscriptionUpdate} disabled={subscriptionLoading || !selectedPlan}>{t("updateSubscription")}</Button>
+          </DialogFooter>
+        </DialogContent>
+      </Dialog>
     </div>
   );
 }

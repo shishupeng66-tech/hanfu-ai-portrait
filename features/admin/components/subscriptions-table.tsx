@@ -1,16 +1,13 @@
 "use client";
 
-import { useMemo, useState } from "react";
+import { useState } from "react";
 import { useTranslations } from "next-intl";
-import {
-  ShoppingCart,
-  Search,
-  CheckCircle,
-  XCircle,
-  AlertCircle,
-} from "lucide-react";
+import { format } from "date-fns";
+import { cn } from "@/lib/utils";
+import { X, ChevronLeft, ChevronRight } from "lucide-react";
+import { Button } from "@/components/button";
 
-interface Subscription {
+interface SubscriptionItem {
   id: string;
   userId: string;
   userName: string | null;
@@ -22,177 +19,94 @@ interface Subscription {
   updatedAt: Date;
 }
 
-interface SubscriptionsTableProps {
-  subscriptions: Subscription[];
-  stats: {
-    totalSubscriptions: number;
-    activeSubscriptions: number;
-    canceledSubscriptions: number;
-    expiredSubscriptions: number;
-  };
+interface SubscriptionStats {
+  totalSubscriptions: number;
+  activeSubscriptions: number;
+  canceledSubscriptions: number;
+  expiredSubscriptions: number;
 }
 
-export function SubscriptionsTable({ subscriptions: initialSubscriptions, stats }: SubscriptionsTableProps) {
-  const [searchTerm, setSearchTerm] = useState("");
-  const [statusFilter, setStatusFilter] = useState<string>("all");
-  const [subscriptionPage, setSubscriptionPage] = useState(1);
-  const t = useTranslations("Admin.subscriptions");
-  const normalizedSearchTerm = searchTerm.trim().toLowerCase();
+interface SubscriptionsTableProps {
+  subscriptions: SubscriptionItem[];
+  stats: SubscriptionStats;
+}
 
-  const filteredSubscriptions = initialSubscriptions.filter((sub) => {
-    const matchesSearch = 
-      sub.userName?.toLowerCase().includes(normalizedSearchTerm) ||
-      sub.userEmail?.toLowerCase().includes(normalizedSearchTerm) ||
-      sub.planKey.toLowerCase().includes(normalizedSearchTerm);
-    
-    const matchesStatus = statusFilter === "all" || sub.status === statusFilter;
-    
-    return matchesSearch && matchesStatus;
+const statusBadgeClasses: Record<string, string> = {
+  active: "bg-emerald-500/10 text-emerald-400 border-emerald-500/20",
+  trial: "bg-blue-500/10 text-blue-400 border-blue-500/20",
+  canceled: "bg-red-500/10 text-red-400 border-red-500/20",
+  expired: "bg-neutral-500/10 text-neutral-400 border-neutral-500/20",
+};
+
+export function SubscriptionsTable({ subscriptions, stats }: SubscriptionsTableProps) {
+  const t = useTranslations("Admin.subscriptions");
+  const tpl = useTranslations("Admin.plans");
+  const [searchQuery, setSearchQuery] = useState("");
+  const [statusFilter, setStatusFilter] = useState("all");
+  const [currentPage, setCurrentPage] = useState(1);
+  const pageSize = 20;
+
+  const filtered = subscriptions.filter((s) => {
+    const q = searchQuery.trim().toLowerCase();
+    if (q) {
+      const name = (s.userName || "").toLowerCase();
+      const email = (s.userEmail || "").toLowerCase();
+      const plan = tpl(s.planKey).toLowerCase();
+      if (!name.includes(q) && !email.includes(q) && !plan.includes(q)) return false;
+    }
+    if (statusFilter !== "all" && s.status !== statusFilter) return false;
+    return true;
   });
 
-  const subscriptionsPerPage = 10;
-  const totalPages = Math.max(1, Math.ceil(filteredSubscriptions.length / subscriptionsPerPage));
-  const currentPage = Math.min(subscriptionPage, totalPages);
-  const startIndex = (currentPage - 1) * subscriptionsPerPage;
-  const paginatedSubscriptions = filteredSubscriptions.slice(startIndex, startIndex + subscriptionsPerPage);
-  const pageNumbers = useMemo(() => {
-    const maxButtons = 5;
-    if (totalPages <= maxButtons) {
-      return Array.from({ length: totalPages }, (_, index) => index + 1);
-    }
+  const totalPages = Math.max(1, Math.ceil(filtered.length / pageSize));
+  const safePage = Math.min(currentPage, totalPages);
+  const paged = filtered.slice((safePage - 1) * pageSize, safePage * pageSize);
 
-    const halfWindow = Math.floor(maxButtons / 2);
-    let start = Math.max(1, currentPage - halfWindow);
-    let end = start + maxButtons - 1;
+  const statCards = [
+    { label: t("totalSubscriptions"), value: stats.totalSubscriptions },
+    { label: t("activeSubscriptions"), value: stats.activeSubscriptions },
+    { label: t("canceledSubscriptions"), value: stats.canceledSubscriptions },
+    { label: t("expiredSubscriptions"), value: stats.expiredSubscriptions },
+  ];
 
-    if (end > totalPages) {
-      end = totalPages;
-      start = end - maxButtons + 1;
-    }
-
-    return Array.from({ length: end - start + 1 }, (_, index) => start + index);
-  }, [currentPage, totalPages]);
-
-  const getStatusColor = (status: string) => {
-    switch (status) {
-      case "active":
-        return "bg-green-100 dark:bg-green-900/30 text-green-700 dark:text-green-400";
-      case "canceled":
-        return "bg-red-100 dark:bg-red-900/30 text-red-700 dark:text-red-400";
-      case "expired":
-        return "bg-secondary text-muted-foreground";
-      case "trial":
-        return "bg-secondary text-muted-foreground";
-      default:
-        return "bg-secondary text-muted-foreground";
-    }
-  };
-
-  const getDaysUntilExpiry = (endDate: Date | null) => {
+  const getDaysRemaining = (endDate: Date | null) => {
     if (!endDate) return null;
     const now = new Date();
-    const diff = endDate.getTime() - now.getTime();
-    return Math.ceil(diff / (1000 * 60 * 60 * 24));
+    const diff = Math.ceil((new Date(endDate).getTime() - now.getTime()) / (1000 * 60 * 60 * 24));
+    return diff;
   };
+
+  const inputClass = "flex h-9 w-full rounded-lg border border-border bg-card px-3 py-1 text-sm shadow-sm transition-colors placeholder:text-muted-foreground focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-ring";
 
   return (
     <div className="space-y-6">
-      <div className="flex items-center justify-between">
-        <h1 className="text-2xl font-bold text-foreground">
-          {t("title")}
-        </h1>
+      <div>
+        <h1 className="text-2xl font-bold text-foreground mb-1">{t("title")}</h1>
+        <p className="text-sm text-muted-foreground">Han Portrait · 订阅管理</p>
       </div>
 
       {/* 统计卡片 */}
-      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4">
-        <div className="bg-card rounded-lg p-6 border border-border hover:shadow-lg transition-shadow">
-          <div className="flex items-center justify-between">
-            <div>
-              <p className="text-sm text-muted-foreground">
-                {t("totalSubscriptions")}
-              </p>
-              <p className="text-2xl font-bold text-foreground mt-1">
-                {stats.totalSubscriptions}
-              </p>
-            </div>
-            <div className="bg-muted p-3 rounded-lg">
-              <ShoppingCart className="h-6 w-6 text-white" />
-            </div>
+      <div className="grid grid-cols-1 gap-4 sm:grid-cols-2 lg:grid-cols-4">
+        {statCards.map((card) => (
+          <div key={card.label} className="rounded-xl border border-border bg-card p-5 transition-colors hover:border-amber-500/20">
+            <p className="text-xs text-muted-foreground">{card.label}</p>
+            <p className="mt-1 text-2xl font-bold text-foreground">{card.value.toLocaleString()}</p>
           </div>
-        </div>
-
-        <div className="bg-card rounded-lg p-6 border border-border hover:shadow-lg transition-shadow">
-          <div className="flex items-center justify-between">
-            <div>
-              <p className="text-sm text-muted-foreground">
-                {t("activeSubscriptions")}
-              </p>
-              <p className="text-2xl font-bold text-foreground mt-1">
-                {stats.activeSubscriptions}
-              </p>
-            </div>
-            <div className="bg-muted p-3 rounded-lg">
-              <CheckCircle className="h-6 w-6 text-white" />
-            </div>
-          </div>
-        </div>
-
-        <div className="bg-card rounded-lg p-6 border border-border hover:shadow-lg transition-shadow">
-          <div className="flex items-center justify-between">
-            <div>
-              <p className="text-sm text-muted-foreground">
-                {t("canceledSubscriptions")}
-              </p>
-              <p className="text-2xl font-bold text-foreground mt-1">
-                {stats.canceledSubscriptions}
-              </p>
-            </div>
-            <div className="bg-muted p-3 rounded-lg">
-              <XCircle className="h-6 w-6 text-white" />
-            </div>
-          </div>
-        </div>
-
-        <div className="bg-card rounded-lg p-6 border border-border hover:shadow-lg transition-shadow">
-          <div className="flex items-center justify-between">
-            <div>
-              <p className="text-sm text-muted-foreground">
-                {t("expiredSubscriptions")}
-              </p>
-              <p className="text-2xl font-bold text-foreground mt-1">
-                {stats.expiredSubscriptions}
-              </p>
-            </div>
-            <div className="bg-muted p-3 rounded-lg">
-              <AlertCircle className="h-6 w-6 text-white" />
-            </div>
-          </div>
-        </div>
+        ))}
       </div>
 
-      {/* 筛选栏 */}
-      <div className="flex flex-col md:flex-row gap-4">
-        <div className="relative flex-1 max-w-md">
-          <Search className="absolute left-4 top-1/2 -translate-y-1/2 h-4 w-4 text-muted-foreground" />
-          <input
-            type="text"
-            placeholder={t("searchPlaceholder")}
-            value={searchTerm}
-            onChange={(e) => {
-              setSearchTerm(e.target.value);
-              setSubscriptionPage(1);
-            }}
-            className="w-full pl-11 pr-4 py-2 border border-border rounded-lg bg-background text-foreground focus:outline-none focus:ring-2 focus:ring-ring"
-          />
-        </div>
-
+      {/* 搜索和筛选 */}
+      <div className="flex gap-2 flex-wrap">
+        <input
+          placeholder={t("searchPlaceholder")}
+          value={searchQuery}
+          onChange={(e) => { setSearchQuery(e.target.value); setCurrentPage(1); }}
+          className={cn(inputClass, "max-w-sm")}
+        />
         <select
           value={statusFilter}
-          onChange={(e) => {
-            setStatusFilter(e.target.value);
-            setSubscriptionPage(1);
-          }}
-          className="px-4 py-2 border border-border rounded-lg bg-background text-foreground focus:outline-none focus:ring-2 focus:ring-ring"
+          onChange={(e) => { setStatusFilter(e.target.value); setCurrentPage(1); }}
+          className={cn(inputClass, "w-32")}
         >
           <option value="all">{t("allStatus")}</option>
           <option value="active">{t("active")}</option>
@@ -200,156 +114,90 @@ export function SubscriptionsTable({ subscriptions: initialSubscriptions, stats 
           <option value="expired">{t("expired")}</option>
           <option value="trial">{t("trial")}</option>
         </select>
+        {(searchQuery || statusFilter !== "all") && (
+          <Button variant="simple" size="sm" onClick={() => { setSearchQuery(""); setStatusFilter("all"); setCurrentPage(1); }}>
+            <X className="h-4 w-4 mr-1" />
+            清空
+          </Button>
+        )}
       </div>
 
-      {/* 订阅表格 */}
-      <div className="bg-background rounded-lg border border-border overflow-hidden">
+      {/* 表格 */}
+      <div className="rounded-xl border border-border bg-card overflow-hidden">
         <div className="overflow-x-auto">
           <table className="w-full">
-            <thead className="bg-secondary">
-              <tr>
-                <th className="px-6 py-3 text-left text-xs font-medium text-muted-foreground uppercase tracking-wider">
-                  {t("user")}
-                </th>
-                <th className="px-6 py-3 text-left text-xs font-medium text-muted-foreground uppercase tracking-wider">
-                  {t("plan")}
-                </th>
-                <th className="px-6 py-3 text-left text-xs font-medium text-muted-foreground uppercase tracking-wider">
-                  {t("status")}
-                </th>
-                <th className="px-6 py-3 text-left text-xs font-medium text-muted-foreground uppercase tracking-wider">
-                  {t("expiryDate")}
-                </th>
-                <th className="px-6 py-3 text-left text-xs font-medium text-muted-foreground uppercase tracking-wider">
-                  {t("createdAt")}
-                </th>
+            <thead>
+              <tr className="border-b border-amber-500/10 bg-muted/50">
+                <th className="px-4 py-3 text-left text-xs font-medium text-muted-foreground">{t("user")}</th>
+                <th className="px-4 py-3 text-left text-xs font-medium text-muted-foreground">{t("plan")}</th>
+                <th className="px-4 py-3 text-left text-xs font-medium text-muted-foreground">{t("status")}</th>
+                <th className="px-4 py-3 text-left text-xs font-medium text-muted-foreground hidden md:table-cell">{t("expiryDate")}</th>
+                <th className="px-4 py-3 text-left text-xs font-medium text-muted-foreground hidden md:table-cell">{t("createdAt")}</th>
               </tr>
             </thead>
-            <tbody className="divide-y divide-border">
-              {paginatedSubscriptions.map((sub) => {
-                const daysUntilExpiry = getDaysUntilExpiry(sub.currentPeriodEnd);
-
+            <tbody className="divide-y divide-amber-500/5">
+              {paged.map((s) => {
+                const days = getDaysRemaining(s.currentPeriodEnd);
                 return (
-                  <tr key={sub.id} className="hover:bg-hover">
-                    <td className="px-6 py-4">
+                  <tr key={s.id} className="hover:bg-muted/30 transition-colors">
+                    <td className="px-4 py-3">
+                      <p className="text-sm font-medium text-foreground">{s.userName || t("unknownUser")}</p>
+                      <p className="text-xs text-muted-foreground">{s.userEmail}</p>
+                    </td>
+                    <td className="px-4 py-3">
+                      <span className="text-sm text-foreground">{tpl(s.planKey)}</span>
+                    </td>
+                    <td className="px-4 py-3">
+                      <span className={cn(
+                        "inline-flex items-center rounded-full border px-2 py-0.5 text-xs font-medium",
+                        statusBadgeClasses[s.status] || "bg-muted text-muted-foreground border-border"
+                      )}>
+                        {t(s.status)}
+                      </span>
+                    </td>
+                    <td className="px-4 py-3 hidden md:table-cell">
                       <div>
-                        <div className="text-sm font-medium text-foreground">
-                          {sub.userName || t("unknownUser")}
-                        </div>
-                        <div className="text-sm text-muted-foreground">
-                          {sub.userEmail}
-                        </div>
+                        <span className="text-xs text-muted-foreground">
+                          {s.currentPeriodEnd ? format(new Date(s.currentPeriodEnd), "yyyy-MM-dd") : "-"}
+                        </span>
+                        {days !== null && (
+                          <span className={cn("ml-2 text-xs", days < 0 ? "text-red-400" : days <= 7 ? "text-amber-400" : "text-muted-foreground")}>
+                            {t("daysRemaining", { days })}
+                          </span>
+                        )}
                       </div>
                     </td>
-                    <td className="px-6 py-4">
-                      <span className="text-sm font-medium text-foreground">
-                        {sub.planKey}
-                      </span>
-                    </td>
-                    <td className="px-6 py-4">
-                      <span className={`px-2 py-1 text-xs rounded-full ${getStatusColor(sub.status)}`}>
-                        {t(sub.status)}
-                      </span>
-                    </td>
-                    <td className="px-6 py-4">
-                      {sub.currentPeriodEnd ? (
-                        <div>
-                          <div className="text-sm text-foreground">
-                            {new Date(sub.currentPeriodEnd).toLocaleDateString()}
-                          </div>
-                          {daysUntilExpiry !== null && daysUntilExpiry > 0 && (
-                            <div className="text-xs text-muted-foreground">
-                              {t("daysRemaining", { days: daysUntilExpiry })}
-                            </div>
-                          )}
-                        </div>
-                      ) : (
-                        <span className="text-sm text-muted-foreground">-</span>
-                      )}
-                    </td>
-                    <td className="px-6 py-4">
-                      <div className="text-sm text-muted-foreground">
-                        {new Date(sub.createdAt).toLocaleDateString()}
-                      </div>
+                    <td className="px-4 py-3 hidden md:table-cell">
+                      <span className="text-xs text-muted-foreground">{format(new Date(s.createdAt), "yyyy-MM-dd")}</span>
                     </td>
                   </tr>
                 );
               })}
+              {paged.length === 0 && (
+                <tr>
+                  <td colSpan={5} className="px-4 py-12 text-center text-sm text-muted-foreground">
+                    {t("noSubscriptions")}
+                  </td>
+                </tr>
+              )}
             </tbody>
           </table>
-          
-          {filteredSubscriptions.length === 0 && (
-            <div className="text-center py-12">
-              <p className="text-muted-foreground">
-                {t("noSubscriptions")}
-              </p>
-            </div>
-          )}
         </div>
 
-        {filteredSubscriptions.length > 0 && (
-          <nav
-            className="flex items-center justify-between px-6 py-4 border-t border-border bg-secondary"
-            aria-label={t("pagination.page", { current: currentPage, total: totalPages })}
-          >
-            <button
-              type="button"
-              onClick={() => setSubscriptionPage((page) => Math.max(1, page - 1))}
-              disabled={currentPage === 1}
-              className="px-3 py-1.5 text-sm font-medium rounded-md border border-border text-muted-foreground hover:bg-hover disabled:opacity-40 disabled:cursor-not-allowed"
-            >
-              {t("pagination.previous")}
-            </button>
-
-            <div className="flex items-center gap-2">
-              {pageNumbers[0] > 1 && (
-                <button
-                  type="button"
-                  onClick={() => setSubscriptionPage(1)}
-                  className={`px-3 py-1.5 text-sm font-medium rounded-md border hover:bg-hover ${currentPage === 1 ? "bg-foreground text-background border-transparent" : "text-muted-foreground border-border"}`}
-                >
-                  1
-                </button>
-              )}
-              {pageNumbers[0] > 2 && <span className="text-sm text-muted-foreground">...</span>}
-
-              {pageNumbers.map((pageNumber) => (
-                <button
-                  key={pageNumber}
-                  type="button"
-                  onClick={() => setSubscriptionPage(pageNumber)}
-                  className={`px-3 py-1.5 text-sm font-medium rounded-md border hover:bg-hover ${
-                    currentPage === pageNumber ? "bg-foreground text-background border-transparent" : "text-muted-foreground border-border"
-                  }`}
-                  aria-current={currentPage === pageNumber ? "page" : undefined}
-                >
-                  {pageNumber}
-                </button>
-              ))}
-
-              {pageNumbers[pageNumbers.length - 1] < totalPages - 1 && (
-                <span className="text-sm text-muted-foreground">...</span>
-              )}
-              {pageNumbers[pageNumbers.length - 1] < totalPages && (
-                <button
-                  type="button"
-                  onClick={() => setSubscriptionPage(totalPages)}
-                  className={`px-3 py-1.5 text-sm font-medium rounded-md border hover:bg-hover ${currentPage === totalPages ? "bg-foreground text-background border-transparent" : "text-muted-foreground border-border"}`}
-                >
-                  {totalPages}
-                </button>
-              )}
+        {totalPages > 1 && (
+          <div className="flex items-center justify-between border-t border-amber-500/10 px-4 py-3">
+            <span className="text-xs text-muted-foreground">
+              {t("pagination.page", { current: safePage, total: totalPages })}
+            </span>
+            <div className="flex items-center gap-1">
+              <Button variant="simple" size="sm" onClick={() => setCurrentPage((p) => p - 1)} disabled={safePage <= 1}>
+                <ChevronLeft className="h-4 w-4" />
+              </Button>
+              <Button variant="simple" size="sm" onClick={() => setCurrentPage((p) => p + 1)} disabled={safePage >= totalPages}>
+                <ChevronRight className="h-4 w-4" />
+              </Button>
             </div>
-
-            <button
-              type="button"
-              onClick={() => setSubscriptionPage((page) => Math.min(totalPages, page + 1))}
-              disabled={currentPage === totalPages}
-              className="px-3 py-1.5 text-sm font-medium rounded-md border border-border text-muted-foreground hover:bg-hover disabled:opacity-40 disabled:cursor-not-allowed"
-            >
-              {t("pagination.next")}
-            </button>
-          </nav>
+          </div>
         )}
       </div>
     </div>

@@ -1072,6 +1072,26 @@
         "next": "下一页",
         "page": "第 {{current}} / {{total}} 页"
       }
+    },
+    "plans": {
+      "free": "免费版",
+      "plus_monthly": "Plus 月度会员",
+      "pro_monthly": "Pro 月度会员",
+      "pro_plus_yearly": "Pro+ 年度会员"
+    },
+    "paymentTypes": {
+      "one_time": "积分包购买",
+      "subscription": "会员订阅"
+    },
+    "paymentStatuses": {
+      "succeeded": "支付成功",
+      "pending": "待处理",
+      "failed": "支付失败",
+      "canceled": "已取消"
+    },
+    "roles": {
+      "user": "用户",
+      "admin": "管理员"
     }
   },
   "dashboard": {

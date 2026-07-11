@@ -56,7 +56,11 @@ export function AdminSidebar() {
           {adminNavItems.map((item) => {
             const Icon = item.icon;
             const href = `/${locale}${item.href}`;
-            const isActive = pathname === href || pathname.startsWith(href + "/");
+            // 仪表板只精确匹配，其他页面允许子路径匹配
+            const isActive =
+              item.href === "/admin"
+                ? pathname === href
+                : pathname === href || pathname.startsWith(href + "/");
 
             return (
               <Link
