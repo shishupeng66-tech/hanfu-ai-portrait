@@ -51,8 +51,8 @@ export function AdminSidebar() {
   const locale = useLocale();
 
   return (
-    <div className="w-64 bg-background border-r border-border sticky top-0">
-      <div className="flex h-screen flex-col">
+    <aside className="sticky top-0 h-screen min-h-screen w-64 shrink-0 self-start border-r border-border bg-[#0b0b0c]">
+      <div className="flex min-h-screen flex-col bg-[#0b0b0c]">
         <div className="px-6 pt-16 pb-8 border-b border-border">
           <Link
             href={`/${locale}/dashboard`}
@@ -90,6 +90,6 @@ export function AdminSidebar() {
           })}
         </nav>
       </div>
-    </div>
+    </aside>
   );
 }

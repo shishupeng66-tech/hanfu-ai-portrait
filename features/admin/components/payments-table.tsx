@@ -1,5 +1,6 @@
 "use client";
 
+import Link from "next/link";
 import { useState } from "react";
 import { useLocale } from "next-intl";
 import { useRouter } from "next/navigation";
@@ -30,12 +31,12 @@ type PaymentsTableProps = {
 };
 
 const statusClasses: Record<string, string> = {
-  succeeded: "bg-emerald-500/10 text-emerald-400 border-emerald-500/20",
-  paid: "bg-emerald-500/10 text-emerald-400 border-emerald-500/20",
-  completed: "bg-emerald-500/10 text-emerald-400 border-emerald-500/20",
-  pending: "bg-amber-500/10 text-amber-400 border-amber-500/20",
-  failed: "bg-red-500/10 text-red-400 border-red-500/20",
-  canceled: "bg-neutral-500/10 text-neutral-400 border-neutral-500/20",
+  succeeded: "bg-emerald-500/10 text-emerald-300 border-emerald-500/20",
+  paid: "bg-emerald-500/10 text-emerald-300 border-emerald-500/20",
+  completed: "bg-emerald-500/10 text-emerald-300 border-emerald-500/20",
+  pending: "bg-amber-500/10 text-amber-300 border-amber-500/20",
+  failed: "bg-red-500/10 text-red-300 border-red-500/20",
+  canceled: "bg-neutral-500/10 text-neutral-300 border-neutral-500/20",
 };
 
 const statusLabels: Record<string, string> = {
@@ -103,7 +104,7 @@ export function PaymentsTable({ payments, query, status, type }: PaymentsTablePr
     <div className="space-y-6">
       <div>
         <h1 className="text-2xl font-bold text-foreground mb-1">订单与支付</h1>
-        <p className="text-sm text-muted-foreground">查看 Creem 支付订单、发放积分和会员购买记录。</p>
+        <p className="text-sm text-muted-foreground">查看 Creem 支付订单、积分发放和会员购买记录。</p>
       </div>
 
       <form onSubmit={applyFilters} className="flex flex-wrap gap-2">
@@ -115,10 +116,10 @@ export function PaymentsTable({ payments, query, status, type }: PaymentsTablePr
         />
         <select value={statusFilter} onChange={(e) => setStatusFilter(e.target.value)} className={cn(inputClass, "w-36")}>
           <option value="all">全部状态</option>
-          <option value="succeeded">succeeded</option>
-          <option value="pending">pending</option>
-          <option value="failed">failed</option>
-          <option value="canceled">canceled</option>
+          <option value="succeeded">成功</option>
+          <option value="pending">待处理</option>
+          <option value="failed">失败</option>
+          <option value="canceled">已取消</option>
         </select>
         <select value={typeFilter} onChange={(e) => setTypeFilter(e.target.value)} className={cn(inputClass, "w-36")}>
           <option value="all">全部类型</option>
@@ -137,7 +138,7 @@ export function PaymentsTable({ payments, query, status, type }: PaymentsTablePr
         )}
       </form>
 
-      <div className="rounded-xl border border-border bg-card overflow-hidden">
+      <div className="rounded-xl border border-border bg-card overflow-hidden shadow-sm">
         <div className="overflow-x-auto">
           <table className="w-full">
             <thead>
@@ -148,7 +149,7 @@ export function PaymentsTable({ payments, query, status, type }: PaymentsTablePr
                 <th className="px-4 py-3 text-left text-xs font-medium text-muted-foreground">套餐/积分包</th>
                 <th className="px-4 py-3 text-right text-xs font-medium text-muted-foreground">金额</th>
                 <th className="px-4 py-3 text-left text-xs font-medium text-muted-foreground">状态</th>
-                <th className="px-4 py-3 text-left text-xs font-medium text-muted-foreground">Provider 支付 ID</th>
+                <th className="px-4 py-3 text-left text-xs font-medium text-muted-foreground">Creem / Provider ID</th>
                 <th className="px-4 py-3 text-right text-xs font-medium text-muted-foreground">发放积分</th>
                 <th className="px-4 py-3 text-left text-xs font-medium text-muted-foreground">创建时间</th>
               </tr>
@@ -156,12 +157,16 @@ export function PaymentsTable({ payments, query, status, type }: PaymentsTablePr
             <tbody className="divide-y divide-amber-500/5">
               {payments.map((item) => (
                 <tr key={item.id} className="hover:bg-muted/30 transition-colors">
-                  <td className="px-4 py-3 text-xs text-muted-foreground max-w-[180px] truncate" title={item.id}>{item.id}</td>
+                  <td className="px-4 py-3 text-xs max-w-[180px] truncate" title={item.id}>
+                    <Link href={`/${locale}/admin/payments/${item.id}`} className="text-amber-200 hover:text-amber-100">
+                      {item.id}
+                    </Link>
+                  </td>
                   <td className="px-4 py-3 text-sm text-foreground">{item.userEmail || "-"}</td>
                   <td className="px-4 py-3 text-sm text-foreground">{paymentTypeLabels[item.type] || item.type}</td>
                   <td className="px-4 py-3 text-sm text-foreground">{item.planKey ? planLabels[item.planKey] || item.planKey : "-"}</td>
                   <td className="px-4 py-3 text-right text-sm font-medium text-foreground">
-                    {(item.amountCents / 100).toFixed(2)}
+                    {(item.amountCents / 100).toFixed(2)} {item.currency.toUpperCase()}
                   </td>
                   <td className="px-4 py-3"><StatusBadge status={item.status} /></td>
                   <td className="px-4 py-3 text-xs text-muted-foreground max-w-[220px] truncate" title={item.providerPaymentId}>
@@ -175,7 +180,7 @@ export function PaymentsTable({ payments, query, status, type }: PaymentsTablePr
               ))}
               {payments.length === 0 && (
                 <tr>
-                  <td colSpan={9} className="px-4 py-12 text-center text-sm text-muted-foreground">暂无订单数据</td>
+                  <td colSpan={9} className="px-4 py-14 text-center text-sm text-muted-foreground">暂无订单数据</td>
                 </tr>
               )}
             </tbody>

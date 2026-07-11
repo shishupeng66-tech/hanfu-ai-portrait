@@ -1,29 +1,24 @@
 import { requireAdmin } from "@/lib/auth/admin";
-import { AdminSidebar } from "@/features/admin/components/admin-sidebar";
 import { AdminHeader } from "@/features/admin/components/admin-header";
+import { AdminSidebar } from "@/features/admin/components/admin-sidebar";
 
 export default async function AdminLayout({
   children,
 }: {
   children: React.ReactNode;
 }) {
-  // 检查管理员权限
   await requireAdmin();
 
   return (
-    <div className="min-h-screen bg-muted">
-      <div className="flex">
-        {/* 侧边栏 */}
+    <div className="min-h-screen bg-[#0b0b0c] text-foreground">
+      <div className="flex min-h-screen bg-[#0b0b0c]">
         <AdminSidebar />
 
-        {/* 主内容区 */}
-        <div className="flex-1 flex flex-col">
+        <div className="flex min-h-screen flex-1 flex-col bg-[#0b0b0c]">
           <AdminHeader />
 
-          <main className="flex-1 p-8">
-            <div className="mx-auto max-w-7xl">
-              {children}
-            </div>
+          <main className="min-h-screen flex-1 bg-[#0b0b0c] p-8">
+            <div className="mx-auto max-w-7xl">{children}</div>
           </main>
         </div>
       </div>

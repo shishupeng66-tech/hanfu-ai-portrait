@@ -6,7 +6,7 @@ import { Shield } from "lucide-react";
 
 export function AdminHeader() {
   return (
-    <header className="sticky top-0 z-30 border-b border-border bg-background/95 backdrop-blur supports-[backdrop-filter]:bg-background/60">
+    <header className="sticky top-0 z-30 border-b border-border bg-[#0b0b0c]/95 backdrop-blur supports-[backdrop-filter]:bg-[#0b0b0c]/90">
       <div className="flex items-center justify-between px-8 py-3 gap-6">
         <div className="flex items-center gap-3">
           <h1 className="text-sm font-semibold text-foreground">汉韵写真后台</h1>

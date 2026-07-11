@@ -1,6 +1,7 @@
 "use client";
 
 import Image from "next/image";
+import Link from "next/link";
 import { useState } from "react";
 import { useLocale } from "next-intl";
 import { useRouter } from "next/navigation";
@@ -31,10 +32,10 @@ type GenerationsTableProps = {
 };
 
 const statusClasses: Record<string, string> = {
-  completed: "bg-emerald-500/10 text-emerald-400 border-emerald-500/20",
-  failed: "bg-red-500/10 text-red-400 border-red-500/20",
-  processing: "bg-amber-500/10 text-amber-400 border-amber-500/20",
-  pending: "bg-blue-500/10 text-blue-400 border-blue-500/20",
+  completed: "bg-emerald-500/10 text-emerald-300 border-emerald-500/20",
+  failed: "bg-red-500/10 text-red-300 border-red-500/20",
+  processing: "bg-amber-500/10 text-amber-300 border-amber-500/20",
+  pending: "bg-blue-500/10 text-blue-300 border-blue-500/20",
 };
 
 const statusLabels: Record<string, string> = {
@@ -116,7 +117,7 @@ export function GenerationsTable({ generations, query, status }: GenerationsTabl
         )}
       </form>
 
-      <div className="rounded-xl border border-border bg-card overflow-hidden">
+      <div className="rounded-xl border border-border bg-card overflow-hidden shadow-sm">
         <div className="overflow-x-auto">
           <table className="w-full">
             <thead>
@@ -136,7 +137,11 @@ export function GenerationsTable({ generations, query, status }: GenerationsTabl
             <tbody className="divide-y divide-amber-500/5">
               {generations.map((item) => (
                 <tr key={item.id} className="hover:bg-muted/30 transition-colors">
-                  <td className="px-4 py-3 text-xs text-muted-foreground max-w-[180px] truncate" title={item.id}>{item.id}</td>
+                  <td className="px-4 py-3 text-xs max-w-[180px] truncate" title={item.id}>
+                    <Link href={`/${locale}/admin/generations/${item.id}`} className="text-amber-200 hover:text-amber-100">
+                      {item.id}
+                    </Link>
+                  </td>
                   <td className="px-4 py-3">
                     <p className="text-sm text-foreground">{item.userEmail || "-"}</p>
                     <p className="text-xs text-muted-foreground max-w-[160px] truncate">{item.userId}</p>
@@ -157,7 +162,7 @@ export function GenerationsTable({ generations, query, status }: GenerationsTabl
                       <span className="text-xs text-muted-foreground">-</span>
                     )}
                   </td>
-                  <td className="px-4 py-3 text-xs text-red-400 max-w-[260px] truncate" title={item.error || ""}>
+                  <td className="px-4 py-3 text-xs text-red-300 max-w-[260px] truncate" title={item.error || ""}>
                     {item.error || "-"}
                   </td>
                   <td className="px-4 py-3 text-xs text-muted-foreground">{format(new Date(item.createdAt), "yyyy-MM-dd HH:mm")}</td>
@@ -166,7 +171,7 @@ export function GenerationsTable({ generations, query, status }: GenerationsTabl
               ))}
               {generations.length === 0 && (
                 <tr>
-                  <td colSpan={10} className="px-4 py-12 text-center text-sm text-muted-foreground">暂无生成任务</td>
+                  <td colSpan={10} className="px-4 py-14 text-center text-sm text-muted-foreground">暂无生成任务</td>
                 </tr>
               )}
             </tbody>
