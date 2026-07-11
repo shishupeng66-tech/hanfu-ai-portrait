@@ -464,37 +464,6 @@ export default function SettingsPage() {
             </motion.section>
 
             <motion.section
-              id="preferences"
-              initial={{ y: 40, opacity: 0 }}
-              animate={{ y: 0, opacity: 1 }}
-              transition={{ ease: "easeOut", duration: 0.5, delay: 0.2 }}
-              className="rounded-3xl border border-border bg-card/50 p-6 backdrop-blur-md lg:col-span-3"
-            >
-              <h2 className="text-2xl font-semibold text-card-foreground">
-                {t("sections.preferences.title")}
-              </h2>
-              <p className="mt-2 text-sm text-muted-foreground">
-                {t("sections.preferences.description")}
-              </p>
-
-              <div className="mt-6 grid grid-cols-1 gap-4 md:grid-cols-2 lg:grid-cols-4">
-                {[
-                  { label: "sections.preferences.language", value: "sections.preferences.languageValue" },
-                  { label: "sections.preferences.notification", value: "sections.preferences.notificationValue" },
-                  { label: "sections.preferences.defaultTemplate", value: "sections.preferences.defaultTemplateValue" },
-                  { label: "sections.preferences.defaultImageCount", value: "sections.preferences.defaultImageCountValue" },
-                ].map((item) => (
-                  <div key={item.label} className="rounded-2xl bg-muted/50 p-4">
-                    <p className="text-sm text-muted-foreground">{t(item.label)}</p>
-                    <p className="mt-1 text-lg font-semibold text-card-foreground">
-                      {t(item.value)}
-                    </p>
-                  </div>
-                ))}
-              </div>
-            </motion.section>
-
-            <motion.section
               id="security"
               initial={{ y: 40, opacity: 0 }}
               animate={{ y: 0, opacity: 1 }}

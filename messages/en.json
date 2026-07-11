@@ -1210,91 +1210,136 @@
         "name": "Tang Glamour",
         "description": "Luxurious Tang Dynasty style with golden hair ornaments and palace photography.",
         "label": "Tang Dynasty",
-        "styleTags": ["Tang", "Glamorous", "Traditional"]
+        "styleTags": ["Tang", "Glamorous", "Traditional"],
+        "recommendedPhotoType": "Clear front-facing portrait with good lighting.",
+        "audience": "Ideal for users seeking authentic Tang dynasty elegance and royal aesthetics.",
+        "usageTips": "For best results, use a photo with a simple background and clear facial features."
       },
       "palaceLantern": {
         "name": "Palace Lantern",
         "description": "Red walls and lanterns, black-and-gold Hanfu, cinematic night scenes.",
         "label": "Tang Dynasty",
-        "styleTags": ["Tang", "Palace", "Festive"]
+        "styleTags": ["Tang", "Palace", "Festive"],
+        "recommendedPhotoType": "Clear front-facing portrait with good lighting.",
+        "audience": "Perfect for users who want authentic traditional Hanfu styling.",
+        "usageTips": "For best results, use a photo with a simple background and clear facial features."
       },
       "songElegance": {
         "name": "Song Elegance",
         "description": "Elegant and understated, negative space composition, Song Dynasty makeup.",
         "label": "Song Dynasty",
-        "styleTags": ["Song", "Elegant", "Minimalist"]
+        "styleTags": ["Song", "Elegant", "Minimalist"],
+        "recommendedPhotoType": "Clear front-facing portrait with good lighting.",
+        "audience": "Perfect for users who want authentic traditional Hanfu styling.",
+        "usageTips": "For best results, use a photo with a simple background and clear facial features."
       },
       "teaGathering": {
         "name": "Tea Gathering",
         "description": "Serene tea ceremony setting, flowing robes, Zen aesthetics.",
         "label": "Song Dynasty",
-        "styleTags": ["Song", "Literary", "Scholarly"]
+        "styleTags": ["Song", "Literary", "Scholarly"],
+        "recommendedPhotoType": "Clear front-facing portrait with good lighting.",
+        "audience": "Perfect for users who want authentic traditional Hanfu styling.",
+        "usageTips": "For best results, use a photo with a simple background and clear facial features."
       },
       "landscapePlain": {
         "name": "Landscape Scholar",
         "description": "Ink painting landscapes, clean lines, scholarly elegance.",
         "label": "Song Dynasty",
-        "styleTags": ["Song", "Literary", "Scholarly"]
+        "styleTags": ["Song", "Literary", "Scholarly"],
+        "recommendedPhotoType": "Clear front-facing portrait with good lighting.",
+        "audience": "Perfect for users who want authentic traditional Hanfu styling.",
+        "usageTips": "For best results, use a photo with a simple background and clear facial features."
       },
       "mingFormal": {
         "name": "Ming Formal",
         "description": "Intricate patterns and embroidery, Ming Dynasty formal wear.",
         "label": "Ming Dynasty",
-        "styleTags": ["Ming", "Formal", "Regal"]
+        "styleTags": ["Ming", "Formal", "Regal"],
+        "recommendedPhotoType": "Clear front-facing portrait with good lighting.",
+        "audience": "Perfect for users who want authentic traditional Hanfu styling.",
+        "usageTips": "For best results, use a photo with a simple background and clear facial features."
       },
       "phoenixCrown": {
         "name": "Phoenix Crown",
         "description": "Phoenix crown and ceremonial robes, the pinnacle of Hanfu elegance.",
         "label": "Ming Dynasty",
-        "styleTags": ["Ming", "Royal", "Wedding"]
+        "styleTags": ["Ming", "Royal", "Wedding"],
+        "recommendedPhotoType": "Clear front-facing portrait with good lighting.",
+        "audience": "Perfect for users who want authentic traditional Hanfu styling.",
+        "usageTips": "For best results, use a photo with a simple background and clear facial features."
       },
       "boudoirLady": {
         "name": "Boudoir Lady",
         "description": "Intimate boudoir setting, delicate makeup, graceful femininity.",
         "label": "Ming Dynasty",
-        "styleTags": ["Ming", "Graceful", "Traditional"]
+        "styleTags": ["Ming", "Graceful", "Traditional"],
+        "recommendedPhotoType": "Clear front-facing portrait with good lighting.",
+        "audience": "Perfect for users who want authentic traditional Hanfu styling.",
+        "usageTips": "For best results, use a photo with a simple background and clear facial features."
       },
       "qingPalace": {
         "name": "Qing Palace",
         "description": "Qing Dynasty palace attire, bold colors, imperial grandeur.",
         "label": "Qing Dynasty",
-        "styleTags": ["Qing", "Traditional", "Formal"]
+        "styleTags": ["Qing", "Traditional", "Formal"],
+        "recommendedPhotoType": "Clear front-facing portrait with good lighting.",
+        "audience": "Perfect for users who want authentic traditional Hanfu styling.",
+        "usageTips": "For best results, use a photo with a simple background and clear facial features."
       },
       "qipaoFlower": {
         "name": "Qipao Floral Portrait",
         "description": "Contemporary qipao with floral elements, soft and elegant.",
         "label": "Modern Style",
-        "styleTags": ["Qipao", "Floral", "Modern"]
+        "styleTags": ["Qipao", "Floral", "Modern"],
+        "recommendedPhotoType": "Clear front-facing portrait with good lighting.",
+        "audience": "Perfect for users who want authentic traditional Hanfu styling.",
+        "usageTips": "For best results, use a photo with a simple background and clear facial features."
       },
       "modernQipao": {
         "name": "Modern Qipao",
         "description": "Oriental vintage with modern tailoring, elegant portraiture.",
         "label": "Modern Style",
-        "styleTags": ["Qipao", "Modern", "Elegant"]
+        "styleTags": ["Qipao", "Modern", "Elegant"],
+        "recommendedPhotoType": "Clear front-facing portrait with good lighting.",
+        "audience": "Perfect for users who want authentic traditional Hanfu styling.",
+        "usageTips": "For best results, use a photo with a simple background and clear facial features."
       },
       "bluePorcelain": {
         "name": "Blue Porcelain Style",
         "description": "Blue-and-white porcelain patterns, neo-Chinese fusion, fresh tones.",
         "label": "Modern Style",
-        "styleTags": ["Porcelain", "Blue", "Modern"]
+        "styleTags": ["Porcelain", "Blue", "Modern"],
+        "recommendedPhotoType": "Clear front-facing portrait with good lighting.",
+        "audience": "Perfect for users who want authentic traditional Hanfu styling.",
+        "usageTips": "For best results, use a photo with a simple background and clear facial features."
       },
       "modernGuofeng": {
         "name": "Modern Guofeng Fashion",
         "description": "Contemporary Chinese fashion, editorial style, bold and modern.",
         "label": "Modern Style",
-        "styleTags": ["Fashion", "Contemporary", "Stylish"]
+        "styleTags": ["Fashion", "Contemporary", "Stylish"],
+        "recommendedPhotoType": "Clear front-facing portrait with good lighting.",
+        "audience": "Perfect for users who want authentic traditional Hanfu styling.",
+        "usageTips": "For best results, use a photo with a simple background and clear facial features."
       },
       "orientalMagazine": {
         "name": "Oriental Editorial",
         "description": "Magazine-quality editorial, East-meets-West aesthetics.",
         "label": "Modern Style",
-        "styleTags": ["Vogue", "Editorial", "Oriental"]
+        "styleTags": ["Vogue", "Editorial", "Oriental"],
+        "recommendedPhotoType": "Clear front-facing portrait with good lighting.",
+        "audience": "Perfect for users who want authentic traditional Hanfu styling.",
+        "usageTips": "For best results, use a photo with a simple background and clear facial features."
       },
       "dunhuangMuse": {
         "name": "Dunhuang Muse",
         "description": "Dunhuang-inspired, golden murals, flying apsara aesthetics.",
         "label": "Dunhuang Style",
-        "styleTags": ["Dunhuang", "Fresco", "Artistic"]
+        "styleTags": ["Dunhuang", "Fresco", "Artistic"],
+        "recommendedPhotoType": "Clear front-facing portrait with good lighting.",
+        "audience": "Perfect for users who want authentic traditional Hanfu styling.",
+        "usageTips": "For best results, use a photo with a simple background and clear facial features."
       }
     }
   },

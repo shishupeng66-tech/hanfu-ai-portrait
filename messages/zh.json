@@ -1381,91 +1381,136 @@
         "name": "大唐风华",
         "description": "华丽唐风、金色发饰、宫廷写真",
         "label": "唐制汉服",
-        "styleTags": ["唐", "华丽", "传统"]
+        "styleTags": ["唐", "华丽", "传统"],
+        "recommendedPhotoType": "光线良好的清晰正面人像照。",
+        "audience": "适合追求地道唐代优雅与皇家美学的用户。",
+        "usageTips": "请使用背景简洁、面部清晰的照片以获得最佳效果。"
       },
       "palaceLantern": {
         "name": "宫灯夜宴",
         "description": "红墙巷灯、黑金汉服、电影感夜景",
         "label": "唐制汉服",
-        "styleTags": ["唐", "宫灯", "节庆"]
+        "styleTags": ["唐", "宫灯", "节庆"],
+        "recommendedPhotoType": "光线良好的清晰正面人像照。",
+        "audience": "适合想体验地道传统汉服造型的用户。",
+        "usageTips": "请使用背景简洁、面部清晰的照片以获得最佳效果。"
       },
       "songElegance": {
         "name": "宋韵清雅",
         "description": "清冷淡雅、留白构图、宋式妆造",
         "label": "宋制汉服",
-        "styleTags": ["宋", "清雅", "极简"]
+        "styleTags": ["宋", "清雅", "极简"],
+        "recommendedPhotoType": "光线良好的清晰正面人像照。",
+        "audience": "适合想体验地道传统汉服造型的用户。",
+        "usageTips": "请使用背景简洁、面部清晰的照片以获得最佳效果。"
       },
       "teaGathering": {
         "name": "雅集茶会",
         "description": "茶席雅集、飘逸长衫、禅意美学",
         "label": "宋制汉服",
-        "styleTags": ["宋", "文人", "书香"]
+        "styleTags": ["宋", "文人", "书香"],
+        "recommendedPhotoType": "光线良好的清晰正面人像照。",
+        "audience": "适合想体验地道传统汉服造型的用户。",
+        "usageTips": "请使用背景简洁、面部清晰的照片以获得最佳效果。"
       },
       "landscapePlain": {
         "name": "山水素影",
         "description": "水墨山水、线条简洁、文人雅致",
         "label": "宋制汉服",
-        "styleTags": ["宋", "文人", "书香"]
+        "styleTags": ["宋", "文人", "书香"],
+        "recommendedPhotoType": "光线良好的清晰正面人像照。",
+        "audience": "适合想体验地道传统汉服造型的用户。",
+        "usageTips": "请使用背景简洁、面部清晰的照片以获得最佳效果。"
       },
       "mingFormal": {
         "name": "明制礼服",
         "description": "精美刺绣纹样、明制礼服",
         "label": "明制汉服",
-        "styleTags": ["明", "礼制", "庄重"]
+        "styleTags": ["明", "礼制", "庄重"],
+        "recommendedPhotoType": "光线良好的清晰正面人像照。",
+        "audience": "适合想体验地道传统汉服造型的用户。",
+        "usageTips": "请使用背景简洁、面部清晰的照片以获得最佳效果。"
       },
       "phoenixCrown": {
         "name": "凤冠霞帔",
         "description": "凤冠霞帔、汉服至美之巅",
         "label": "明制汉服",
-        "styleTags": ["明", "皇家", "婚庆"]
+        "styleTags": ["明", "皇家", "婚庆"],
+        "recommendedPhotoType": "光线良好的清晰正面人像照。",
+        "audience": "适合想体验地道传统汉服造型的用户。",
+        "usageTips": "请使用背景简洁、面部清晰的照片以获得最佳效果。"
       },
       "boudoirLady": {
         "name": "闺阁佳人",
         "description": "闺阁私密、精致妆容、温婉仕女",
         "label": "明制汉服",
-        "styleTags": ["明", "温婉", "传统"]
+        "styleTags": ["明", "温婉", "传统"],
+        "recommendedPhotoType": "光线良好的清晰正面人像照。",
+        "audience": "适合想体验地道传统汉服造型的用户。",
+        "usageTips": "请使用背景简洁、面部清晰的照片以获得最佳效果。"
       },
       "qingPalace": {
         "name": "清宫华服",
         "description": "清宫华服、浓墨重彩、皇室气派",
         "label": "清制汉服",
-        "styleTags": ["清", "传统", "礼制"]
+        "styleTags": ["清", "传统", "礼制"],
+        "recommendedPhotoType": "光线良好的清晰正面人像照。",
+        "audience": "适合想体验地道传统汉服造型的用户。",
+        "usageTips": "请使用背景简洁、面部清晰的照片以获得最佳效果。"
       },
       "qipaoFlower": {
         "name": "旗袍花影",
         "description": "当代旗袍、花卉元素、柔美优雅",
         "label": "现代风尚",
-        "styleTags": ["旗袍", "花卉", "现代"]
+        "styleTags": ["旗袍", "花卉", "现代"],
+        "recommendedPhotoType": "光线良好的清晰正面人像照。",
+        "audience": "适合想体验地道传统汉服造型的用户。",
+        "usageTips": "请使用背景简洁、面部清晰的照片以获得最佳效果。"
       },
       "modernQipao": {
         "name": "现代旗袍",
         "description": "东方复古、现代剪裁、优雅肖像",
         "label": "现代风尚",
-        "styleTags": ["旗袍", "现代", "优雅"]
+        "styleTags": ["旗袍", "现代", "优雅"],
+        "recommendedPhotoType": "光线良好的清晰正面人像照。",
+        "audience": "适合想体验地道传统汉服造型的用户。",
+        "usageTips": "请使用背景简洁、面部清晰的照片以获得最佳效果。"
       },
       "bluePorcelain": {
         "name": "青花瓷韵",
         "description": "青花纹样、新中式融合、清透色调",
         "label": "现代风尚",
-        "styleTags": ["青花", "蓝白", "现代"]
+        "styleTags": ["青花", "蓝白", "现代"],
+        "recommendedPhotoType": "光线良好的清晰正面人像照。",
+        "audience": "适合想体验地道传统汉服造型的用户。",
+        "usageTips": "请使用背景简洁、面部清晰的照片以获得最佳效果。"
       },
       "modernGuofeng": {
         "name": "国风时尚",
         "description": "当代国风、杂志质感、大胆前卫",
         "label": "现代风尚",
-        "styleTags": ["时尚", "当代", "型格"]
+        "styleTags": ["时尚", "当代", "型格"],
+        "recommendedPhotoType": "光线良好的清晰正面人像照。",
+        "audience": "适合想体验地道传统汉服造型的用户。",
+        "usageTips": "请使用背景简洁、面部清晰的照片以获得最佳效果。"
       },
       "orientalMagazine": {
         "name": "东方杂志",
         "description": "杂志级质感、东西方美学碰撞",
         "label": "现代风尚",
-        "styleTags": ["杂志", "编辑", "东方"]
+        "styleTags": ["杂志", "编辑", "东方"],
+        "recommendedPhotoType": "光线良好的清晰正面人像照。",
+        "audience": "适合想体验地道传统汉服造型的用户。",
+        "usageTips": "请使用背景简洁、面部清晰的照片以获得最佳效果。"
       },
       "dunhuangMuse": {
         "name": "敦煌飞天",
         "description": "敦煌灵感、金色壁画、飞天意境",
         "label": "敦煌风格",
-        "styleTags": ["敦煌", "壁画", "艺术"]
+        "styleTags": ["敦煌", "壁画", "艺术"],
+        "recommendedPhotoType": "光线良好的清晰正面人像照。",
+        "audience": "适合想体验地道传统汉服造型的用户。",
+        "usageTips": "请使用背景简洁、面部清晰的照片以获得最佳效果。"
       }
     }
   },

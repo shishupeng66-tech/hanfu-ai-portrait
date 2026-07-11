@@ -185,12 +185,12 @@ export default function TemplateDetailPage() {
                 </h3>
                 <div className="space-y-3">
                   <InfoRow label={t("dynasty")} value={tLabel} />
-                  <InfoRow label={t("recommendedPhotoType")} value={template.recommendedPhotoType} />
+                  <InfoRow label={t("recommendedPhotoType")} value={t(`templates.${id}.recommendedPhotoType`)} />
                   <InfoRow label={t("imageCount")} value={`${template.generationCount} ${t("images")}`} />
                   <InfoRow label={t("creditCost")} value={`${template.creditCost} ${t("credits")}`} />
                   <InfoRow label={t("templateAccess")} value={template.isPremium ? t("memberExclusive") : t("free")} />
-                  <InfoRow label={t("suitableFor")} value={template.audience} />
-                  <InfoRow label={t("usageTips")} value={template.usageTips} />
+                  <InfoRow label={t("suitableFor")} value={t(`templates.${id}.audience`)} />
+                  <InfoRow label={t("usageTips")} value={t(`templates.${id}.usageTips`)} />
                 </div>
               </div>
 
