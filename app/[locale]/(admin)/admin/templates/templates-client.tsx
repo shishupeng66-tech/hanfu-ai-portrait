@@ -177,7 +177,8 @@ export function AdminTemplatesClient() {
       });
 
       if (!res.ok) {
-        alert("Operation failed");
+        const errData = await res.json().catch(() => ({}));
+        alert(errData.error || "Operation failed");
         return;
       }
 
