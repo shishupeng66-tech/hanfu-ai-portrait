@@ -50,7 +50,7 @@ export default function GeneratePage() {
   const tTips = useTranslations('generate.uploadSection.photoTips');
 
   const [viewMode, setViewMode] = useState<"create" | "preview">("create");
-  const [selectedTemplate, setSelectedTemplate] = useState<string>("tangGlamour");
+  const [selectedTemplate, setSelectedTemplate] = useState<string>("");
   const [file, setFile] = useState<File | null>(null);
   const [previewUrl, setPreviewUrl] = useState<string | null>(null);
   const [resultUrls, setResultUrls] = useState<string[]>([]);
@@ -108,7 +108,8 @@ export default function GeneratePage() {
   }
 
   function getApiTemplateKey(selectedTemplateId: string) {
-    return styleTemplates.find((template) => template.id === selectedTemplateId)?.apiTemplateKey ?? null;
+    const key = styleTemplates.find((template) => template.id === selectedTemplateId)?.apiTemplateKey;
+    return key ?? "nightLanternRedBlackHanfu";
   }
 
   async function handleGenerate() {
@@ -116,11 +117,6 @@ export default function GeneratePage() {
 
     if (!file) {
       setGenerationError(t('errors.uploadRequired'));
-      return;
-    }
-
-    if (!apiTemplateKey) {
-      setGenerationError(t('errors.notAvailable'));
       return;
     }
 
@@ -263,7 +259,11 @@ export default function GeneratePage() {
                   <div className="space-y-3 text-sm">
                     <div className="flex items-center justify-between gap-4">
                       <span className="text-[rgba(255,247,236,0.45)]">{t('previewSection.templateLabel')}</span>
-                      <span className="text-right font-medium text-[#E8C27A]">{t(`styleSelection.dynasty.${selectedDynasty}`)} · {t(`styleSelection.templates.${selectedTemplate}.name`)}</span>
+                      <span className="text-right font-medium text-[#E8C27A]">
+                        {styleTemplates.length > 0 && selectedTemplate
+                          ? `${t(`styleSelection.dynasty.${selectedDynasty}`)} · ${t(`styleSelection.templates.${selectedTemplate}.name`)}`
+                          : t('styleSelection.defaultTemplate')}
+                      </span>
                     </div>
                     <div className="flex items-center justify-between gap-4">
                       <span className="text-[rgba(255,247,236,0.45)]">{t('previewSection.creditsLabel')}</span>
@@ -346,64 +346,72 @@ export default function GeneratePage() {
 
                 <div className="min-w-0 rounded-2xl border border-[rgba(255,247,236,0.08)] bg-[#141418] p-4">
                   <h2 className="mb-3 text-base font-semibold text-[rgba(255,247,236,0.92)]">{t('styleSelection.title')}</h2>
-                  <div className="flex flex-wrap gap-2">
-                    {dynastyTabs.map((dynasty) => {
-                      const isSelected = selectedDynasty === dynasty;
+                  {styleTemplates.length > 0 ? (
+                    <>
+                      <div className="flex flex-wrap gap-2">
+                        {dynastyTabs.map((dynasty) => {
+                          const isSelected = selectedDynasty === dynasty;
 
-                      return (
-                        <button
-                          key={dynasty}
-                          type="button"
-                          onClick={() => {
-                            const nextTemplate = styleTemplates.find((template) => template.dynasty === dynasty);
-                            if (nextTemplate) {
-                              setSelectedTemplate(nextTemplate.id);
-                              setGenerationError(null);
-                            }
-                          }}
-                          className="rounded-full border px-4 py-2 text-sm transition"
-                          style={{
-                            background: isSelected ? "rgba(232,194,122,0.16)" : "rgba(255,247,236,0.03)",
-                            borderColor: isSelected ? "rgba(232,194,122,0.58)" : "rgba(255,247,236,0.08)",
-                            color: isSelected ? "#E8C27A" : "rgba(255,247,236,0.62)",
-                          }}
-                        >
-                          {t(`styleSelection.dynasty.${dynasty}`)}
-                        </button>
-                      );
-                    })}
-                  </div>
+                          return (
+                            <button
+                              key={dynasty}
+                              type="button"
+                              onClick={() => {
+                                const nextTemplate = styleTemplates.find((template) => template.dynasty === dynasty);
+                                if (nextTemplate) {
+                                  setSelectedTemplate(nextTemplate.id);
+                                  setGenerationError(null);
+                                }
+                              }}
+                              className="rounded-full border px-4 py-2 text-sm transition"
+                              style={{
+                                background: isSelected ? "rgba(232,194,122,0.16)" : "rgba(255,247,236,0.03)",
+                                borderColor: isSelected ? "rgba(232,194,122,0.58)" : "rgba(255,247,236,0.08)",
+                                color: isSelected ? "#E8C27A" : "rgba(255,247,236,0.62)",
+                              }}
+                            >
+                              {t(`styleSelection.dynasty.${dynasty}`)}
+                            </button>
+                          );
+                        })}
+                      </div>
 
-                  <div className="mt-5 grid grid-cols-2 gap-2 sm:grid-cols-4 lg:grid-cols-2 xl:grid-cols-4">
-                    {activeDynastyTemplates.map((template) => {
-                      const isSelected = selectedTemplate === template.id;
+                      <div className="mt-5 grid grid-cols-2 gap-2 sm:grid-cols-4 lg:grid-cols-2 xl:grid-cols-4">
+                        {activeDynastyTemplates.map((template) => {
+                          const isSelected = selectedTemplate === template.id;
 
-                      return (
-                        <button
-                          key={template.id}
-                          type="button"
-                          onClick={() => {
-                            setSelectedTemplate(template.id);
-                            setGenerationError(null);
-                          }}
-                          className="rounded-full border px-3 py-2 text-sm transition hover:border-[rgba(232,194,122,0.34)]"
-                          style={{
-                            background: isSelected ? "rgba(232,194,122,0.10)" : "rgba(255,247,236,0.03)",
-                            borderColor: isSelected ? "rgba(232,194,122,0.68)" : "rgba(255,247,236,0.08)",
-                            color: isSelected ? "#E8C27A" : "rgba(255,247,236,0.62)",
-                          }}
-                        >
-                          {t(`styleSelection.templates.${template.id}.name`)}
-                        </button>
-                      );
-                    })}
-                  </div>
+                          return (
+                            <button
+                              key={template.id}
+                              type="button"
+                              onClick={() => {
+                                setSelectedTemplate(template.id);
+                                setGenerationError(null);
+                              }}
+                              className="rounded-full border px-3 py-2 text-sm transition hover:border-[rgba(232,194,122,0.34)]"
+                              style={{
+                                background: isSelected ? "rgba(232,194,122,0.10)" : "rgba(255,247,236,0.03)",
+                                borderColor: isSelected ? "rgba(232,194,122,0.68)" : "rgba(255,247,236,0.08)",
+                                color: isSelected ? "#E8C27A" : "rgba(255,247,236,0.62)",
+                              }}
+                            >
+                              {t(`styleSelection.templates.${template.id}.name`)}
+                            </button>
+                          );
+                        })}
+                      </div>
 
-                  <div className="mt-5 rounded-xl border border-[rgba(232,194,122,0.12)] bg-[rgba(232,194,122,0.045)] px-4 py-3 text-sm text-[rgba(255,247,236,0.56)]">
-                    {t('styleSelection.currentSelection')}: <span className="font-medium text-[#E8C27A]">{t(`styleSelection.dynasty.${selectedDynasty}`)}</span>
-                    <span className="px-1 text-[rgba(255,247,236,0.28)]">·</span>
-                    <span className="font-medium text-[#E8C27A]">{t(`styleSelection.templates.${selectedTemplate}.name`)}</span>
-                  </div>
+                      <div className="mt-5 rounded-xl border border-[rgba(232,194,122,0.12)] bg-[rgba(232,194,122,0.045)] px-4 py-3 text-sm text-[rgba(255,247,236,0.56)]">
+                        {t('styleSelection.currentSelection')}: <span className="font-medium text-[#E8C27A]">{t(`styleSelection.dynasty.${selectedDynasty}`)}</span>
+                        <span className="px-1 text-[rgba(255,247,236,0.28)]">·</span>
+                        <span className="font-medium text-[#E8C27A]">{t(`styleSelection.templates.${selectedTemplate}.name`)}</span>
+                      </div>
+                    </>
+                  ) : (
+                    <div className="rounded-xl border border-[rgba(255,247,236,0.06)] bg-[rgba(255,247,236,0.02)] px-4 py-6 text-center">
+                      <p className="text-sm text-[rgba(255,247,236,0.45)]">{t('styleSelection.noTemplatesAvailable')}</p>
+                    </div>
+                  )}
                 </div>
               </div>
 
@@ -433,7 +441,10 @@ export default function GeneratePage() {
                 <p className="mt-3 min-h-5 text-sm" style={{ color: generationError ? '#E8C27A' : 'rgba(255,247,236,0.45)' }}>
                   {generationError || (
                     <>
-                      {t('styleSelection.currentSelection')}: <span className="font-medium text-[#E8C27A]">{t(`styleSelection.dynasty.${selectedDynasty}`)} · {t(`styleSelection.templates.${selectedTemplate}.name`)}</span> · {t('styleSelection.generationCost')}{" "}
+                      {styleTemplates.length > 0 && selectedTemplate ? (
+                        <>{t('styleSelection.currentSelection')}: <span className="font-medium text-[#E8C27A]">{t(`styleSelection.dynasty.${selectedDynasty}`)} · {t(`styleSelection.templates.${selectedTemplate}.name`)}</span> · </>
+                      ) : null}
+                      {t('styleSelection.generationCost')}{" "}
                       <span className="font-semibold text-[#E8C27A]">{GENERATION_COST} {t('styleSelection.credits')}</span>
                     </>
                   )}
@@ -442,6 +453,7 @@ export default function GeneratePage() {
               </div>
             </section>
 
+            {featuredTemplates.length > 0 && (
             <section className="mt-9 pb-12">
               <div className="mb-6 flex flex-col gap-2 md:flex-row md:items-end md:justify-between">
                 <div>
@@ -487,6 +499,7 @@ export default function GeneratePage() {
                 })}
               </div>
             </section>
+          )}
           </>
         )}
       </main>

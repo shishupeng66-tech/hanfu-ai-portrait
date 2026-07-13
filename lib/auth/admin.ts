@@ -19,11 +19,11 @@ export async function isAdmin(): Promise<boolean> {
  * Protect a route for admin access only
  * Redirects to dashboard if not an admin
  */
-export async function requireAdmin() {
+export async function requireAdmin(locale?: string) {
   const adminStatus = await isAdmin();
   
   if (!adminStatus) {
-    redirect("/dashboard");
+    redirect(locale ? `/${locale}/dashboard` : "/dashboard");
   }
 }
 

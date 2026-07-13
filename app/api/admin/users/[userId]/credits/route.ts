@@ -2,12 +2,15 @@ import { NextRequest, NextResponse } from "next/server";
 import { db } from "@/lib/db";
 import { user, creditLedger } from "@/lib/db/schema";
 import { eq, sql } from "drizzle-orm";
-import { requireAdmin } from "@/lib/auth/admin";
+import { requireAdminApi } from "@/lib/auth/admin-api";
 
 export async function POST(request: NextRequest, props: { params: Promise<{ userId: string }> }) {
   const params = await props.params;
   try {
-    await requireAdmin();
+    const adminAccess = await requireAdminApi(request.headers);
+    if (!adminAccess.ok) {
+      return adminAccess.response;
+    }
     
     const body = await request.json();
     const { amount, reason } = body;

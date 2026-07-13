@@ -195,8 +195,22 @@ export default function TemplatesPage() {
           </div>
         ) : (
           <div className="flex flex-col items-center justify-center py-20">
-            <p className="text-base" style={{ color: "rgba(255, 247, 236, 0.45)" }}>
-              {t("empty")}
+            <div
+              className="w-20 h-20 rounded-2xl flex items-center justify-center mb-6"
+              style={{ background: "rgba(255, 247, 236, 0.03)" }}
+            >
+              <svg width="36" height="36" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5" style={{ color: "rgba(255, 247, 236, 0.25)" }}>
+                <path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8Z" />
+                <path d="M14 2v6h6" />
+                <path d="M12 18v-6" />
+                <path d="M9 15h6" />
+              </svg>
+            </div>
+            <h3 className="text-xl font-semibold mb-2" style={{ color: "rgba(255, 247, 236, 0.92)" }}>
+              {t("emptyLibrary.title")}
+            </h3>
+            <p className="text-sm text-center max-w-md" style={{ color: "rgba(255, 247, 236, 0.45)" }}>
+              {t("emptyLibrary.subtitle")}
             </p>
           </div>
         )}

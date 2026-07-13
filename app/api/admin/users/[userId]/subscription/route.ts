@@ -2,7 +2,7 @@ import { NextRequest, NextResponse } from "next/server";
 import { db } from "@/lib/db";
 import { user } from "@/lib/db/schema";
 import { eq } from "drizzle-orm";
-import { requireAdmin } from "@/lib/auth/admin";
+import { requireAdminApi } from "@/lib/auth/admin-api";
 
 const validPlans = new Set(["free", "plus_monthly", "pro_monthly", "proplus_yearly"]);
 const validStatuses = new Set(["active", "inactive", "canceled"]);
@@ -10,7 +10,10 @@ const validStatuses = new Set(["active", "inactive", "canceled"]);
 export async function POST(request: NextRequest, props: { params: Promise<{ userId: string }> }) {
   const params = await props.params;
   try {
-    await requireAdmin();
+    const adminAccess = await requireAdminApi(request.headers);
+    if (!adminAccess.ok) {
+      return adminAccess.response;
+    }
     
     const body = await request.json();
     const { planKey, status } = body;
@@ -67,7 +70,10 @@ export async function POST(request: NextRequest, props: { params: Promise<{ user
 export async function DELETE(request: NextRequest, props: { params: Promise<{ userId: string }> }) {
   const params = await props.params;
   try {
-    await requireAdmin();
+    const adminAccess = await requireAdminApi(request.headers);
+    if (!adminAccess.ok) {
+      return adminAccess.response;
+    }
     
     // Cancel user's subscription (set to free plan)
     await db

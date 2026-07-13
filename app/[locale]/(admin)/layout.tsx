@@ -4,10 +4,14 @@ import { AdminSidebar } from "@/features/admin/components/admin-sidebar";
 
 export default async function AdminLayout({
   children,
+  params,
 }: {
   children: React.ReactNode;
+  params: Promise<{ locale: string }>;
 }) {
-  await requireAdmin();
+  const { locale } = await params;
+
+  await requireAdmin(locale);
 
   return (
     <div className="min-h-screen bg-[#0b0b0c] text-foreground">
