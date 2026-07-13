@@ -1,7 +1,7 @@
-import { getPublicPublishedTemplates } from "@/data/templates/server";
+import { getPublicPublishedTemplates } from "@/lib/db/template-repository";
 import TemplatesClientPage from "./templates-client";
 
-export default function TemplatesPage() {
-  const templates = getPublicPublishedTemplates();
+export default async function TemplatesPage() {
+  const templates = await getPublicPublishedTemplates();
   return <TemplatesClientPage templates={templates} />;
 }

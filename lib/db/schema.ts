@@ -198,3 +198,80 @@ export const newsletterSubscription = pgTable("newsletter_subscription", {
   unsubscribedAt: timestamp("unsubscribed_at"),
   updatedAt: timestamp("updated_at").defaultNow().$onUpdate(() => new Date()).notNull(),
 });
+
+// ---------------------------------------------------------------------------
+// Portrait templates (admin-managed, database-backed)
+// ---------------------------------------------------------------------------
+
+export const portraitTemplate = pgTable(
+  "portrait_template",
+  {
+    id: text("id").primaryKey(),
+    slug: text("slug").notNull().unique(),
+    status: varchar("status", { length: 16 }).notNull().default("draft"), // draft | published | archived
+    version: integer("version").default(1).notNull(),
+    nameZh: text("name_zh").notNull(),
+    nameEn: text("name_en").notNull(),
+    descriptionZh: text("description_zh").default(""),
+    descriptionEn: text("description_en").default(""),
+    category: varchar("category", { length: 64 }).default("hanfu"),
+    dynasty: varchar("dynasty", { length: 64 }).default(""),
+    styles: text("styles").array().default([]),
+    tags: text("tags").array().default([]),
+    coverImage: text("cover_image").default(""),
+    previewImages: text("preview_images").array().default([]),
+    referenceImages: text("reference_images").array().default([]),
+    basePrompt: text("base_prompt").notNull(),
+    negativePrompt: text("negative_prompt").default(""),
+    generationConfig: text("generation_config").default("{}"), // JSON string
+    creditsPerGeneration: integer("credits_per_generation").default(4).notNull(),
+    memberCreditsPerGeneration: integer("member_credits_per_generation"),
+    featured: boolean("featured").default(false).notNull(),
+    sortOrder: integer("sort_order").default(0).notNull(),
+    createdBy: text("created_by"),
+    updatedBy: text("updated_by"),
+    archivedAt: timestamp("archived_at"),
+    createdAt: timestamp("created_at").defaultNow().notNull(),
+    updatedAt: timestamp("updated_at")
+      .defaultNow()
+      .$onUpdate(() => new Date())
+      .notNull(),
+  },
+  (table) => ({
+    slugIdx: index("portrait_template_slug_idx").on(table.slug),
+    statusIdx: index("portrait_template_status_idx").on(table.status),
+    featuredOrderIdx: index("portrait_template_featured_order_idx").on(
+      table.featured,
+      table.sortOrder,
+    ),
+  }),
+);
+
+export const portraitTemplateShot = pgTable(
+  "portrait_template_shot",
+  {
+    id: text("id").primaryKey(),
+    templateId: text("template_id")
+      .notNull()
+      .references(() => portraitTemplate.id, { onDelete: "cascade" }),
+    shotKey: text("shot_key").notNull(),
+    sortOrder: integer("sort_order").default(0).notNull(),
+    titleZh: text("title_zh").notNull(),
+    titleEn: text("title_en").notNull(),
+    prompt: text("prompt").notNull(),
+    pose: text("pose").default(""),
+    camera: text("camera").default(""),
+    composition: text("composition").default(""),
+    expression: text("expression").default(""),
+    referenceImage: text("reference_image").default(""),
+    createdAt: timestamp("created_at").defaultNow().notNull(),
+    updatedAt: timestamp("updated_at")
+      .defaultNow()
+      .$onUpdate(() => new Date())
+      .notNull(),
+  },
+  (table) => ({
+    templateIdIdx: index("portrait_template_shot_template_idx").on(table.templateId),
+    templateKeyIdx: index("portrait_template_shot_key_idx").on(table.templateId, table.shotKey),
+  }),
+);

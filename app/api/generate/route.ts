@@ -10,15 +10,13 @@ import { uploadToR2, generateImageKey } from "@/lib/r2";
 import { getActiveSessionUser } from "@/lib/auth/session";
 import { getErrorMessage } from "@/lib/error-utils";
 import { volcanoEngineConfig, getHeaders, validateConfig } from "@/lib/volcano-engine/config";
-import { getTemplateBySlug, getTemplateById } from "@/data/templates/server";
-import type { TemplateDefinition, TemplateShot } from "@/data/templates/schema";
+import { getTemplateBySlug, getTemplateById } from "@/lib/db/template-repository";
+import type { TemplateWithShots } from "@/lib/db/template-repository";
 
 // ---------------------------------------------------------------------------
 // Configuration
 // ---------------------------------------------------------------------------
 
-const SET_CREDITS = 4;
-const TRIAL_CREDITS = 1;
 const MAX_IMAGE_SIZE = 10 * 1024 * 1024; // 10 MB
 
 // ---------------------------------------------------------------------------
@@ -48,25 +46,25 @@ function ensureGenerateConfig() {
 }
 
 function buildGenerationPrompt(
-  template: TemplateDefinition,
+  template: TemplateWithShots,
   shotId?: string | null
 ): { prompt: string; negativePrompt: string } {
-  let shot: TemplateShot | undefined;
+  let shot = undefined;
   if (shotId) {
-    shot = template.shots?.find((s) => s.id === shotId);
+    shot = template.shots?.find((s) => s.shotKey === shotId);
   }
   // Default to first shot if not specified or not found
   if (!shot) {
     shot = template.shots?.[0];
   }
 
-  const basePrompt = template.prompt.base;
+  const basePrompt = template.basePrompt;
   const shotPrompt = shot?.prompt ?? "";
   const prompt = shotPrompt ? `${basePrompt}\n\n${shotPrompt}` : basePrompt;
 
   return {
     prompt,
-    negativePrompt: template.prompt.negative ?? "",
+    negativePrompt: template.negativePrompt ?? "",
   };
 }
 
@@ -167,9 +165,9 @@ export async function POST(req: NextRequest) {
     const slug = typeof templateSlug === "string" ? templateSlug : null;
     const id = typeof templateId === "string" ? templateId : null;
     const template = slug
-      ? getTemplateBySlug(slug)
+      ? await getTemplateBySlug(slug)
       : id
-        ? getTemplateById(id)
+        ? await getTemplateById(id)
         : null;
 
     if (!template) {
@@ -194,9 +192,10 @@ export async function POST(req: NextRequest) {
     const resolvedShotId = typeof shotId === "string" ? shotId : null;
     const { prompt, negativePrompt } = buildGenerationPrompt(template, resolvedShotId);
 
-    // Determine credits needed
-    const maxImages = template.generation?.imageCount ?? 6;
-    const creditsNeeded = mode === "trial" ? TRIAL_CREDITS : SET_CREDITS;
+    // Determine credits needed from database
+    const genConfig = JSON.parse(template.generationConfig ?? "{}");
+    const maxImages = genConfig.imageCount ?? 6;
+    const creditsNeeded = template.creditsPerGeneration ?? 4;
 
     const hasCredits = await canUserAfford(userId, creditsNeeded);
     if (!hasCredits) {
@@ -212,7 +211,7 @@ export async function POST(req: NextRequest) {
 
     const historyId = randomUUID();
 
-    const activeShot = template.shots?.find((s) => s.id === shotId) ?? template.shots?.[0] ?? null;
+    const activeShot = template.shots?.find((s) => s.shotKey === resolvedShotId) ?? template.shots?.[0] ?? null;
 
     await db.insert(generationHistory).values({
       id: historyId,
@@ -225,11 +224,11 @@ export async function POST(req: NextRequest) {
         templateId: template.id,
         templateSlug: template.slug,
         templateVersion: template.version,
-        templateName: template.name,
-        shotId: activeShot?.id ?? null,
-        shotOrder: activeShot?.order ?? null,
-        model: template.generation?.model ?? "seedream-4.5",
-        aspectRatio: template.generation?.aspectRatio ?? "3:4",
+        templateName: { zh: template.nameZh, en: template.nameEn },
+        shotId: activeShot?.shotKey ?? null,
+        shotOrder: activeShot?.sortOrder ?? null,
+        model: genConfig.model ?? "seedream-4.5",
+        aspectRatio: genConfig.aspectRatio ?? "3:4",
         mode,
         maxImages,
         trialAlreadyUsed,
@@ -298,11 +297,11 @@ export async function POST(req: NextRequest) {
             templateId: template.id,
             templateSlug: template.slug,
             templateVersion: template.version,
-            templateName: template.name,
-            shotId: activeShot?.id ?? null,
-            shotOrder: activeShot?.order ?? null,
-            model: template.generation?.model ?? "seedream-4.5",
-            aspectRatio: template.generation?.aspectRatio ?? "3:4",
+            templateName: { zh: template.nameZh, en: template.nameEn },
+            shotId: activeShot?.shotKey ?? null,
+            shotOrder: activeShot?.sortOrder ?? null,
+            model: genConfig.model ?? "seedream-4.5",
+            aspectRatio: genConfig.aspectRatio ?? "3:4",
             mode,
             maxImages,
             trialAlreadyUsed,
@@ -330,7 +329,7 @@ export async function POST(req: NextRequest) {
     return NextResponse.json({
       id: historyId,
       imageUrls: validUrls,
-      templateName: template.name,
+      templateName: { zh: template.nameZh, en: template.nameEn },
       templateSlug: template.slug,
       templateId: template.id,
       mode,

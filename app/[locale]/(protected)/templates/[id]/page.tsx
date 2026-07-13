@@ -1,4 +1,4 @@
-import { getPublicTemplateById, getPublicTemplateBySlug } from "@/data/templates/server";
+import { getPublicTemplateById, getPublicTemplateBySlug } from "@/lib/db/template-repository";
 import TemplateDetailClientPage from "./detail-client";
 
 export default async function TemplateDetailPage({
@@ -8,6 +8,6 @@ export default async function TemplateDetailPage({
 }) {
   const { id } = await params;
   // Try by slug first, then by id
-  const template = getPublicTemplateBySlug(id) ?? getPublicTemplateById(id);
+  const template = (await getPublicTemplateBySlug(id)) ?? (await getPublicTemplateById(id));
   return <TemplateDetailClientPage template={template} />;
 }

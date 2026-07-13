@@ -8,6 +8,7 @@ import {
   Database,
   Home,
   ImageIcon,
+  LayoutTemplate,
   ShoppingCart,
   Users,
 } from "lucide-react";
@@ -43,6 +44,11 @@ const adminNavItems = [
     title: "积分流水",
     href: "/admin/credits",
     icon: Database,
+  },
+  {
+    title: "模板管理",
+    href: "/admin/templates",
+    icon: LayoutTemplate,
   },
 ];
 
