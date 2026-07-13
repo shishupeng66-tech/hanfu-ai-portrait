@@ -95,7 +95,9 @@
       "notAvailable": "This template is temporarily unavailable. Please choose another one.",
       "insufficientCredits": "Insufficient credits to generate portrait.",
       "templateNotAvailable": "This template is not available or has been removed.",
-      "noTemplatesAvailable": "No templates available. Please wait for new templates."
+      "noTemplatesAvailable": "No templates available. Please wait for new templates.",
+      "noTemplateSelected": "Please select a template first.",
+      "invalidCreditsConfig": "Template credits configuration is invalid. Please contact support."
     },
     "previewSection": {
       "title": "Preview Result",

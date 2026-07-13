@@ -27,6 +27,7 @@ const createTemplateSchema = z.object({
   memberCreditsPerGeneration: z.number().int().min(0).optional(),
   featured: z.boolean().optional().default(false),
   sortOrder: z.number().int().optional().default(0),
+  version: z.number().int().min(1).optional().default(1),
   shots: z
     .array(
       z.object({
@@ -119,7 +120,7 @@ export async function POST(req: NextRequest) {
       {
         slug: data.slug,
         status: "draft",
-        version: 1,
+        version: data.version,
         nameZh: data.nameZh,
         nameEn: data.nameEn,
         descriptionZh: data.descriptionZh,

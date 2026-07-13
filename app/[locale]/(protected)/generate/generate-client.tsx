@@ -6,7 +6,6 @@ import { useLocale, useTranslations } from "next-intl";
 import { useSession } from "@/lib/auth-client";
 import type { PublicTemplate } from "@/data/templates/client";
 
-const GENERATION_COST = 10;
 const DYNASTY_TABS = ["tang", "song", "yuan", "ming", "qing", "modern"] as const;
 
 function UploadIcon() {
@@ -66,6 +65,16 @@ export default function GenerateClientPage({
   const hasTemplates = templates.length > 0;
   const activeTemplate = templates.find((t) => t.slug === selectedTemplateSlug) ?? null;
 
+  // Derive generation cost from active template (never from hardcoded constant)
+  const generationCost = activeTemplate?.creditsPerGeneration;
+  const creditsValid =
+    generationCost !== undefined &&
+    generationCost !== null &&
+    Number.isFinite(generationCost) &&
+    Number.isInteger(generationCost) &&
+    generationCost >= 0;
+  const creditsInsufficient = creditsValid && generationCost! > 0 && userCredits < generationCost!;
+
   const fetchUserCredits = useCallback(async () => {
     if (!isLoggedIn) return;
     try {
@@ -112,12 +121,22 @@ export default function GenerateClientPage({
       return;
     }
 
+    if (!activeTemplate) {
+      setGenerationError(t("errors.noTemplateSelected"));
+      return;
+    }
+
+    if (!creditsValid) {
+      setGenerationError(t("errors.invalidCreditsConfig"));
+      return;
+    }
+
     if (!file) {
       setGenerationError(t("errors.uploadRequired"));
       return;
     }
 
-    if (userCredits < GENERATION_COST) {
+    if (creditsInsufficient) {
       setGenerationError(t("errors.insufficientCredits"));
       return;
     }
@@ -274,7 +293,7 @@ export default function GenerateClientPage({
                     </div>
                     <div className="flex items-center justify-between gap-4">
                       <span className="text-[rgba(255,247,236,0.45)]">{t("previewSection.creditsLabel")}</span>
-                      <span className="font-medium text-[#E8C27A]">{GENERATION_COST} {t("styleSelection.credits")}</span>
+                      <span className="font-medium text-[#E8C27A]">{creditsValid ? generationCost : "—"} {t("styleSelection.credits")}</span>
                     </div>
                     <div className="flex items-center justify-between gap-4">
                       <span className="text-[rgba(255,247,236,0.45)]">{t("previewSection.countLabel")}</span>
@@ -295,7 +314,7 @@ export default function GenerateClientPage({
                     <button
                       type="button"
                       onClick={handleGenerate}
-                      disabled={isGenerating || !hasTemplates}
+                      disabled={isGenerating || !hasTemplates || !activeTemplate || !creditsValid || creditsInsufficient}
                       className="flex h-11 items-center justify-center gap-2 rounded-xl bg-[#E8C27A] px-4 text-sm font-semibold text-[#0B0B0D] transition hover:bg-[#F2D38A] disabled:cursor-not-allowed disabled:opacity-70"
                     >
                       {isGenerating && <LoadingSpinner />}
@@ -434,10 +453,10 @@ export default function GenerateClientPage({
                 <button
                   type="button"
                   onClick={handleGenerate}
-                  disabled={isGenerating || !hasTemplates}
+                  disabled={isGenerating || !hasTemplates || !activeTemplate || !creditsValid || creditsInsufficient}
                   className="flex h-[58px] w-[280px] items-center justify-center gap-2 rounded-xl px-8 text-base font-semibold text-[#0B0B0D] transition disabled:cursor-not-allowed disabled:opacity-70 md:w-[332px]"
                   style={{
-                    background: hasTemplates
+                    background: hasTemplates && activeTemplate && creditsValid && !creditsInsufficient
                       ? "linear-gradient(180deg, #F4D18B 0%, #E8C27A 48%, #C99A43 100%)"
                       : "rgba(255, 247, 236, 0.1)",
                     boxShadow: hasTemplates ? "inset 0 1px 0 rgba(255,255,255,0.34), 0 16px 42px rgba(232,194,122,0.15)" : "none",
@@ -453,7 +472,7 @@ export default function GenerateClientPage({
                         <>{t("styleSelection.currentSelection")}: <span className="font-medium text-[#E8C27A]">{templateDisplayName}</span> · </>
                       ) : null}
                       {t("styleSelection.generationCost")}{" "}
-                      <span className="font-semibold text-[#E8C27A]">{GENERATION_COST} {t("styleSelection.credits")}</span>
+                      <span className="font-semibold text-[#E8C27A]">{creditsValid ? generationCost : "—"} {t("styleSelection.credits")}</span>
                     </>
                   )}
                 </p>

@@ -61,6 +61,7 @@ export const TemplateDefinitionSchema = z.object({
   generation: TemplateGenerationSchema.optional(),
   featured: z.boolean().optional().default(false),
   sortOrder: z.number().int().optional().default(0),
+  creditsPerGeneration: z.number().int().min(0).optional().default(4),
 });
 
 export type TemplateDefinition = z.infer<typeof TemplateDefinitionSchema>;
@@ -94,6 +95,7 @@ export type PublicTemplate = {
   shots: PublicTemplateShot[];
   featured: boolean;
   sortOrder: number;
+  creditsPerGeneration: number;
 };
 
 /**
@@ -120,6 +122,7 @@ export function toPublicTemplate(template: TemplateDefinition): PublicTemplate {
     })),
     featured: template.featured ?? false,
     sortOrder: template.sortOrder ?? 0,
+    creditsPerGeneration: template.creditsPerGeneration ?? 4,
   };
 }
 
