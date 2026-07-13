@@ -85,12 +85,44 @@ function toPublicTemplate(t: TemplateWithShots): PublicTemplate {
   };
 }
 
+/**
+ * PostgreSQL error code 42P01 = undefined_table.
+ * Use this to safely detect when the template tables haven't been created yet.
+ */
+function isTableNotFoundError(error: unknown): boolean {
+  if (error instanceof Error && "code" in error) {
+    return (error as Error & { code: string }).code === "42P01";
+  }
+  return false;
+}
+
+function emptyListResult(page = 1, pageSize = 20): TemplateListResult {
+  return { templates: [], total: 0, page, pageSize, totalPages: 0 };
+}
+
+const TEMPLATE_TABLE_NOT_READY =
+  "Portrait template tables not found in database. Please run migration.";
+
 // ---------------------------------------------------------------------------
 // Template CRUD
 // ---------------------------------------------------------------------------
 
 export async function listTemplates(
   params: TemplateListParams = {},
+): Promise<TemplateListResult> {
+  try {
+    return await _listTemplatesUnsafe(params);
+  } catch (error) {
+    if (isTableNotFoundError(error)) {
+      console.warn("[templates] " + TEMPLATE_TABLE_NOT_READY);
+      return emptyListResult(params.page ?? 1, params.pageSize ?? 20);
+    }
+    throw error;
+  }
+}
+
+async function _listTemplatesUnsafe(
+  params: TemplateListParams,
 ): Promise<TemplateListResult> {
   const {
     search,
@@ -286,7 +318,7 @@ export async function updateTemplate(
 }
 
 export async function deleteTemplate(id: string): Promise<boolean> {
-  const result = await db
+  await db
     .delete(portraitTemplate)
     .where(eq(portraitTemplate.id, id));
   return true;
@@ -362,45 +394,93 @@ export async function duplicateTemplate(
 // ---------------------------------------------------------------------------
 
 export async function getPublicPublishedTemplates(): Promise<PublicTemplate[]> {
-  const result = await listTemplates({ status: "published", pageSize: 1000, sortBy: "sortOrder", sortOrder: "desc" });
-  return result.templates.map(toPublicTemplate);
+  try {
+    const result = await listTemplates({ status: "published", pageSize: 1000, sortBy: "sortOrder", sortOrder: "desc" });
+    return result.templates.map(toPublicTemplate);
+  } catch (error) {
+    if (isTableNotFoundError(error)) {
+      console.warn("[templates] " + TEMPLATE_TABLE_NOT_READY);
+      return [];
+    }
+    console.error("[templates] Failed to get published templates:", error);
+    if (process.env.NODE_ENV === "development") {
+      throw error;
+    }
+    return [];
+  }
 }
 
 export async function getPublicFeaturedTemplates(): Promise<PublicTemplate[]> {
-  const templates = await db
-    .select()
-    .from(portraitTemplate)
-    .where(and(eq(portraitTemplate.status, "published"), eq(portraitTemplate.featured, true)))
-    .orderBy(desc(portraitTemplate.sortOrder));
-
-  const ids = templates.map((t) => t.id);
-  let allShots: DbTemplateShot[] = [];
-  if (ids.length > 0) {
-    allShots = await db
+  try {
+    const templates = await db
       .select()
-      .from(portraitTemplateShot)
-      .where(inArray(portraitTemplateShot.templateId, ids))
-      .orderBy(asc(portraitTemplateShot.sortOrder));
-  }
+      .from(portraitTemplate)
+      .where(and(eq(portraitTemplate.status, "published"), eq(portraitTemplate.featured, true)))
+      .orderBy(desc(portraitTemplate.sortOrder));
 
-  const shotsMap = new Map<string, DbTemplateShot[]>();
-  for (const shot of allShots) {
-    const list = shotsMap.get(shot.templateId) ?? [];
-    list.push(shot);
-    shotsMap.set(shot.templateId, list);
-  }
+    const ids = templates.map((t) => t.id);
+    let allShots: DbTemplateShot[] = [];
+    if (ids.length > 0) {
+      allShots = await db
+        .select()
+        .from(portraitTemplateShot)
+        .where(inArray(portraitTemplateShot.templateId, ids))
+        .orderBy(asc(portraitTemplateShot.sortOrder));
+    }
 
-  return templates.map((t) => toPublicTemplate({ ...t, shots: shotsMap.get(t.id) ?? [] }));
+    const shotsMap = new Map<string, DbTemplateShot[]>();
+    for (const shot of allShots) {
+      const list = shotsMap.get(shot.templateId) ?? [];
+      list.push(shot);
+      shotsMap.set(shot.templateId, list);
+    }
+
+    return templates.map((t) => toPublicTemplate({ ...t, shots: shotsMap.get(t.id) ?? [] }));
+  } catch (error) {
+    if (isTableNotFoundError(error)) {
+      console.warn("[templates] " + TEMPLATE_TABLE_NOT_READY);
+      return [];
+    }
+    console.error("[templates] Failed to get featured templates:", error);
+    if (process.env.NODE_ENV === "development") {
+      throw error;
+    }
+    return [];
+  }
 }
 
 export async function getPublicTemplateById(id: string): Promise<PublicTemplate | null> {
-  const t = await getTemplateById(id);
-  if (!t || t.status !== "published") return null;
-  return toPublicTemplate(t);
+  try {
+    const t = await getTemplateById(id);
+    if (!t || t.status !== "published") return null;
+    return toPublicTemplate(t);
+  } catch (error) {
+    if (isTableNotFoundError(error)) {
+      console.warn("[templates] " + TEMPLATE_TABLE_NOT_READY);
+      return null;
+    }
+    console.error("[templates] Failed to get template by id:", error);
+    if (process.env.NODE_ENV === "development") {
+      throw error;
+    }
+    return null;
+  }
 }
 
 export async function getPublicTemplateBySlug(slug: string): Promise<PublicTemplate | null> {
-  const t = await getTemplateBySlug(slug);
-  if (!t || t.status !== "published") return null;
-  return toPublicTemplate(t);
+  try {
+    const t = await getTemplateBySlug(slug);
+    if (!t || t.status !== "published") return null;
+    return toPublicTemplate(t);
+  } catch (error) {
+    if (isTableNotFoundError(error)) {
+      console.warn("[templates] " + TEMPLATE_TABLE_NOT_READY);
+      return null;
+    }
+    console.error("[templates] Failed to get template by slug:", error);
+    if (process.env.NODE_ENV === "development") {
+      throw error;
+    }
+    return null;
+  }
 }

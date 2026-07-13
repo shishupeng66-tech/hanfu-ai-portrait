@@ -81,8 +81,17 @@ export async function GET(req: NextRequest) {
 
     return NextResponse.json(result);
   } catch (error) {
+    const isTableNotFound =
+      error instanceof Error && "code" in error && (error as Error & { code: string }).code === "42P01";
     console.error("[admin] Failed to list templates:", error);
-    return NextResponse.json({ error: "Failed to list templates" }, { status: 500 });
+    return NextResponse.json(
+      {
+        error: isTableNotFound
+          ? "Template database not initialized. Please run migration."
+          : "Failed to list templates",
+      },
+      { status: 500 },
+    );
   }
 }
 

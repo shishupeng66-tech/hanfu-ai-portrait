@@ -6,7 +6,6 @@ import { useLocale } from "next-intl";
 import {
   Plus,
   Search,
-  Filter,
   Eye,
   Edit,
   Copy,
@@ -178,8 +177,7 @@ export function AdminTemplatesClient() {
       });
 
       if (!res.ok) {
-        const err = await res.json();
-        alert(err.error || "Operation failed");
+        alert("Operation failed");
         return;
       }
 

@@ -1,7 +1,7 @@
 "use client";
 
-import { useState, useEffect, useCallback, use } from "react";
-import { useRouter, useSearchParams } from "next/navigation";
+import { useState, useEffect, use } from "react";
+import { useRouter } from "next/navigation";
 import { useLocale } from "next-intl";
 import {
   Plus,
@@ -9,11 +9,9 @@ import {
   ArrowUp,
   ArrowDown,
   Upload,
-  Eye,
   Save,
   CheckCircle,
   Archive,
-  Copy,
   X,
   ImageIcon,
 } from "lucide-react";
@@ -103,9 +101,7 @@ const DYNASTIES = [
   { value: "qing", labelZh: "清", labelEn: "Qing" },
   { value: "modern", labelZh: "现代", labelEn: "Modern" },
   { value: "dunhuang", labelZh: "敦煌", labelEn: "Dunhuang" },
-];
-
-const STYLES = ["classic", "fantasy", "ink", "watercolor", "oil", "realistic", "cinematic", "dramatic"];
+]; 
 
 // ---------------------------------------------------------------------------
 // Component
@@ -113,7 +109,6 @@ const STYLES = ["classic", "fantasy", "ink", "watercolor", "oil", "realistic", "
 
 export function AdminTemplateForm({ templateId }: { templateId?: string }) {
   const router = useRouter();
-  const searchParams = useSearchParams();
   const locale = useLocale();
   const isZh = locale === "zh";
   const isEdit = !!templateId;
