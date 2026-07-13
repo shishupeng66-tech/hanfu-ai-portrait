@@ -14,7 +14,7 @@ export default async function AdminLayout({
   await requireAdmin(locale);
 
   return (
-    <div className="min-h-screen bg-[#0b0b0c] text-foreground">
+    <div className="admin-theme min-h-screen bg-[#0b0b0c] text-foreground">
       <div className="flex min-h-screen bg-[#0b0b0c]">
         <AdminSidebar />
 

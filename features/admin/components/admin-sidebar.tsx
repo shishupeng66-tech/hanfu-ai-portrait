@@ -62,7 +62,7 @@ export function AdminSidebar() {
         <div className="px-6 pt-16 pb-8 border-b border-border">
           <Link
             href={`/${locale}/dashboard`}
-            className="flex items-center gap-2 justify-center w-full rounded-lg border border-border px-4 py-2 text-sm font-medium text-muted-foreground hover:bg-hover hover:text-hover-foreground transition-colors"
+            className="flex items-center gap-2 justify-center w-full rounded-lg border border-border px-4 py-2 text-sm font-medium text-muted-foreground hover:bg-accent hover:text-hover-foreground transition-colors"
           >
             <Home className="h-4 w-4" />
             返回用户仪表盘
@@ -85,7 +85,7 @@ export function AdminSidebar() {
                 className={cn(
                   "flex items-center gap-3 px-3 py-2 rounded-lg text-sm font-medium transition-colors",
                   isActive
-                    ? "bg-secondary text-foreground"
+                    ? "bg-primary/10 text-primary border border-primary/20"
                     : "text-muted-foreground hover:bg-hover hover:text-hover-foreground"
                 )}
               >

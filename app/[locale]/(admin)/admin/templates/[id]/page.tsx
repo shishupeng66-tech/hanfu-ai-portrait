@@ -14,6 +14,7 @@ import {
   Archive,
   X,
   ImageIcon,
+  ChevronDown,
 } from "lucide-react";
 import { cn } from "@/lib/utils";
 
@@ -379,8 +380,8 @@ export function AdminTemplateForm({ templateId }: { templateId?: string }) {
     return <div className="text-center py-12 text-muted-foreground">Loading...</div>;
   }
 
-  const inputClass = "w-full rounded-lg border border-border bg-secondary px-4 py-2 text-sm text-foreground placeholder:text-muted-foreground focus:outline-none focus:ring-2 focus:ring-primary/50";
-  const textareaClass = "w-full rounded-lg border border-border bg-secondary px-4 py-2 text-sm text-foreground placeholder:text-muted-foreground focus:outline-none focus:ring-2 focus:ring-primary/50 min-h-[80px]";
+  const inputClass = "w-full rounded-lg border border-border bg-secondary px-4 py-2 text-sm text-secondary-foreground placeholder:text-muted-foreground hover:border-muted-foreground/50 focus:outline-none focus:ring-2 focus:ring-ring/50 focus:border-ring transition-colors";
+  const textareaClass = "w-full rounded-lg border border-border bg-secondary px-4 py-2 text-sm text-secondary-foreground placeholder:text-muted-foreground hover:border-muted-foreground/50 focus:outline-none focus:ring-2 focus:ring-ring/50 focus:border-ring min-h-[80px] transition-colors";
   const labelClass = "block text-sm font-medium text-foreground mb-1.5";
 
   return (
@@ -399,7 +400,7 @@ export function AdminTemplateForm({ templateId }: { templateId?: string }) {
           {isEdit && (
             <button
               onClick={() => router.push(`/${locale}/admin/templates`)}
-              className="flex items-center gap-1.5 rounded-lg border border-border px-4 py-2 text-sm hover:bg-hover transition-colors"
+              className="flex items-center gap-1.5 rounded-lg border border-border px-4 py-2 text-sm text-foreground hover:bg-accent focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring/50 transition-colors"
             >
               <X className="h-4 w-4" />
               {isZh ? "返回" : "Back"}
@@ -408,7 +409,7 @@ export function AdminTemplateForm({ templateId }: { templateId?: string }) {
           <button
             onClick={() => handleSave("draft")}
             disabled={saving}
-            className="flex items-center gap-1.5 rounded-lg border border-border px-4 py-2 text-sm hover:bg-hover disabled:opacity-50 transition-colors"
+            className="flex items-center gap-1.5 rounded-lg border border-border bg-secondary px-4 py-2 text-sm text-secondary-foreground hover:bg-hover disabled:opacity-50 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring/50 transition-colors"
           >
             <Save className="h-4 w-4" />
             {isZh ? "保存草稿" : "Save Draft"}
@@ -416,7 +417,7 @@ export function AdminTemplateForm({ templateId }: { templateId?: string }) {
           <button
             onClick={handlePublish}
             disabled={saving}
-            className="flex items-center gap-1.5 rounded-lg bg-green-600 px-4 py-2 text-sm font-medium text-white hover:bg-green-700 disabled:opacity-50 transition-colors"
+            className="flex items-center gap-1.5 rounded-lg bg-green-600 px-4 py-2 text-sm font-medium text-white hover:bg-green-700 disabled:opacity-50 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-green-500 focus-visible:ring-offset-2 focus-visible:ring-offset-background transition-colors"
           >
             <CheckCircle className="h-4 w-4" />
             {isZh ? "保存并发布" : "Save & Publish"}
@@ -431,15 +432,31 @@ export function AdminTemplateForm({ templateId }: { templateId?: string }) {
       )}
 
       {/* JSON Import */}
-      <div className="rounded-lg border border-border p-4">
+      <div className="overflow-hidden rounded-xl border border-border bg-card/60">
         <button
-          onClick={() => setShowJsonImport(!showJsonImport)}
-          className="text-sm text-muted-foreground hover:text-foreground transition-colors"
+          type="button"
+          aria-expanded={showJsonImport}
+          aria-controls="json-import-panel"
+          onClick={() => setShowJsonImport((v) => !v)}
+          className="flex w-full items-center justify-between px-5 py-4 text-left transition-colors hover:bg-accent focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-inset"
         >
-          {isZh ? "从 JSON 导入" : "Import from JSON"}
+          <div>
+            <div className="text-sm font-medium text-foreground">
+              {isZh ? "从 JSON 导入" : "Import from JSON"}
+            </div>
+            <div className="text-xs text-muted-foreground mt-0.5">
+              {isZh ? "粘贴符合模板规范的 JSON，自动填充表单" : "Paste a valid template JSON to auto-fill the form"}
+            </div>
+          </div>
+          <ChevronDown
+            className={cn(
+              "h-5 w-5 text-muted-foreground shrink-0 transition-transform duration-200",
+              showJsonImport && "rotate-180"
+            )}
+          />
         </button>
         {showJsonImport && (
-          <div className="mt-3 space-y-2">
+          <div id="json-import-panel" className="border-t border-border px-5 py-4 space-y-3">
             <textarea
               className={textareaClass}
               rows={6}
@@ -449,7 +466,7 @@ export function AdminTemplateForm({ templateId }: { templateId?: string }) {
             />
             <button
               onClick={handleJsonImport}
-              className="rounded-lg bg-primary px-4 py-2 text-sm font-medium text-primary-foreground hover:bg-primary/90"
+              className="rounded-lg bg-primary px-4 py-2 text-sm font-medium text-primary-foreground hover:bg-primary/90 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 focus-visible:ring-offset-background transition-colors"
             >
               {isZh ? "导入并预览" : "Import & Preview"}
             </button>
@@ -584,7 +601,7 @@ export function AdminTemplateForm({ templateId }: { templateId?: string }) {
       <Section
         title={isZh ? "分镜" : "Shots"}
         action={
-          <button onClick={addShot} className="flex items-center gap-1.5 rounded-lg border border-border px-3 py-1.5 text-xs hover:bg-hover transition-colors">
+          <button onClick={addShot} className="flex items-center gap-1.5 rounded-lg border border-border px-3 py-1.5 text-xs text-foreground hover:bg-accent focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring/50 transition-colors">
             <Plus className="h-3 w-3" />
             {isZh ? "添加镜头" : "Add Shot"}
           </button>
@@ -712,7 +729,7 @@ export function AdminTemplateForm({ templateId }: { templateId?: string }) {
           {isEdit && form.status === "published" && (
             <button
               onClick={handleArchive}
-              className="flex items-center gap-1.5 rounded-lg border border-amber-500/30 px-4 py-2 text-sm text-amber-400 hover:bg-amber-500/10 transition-colors"
+              className="flex items-center gap-1.5 rounded-lg border border-red-500/30 px-4 py-2 text-sm text-red-400 hover:bg-red-500/10 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-red-500/50 transition-colors"
             >
               <Archive className="h-4 w-4" />
               {isZh ? "下架模板" : "Archive Template"}
@@ -723,7 +740,7 @@ export function AdminTemplateForm({ templateId }: { templateId?: string }) {
           <button
             onClick={() => handleSave("draft")}
             disabled={saving}
-            className="flex items-center gap-1.5 rounded-lg border border-border px-4 py-2 text-sm hover:bg-hover disabled:opacity-50 transition-colors"
+            className="flex items-center gap-1.5 rounded-lg border border-border bg-secondary px-4 py-2 text-sm text-secondary-foreground hover:bg-hover disabled:opacity-50 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring/50 transition-colors"
           >
             <Save className="h-4 w-4" />
             {isZh ? "保存草稿" : "Save Draft"}
@@ -731,7 +748,7 @@ export function AdminTemplateForm({ templateId }: { templateId?: string }) {
           <button
             onClick={handlePublish}
             disabled={saving}
-            className="flex items-center gap-1.5 rounded-lg bg-green-600 px-4 py-2 text-sm font-medium text-white hover:bg-green-700 disabled:opacity-50 transition-colors"
+            className="flex items-center gap-1.5 rounded-lg bg-green-600 px-4 py-2 text-sm font-medium text-white hover:bg-green-700 disabled:opacity-50 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-green-500 focus-visible:ring-offset-2 focus-visible:ring-offset-background transition-colors"
           >
             <CheckCircle className="h-4 w-4" />
             {isZh ? "保存并发布" : "Save & Publish"}
@@ -756,7 +773,7 @@ function Section({
   children: React.ReactNode;
 }) {
   return (
-    <div className="rounded-lg border border-border p-6">
+    <div className="rounded-xl border border-border bg-card/60 p-5">
       <div className="flex items-center justify-between mb-4">
         <h3 className="text-lg font-semibold text-foreground">{title}</h3>
         {action}

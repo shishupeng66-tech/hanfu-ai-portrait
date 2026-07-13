@@ -204,7 +204,7 @@ export function AdminTemplatesClient() {
         </div>
         <button
           onClick={() => router.push(`/${locale}/admin/templates/new`)}
-          className="flex items-center gap-2 rounded-lg bg-primary px-4 py-2 text-sm font-medium text-primary-foreground hover:bg-primary/90 transition-colors"
+          className="flex items-center gap-2 rounded-lg bg-primary px-4 py-2 text-sm font-medium text-primary-foreground hover:bg-primary/90 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary/50 focus-visible:ring-offset-2 focus-visible:ring-offset-background transition-colors"
         >
           <Plus className="h-4 w-4" />
           {isZh ? "新建模板" : "New Template"}
@@ -214,20 +214,20 @@ export function AdminTemplatesClient() {
       {/* Filters */}
       <div className="flex flex-wrap items-center gap-3">
         <div className="relative flex-1 min-w-[200px] max-w-sm">
-          <Search className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-muted-foreground" />
+          <Search className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-muted-foreground/70" />
           <input
             type="text"
             placeholder={isZh ? "搜索模板名称或slug..." : "Search name or slug..."}
             value={search}
             onChange={(e) => { setSearch(e.target.value); setPage(1); }}
-            className="w-full rounded-lg border border-border bg-secondary pl-10 pr-4 py-2 text-sm text-foreground placeholder:text-muted-foreground focus:outline-none focus:ring-2 focus:ring-primary/50"
+            className="w-full rounded-lg border border-border bg-secondary pl-10 pr-4 py-2 text-sm text-secondary-foreground placeholder:text-muted-foreground hover:border-muted-foreground/50 focus:outline-none focus:ring-2 focus:ring-ring/50 focus:border-ring transition-colors"
           />
         </div>
 
         <select
           value={statusFilter}
           onChange={(e) => { setStatusFilter(e.target.value); setPage(1); }}
-          className="rounded-lg border border-border bg-secondary px-3 py-2 text-sm text-foreground focus:outline-none focus:ring-2 focus:ring-primary/50"
+          className="rounded-lg border border-border bg-secondary px-3 py-2 text-sm text-secondary-foreground hover:border-muted-foreground/50 focus:outline-none focus:ring-2 focus:ring-ring/50 focus:border-ring transition-colors"
         >
           <option value="">{isZh ? "所有状态" : "All Status"}</option>
           <option value="draft">{isZh ? "草稿" : "Draft"}</option>
@@ -238,7 +238,7 @@ export function AdminTemplatesClient() {
         <select
           value={categoryFilter}
           onChange={(e) => { setCategoryFilter(e.target.value); setPage(1); }}
-          className="rounded-lg border border-border bg-secondary px-3 py-2 text-sm text-foreground focus:outline-none focus:ring-2 focus:ring-primary/50"
+          className="rounded-lg border border-border bg-secondary px-3 py-2 text-sm text-secondary-foreground hover:border-muted-foreground/50 focus:outline-none focus:ring-2 focus:ring-ring/50 focus:border-ring transition-colors"
         >
           <option value="">{isZh ? "所有分类" : "All Categories"}</option>
           {Object.entries(CATEGORY_LABELS).map(([k, v]) => (
@@ -249,7 +249,7 @@ export function AdminTemplatesClient() {
         <select
           value={dynastyFilter}
           onChange={(e) => { setDynastyFilter(e.target.value); setPage(1); }}
-          className="rounded-lg border border-border bg-secondary px-3 py-2 text-sm text-foreground focus:outline-none focus:ring-2 focus:ring-primary/50"
+          className="rounded-lg border border-border bg-secondary px-3 py-2 text-sm text-secondary-foreground hover:border-muted-foreground/50 focus:outline-none focus:ring-2 focus:ring-ring/50 focus:border-ring transition-colors"
         >
           <option value="">{isZh ? "所有朝代" : "All Dynasties"}</option>
           {Object.entries(DYNASTY_LABELS).map(([k, v]) => (
@@ -260,7 +260,7 @@ export function AdminTemplatesClient() {
         <select
           value={featuredFilter}
           onChange={(e) => { setFeaturedFilter(e.target.value); setPage(1); }}
-          className="rounded-lg border border-border bg-secondary px-3 py-2 text-sm text-foreground focus:outline-none focus:ring-2 focus:ring-primary/50"
+          className="rounded-lg border border-border bg-secondary px-3 py-2 text-sm text-secondary-foreground hover:border-muted-foreground/50 focus:outline-none focus:ring-2 focus:ring-ring/50 focus:border-ring transition-colors"
         >
           <option value="">{isZh ? "推荐状态" : "Featured"}</option>
           <option value="true">{isZh ? "已推荐" : "Featured"}</option>
@@ -270,7 +270,7 @@ export function AdminTemplatesClient() {
         <select
           value={sortBy}
           onChange={(e) => setSortBy(e.target.value)}
-          className="rounded-lg border border-border bg-secondary px-3 py-2 text-sm text-foreground focus:outline-none focus:ring-2 focus:ring-primary/50"
+          className="rounded-lg border border-border bg-secondary px-3 py-2 text-sm text-secondary-foreground hover:border-muted-foreground/50 focus:outline-none focus:ring-2 focus:ring-ring/50 focus:border-ring transition-colors"
         >
           <option value="sortOrder">{isZh ? "排序" : "Sort Order"}</option>
           <option value="updatedAt">{isZh ? "更新时间" : "Updated"}</option>
@@ -279,7 +279,7 @@ export function AdminTemplatesClient() {
 
         <button
           onClick={() => setSortOrder(sortOrder === "asc" ? "desc" : "asc")}
-          className="rounded-lg border border-border bg-secondary px-3 py-2 text-sm text-foreground hover:bg-hover transition-colors"
+          className="rounded-lg border border-border bg-secondary px-3 py-2 text-sm text-secondary-foreground hover:bg-hover focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring/50 transition-colors"
         >
           {sortOrder === "asc" ? "↑" : "↓"}
         </button>
@@ -304,7 +304,7 @@ export function AdminTemplatesClient() {
           <div className="overflow-x-auto rounded-lg border border-border">
             <table className="w-full text-sm">
               <thead>
-                <tr className="border-b border-border bg-secondary/50">
+                <tr className="border-b border-border bg-muted/50">
                   <th className="px-4 py-3 text-left font-medium text-muted-foreground">{isZh ? "封面" : "Cover"}</th>
                   <th className="px-4 py-3 text-left font-medium text-muted-foreground">{isZh ? "名称" : "Name"}</th>
                   <th className="px-4 py-3 text-left font-medium text-muted-foreground">Slug</th>
