@@ -1381,6 +1381,8 @@
       "free": "免费可用",
       "templateInfo": "模板信息",
       "dynasty": "朝代/风格",
+      "category": "分类",
+      "shots": "镜头数",
       "recommendedPhotoType": "推荐照片类型",
       "imageCount": "生成张数",
       "creditCost": "消耗积分",
@@ -1649,12 +1651,6 @@
       "generateButton": "生成写真",
       "generating": "生成中..."
     },
-    "styles": {
-      "redLantern": {
-        "name": "夜灯红黑汉服",
-        "description": "红墙巷灯、黑金汉服、电影感夜景"
-      }
-    },
     "sidebar": {
       "create": "创作",
       "generatePortrait": "生成写真",
@@ -1674,7 +1670,9 @@
       "generationFailed": "生成失败，请稍后重试。",
       "noResult": "生成成功但未返回图片。",
       "notAvailable": "该模板暂不可用，请选择其他模板。",
-      "insufficientCredits": "积分不足，无法生成写真。"
+      "insufficientCredits": "积分不足，无法生成写真。",
+      "templateNotAvailable": "该模板暂不可用或已下架。",
+      "noTemplatesAvailable": "暂无可用模板，请等待新模板上线。"
     },
     "previewSection": {
       "title": "预览结果",

@@ -1,3 +1,13 @@
+/**
+ * @deprecated Legacy portrait templates used by the old generation system.
+ * New templates are managed in data/templates/items/ and loaded via
+ * data/templates/server.ts. This file is kept only for compatibility
+ * with historical generation records that reference old templateKeys.
+ *
+ * DO NOT register new templates here.
+ * DO NOT use this in new code.
+ */
+
 export type PortraitGenerationMode = "trial" | "set";
 
 export type PortraitTemplate = {

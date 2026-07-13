@@ -6,51 +6,24 @@ import { createCreditCompensation } from "@/lib/credit-compensation";
 import { canUserAfford, deductCredits } from "@/lib/credits";
 import { db } from "@/lib/db";
 import { generationHistory } from "@/lib/db/schema";
-import {
-  isPortraitGenerationMode,
-  isPortraitTemplateKey,
-  portraitTemplates,
-} from "@/lib/portrait-templates";
 import { uploadToR2, generateImageKey } from "@/lib/r2";
 import { getActiveSessionUser } from "@/lib/auth/session";
 import { getErrorMessage } from "@/lib/error-utils";
 import { volcanoEngineConfig, getHeaders, validateConfig } from "@/lib/volcano-engine/config";
+import { getTemplateBySlug, getTemplateById } from "@/data/templates/server";
+import type { TemplateDefinition, TemplateShot } from "@/data/templates/schema";
 
-const templates = {
-  qipao: {
-    name: "新中式旗袍写真",
-    shots: [
-      "以上传照片中的人物为原型，在完全保留人物原生面部特征、五官特点的基础上生成一张；不沿用原图服饰/发型/背景，一切以当前为准：顶级新中式写真风格。背景为暖琥珀色的中式做旧宣纸纹理墙面，打有斑驳的竹影残痕（竹影避开面部，只落在背景上）。人物穿着极简的浅杏色新中式改良旗袍，无任何外搭，面料极其柔软贴身，最大化凸显极致柔美的东方曲线与肩颈线条。发型严格固定为慵懒的极简低盘发，耳侧与后颈刻意留出几缕细软的微卷碎发，发髻上斜插一支素面羊脂玉发簪。颈部大面积留白（无项链），双耳佩戴极简的和田白玉水滴耳坠。光影为极其温暖治愈的琥珀色调漫反射平光，像满月一样均匀洒在人物面部，画面蒙着一层淡淡的柔焦感，呈现出一种极致的松弛感与白月光般的柔和唯美。每一个镜头比例2:3。中景正面平视：人物微微歪头直视镜头，眼神充满楚楚动人的温柔。极其均匀的面光让肌肤呈现无瑕的奶油质感。裸色的新中式旗袍几乎与背景的琥珀色融为一体，大面积的肩颈留白让画面极其干净。视觉焦点落在耳畔微微摇曳的白玉水滴耳坠上，玉石在暖光下散发着温润的光泽。",
-      "以上传照片中的人物为原型，在完全保留人物原生面部特征、五官特点的基础上生成一张；不沿用原图服饰/发型/背景，一切以当前为准：顶级新中式写真风格。背景为暖琥珀色的中式做旧宣纸纹理墙面，打有斑驳的竹影残痕（竹影避开面部，只落在背景上）。人物穿着极简的浅杏色新中式改良旗袍，无任何外搭，面料极其柔软贴身，最大化凸显极致柔美的东方曲线与肩颈线条。发型严格固定为慵懒的极简低盘发，耳侧与后颈刻意留出几缕细软的微卷碎发，发髻上斜插一支素面羊脂玉发簪。颈部大面积留白（无项链），双耳佩戴极简的和田白玉水滴耳坠。光影为极其温暖治愈的琥珀色调漫反射平光，像满月一样均匀洒在人物面部，画面蒙着一层淡淡的柔焦感，呈现出一种极致的松弛感与白月光般的柔和唯美。每一个镜头比例2:3。中景单手轻抚颈侧：人物微微偏头，单手轻轻抬起，用指尖不经意地拨弄耳侧的碎发或轻抚颈部肌肤（大臂贴紧身体显瘦）。眼神自然下垂或迷离，这个微小的动作打破了静态的死板，展现出东方女性的慵懒与娇憨。",
-      "以上传照片中的人物为原型，在完全保留人物原生面部特征、五官特点的基础上生成一张；不沿用原图服饰/发型/背景，一切以当前为准：顶级新中式写真风格。背景为暖琥珀色的中式做旧宣纸纹理墙面，打有斑驳的竹影残痕（竹影避开面部，只落在背景上）。人物穿着极简的浅杏色新中式改良旗袍，无任何外搭，面料极其柔软贴身，最大化凸显极致柔美的东方曲线与肩颈线条。发型严格固定为慵懒的极简低盘发，耳侧与后颈刻意留出几缕细软的微卷碎发，发髻上斜插一支素面羊脂玉发簪。颈部大面积留白（无项链），双耳佩戴极简的和田白玉水滴耳坠。光影为极其温暖治愈的琥珀色调漫反射平光，像满月一样均匀洒在人物面部，画面蒙着一层淡淡的柔焦感，呈现出一种极致的松弛感与白月光般的柔和唯美。每一个镜头比例2:3。局部特写眼眸与耳坠：镜头极度拉近，画面被切割。左侧是人物温柔注视的单侧眼眸（眼神光清透如水），右侧是垂在脸颊旁的白玉水滴耳坠和几缕碎发。极其细腻的皮肤纹理与玉石的温润形成顶级质感对比。",
-      "以上传照片中的人物为原型，在完全保留人物原生面部特征、五官特点的基础上生成一张；不沿用原图服饰/发型/背景，一切以当前为准：顶级新中式写真风格。背景为暖琥珀色的中式做旧宣纸纹理墙面，打有斑驳的竹影残痕（竹影避开面部，只落在背景上）。人物穿着极简的浅杏色新中式改良旗袍，无任何外搭，面料极其柔软贴身，最大化凸显极致柔美的东方曲线与肩颈线条。发型严格固定为慵懒的极简低盘发，耳侧与后颈刻意留出几缕细软的微卷碎发，发髻上斜插一支素面羊脂玉发簪。颈部大面积留白（无项链），双耳佩戴极简的和田白玉水滴耳坠。光影为极其温暖治愈的琥珀色调漫反射平光，像满月一样均匀洒在人物面部，画面蒙着一层淡淡的柔焦感，呈现出一种极致的松弛感与白月光般的柔和唯美。每一个镜头比例2:3。特写侧后方耳廓与下颌：镜头位于人物侧后方极近处。完全看不到眼睛和鼻子，画面只包含耳朵、白玉水滴耳坠、下颌线的末端以及修长的脖颈。一束极其微弱的暖光只打在耳廓边缘和玉坠上，神秘而高级。",
-      "以上传照片中的人物为原型，在完全保留人物原生面部特征、五官特点的基础上生成一张；不沿用原图服饰/发型/背景，一切以当前为准：顶级新中式写真风格。背景为暖琥珀色的中式做旧宣纸纹理墙面，打有斑驳的竹影残痕（竹影避开面部，只落在背景上）。人物穿着极简的浅杏色新中式改良旗袍，无任何外搭，面料极其柔软贴身，最大化凸显极致柔美的东方曲线与肩颈线条。发型严格固定为慵懒的极简低盘发，耳侧与后颈刻意留出几缕细软的微卷碎发，发髻上斜插一支素面羊脂玉发簪。颈部大面积留白（无项链），双耳佩戴极简的和田白玉水滴耳坠。光影为极其温暖治愈的琥珀色调漫反射平光，像满月一样均匀洒在人物面部，画面蒙着一层淡淡的柔焦感，呈现出一种极致的松弛感与白月光般的柔和唯美。每一个镜头比例2:3。中近景半隐侧颜：人物的脸部有一大半隐没在柔和的暗影中，或者被一缕垂落的碎发、一道较暗的竹影巧妙遮挡。只露出一只低垂的眼睛和高挺的鼻梁。这种犹抱琵琶半遮面的拍法，彻底消除了普通人的镜头恐惧，留下惊鸿一瞥的美。"
-    ]
-  },
-  weijin: {
-    name: "魏晋宋制汉服写真",
-    shots: [
-      "生成3:4构图超写实古风电影感人像，以指定人物面部为原型，清瘦纤细，9头身比例，保留清新少女感，8K超高清，柔光，轻微胶片颗粒，皮肤纹理真实细腻。身形：清瘦9头身，体态修长轻盈，骨骼与肌肉线条自然流畅。妆发：清透伪素颜，粉调腮红+豆沙/橘红唇色，眼尾微扬；半束发+白色简约发簪，乌黑长发垂落，发丝散于脸颊，毛流感真实，慵懒随性。服饰：魏晋风宋制改良汉服，轻薄通透纱质面料，外层米白渐变浅青大袖衫，袖口垂坠褶皱自然，内层橙红+浅青撞色襦裙，橙红作披帛/腰饰，无繁复纹样，纱料透光质感与垂坠感真实还原。光影色调：柔和侧顺/侧顶漫/侧逆光，树叶斑驳光斑，奶油肌质感，皮肤高光与阴影过渡自然，保留毛孔与纹理细节；青绿色主调+浅白/米灰，低饱和偏冷，空山新雨后清冷治愈感。拍摄：全画幅微单+85mm f/1.4人像镜头，极致浅景深虚化背景，富士/柯达胶片色彩，高通透低对比，画面纯净低噪点，细节锐利，超写实质感。森林草坪躺卧。俯拍半身，躺于春日森林柔软草坪，右手握透明刺绣蒲扇，左手抬起，微笑，目光温柔看镜头，前景树叶遮挡，绿意盎然，中心构图+留白，草坪草叶纹理清晰。",
-      "生成3:4构图超写实古风电影感人像，以指定人物面部为原型，清瘦纤细，9头身比例，保留清新少女感，8K超高清，柔光，轻微胶片颗粒，皮肤纹理真实细腻。身形：清瘦9头身，体态修长轻盈，骨骼与肌肉线条自然流畅。妆发：清透伪素颜，粉调腮红+豆沙/橘红唇色，眼尾微扬；半束发+白色简约发簪，乌黑长发垂落，发丝散于脸颊，毛流感真实，慵懒随性。服饰：魏晋风宋制改良汉服，轻薄通透纱质面料，外层米白渐变浅青大袖衫，袖口垂坠褶皱自然，内层橙红+浅青撞色襦裙，橙红作披帛/腰饰，无繁复纹样，纱料透光质感与垂坠感真实还原。光影色调：柔和侧顺/侧顶漫/侧逆光，树叶斑驳光斑，奶油肌质感，皮肤高光与阴影过渡自然，保留毛孔与纹理细节；青绿色主调+浅白/米灰，低饱和偏冷，空山新雨后清冷治愈感。拍摄：全画幅微单+85mm f/1.4人像镜头，极致浅景深虚化背景，富士/柯达胶片色彩，高通透低对比，画面纯净低噪点，细节锐利，超写实质感。竹筏躺卧睁眼。高角度俯拍半身，优雅的侧卧在老旧竹筒竹筏，左手握透明刺绣团扇，右手搭筏边，前景柳枝虚化遮挡，水面波纹与倒影清晰，旁置半透明油纸伞，温柔直视镜头，竹筏磨损纹理真实。",
-      "生成3:4构图超写实古风电影感人像，以指定人物面部为原型，清瘦纤细，9头身比例，保留清新少女感，8K超高清，柔光，轻微胶片颗粒，皮肤纹理真实细腻。身形：清瘦9头身，体态修长轻盈，骨骼与肌肉线条自然流畅。妆发：清透伪素颜，粉调腮红+豆沙/橘红唇色，眼尾微扬；半束发+白色简约发簪，乌黑长发垂落，发丝散于脸颊，毛流感真实，慵懒随性。服饰：魏晋风宋制改良汉服，轻薄通透纱质面料，外层米白渐变浅青大袖衫，袖口垂坠褶皱自然，内层橙红+浅青撞色襦裙，橙红作披帛/腰饰，无繁复纹样，纱料透光质感与垂坠感真实还原。光影色调：柔和侧顺/侧顶漫/侧逆光，树叶斑驳光斑，奶油肌质感，皮肤高光与阴影过渡自然，保留毛孔与纹理细节；青绿色主调+浅白/米灰，低饱和偏冷，空山新雨后清冷治愈感。拍摄：全画幅微单+85mm f/1.4人像镜头，极致浅景深虚化背景，富士/柯达胶片色彩，高通透低对比，画面纯净低噪点，细节锐利，超写实质感。竹筏躺卧闭眼。高角度俯拍上半身，优雅的躺于老旧竹筒竹筏，双眼轻闭，右手搭腹，左手垂水面，纱摆入水，前景树叶遮挡，旁置青瓷茶具，水底鹅卵石与水流纹理可见，恬静酣眠感。",
-      "生成3:4构图超写实古风电影感人像，以指定人物面部为原型，清瘦纤细，9头身比例，保留清新少女感，8K超高清，柔光，轻微胶片颗粒，皮肤纹理真实细腻。身形：清瘦9头身，体态修长轻盈，骨骼与肌肉线条自然流畅。妆发：清透伪素颜，粉调腮红+豆沙/橘红唇色，眼尾微扬；半束发+白色简约发簪，乌黑长发垂落，发丝散于脸颊，毛流感真实，慵懒随性。服饰：魏晋风宋制改良汉服，轻薄通透纱质面料，外层米白渐变浅青大袖衫，袖口垂坠褶皱自然，内层橙红+浅青撞色襦裙，橙红作披帛/腰饰，无繁复纹样，纱料透光质感与垂坠感真实还原。光影色调：柔和侧顺/侧顶漫/侧逆光，树叶斑驳光斑，奶油肌质感，皮肤高光与阴影过渡自然，保留毛孔与纹理细节；青绿色主调+浅白/米灰，低饱和偏冷，空山新雨后清冷治愈感。拍摄：全画幅微单+85mm f/1.4人像镜头，极致浅景深虚化背景，富士/柯达胶片色彩，高通透低对比，画面纯净低噪点，细节锐利，超写实质感。水边站立持伞。上半身特写，侧身站立，左手握手绘质感油纸伞，长发披帛随风飘动，前景柳枝遮挡，午后侧逆光+轮廓光，背景溪水与树林层次分明，甜美的微笑，温柔看镜头，伞面纹理清晰。",
-      "生成3:4构图超写实古风电影感人像，以指定人物面部为原型，清瘦纤细，9头身比例，保留清新少女感，8K超高清，柔光，轻微胶片颗粒，皮肤纹理真实细腻。身形：清瘦9头身，体态修长轻盈，骨骼与肌肉线条自然流畅。妆发：清透伪素颜，粉调腮红+豆沙/橘红唇色，眼尾微扬；半束发+白色简约发簪，乌黑长发垂落，发丝散于脸颊，毛流感真实，慵懒随性。服饰：魏晋风宋制改良汉服，轻薄通透纱质面料，外层米白渐变浅青大袖衫，袖口垂坠褶皱自然，内层橙红+浅青撞色襦裙，橙红作披帛/腰饰，无繁复纹样，纱料透光质感与垂坠感真实还原。光影色调：柔和侧顺/侧顶漫/侧逆光，树叶斑驳光斑，奶油肌质感，皮肤高光与阴影过渡自然，保留毛孔与纹理细节；青绿色主调+浅白/米灰，低饱和偏冷，空山新雨后清冷治愈感。拍摄：全画幅微单+85mm f/1.4人像镜头，极致浅景深虚化背景，富士/柯达胶片色彩，高通透低对比，画面纯净低噪点，细节锐利，超写实质感。竹筏端坐持伞。端坐于竹筒竹筏，双手握米黄色传统竹骨油纸伞，赤足搭筏边，裙摆入水，背景林间溪水，阳光斑驳洒落，浅笑看镜头，闲适悠然，水下石块与波纹清晰。",
-      "生成3:4构图超写实古风电影感人像，以指定人物面部为原型，清瘦纤细，9头身比例，保留清新少女感，8K超高清，柔光，轻微胶片颗粒，皮肤纹理真实细腻。身形：清瘦9头身，体态修长轻盈，骨骼与肌肉线条自然流畅。妆发：清透伪素颜，粉调腮红+豆沙/橘红唇色，眼尾微扬；半束发+白色简约发簪，乌黑长发垂落，发丝散于脸颊，毛流感真实，慵懒随性。服饰：魏晋风宋制改良汉服，轻薄通透纱质面料，外层米白渐变浅青大袖衫，袖口垂坠褶皱自然，内层橙红+浅青撞色襦裙，橙红作披帛/腰饰，无繁复纹样，纱料透光质感与垂坠感真实还原。光影色调：柔和侧顺/侧顶漫/侧逆光，树叶斑驳光斑，奶油肌质感，皮肤高光与阴影过渡自然，保留毛孔与纹理细节；青绿色主调+浅白/米灰，低饱和偏冷，空山新雨后清冷治愈感。拍摄：全画幅微单+85mm f/1.4人像镜头，极致浅景深虚化背景，富士/柯达胶片色彩，高通透低对比，画面纯净低噪点，细节锐利，超写实质感。水面秋千端坐。平拍，端坐于水面木质秋千，赤足触水面漾开涟漪，裙摆垂水，背景平静湖水，眼神望侧方，放空疏离，秋千与水面形成几何感，涟漪环形扩散，木质秋千纹理与水波纹路真实。"
-    ]
-  },
-  tang: {
-    name: "唐风红墙写真",
-    shots: [
-      "严格保留输入照片中人物的真实身份、五官比例、脸型、肤色、眼睛颜色、气质和表情特征，不要换脸，不要改变人种，不要变成另一个人。只改变服装、发型、场景、灯光和古风写真风格。\n\n生成一张竖版 3:4 夜景古风汉服写真。整体风格为“夜灯鬼面汉服”：红黑金配色，现代唐风汉服灵感，红黑撞色齐胸襦裙，黑色透明轻纱外衫，红色、暗金、红棕渐变的层叠裙摆，红金相间的华丽步摇、珠钗、珍珠流苏发饰，鎏金彩绘妖异鬼面面具，中式红墙巷弄，飞檐翘角木质古建筑，红色灯笼，深蓝暮色天空，暖色逆光，强烈发丝轮廓光，浅景深，真实夜景人像摄影，复古电影胶片质感，神秘、冷艳、华丽、高级商业古风写真。\n\n人物是画面唯一主体，近景半身到七分身构图，人脸清晰，位于画面上三分之一。身体微微侧身，肩颈线条干净优雅，回眸看向镜头，神情清冷、安静、疏离但有美感。脸部保持清晰自然不过曝，保留真实皮肤纹理，妆容精致自然，红唇不过重。背景建筑、灯笼、灯串只作为氛围，柔和虚化，不要抢主体。\n\n面具作为“真容与假面”的视觉对照：人物真实的脸柔和、清晰、有高级美感；妖鬼面具华丽、神秘、有戏剧性。面具为小型鎏金彩绘妖异鬼面，红、金、黑配色，有尖角或牛角轮廓、夸张眉眼、金色雕花纹路、传统漆器和金属质感。面具靠近人物脸侧，与人物脸接近同一水平线，面具中心高度在嘴唇到下巴附近，位于脸颊旁或肩上方一点的位置，不要举到头顶，不要掉到胸口或腰部。面具与人脸形成左右呼应和视觉对比，但不能遮住五官，不能挡脸，不能比人脸更大。\n\n画面只允许一只手清晰可见。这只手自然托住面具侧下缘，手腕朝身体内侧自然微弯，手心朝向自己或朝向面具背面，用拇指和手指从面具背后与侧下缘轻轻托住面具。手、手腕和前臂必须连续自然，符合真实人体结构。不要展示另一只手，另一只手完全不进入画面。\n\n黑色轻纱、宽袖、发丝、流苏和裙摆由夜风自然吹动，形成轻盈飘逸的弧线，不要用手抓裙子，不要提裙摆。飘动主要出现在肩部外纱、袖缘、发丝、流苏和画面边缘，裙摆在下方自然展开，有真实布料层次和轻盈流动感，但不要遮住脸、手和身体主体。衣料有丝绸、薄纱、暗金织纹质感，纹理清晰。\n\n摄影语言：85mm 人像镜头效果，轻微低角度但不要夸张，人物清晰，背景虚化。光线从人物背后和侧后方勾勒发丝、肩部、发饰、面具边缘和飘动轻纱轮廓。画面要像真实相机拍摄的高级古风写真，不要插画感，不要塑料皮肤，不要过度AI滤镜。"
-    ]
-  }
-} as const;
+// ---------------------------------------------------------------------------
+// Configuration
+// ---------------------------------------------------------------------------
 
-const defaultNegativePrompt = "低质量，模糊，噪点，像素化，过度锐化，脸部变形，五官错位，换脸，不像本人，身份改变，人种改变，塑料脸，蜡像皮肤，过度磨皮，动漫脸，卡通脸，娃娃脸，AI感，CG感，游戏感，插画感，假皮肤，假布料，塑料布料，畸形身体，坏手，坏手指，多手指，少手指，融合手指，多余手臂，多余肢体，断肢，第二只手，另一只手，画面下方出现手，画面下方出现断手，腰部下方出现断手，胳膊断开，手臂没有连接身体，手臂凭空出现，肩膀和手臂不连接，肘部缺失，前臂错位，手腕外翻，手腕反折，手腕扭曲，折断的手腕，僵硬手腕，手抓裙子，手提裙摆，掂裙子，拽裙子，不自然手势，表情呆滞，游客照，证件照，站姿僵硬，现代衣服，现代首饰，西式礼服，哥特裙，和服，浴衣，错误汉服，服装凌乱，颜色跑偏，面具遮脸，面具挡住五官，面具比脸大，面具举到头顶，面具在头顶上方，面具在胸口，面具在腰部，面具位置太低，巨大面具，面具成为唯一主体，西式舞会眼罩，狐狸面具，可爱卡通面具，道具变形，袖子遮脸，裙摆遮脸，衣料遮住五官，背景过乱，灯笼压住人物，建筑抢主体，过曝，欠曝，脸部阴影太重，文字，水印，logo，抖音号，豆包AI生成，签名，数字";
-// Keep the legacy inline templates reachable for prompt reference while the live
-// product flow reads from lib/portrait-templates.ts.
-void templates;
-void defaultNegativePrompt;
+const SET_CREDITS = 4;
+const TRIAL_CREDITS = 1;
+const MAX_IMAGE_SIZE = 10 * 1024 * 1024; // 10 MB
+
+// ---------------------------------------------------------------------------
+// Helpers
+// ---------------------------------------------------------------------------
 
 async function downloadImage(url: string): Promise<Buffer> {
   const response = await fetch(url);
@@ -65,6 +38,36 @@ function getImageGenerationUrl() {
   return apiUrl.endsWith("/images/generations")
     ? apiUrl
     : `${apiUrl}/images/generations`;
+}
+
+function ensureGenerateConfig() {
+  validateConfig();
+  if (!volcanoEngineConfig.apiUrl) {
+    throw new Error("VOLCANO_ENGINE_API_URL is not configured");
+  }
+}
+
+function buildGenerationPrompt(
+  template: TemplateDefinition,
+  shotId?: string | null
+): { prompt: string; negativePrompt: string } {
+  let shot: TemplateShot | undefined;
+  if (shotId) {
+    shot = template.shots?.find((s) => s.id === shotId);
+  }
+  // Default to first shot if not specified or not found
+  if (!shot) {
+    shot = template.shots?.[0];
+  }
+
+  const basePrompt = template.prompt.base;
+  const shotPrompt = shot?.prompt ?? "";
+  const prompt = shotPrompt ? `${basePrompt}\n\n${shotPrompt}` : basePrompt;
+
+  return {
+    prompt,
+    negativePrompt: template.prompt.negative ?? "",
+  };
 }
 
 async function generatePortraitImages({
@@ -122,17 +125,14 @@ async function generatePortraitImages({
 
   return (
     (data as { data?: Array<{ url?: string }> }).data
-      ?.map(item => item.url)
+      ?.map((item) => item.url)
       .filter((url): url is string => Boolean(url)) || []
   );
 }
 
-function ensureGenerateConfig() {
-  validateConfig();
-  if (!volcanoEngineConfig.apiUrl) {
-    throw new Error("VOLCANO_ENGINE_API_URL is not configured");
-  }
-}
+// ---------------------------------------------------------------------------
+// POST /api/generate
+// ---------------------------------------------------------------------------
 
 export async function POST(req: NextRequest) {
   try {
@@ -145,22 +145,39 @@ export async function POST(req: NextRequest) {
 
     const formData = await req.formData();
     const file = formData.get("image");
-    const templateKey = formData.get("template");
+    const templateSlug = formData.get("templateSlug");
+    const templateId = formData.get("templateId");
+    const shotId = formData.get("shotId");
     const modeEntry = formData.get("mode");
     const trialAlreadyUsed = formData.get("trialAlreadyUsed") === "true";
-    const mode = isPortraitGenerationMode(modeEntry) ? modeEntry : "set";
+    const mode = modeEntry === "trial" ? "trial" : "set";
 
+    // Validate file
     if (!(file instanceof File)) {
       return NextResponse.json({ error: "Image is required" }, { status: 400 });
     }
     if (!file.type.startsWith("image/")) {
       return NextResponse.json({ error: "File must be an image" }, { status: 400 });
     }
-    if (file.size > 10 * 1024 * 1024) {
+    if (file.size > MAX_IMAGE_SIZE) {
       return NextResponse.json({ error: "Image must be smaller than 10MB" }, { status: 400 });
     }
-    if (!isPortraitTemplateKey(templateKey)) {
-      return NextResponse.json({ error: "Invalid template" }, { status: 400 });
+
+    // Resolve template
+    const slug = typeof templateSlug === "string" ? templateSlug : null;
+    const id = typeof templateId === "string" ? templateId : null;
+    const template = slug
+      ? getTemplateBySlug(slug)
+      : id
+        ? getTemplateById(id)
+        : null;
+
+    if (!template) {
+      return NextResponse.json({ error: "Template not found" }, { status: 400 });
+    }
+
+    if (template.status !== "published") {
+      return NextResponse.json({ error: "Template is not available" }, { status: 400 });
     }
 
     console.log("开始处理图片，文件大小:", file.size);
@@ -172,12 +189,14 @@ export async function POST(req: NextRequest) {
     const mimeType = file.type;
 
     const userId = access.user.id;
-    const template = portraitTemplates[templateKey];
-    const generationRequest = mode === "trial" ? template.trialRequest : template.setRequest;
-    const creditsNeeded =
-      mode === "trial"
-        ? template.trialCredits
-        : Math.max(1, template.setCredits - (trialAlreadyUsed ? template.trialCredits : 0));
+
+    // Build prompt from template
+    const resolvedShotId = typeof shotId === "string" ? shotId : null;
+    const { prompt, negativePrompt } = buildGenerationPrompt(template, resolvedShotId);
+
+    // Determine credits needed
+    const maxImages = template.generation?.imageCount ?? 6;
+    const creditsNeeded = mode === "trial" ? TRIAL_CREDITS : SET_CREDITS;
 
     const hasCredits = await canUserAfford(userId, creditsNeeded);
     if (!hasCredits) {
@@ -192,18 +211,27 @@ export async function POST(req: NextRequest) {
     }
 
     const historyId = randomUUID();
+
+    const activeShot = template.shots?.find((s) => s.id === shotId) ?? template.shots?.[0] ?? null;
+
     await db.insert(generationHistory).values({
       id: historyId,
       userId,
       type: "image",
-      prompt: generationRequest.prompt,
+      prompt,
       status: "processing",
       creditsUsed: creditsNeeded,
       metadata: JSON.stringify({
-        templateKey,
+        templateId: template.id,
+        templateSlug: template.slug,
+        templateVersion: template.version,
         templateName: template.name,
+        shotId: activeShot?.id ?? null,
+        shotOrder: activeShot?.order ?? null,
+        model: template.generation?.model ?? "seedream-4.5",
+        aspectRatio: template.generation?.aspectRatio ?? "3:4",
         mode,
-        maxImages: generationRequest.maxImages,
+        maxImages,
         trialAlreadyUsed,
         creditsNeeded,
       }),
@@ -235,11 +263,11 @@ export async function POST(req: NextRequest) {
     let validUrls: string[] = [];
     try {
       const generatedUrls = await generatePortraitImages({
-        prompt: generationRequest.prompt,
-        negativePrompt: generationRequest.negativePrompt,
+        prompt,
+        negativePrompt,
         imageBase64,
         mimeType,
-        maxImages: generationRequest.maxImages,
+        maxImages,
       });
 
       const imageUrls = await Promise.all(
@@ -267,10 +295,16 @@ export async function POST(req: NextRequest) {
           resultUrl: validUrls[0],
           updatedAt: new Date(),
           metadata: JSON.stringify({
-            templateKey,
+            templateId: template.id,
+            templateSlug: template.slug,
+            templateVersion: template.version,
             templateName: template.name,
+            shotId: activeShot?.id ?? null,
+            shotOrder: activeShot?.order ?? null,
+            model: template.generation?.model ?? "seedream-4.5",
+            aspectRatio: template.generation?.aspectRatio ?? "3:4",
             mode,
-            maxImages: generationRequest.maxImages,
+            maxImages,
             trialAlreadyUsed,
             creditsNeeded,
             imageUrls: validUrls,
@@ -297,9 +331,10 @@ export async function POST(req: NextRequest) {
       id: historyId,
       imageUrls: validUrls,
       templateName: template.name,
-      templateKey,
+      templateSlug: template.slug,
+      templateId: template.id,
       mode,
-      totalShots: generationRequest.maxImages,
+      totalShots: maxImages,
       creditsUsed: creditsNeeded,
       remainingCredits: deductResult.remainingCredits,
     });

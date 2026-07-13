@@ -35,7 +35,9 @@
     "db:studio": "drizzle-kit studio",
     "admin:setup": "tsx scripts/setup-admin.ts",
     "generate:blog-manifest": "node scripts/generate-blog-manifest.mjs",
-    "sync:fumadocs-style": "node scripts/sync-fumadocs-style.mjs"
+    "sync:fumadocs-style": "node scripts/sync-fumadocs-style.mjs",
+    "templates:registry": "node scripts/generate-template-registry.mjs",
+    "templates:validate": "node scripts/validate-templates.mjs"
   },
   "dependencies": {
     "@aws-sdk/client-s3": "^3.893.0",

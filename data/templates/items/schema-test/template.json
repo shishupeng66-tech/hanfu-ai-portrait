@@ -1,0 +1,50 @@
+{
+  "id": "schema-test",
+  "slug": "schema-test",
+  "status": "draft",
+  "version": 1,
+  "name": {
+    "zh": "仅用于模板结构校验，不用于正式生成",
+    "en": "Schema validation only — NOT for production generation"
+  },
+  "description": {
+    "zh": "此模板仅用于验证模板 JSON 结构、注册表和校验流程，不参与正式生成。",
+    "en": "This template exists only to validate the template JSON schema, registry, and validation pipeline. It is not used for production generation."
+  },
+  "category": "test",
+  "dynasty": "test",
+  "styles": ["test"],
+  "tags": ["test", "schema-validation"],
+  "coverImage": "",
+  "previewImages": [],
+  "referenceImages": [],
+  "prompt": {
+    "base": "TEST PROMPT — DO NOT USE IN PRODUCTION",
+    "negative": "TEST NEGATIVE PROMPT"
+  },
+  "shots": [
+    {
+      "id": "shot-01",
+      "order": 1,
+      "title": {
+        "zh": "测试镜头一",
+        "en": "Test Shot 1"
+      },
+      "prompt": "TEST SHOT PROMPT — DO NOT USE IN PRODUCTION",
+      "pose": "",
+      "camera": "",
+      "composition": "",
+      "expression": "",
+      "referenceImage": ""
+    }
+  ],
+  "generation": {
+    "model": "seedream-4.5",
+    "aspectRatio": "3:4",
+    "width": 1536,
+    "height": 2048,
+    "imageCount": 1
+  },
+  "featured": false,
+  "sortOrder": 0
+}

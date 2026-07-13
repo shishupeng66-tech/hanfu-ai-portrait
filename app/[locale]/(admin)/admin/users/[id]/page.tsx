@@ -73,10 +73,18 @@ const creditReasonLabels: Record<string, string> = {
 function parseGenerationMetadata(metadata: string | null) {
   if (!metadata) return { templateName: null, templateKey: null };
   try {
-    const parsed = JSON.parse(metadata) as { templateName?: string; templateKey?: string };
+    const parsed = JSON.parse(metadata) as {
+      templateName?: string | { zh?: string; en?: string };
+      templateKey?: string;
+      templateSlug?: string;
+    };
+    const name =
+      typeof parsed.templateName === "string"
+        ? parsed.templateName
+        : parsed.templateName?.zh || parsed.templateName?.en || null;
     return {
-      templateName: parsed.templateName ?? null,
-      templateKey: parsed.templateKey ?? null,
+      templateName: name,
+      templateKey: parsed.templateKey ?? parsed.templateSlug ?? null,
     };
   } catch {
     return { templateName: null, templateKey: null };

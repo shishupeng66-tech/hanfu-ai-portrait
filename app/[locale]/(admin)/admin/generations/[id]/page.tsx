@@ -16,8 +16,10 @@ type GenerationDetailPageProps = {
 };
 
 type GenerationMetadata = {
-  templateName?: string;
+  templateName?: string | { zh?: string; en?: string };
   templateKey?: string;
+  templateSlug?: string;
+  templateId?: string;
   model?: string;
   imageUrls?: string[];
   imageUrl?: string;
@@ -171,7 +173,7 @@ export default async function AdminGenerationDetailPage({ params }: GenerationDe
             </Link>
           }
         />
-        <Field label="模板" value={metadata.templateName || metadata.templateKey || "-"} />
+        <Field label="模板" value={typeof metadata.templateName === "string" ? metadata.templateName : metadata.templateName?.zh || metadata.templateName?.en || metadata.templateKey || metadata.templateSlug || "-"} />
         <Field label="模型" value={metadata.model || "Volcano Engine"} />
         <Field label="类型" value={typeLabels[record.type] || record.type} />
         <Field label="消耗积分" value={record.creditsUsed.toLocaleString()} />

@@ -74,12 +74,6 @@
       "generateButton": "Generate Portrait",
       "generating": "Generating..."
     },
-    "styles": {
-      "redLantern": {
-        "name": "Red Lantern Hanfu",
-        "description": "Red wall alleys, twilight lanterns"
-      }
-    },
     "sidebar": {
       "create": "Create",
       "generatePortrait": "Generate Portrait",
@@ -99,7 +93,9 @@
       "generationFailed": "Generation failed. Please try again later.",
       "noResult": "Generation succeeded but no images returned.",
       "notAvailable": "This template is temporarily unavailable. Please choose another one.",
-      "insufficientCredits": "Insufficient credits to generate portrait."
+      "insufficientCredits": "Insufficient credits to generate portrait.",
+      "templateNotAvailable": "This template is not available or has been removed.",
+      "noTemplatesAvailable": "No templates available. Please wait for new templates."
     },
     "previewSection": {
       "title": "Preview Result",
@@ -1064,6 +1060,8 @@
       "free": "Free",
       "templateInfo": "Template Info",
       "dynasty": "Dynasty / Style",
+      "category": "Category",
+      "shots": "Shots",
       "recommendedPhotoType": "Recommended Photo Type",
       "imageCount": "Image Count",
       "creditCost": "Credit Cost",

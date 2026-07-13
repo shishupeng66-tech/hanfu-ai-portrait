@@ -1,5 +1,9 @@
 import { z } from "zod";
 
+// =============================================================================
+// Sub-schemas
+// =============================================================================
+
 export const TemplateShotSchema = z.object({
   id: z.string().min(1),
   order: z.number().int().min(1),
@@ -28,7 +32,11 @@ export const TemplateGenerationSchema = z.object({
   imageCount: z.number().int().positive().default(6),
 });
 
-export const TemplateSchema = z.object({
+// =============================================================================
+// Full template definition (server-side only — contains prompt secrets)
+// =============================================================================
+
+export const TemplateDefinitionSchema = z.object({
   id: z.string().min(1),
   slug: z.string().min(1),
   status: z.enum(["draft", "published", "archived"]),
@@ -55,29 +63,79 @@ export const TemplateSchema = z.object({
   sortOrder: z.number().int().optional().default(0),
 });
 
-export type Template = z.infer<typeof TemplateSchema>;
+export type TemplateDefinition = z.infer<typeof TemplateDefinitionSchema>;
 export type TemplateShot = z.infer<typeof TemplateShotSchema>;
 export type TemplatePrompt = z.infer<typeof TemplatePromptSchema>;
 export type TemplateGeneration = z.infer<typeof TemplateGenerationSchema>;
 
-/**
- * Validate a template object. Returns the parsed template or throws.
- */
-export function validateTemplate(data: unknown): Template {
-  return TemplateSchema.parse(data);
-}
+// =============================================================================
+// Public template (safe for client-side — NO prompt or generation config)
+// =============================================================================
+
+export type PublicTemplateShot = {
+  id: string;
+  order: number;
+  title: { zh: string; en: string };
+};
+
+export type PublicTemplate = {
+  id: string;
+  slug: string;
+  status: "draft" | "published" | "archived";
+  version: number;
+  name: { zh: string; en: string };
+  description: { zh: string; en: string };
+  category: string;
+  dynasty: string;
+  styles: string[];
+  tags: string[];
+  coverImage: string;
+  previewImages: string[];
+  shots: PublicTemplateShot[];
+  featured: boolean;
+  sortOrder: number;
+};
 
 /**
- * Validate a template object safely. Returns { success, data } or { success, error }.
+ * Strip private fields from a template definition for client-side use.
  */
+export function toPublicTemplate(template: TemplateDefinition): PublicTemplate {
+  return {
+    id: template.id,
+    slug: template.slug,
+    status: template.status,
+    version: template.version,
+    name: template.name,
+    description: template.description,
+    category: template.category ?? "hanfu",
+    dynasty: template.dynasty ?? "",
+    styles: template.styles ?? [],
+    tags: template.tags ?? [],
+    coverImage: template.coverImage ?? "",
+    previewImages: template.previewImages ?? [],
+    shots: (template.shots ?? []).map((s) => ({
+      id: s.id,
+      order: s.order,
+      title: s.title,
+    })),
+    featured: template.featured ?? false,
+    sortOrder: template.sortOrder ?? 0,
+  };
+}
+
+// =============================================================================
+// Validation helpers
+// =============================================================================
+
+export function validateTemplate(data: unknown): TemplateDefinition {
+  return TemplateDefinitionSchema.parse(data);
+}
+
 export function safeValidateTemplate(data: unknown) {
-  return TemplateSchema.safeParse(data);
+  return TemplateDefinitionSchema.safeParse(data);
 }
 
-/**
- * Check if a published template has all required fields.
- */
-export function isPublishedTemplateComplete(template: Template): boolean {
+export function isPublishedTemplateComplete(template: TemplateDefinition): boolean {
   return (
     template.name.zh.length > 0 &&
     template.name.en.length > 0 &&
@@ -86,9 +144,6 @@ export function isPublishedTemplateComplete(template: Template): boolean {
   );
 }
 
-/**
- * Validate image paths start with /templates/.
- */
 export function isValidTemplateImagePath(path: string): boolean {
   return path.startsWith("/templates/");
 }
