@@ -300,19 +300,40 @@ export function AdminTemplateForm({ templateId }: { templateId?: string }) {
       });
 
       if (!res.ok) {
-        const err = await res.json();
-        throw new Error(err.error || (err.details ? JSON.stringify(err.details) : "Save failed"));
+        const err = await res.json().catch(() => ({}));
+        const details = Array.isArray(err.details) ? err.details : [];
+        const msg = err.error || "Save failed";
+        if (details.length > 0) {
+          setError([msg, ...details.map((d: string) => `- ${d}`)].join("\n"));
+        } else {
+          setError(msg);
+        }
+        setSaving(false);
+        return;
       }
 
       const saved = await res.json();
       setHasUnsaved(false);
 
       if (targetStatus === "published") {
-        // Publish the template
-        await fetch(`/api/admin/templates/${saved.id}/publish`, { method: "POST" });
+        const publishRes = await fetch(`/api/admin/templates/${saved.id}/publish`, { method: "POST" });
+        const publishData = await publishRes.json().catch(() => ({}));
+
+        if (!publishRes.ok) {
+          const details = Array.isArray(publishData.details) ? publishData.details : [];
+          const msg = publishData.error || "Publish failed";
+          if (details.length > 0) {
+            setError([msg, ...details.map((d: string) => `- ${d}`)].join("\n"));
+          } else {
+            setError(msg);
+          }
+          setSaving(false);
+          return;
+        }
       }
 
-      router.push(`/${locale}/admin/templates`);
+      router.replace(`/${locale}/admin/templates`);
+      router.refresh();
     } catch (err) {
       setError(err instanceof Error ? err.message : "Save failed");
     } finally {
@@ -426,7 +447,7 @@ export function AdminTemplateForm({ templateId }: { templateId?: string }) {
       </div>
 
       {error && (
-        <div className="rounded-lg border border-red-500/20 bg-red-500/10 p-4 text-sm text-red-400">
+        <div className="rounded-lg border border-red-500/20 bg-red-500/10 p-4 text-sm text-red-400 whitespace-pre-wrap">
           {error}
         </div>
       )}

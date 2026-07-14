@@ -19,6 +19,7 @@ function HeartIcon({ filled }: { filled: boolean }) {
 
 export default function TemplatesClientPage({ templates }: { templates: PublicTemplate[] }) {
   const t = useTranslations("templates.list");
+  const tTemplates = useTranslations("templates");
   const locale = useLocale();
   const router = useRouter();
 
@@ -178,10 +179,10 @@ export default function TemplatesClientPage({ templates }: { templates: PublicTe
               </svg>
             </div>
             <h3 className="text-xl font-semibold mb-2" style={{ color: "rgba(255, 247, 236, 0.92)" }}>
-              {t("emptyLibrary.title")}
+              {tTemplates("emptyLibrary.title")}
             </h3>
             <p className="text-sm text-center max-w-md" style={{ color: "rgba(255, 247, 236, 0.45)" }}>
-              {t("emptyLibrary.subtitle")}
+              {tTemplates("emptyLibrary.subtitle")}
             </p>
           </div>
         )}

@@ -93,6 +93,7 @@ const DYNASTY_LABELS: Record<string, string> = {
 export function AdminTemplatesClient() {
   const router = useRouter();
   const locale = useLocale();
+  const isZh = locale === "zh";
 
   const [data, setData] = useState<ListResult | null>(null);
   const [loading, setLoading] = useState(true);
@@ -117,7 +118,7 @@ export function AdminTemplatesClient() {
       if (statusFilter) params.set("status", statusFilter);
       if (categoryFilter) params.set("category", categoryFilter);
       if (dynastyFilter) params.set("dynasty", dynastyFilter);
-      if (featuredFilter) params.set("featured", featuredFilter);
+      if (featuredFilter === "true" || featuredFilter === "false") params.set("featured", featuredFilter);
       params.set("page", String(page));
       params.set("pageSize", "20");
       params.set("sortBy", sortBy);
@@ -126,10 +127,12 @@ export function AdminTemplatesClient() {
       const res = await fetch(`/api/admin/templates?${params.toString()}`);
       if (!res.ok) {
         if (res.status === 401 || res.status === 403) {
-          router.push(`/${locale}/dashboard`);
+          setError(isZh ? "管理员登录已失效，即将跳转..." : "Admin session expired, redirecting...");
+          setTimeout(() => router.push(`/${locale}/dashboard`), 1500);
           return;
         }
-        throw new Error("Failed to fetch templates");
+        const errData = await res.json().catch(() => ({}));
+        throw new Error(errData.error || `Request failed (${res.status})`);
       }
       const json = await res.json();
       setData(json);
@@ -138,7 +141,7 @@ export function AdminTemplatesClient() {
     } finally {
       setLoading(false);
     }
-  }, [search, statusFilter, categoryFilter, dynastyFilter, featuredFilter, page, sortBy, sortOrder, locale, router]);
+  }, [search, statusFilter, categoryFilter, dynastyFilter, featuredFilter, page, sortBy, sortOrder, locale, router, isZh]);
 
   useEffect(() => {
     fetchTemplates();
@@ -187,8 +190,6 @@ export function AdminTemplatesClient() {
       alert("Operation failed");
     }
   };
-
-  const isZh = locale === "zh";
 
   return (
     <div className="space-y-6">
@@ -287,8 +288,14 @@ export function AdminTemplatesClient() {
 
       {/* Error */}
       {error && (
-        <div className="rounded-lg border border-red-500/20 bg-red-500/10 p-4 text-sm text-red-400">
-          {error}
+        <div className="rounded-lg border border-red-500/20 bg-red-500/10 p-4">
+          <p className="text-sm text-red-400">{error}</p>
+          <button
+            onClick={fetchTemplates}
+            className="mt-2 rounded-lg border border-red-500/30 px-3 py-1 text-xs text-red-400 hover:bg-red-500/10 transition-colors"
+          >
+            {isZh ? "重新加载" : "Retry"}
+          </button>
         </div>
       )}
 
