@@ -102,6 +102,7 @@ async function generatePortraitImages({
       size: "3072x4096",
       stream: false,
       watermark: false,
+      // TODO: 复核 denoising_strength 等参数在 prompt_generation 模式下的必要性
       denoising_strength: 0.35,
     }),
   });
@@ -116,6 +117,61 @@ async function generatePortraitImages({
 
   console.log("ARK image status:", response.status);
   console.log("ARK image response:", JSON.stringify(data).substring(0, 500));
+
+  if (!response.ok) {
+    throw new Error(`ARK API error: ${JSON.stringify(data)}`);
+  }
+
+  return (
+    (data as { data?: Array<{ url?: string }> }).data
+      ?.map((item) => item.url)
+      .filter((url): url is string => Boolean(url)) || []
+  );
+}
+
+async function generateIdentityTransferImages({
+  prompt,
+  userImageBase64,
+  userImageMimeType,
+  templateImageUrl,
+  model,
+}: {
+  prompt: string;
+  userImageBase64: string;
+  userImageMimeType: string;
+  templateImageUrl: string;
+  model: string;
+}): Promise<string[]> {
+  const response = await fetch(getImageGenerationUrl(), {
+    method: "POST",
+    headers: getHeaders(),
+    body: JSON.stringify({
+      model,
+      prompt,
+      image: [
+        `data:${userImageMimeType};base64,${userImageBase64}`,
+        templateImageUrl,
+      ],
+      size: "3072x4096",
+      response_format: "url",
+      stream: false,
+      watermark: false,
+    }),
+  });
+
+  const responseText = await response.text();
+  let data: unknown = responseText;
+  try {
+    data = JSON.parse(responseText);
+  } catch {
+    // Keep the raw body for providers that return plain-text errors.
+  }
+
+  console.log("ARK identity_transfer status:", response.status);
+  console.log(
+    "ARK identity_transfer response:",
+    JSON.stringify(data).substring(0, 500),
+  );
 
   if (!response.ok) {
     throw new Error(`ARK API error: ${JSON.stringify(data)}`);
@@ -178,23 +234,80 @@ export async function POST(req: NextRequest) {
       return NextResponse.json({ error: "Template is not available" }, { status: 400 });
     }
 
-    console.log("开始处理图片，文件大小:", file.size);
-    console.log("VOLCANO_ENGINE_API_URL:", volcanoEngineConfig.apiUrl);
-    console.log("VOLCANO_IMAGE_GENERATION_URL:", getImageGenerationUrl());
-    console.log("VOLCANO_ENGINE_API_KEY exists:", !!volcanoEngineConfig.apiKey);
     const arrayBuffer = await file.arrayBuffer();
     const imageBase64 = Buffer.from(arrayBuffer).toString("base64");
     const mimeType = file.type;
 
     const userId = access.user.id;
 
-    // Build prompt from template
-    const resolvedShotId = typeof shotId === "string" ? shotId : null;
-    const { prompt, negativePrompt } = buildGenerationPrompt(template, resolvedShotId);
-
-    // Determine credits needed from database
+    // Parse generation config and determine workflow
     const genConfig = JSON.parse(template.generationConfig ?? "{}");
-    const maxImages = genConfig.imageCount ?? 6;
+    const workflow: string = genConfig.workflow ?? "prompt_generation";
+
+    // Resolve model: generationConfig.model takes priority over global env
+    const model =
+      typeof genConfig.model === "string" && genConfig.model.trim()
+        ? genConfig.model.trim()
+        : volcanoEngineConfig.imageModel;
+
+    const resolvedShotId = typeof shotId === "string" ? shotId : null;
+    const activeShot = template.shots?.find((s) => s.shotKey === resolvedShotId) ?? template.shots?.[0] ?? null;
+
+    let prompt: string;
+    let negativePrompt: string;
+    let templateImageUrl: string;
+    let maxImages: number;
+
+    if (workflow === "identity_transfer") {
+      // identity_transfer: fixed 1 image, template image required
+      maxImages = 1;
+
+      templateImageUrl =
+        activeShot?.referenceImage?.trim() ||
+        template.referenceImages?.[0]?.trim() ||
+        "";
+
+      if (!templateImageUrl) {
+        return NextResponse.json(
+          {
+            error:
+              "Template is missing the identity transfer reference image. " +
+              "Please upload a template image via referenceImages[0] or shot.referenceImage.",
+          },
+          { status: 400 },
+        );
+      }
+
+      // Build prompt: basePrompt + shot.prompt (if present)
+      prompt = [template.basePrompt, activeShot?.prompt]
+        .filter((value): value is string => typeof value === "string" && value.trim().length > 0)
+        .join("\n\n");
+
+      negativePrompt = "";
+
+      // Secure log — no user image base64
+      console.log("identity_transfer request:", {
+        workflow,
+        model,
+        size: "3072x4096",
+        referenceImageCount: 2,
+        templateImageUrl,
+        promptLength: prompt.length,
+      });
+    } else {
+      // prompt_generation: keep existing behavior
+      const built = buildGenerationPrompt(template, resolvedShotId);
+      prompt = built.prompt;
+      negativePrompt = built.negativePrompt;
+      maxImages = genConfig.imageCount ?? 6;
+      templateImageUrl = "";
+
+      console.log("开始处理图片，文件大小:", file.size);
+      console.log("VOLCANO_ENGINE_API_URL:", volcanoEngineConfig.apiUrl);
+      console.log("VOLCANO_IMAGE_GENERATION_URL:", getImageGenerationUrl());
+      console.log("VOLCANO_ENGINE_API_KEY exists:", !!volcanoEngineConfig.apiKey);
+    }
+
     const creditsNeeded = template.creditsPerGeneration ?? 4;
 
     const hasCredits = await canUserAfford(userId, creditsNeeded);
@@ -211,8 +324,6 @@ export async function POST(req: NextRequest) {
 
     const historyId = randomUUID();
 
-    const activeShot = template.shots?.find((s) => s.shotKey === resolvedShotId) ?? template.shots?.[0] ?? null;
-
     await db.insert(generationHistory).values({
       id: historyId,
       userId,
@@ -221,14 +332,18 @@ export async function POST(req: NextRequest) {
       status: "processing",
       creditsUsed: creditsNeeded,
       metadata: JSON.stringify({
+        workflow,
         templateId: template.id,
         templateSlug: template.slug,
         templateVersion: template.version,
         templateName: { zh: template.nameZh, en: template.nameEn },
         shotId: activeShot?.shotKey ?? null,
         shotOrder: activeShot?.sortOrder ?? null,
-        model: genConfig.model ?? "seedream-4.5",
+        templateImageUrl: workflow === "identity_transfer" ? templateImageUrl : undefined,
+        model,
+        size: workflow === "identity_transfer" ? "3072x4096" : undefined,
         aspectRatio: genConfig.aspectRatio ?? "3:4",
+        promptVersion: template.version,
         mode,
         maxImages,
         trialAlreadyUsed,
@@ -261,13 +376,25 @@ export async function POST(req: NextRequest) {
 
     let validUrls: string[] = [];
     try {
-      const generatedUrls = await generatePortraitImages({
-        prompt,
-        negativePrompt,
-        imageBase64,
-        mimeType,
-        maxImages,
-      });
+      let generatedUrls: string[];
+
+      if (workflow === "identity_transfer") {
+        generatedUrls = await generateIdentityTransferImages({
+          prompt,
+          userImageBase64: imageBase64,
+          userImageMimeType: mimeType,
+          templateImageUrl,
+          model,
+        });
+      } else {
+        generatedUrls = await generatePortraitImages({
+          prompt,
+          negativePrompt,
+          imageBase64,
+          mimeType,
+          maxImages,
+        });
+      }
 
       const imageUrls = await Promise.all(
         generatedUrls.map(async (url, index) => {
@@ -294,14 +421,18 @@ export async function POST(req: NextRequest) {
           resultUrl: validUrls[0],
           updatedAt: new Date(),
           metadata: JSON.stringify({
+            workflow,
             templateId: template.id,
             templateSlug: template.slug,
             templateVersion: template.version,
             templateName: { zh: template.nameZh, en: template.nameEn },
             shotId: activeShot?.shotKey ?? null,
             shotOrder: activeShot?.sortOrder ?? null,
-            model: genConfig.model ?? "seedream-4.5",
+            templateImageUrl: workflow === "identity_transfer" ? templateImageUrl : undefined,
+            model,
+            size: workflow === "identity_transfer" ? "3072x4096" : undefined,
             aspectRatio: genConfig.aspectRatio ?? "3:4",
+            promptVersion: template.version,
             mode,
             maxImages,
             trialAlreadyUsed,

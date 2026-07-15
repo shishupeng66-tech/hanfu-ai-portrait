@@ -25,11 +25,11 @@ export const TemplatePromptSchema = z.object({
 });
 
 export const TemplateGenerationSchema = z.object({
-  model: z.string().default("seedream-4.5"),
+  workflow: z.string().default("identity_transfer"),
+  model: z.string().default(""),
+  size: z.string().default("3072x4096"),
   aspectRatio: z.string().default("3:4"),
-  width: z.number().int().positive().default(1536),
-  height: z.number().int().positive().default(2048),
-  imageCount: z.number().int().positive().default(6),
+  imageCount: z.number().int().positive().default(1),
 });
 
 // =============================================================================

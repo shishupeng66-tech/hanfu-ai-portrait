@@ -33,13 +33,49 @@ export async function publishTemplate(
     if (!template.slug) errors.push("Slug is required");
     if (!template.coverImage) errors.push("Cover image is required");
     if (!template.basePrompt) errors.push("Base prompt is required");
-    if (!template.shots || template.shots.length === 0) errors.push("At least one shot is required");
     if (template.creditsPerGeneration < 0) errors.push("Credits must be >= 0");
 
+    let genConfig: Record<string, unknown> = {};
     try {
-      JSON.parse(template.generationConfig ?? "{}");
+      genConfig = JSON.parse(template.generationConfig ?? "{}");
     } catch {
       errors.push("Generation config is invalid JSON");
+    }
+
+    const workflow = typeof genConfig.workflow === "string" ? genConfig.workflow : "prompt_generation";
+
+    if (workflow === "identity_transfer") {
+      // identity_transfer specific validation
+      const hasTemplateImage =
+        (template.referenceImages && template.referenceImages.length > 0 && template.referenceImages[0]?.trim()) ||
+        (template.shots && template.shots.some((s) => s.referenceImage?.trim()));
+
+      if (!hasTemplateImage) {
+        errors.push(
+          "Identity transfer requires a template reference image (referenceImages[0] or at least one shot.referenceImage)",
+        );
+      }
+
+      if (!genConfig.model || typeof genConfig.model !== "string" || !genConfig.model.trim()) {
+        errors.push("Model is required in generationConfig for identity_transfer");
+      }
+
+      if (genConfig.size !== "3072x4096") {
+        errors.push("Size must be 3072x4096 for identity_transfer");
+      }
+
+      if (genConfig.aspectRatio !== "3:4") {
+        errors.push("Aspect ratio must be 3:4 for identity_transfer");
+      }
+
+      if (genConfig.imageCount !== 1) {
+        errors.push("Image count must be 1 for identity_transfer");
+      }
+    } else {
+      // prompt_generation: keep existing validation
+      if (!template.shots || template.shots.length === 0) {
+        errors.push("At least one shot is required");
+      }
     }
 
     if (errors.length > 0) {

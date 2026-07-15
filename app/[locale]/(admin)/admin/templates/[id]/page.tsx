@@ -76,7 +76,7 @@ const DEFAULT_FORM: TemplateFormData = {
   referenceImages: [],
   basePrompt: "",
   negativePrompt: "",
-  generationConfig: JSON.stringify({ model: "seedream-4.5", aspectRatio: "3:4", width: 1536, height: 2048, imageCount: 6 }, null, 2),
+  generationConfig: JSON.stringify({ workflow: "identity_transfer", model: "", size: "3072x4096", aspectRatio: "3:4", imageCount: 1 }, null, 2),
   creditsPerGeneration: 4,
   memberCreditsPerGeneration: null,
   featured: false,
@@ -593,7 +593,13 @@ export function AdminTemplateForm({ templateId }: { templateId?: string }) {
           </div>
           {/* Reference Images */}
           <div>
-            <label className={labelClass}>{isZh ? "参考图" : "Reference Images"}</label>
+            <label className={labelClass}>{isZh ? "身份迁移模板原图" : "Identity Transfer Template Image"}</label>
+            <p className="text-xs text-muted-foreground mb-2">
+              {isZh
+                ? "第一阶段请上传1张高清、无水印、竖版3:4模板原图。此图片会作为生成请求中的图二。"
+                : "Upload one high-resolution, watermark-free, vertical 3:4 template image. It will be sent as image 2."
+              }
+            </p>
             <MultiImageUploader
               urls={form.referenceImages}
               onUpload={(file) => handleImageUpload(file, "references", (url) => updateField("referenceImages", [...form.referenceImages, url]))}
@@ -691,7 +697,7 @@ export function AdminTemplateForm({ templateId }: { templateId?: string }) {
                   <input className={inputClass} value={shot.composition} onChange={(e) => updateShot(idx, "composition", e.target.value)} />
                 </div>
                 <div>
-                  <label className="block text-xs text-muted-foreground mb-1">{isZh ? "独立参考图" : "Reference Image"}</label>
+                  <label className="block text-xs text-muted-foreground mb-1">{isZh ? "分镜模板原图" : "Shot Template Image"}</label>
                   <ImageUploader
                     currentUrl={shot.referenceImage}
                     onUpload={(file) => handleImageUpload(file, `shots/${shot.shotKey}`, (url) => updateShot(idx, "referenceImage", url))}
