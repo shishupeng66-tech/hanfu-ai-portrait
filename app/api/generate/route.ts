@@ -12,6 +12,7 @@ import { getErrorMessage } from "@/lib/error-utils";
 import { volcanoEngineConfig, getHeaders, validateConfig } from "@/lib/volcano-engine/config";
 import { getTemplateBySlug, getTemplateById } from "@/lib/db/template-repository";
 import type { TemplateWithShots } from "@/lib/db/template-repository";
+import { buildIdentityTransferPrompt } from "@/lib/prompts/identity-preservation";
 
 // ---------------------------------------------------------------------------
 // Configuration
@@ -135,12 +136,14 @@ async function generateIdentityTransferImages({
   userImageMimeType,
   templateImageUrl,
   model,
+  size,
 }: {
   prompt: string;
   userImageBase64: string;
   userImageMimeType: string;
   templateImageUrl: string;
   model: string;
+  size: string;
 }): Promise<string[]> {
   const response = await fetch(getImageGenerationUrl(), {
     method: "POST",
@@ -152,7 +155,7 @@ async function generateIdentityTransferImages({
         `data:${userImageMimeType};base64,${userImageBase64}`,
         templateImageUrl,
       ],
-      size: "3072x4096",
+      size,
       response_format: "url",
       stream: false,
       watermark: false,
@@ -284,14 +287,19 @@ export async function POST(req: NextRequest) {
     let negativePrompt: string;
     let templateImageUrl: string;
     let maxImages: number;
+    let size: string;
 
     if (workflow === "identity_transfer") {
       // identity_transfer: fixed 1 image, template image required
       maxImages = 1;
 
-      // Resolve template image: shot.referenceImage takes priority, no silent fallback to other shots
+      // Resolve template image: shot.referenceImage takes priority, fallback to template.referenceImages[0]
       if (activeShot) {
         templateImageUrl = activeShot.referenceImage?.trim() || "";
+        if (!templateImageUrl) {
+          // Fallback to template-level referenceImages for backward compatibility
+          templateImageUrl = template.referenceImages?.[0]?.trim() || "";
+        }
         if (!templateImageUrl) {
           return NextResponse.json(
             { error: `Shot "${activeShot.shotKey}" is missing its reference image. Please upload a template image for this shot.` },
@@ -308,24 +316,31 @@ export async function POST(req: NextRequest) {
           {
             error:
               "Template is missing the identity transfer reference image. " +
-              "Please upload a template image via referenceImages[0] or shot.referenceImage.",
+              "Please upload a template image via shot.referenceImage or referenceImages[0].",
           },
           { status: 400 },
         );
       }
 
-      // Build prompt: basePrompt + shot.prompt (if present)
-      prompt = [template.basePrompt, activeShot?.prompt]
-        .filter((value): value is string => typeof value === "string" && value.trim().length > 0)
-        .join("\n\n");
+      // Build prompt using the new identity-transfer prompt structure:
+      // IDENTITY_PRESERVATION_PROMPT + template.stylePrompt + shot.stylePrompt
+      prompt = buildIdentityTransferPrompt({
+        templateStylePrompt: template.stylePrompt ?? "",
+        shotStylePrompt: activeShot?.stylePrompt ?? undefined,
+      });
 
       negativePrompt = "";
+
+      // Resolve size from generationConfig, fallback to default
+      size = typeof genConfig.size === "string" && genConfig.size.trim()
+        ? genConfig.size.trim()
+        : "3072x4096";
 
       // Secure log — no user image base64
       console.log("identity_transfer request:", {
         workflow,
         model,
-        size: "3072x4096",
+        size,
         referenceImageCount: 2,
         templateImageUrl,
         promptLength: prompt.length,
@@ -337,6 +352,7 @@ export async function POST(req: NextRequest) {
       negativePrompt = built.negativePrompt;
       maxImages = genConfig.imageCount ?? 6;
       templateImageUrl = "";
+      size = "3072x4096";
 
       console.log("开始处理图片，文件大小:", file.size);
       console.log("VOLCANO_ENGINE_API_URL:", volcanoEngineConfig.apiUrl);
@@ -377,7 +393,7 @@ export async function POST(req: NextRequest) {
         shotOrder: activeShot?.sortOrder ?? null,
         templateImageUrl: workflow === "identity_transfer" ? templateImageUrl : undefined,
         model,
-        size: workflow === "identity_transfer" ? "3072x4096" : undefined,
+        size: workflow === "identity_transfer" ? size : undefined,
         aspectRatio: genConfig.aspectRatio ?? "3:4",
         promptVersion: template.version,
         mode,
@@ -421,6 +437,7 @@ export async function POST(req: NextRequest) {
           userImageMimeType: mimeType,
           templateImageUrl,
           model,
+          size,
         });
       } else {
         generatedUrls = await generatePortraitImages({
@@ -466,7 +483,7 @@ export async function POST(req: NextRequest) {
             shotOrder: activeShot?.sortOrder ?? null,
             templateImageUrl: workflow === "identity_transfer" ? templateImageUrl : undefined,
             model,
-            size: workflow === "identity_transfer" ? "3072x4096" : undefined,
+            size: workflow === "identity_transfer" ? size : undefined,
             aspectRatio: genConfig.aspectRatio ?? "3:4",
             promptVersion: template.version,
             mode,
