@@ -34,6 +34,7 @@
     "db:push": "drizzle-kit push",
     "db:studio": "drizzle-kit studio",
     "admin:setup": "tsx scripts/setup-admin.ts",
+    "seed:templates": "tsx scripts/seed-templates.ts",
     "generate:blog-manifest": "node scripts/generate-blog-manifest.mjs",
     "sync:fumadocs-style": "node scripts/sync-fumadocs-style.mjs",
     "templates:registry": "node scripts/generate-template-registry.mjs",
