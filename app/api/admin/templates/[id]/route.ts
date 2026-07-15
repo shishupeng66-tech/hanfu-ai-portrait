@@ -22,6 +22,7 @@ const updateTemplateSchema = z.object({
   dynasty: z.string().optional(),
   styles: z.array(z.string()).optional(),
   tags: z.array(z.string()).optional(),
+  stylePrompt: z.string().optional(),
   coverImage: z.string().optional(),
   previewImages: z.array(z.string()).optional(),
   referenceImages: z.array(z.string()).optional(),
@@ -45,6 +46,7 @@ const updateTemplateSchema = z.object({
         camera: z.string().optional().default(""),
         composition: z.string().optional().default(""),
         expression: z.string().optional().default(""),
+        stylePrompt: z.string().optional().default(""),
         referenceImage: z.string().optional().default(""),
       }),
     )
@@ -119,6 +121,7 @@ export async function PATCH(
         camera: s.camera,
         composition: s.composition,
         expression: s.expression,
+        stylePrompt: s.stylePrompt,
         referenceImage: s.referenceImage,
       })),
     );

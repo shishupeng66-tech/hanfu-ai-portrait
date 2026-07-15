@@ -17,6 +17,7 @@ const createTemplateSchema = z.object({
   dynasty: z.string().optional().default(""),
   styles: z.array(z.string()).optional().default([]),
   tags: z.array(z.string()).optional().default([]),
+  stylePrompt: z.string().optional().default(""),
   coverImage: z.string().optional().default(""),
   previewImages: z.array(z.string()).optional().default([]),
   referenceImages: z.array(z.string()).optional().default([]),
@@ -40,6 +41,7 @@ const createTemplateSchema = z.object({
         camera: z.string().optional().default(""),
         composition: z.string().optional().default(""),
         expression: z.string().optional().default(""),
+        stylePrompt: z.string().optional().default(""),
         referenceImage: z.string().optional().default(""),
       }),
     )
@@ -129,6 +131,7 @@ export async function POST(req: NextRequest) {
         dynasty: data.dynasty,
         styles: data.styles,
         tags: data.tags,
+        stylePrompt: data.stylePrompt,
         coverImage: data.coverImage,
         previewImages: data.previewImages,
         referenceImages: data.referenceImages,
@@ -152,6 +155,7 @@ export async function POST(req: NextRequest) {
         camera: s.camera,
         composition: s.composition,
         expression: s.expression,
+        stylePrompt: s.stylePrompt,
         referenceImage: s.referenceImage,
       })),
     );

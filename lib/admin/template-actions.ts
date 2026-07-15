@@ -32,7 +32,6 @@ export async function publishTemplate(
     if (!template.nameEn) errors.push("English name is required");
     if (!template.slug) errors.push("Slug is required");
     if (!template.coverImage) errors.push("Cover image is required");
-    if (!template.basePrompt) errors.push("Base prompt is required");
     if (template.creditsPerGeneration < 0) errors.push("Credits must be >= 0");
 
     let genConfig: Record<string, unknown> = {};
@@ -68,7 +67,7 @@ export async function publishTemplate(
         errors.push("Aspect ratio must be 3:4 for identity_transfer");
       }
 
-      if (genConfig.imageCount !== 1) {
+      if (genConfig.count !== 1) {
         errors.push("Image count must be 1 for identity_transfer");
       }
     } else {
