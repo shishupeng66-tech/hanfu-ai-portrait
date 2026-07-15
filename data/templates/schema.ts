@@ -6,6 +6,7 @@ import { z } from "zod";
 
 export const TemplateShotSchema = z.object({
   id: z.string().min(1),
+  shotKey: z.string().optional().default(""),
   order: z.number().int().min(1),
   title: z.object({
     zh: z.string(),
@@ -75,8 +76,10 @@ export type TemplateGeneration = z.infer<typeof TemplateGenerationSchema>;
 
 export type PublicTemplateShot = {
   id: string;
+  shotKey: string;
   order: number;
   title: { zh: string; en: string };
+  referenceImage: string;
 };
 
 export type PublicTemplate = {
@@ -117,8 +120,10 @@ export function toPublicTemplate(template: TemplateDefinition): PublicTemplate {
     previewImages: template.previewImages ?? [],
     shots: (template.shots ?? []).map((s) => ({
       id: s.id,
+      shotKey: s.shotKey ?? s.id,
       order: s.order,
       title: s.title,
+      referenceImage: s.referenceImage ?? "",
     })),
     featured: template.featured ?? false,
     sortOrder: template.sortOrder ?? 0,

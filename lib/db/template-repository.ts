@@ -49,7 +49,7 @@ export type PublicTemplate = {
   tags: string[];
   coverImage: string;
   previewImages: string[];
-  shots: { id: string; shotKey: string; order: number; title: { zh: string; en: string } }[];
+  shots: { id: string; shotKey: string; order: number; title: { zh: string; en: string }; referenceImage: string }[];
   featured: boolean;
   sortOrder: number;
   creditsPerGeneration: number;
@@ -78,6 +78,7 @@ function toPublicTemplate(t: TemplateWithShots): PublicTemplate {
       shotKey: s.shotKey,
       order: s.sortOrder,
       title: { zh: s.titleZh, en: s.titleEn },
+      referenceImage: s.referenceImage ?? "",
     })),
     featured: t.featured ?? false,
     sortOrder: t.sortOrder ?? 0,

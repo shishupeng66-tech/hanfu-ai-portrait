@@ -698,6 +698,12 @@ export function AdminTemplateForm({ templateId }: { templateId?: string }) {
                 </div>
                 <div>
                   <label className="block text-xs text-muted-foreground mb-1">{isZh ? "分镜模板原图" : "Shot Template Image"}</label>
+                  <p className="text-xs text-muted-foreground mb-2">
+                    {isZh
+                      ? "此图片会作为身份迁移请求中的图二。每个分镜只能绑定一张高清、无水印、竖版3:4模板原图。"
+                      : "This image will be sent as image 2 in the identity transfer request. Each shot should use one high-resolution, watermark-free, vertical 3:4 template image."
+                    }
+                  </p>
                   <ImageUploader
                     currentUrl={shot.referenceImage}
                     onUpload={(file) => handleImageUpload(file, `shots/${shot.shotKey}`, (url) => updateShot(idx, "referenceImage", url))}

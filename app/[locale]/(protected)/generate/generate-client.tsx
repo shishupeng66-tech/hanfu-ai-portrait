@@ -51,6 +51,7 @@ export default function GenerateClientPage({
 
   const [viewMode, setViewMode] = useState<"create" | "preview">("create");
   const [selectedTemplateSlug, setSelectedTemplateSlug] = useState<string>("");
+  const [selectedShotId, setSelectedShotId] = useState<string>("");
   const [file, setFile] = useState<File | null>(null);
   const [previewUrl, setPreviewUrl] = useState<string | null>(null);
   const [resultUrls, setResultUrls] = useState<string[]>([]);
@@ -64,6 +65,17 @@ export default function GenerateClientPage({
 
   const hasTemplates = templates.length > 0;
   const activeTemplate = templates.find((t) => t.slug === selectedTemplateSlug) ?? null;
+
+  // Auto-select first shot when template changes
+  const activeTemplateShots = activeTemplate?.shots ?? [];
+  useEffect(() => {
+    if (activeTemplateShots.length > 0) {
+      const sorted = [...activeTemplateShots].sort((a, b) => a.order - b.order);
+      setSelectedShotId(sorted[0].shotKey);
+    } else {
+      setSelectedShotId("");
+    }
+  }, [selectedTemplateSlug]); // eslint-disable-line react-hooks/exhaustive-deps
 
   // Derive generation cost from active template (never from hardcoded constant)
   const generationCost = activeTemplate?.creditsPerGeneration;
@@ -136,6 +148,11 @@ export default function GenerateClientPage({
       return;
     }
 
+    if (activeTemplateShots.length > 1 && !selectedShotId) {
+      setGenerationError(t("errors.chooseShotRequired") ?? "Please select a shot");
+      return;
+    }
+
     if (creditsInsufficient) {
       setGenerationError(t("errors.insufficientCredits"));
       return;
@@ -152,6 +169,9 @@ export default function GenerateClientPage({
     formData.append("image", file);
     formData.append("templateSlug", activeTemplate?.slug ?? "");
     formData.append("mode", "set");
+    if (selectedShotId) {
+      formData.append("shotId", selectedShotId);
+    }
 
     try {
       const response = await fetch("/api/generate", {
@@ -429,6 +449,62 @@ export default function GenerateClientPage({
                       {activeTemplate && (
                         <div className="mt-5 rounded-xl border border-[rgba(232,194,122,0.12)] bg-[rgba(232,194,122,0.045)] px-4 py-3 text-sm text-[rgba(255,247,236,0.56)]">
                           {t("styleSelection.currentSelection")}: <span className="font-medium text-[#E8C27A]">{templateDisplayName}</span>
+                        </div>
+                      )}
+
+                      {activeTemplateShots.length > 1 && (
+                        <div className="mt-4">
+                          <p className="mb-2 text-xs font-medium text-[rgba(255,247,236,0.55)]">
+                            {t("styleSelection.chooseShot") ?? "Choose a shot"}
+                          </p>
+                          <div className="flex gap-2">
+                            {[...activeTemplateShots]
+                              .sort((a, b) => a.order - b.order)
+                              .map((shot) => {
+                                const isShotSelected = selectedShotId === shot.shotKey;
+                                return (
+                                  <button
+                                    key={shot.shotKey}
+                                    type="button"
+                                    onClick={() => setSelectedShotId(shot.shotKey)}
+                                    className="flex flex-col items-center gap-1 rounded-lg border p-2 transition hover:border-[rgba(232,194,122,0.34)]"
+                                    style={{
+                                      background: isShotSelected ? "rgba(232,194,122,0.10)" : "rgba(255,247,236,0.03)",
+                                      borderColor: isShotSelected ? "rgba(232,194,122,0.68)" : "rgba(255,247,236,0.08)",
+                                    }}
+                                  >
+                                    {shot.referenceImage ? (
+                                      <div className="relative h-20 w-[60px] overflow-hidden rounded-md">
+                                        <Image
+                                          src={shot.referenceImage}
+                                          alt={shot.title.zh || shot.title.en || shot.shotKey}
+                                          fill
+                                          className="object-cover"
+                                          unoptimized
+                                        />
+                                      </div>
+                                    ) : (
+                                      <div className="flex h-20 w-[60px] items-center justify-center rounded-md bg-[#1a1a1e]">
+                                        <span className="text-[10px] text-[rgba(255,247,236,0.2)]">No img</span>
+                                      </div>
+                                    )}
+                                    <span
+                                      className="max-w-[70px] truncate text-center text-xs"
+                                      style={{ color: isShotSelected ? "#E8C27A" : "rgba(255,247,236,0.55)" }}
+                                    >
+                                      {shot.title.zh || shot.title.en || shot.shotKey}
+                                    </span>
+                                    {isShotSelected && (
+                                      <span className="flex h-4 w-4 items-center justify-center rounded-full bg-[#E8C27A]">
+                                        <svg width="10" height="10" viewBox="0 0 24 24" fill="none" stroke="#0B0B0D" strokeWidth="3">
+                                          <path d="m20 6-11 11-5-5" />
+                                        </svg>
+                                      </span>
+                                    )}
+                                  </button>
+                                );
+                              })}
+                          </div>
                         </div>
                       )}
                     </>

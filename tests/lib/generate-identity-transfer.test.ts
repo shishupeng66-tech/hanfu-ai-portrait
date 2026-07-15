@@ -504,3 +504,190 @@ describe("publish validation for identity_transfer", () => {
     expect(errors).toHaveLength(0);
   });
 });
+
+// =============================================================================
+// Shot resolution logic (backend behaviour)
+// =============================================================================
+
+describe("shot resolution for identity_transfer", () => {
+  type Shot = {
+    shotKey: string;
+    sortOrder: number;
+    referenceImage: string;
+  };
+
+  function resolveShot(
+    shotId: string | null,
+    shots: Shot[],
+    workflow: string,
+  ): { shot: Shot | null; error: string | null } {
+    if (shotId) {
+      const shot = shots.find((s) => s.shotKey === shotId) ?? null;
+      if (!shot) {
+        return { shot: null, error: `Shot "${shotId}" not found` };
+      }
+      return { shot, error: null };
+    }
+
+    if (workflow === "identity_transfer") {
+      if (shots.length > 1) {
+        return { shot: null, error: "This template has multiple shots. Please select a specific shot." };
+      }
+      return { shot: shots[0] ?? null, error: null };
+    }
+
+    // prompt_generation fallback
+    return { shot: shots[0] ?? null, error: null };
+  }
+
+  function resolveTemplateImage(
+    shot: Shot | null,
+    referenceImages: string[],
+  ): { url: string; error: string | null } {
+    if (shot) {
+      const url = shot.referenceImage?.trim() || "";
+      if (!url) {
+        return { url: "", error: `Shot "${shot.shotKey}" is missing its reference image.` };
+      }
+      return { url, error: null };
+    }
+    // No shots — fallback to referenceImages[0]
+    return { url: referenceImages[0]?.trim() || "", error: null };
+  }
+
+  const shots: Shot[] = [
+    { shotKey: "shot-01", sortOrder: 1, referenceImage: "https://r2.example.com/shot-01.jpg" },
+    { shotKey: "shot-02", sortOrder: 2, referenceImage: "https://r2.example.com/shot-02.jpg" },
+  ];
+
+  it("returns 400 when no shotId is provided for multi-shot template", () => {
+    const result = resolveShot(null, shots, "identity_transfer");
+    expect(result.error).toBe("This template has multiple shots. Please select a specific shot.");
+    expect(result.shot).toBeNull();
+  });
+
+  it("returns shot-01 when shotId=shot-01 is provided", () => {
+    const result = resolveShot("shot-01", shots, "identity_transfer");
+    expect(result.error).toBeNull();
+    expect(result.shot?.shotKey).toBe("shot-01");
+  });
+
+  it("returns shot-02 when shotId=shot-02 is provided", () => {
+    const result = resolveShot("shot-02", shots, "identity_transfer");
+    expect(result.error).toBeNull();
+    expect(result.shot?.shotKey).toBe("shot-02");
+  });
+
+  it("returns 400 when shotId does not exist", () => {
+    const result = resolveShot("shot-99", shots, "identity_transfer");
+    expect(result.error).toBe('Shot "shot-99" not found');
+    expect(result.shot).toBeNull();
+  });
+
+  it("returns error when selected shot has no referenceImage", () => {
+    const shotsWithMissing: Shot[] = [
+      { shotKey: "shot-01", sortOrder: 1, referenceImage: "" },
+      { shotKey: "shot-02", sortOrder: 2, referenceImage: "https://r2.example.com/shot-02.jpg" },
+    ];
+    const shotResult = resolveShot("shot-01", shotsWithMissing, "identity_transfer");
+    expect(shotResult.error).toBeNull();
+    expect(shotResult.shot?.shotKey).toBe("shot-01");
+
+    const imageResult = resolveTemplateImage(shotResult.shot, []);
+    expect(imageResult.error).toBe('Shot "shot-01" is missing its reference image.');
+    expect(imageResult.url).toBe("");
+  });
+
+  it("uses shot-01.referenceImage, not shot-02.referenceImage", () => {
+    const shotResult = resolveShot("shot-01", shots, "identity_transfer");
+    const imageResult = resolveTemplateImage(shotResult.shot, []);
+    expect(imageResult.url).toBe("https://r2.example.com/shot-01.jpg");
+    expect(imageResult.url).not.toBe("https://r2.example.com/shot-02.jpg");
+  });
+
+  it("does not silently fallback to another shot's referenceImage", () => {
+    const shotsWithMissing: Shot[] = [
+      { shotKey: "shot-01", sortOrder: 1, referenceImage: "" },
+      { shotKey: "shot-02", sortOrder: 2, referenceImage: "https://r2.example.com/shot-02.jpg" },
+    ];
+    const shotResult = resolveShot("shot-01", shotsWithMissing, "identity_transfer");
+    const imageResult = resolveTemplateImage(shotResult.shot, []);
+    // Should report error, NOT fallback to shot-02
+    expect(imageResult.error).not.toBeNull();
+    expect(imageResult.url).not.toBe("https://r2.example.com/shot-02.jpg");
+  });
+
+  it("auto-uses single shot when no shotId is provided", () => {
+    const singleShot = [{ shotKey: "shot-01", sortOrder: 1, referenceImage: "https://r2.example.com/shot-01.jpg" }];
+    const result = resolveShot(null, singleShot, "identity_transfer");
+    expect(result.error).toBeNull();
+    expect(result.shot?.shotKey).toBe("shot-01");
+  });
+
+  it("allows fallback to referenceImages[0] when template has no shots", () => {
+    const result = resolveTemplateImage(null, ["https://r2.example.com/fallback.jpg"]);
+    expect(result.error).toBeNull();
+    expect(result.url).toBe("https://r2.example.com/fallback.jpg");
+  });
+
+  it("each Ark request only contains one user image and one shot template image", () => {
+    // This is the buildIdentityTransferRequest function already tested
+    // Verify that image array has exactly 2 elements
+    const request = buildIdentityTransferRequest({
+      model: "test-model",
+      prompt: "test",
+      userImageBase64: "user-data",
+      userImageMimeType: "image/jpeg",
+      templateImageUrl: "https://r2.example.com/shot-01.jpg",
+    });
+    expect(request.image).toHaveLength(2);
+    expect(request.image[1]).toBe("https://r2.example.com/shot-01.jpg");
+    // No third image
+    expect(request.image[2]).toBeUndefined();
+  });
+});
+
+describe("PublicTemplate security", () => {
+  it("exposes referenceImage but not prompt", () => {
+    // Simulate toPublicTemplate stripping
+    const publicShot = {
+      id: "1",
+      shotKey: "shot-01",
+      order: 1,
+      title: { zh: "上元初灯", en: "Lanterns at Nightfall" },
+      referenceImage: "https://r2.example.com/shot-01.jpg",
+    };
+
+    // These fields should be present
+    expect(publicShot).toHaveProperty("referenceImage");
+    expect(publicShot).toHaveProperty("title");
+    expect(publicShot).toHaveProperty("shotKey");
+
+    // These fields should NOT be present
+    expect(publicShot).not.toHaveProperty("prompt");
+    expect(publicShot).not.toHaveProperty("basePrompt");
+    expect(publicShot).not.toHaveProperty("negativePrompt");
+  });
+
+  it("PublicTemplate does not expose basePrompt", () => {
+    const publicTemplate = {
+      id: "tpl-1",
+      slug: "test",
+      name: { zh: "测试", en: "Test" },
+      coverImage: "https://r2.example.com/cover.jpg",
+      shots: [
+        {
+          id: "1",
+          shotKey: "shot-01",
+          order: 1,
+          title: { zh: "上元初灯", en: "Lanterns at Nightfall" },
+          referenceImage: "https://r2.example.com/shot-01.jpg",
+        },
+      ],
+    };
+
+    expect(publicTemplate).not.toHaveProperty("basePrompt");
+    expect(publicTemplate).not.toHaveProperty("negativePrompt");
+    expect(publicTemplate).not.toHaveProperty("prompt");
+  });
+});

@@ -251,7 +251,34 @@ export async function POST(req: NextRequest) {
         : volcanoEngineConfig.imageModel;
 
     const resolvedShotId = typeof shotId === "string" ? shotId : null;
-    const activeShot = template.shots?.find((s) => s.shotKey === resolvedShotId) ?? template.shots?.[0] ?? null;
+
+    // Resolve shot with strict validation
+    let activeShot: typeof template.shots[number] | null = null;
+
+    if (resolvedShotId) {
+      // User specified a shot — must find it exactly, no silent fallback
+      activeShot = template.shots?.find((s) => s.shotKey === resolvedShotId) ?? null;
+      if (!activeShot) {
+        return NextResponse.json(
+          { error: `Shot "${resolvedShotId}" not found in template "${template.slug}"` },
+          { status: 400 },
+        );
+      }
+    } else if (workflow === "identity_transfer") {
+      // No shotId provided for identity_transfer
+      const shotCount = template.shots?.length ?? 0;
+      if (shotCount > 1) {
+        return NextResponse.json(
+          { error: "This template has multiple shots. Please select a specific shot." },
+          { status: 400 },
+        );
+      }
+      // 0 or 1 shot: auto-use the only shot (or null)
+      activeShot = template.shots?.[0] ?? null;
+    } else {
+      // prompt_generation: keep existing behavior — auto-fallback to first shot
+      activeShot = template.shots?.find((s) => s.shotKey === resolvedShotId) ?? template.shots?.[0] ?? null;
+    }
 
     let prompt: string;
     let negativePrompt: string;
@@ -262,10 +289,19 @@ export async function POST(req: NextRequest) {
       // identity_transfer: fixed 1 image, template image required
       maxImages = 1;
 
-      templateImageUrl =
-        activeShot?.referenceImage?.trim() ||
-        template.referenceImages?.[0]?.trim() ||
-        "";
+      // Resolve template image: shot.referenceImage takes priority, no silent fallback to other shots
+      if (activeShot) {
+        templateImageUrl = activeShot.referenceImage?.trim() || "";
+        if (!templateImageUrl) {
+          return NextResponse.json(
+            { error: `Shot "${activeShot.shotKey}" is missing its reference image. Please upload a template image for this shot.` },
+            { status: 400 },
+          );
+        }
+      } else {
+        // No shots at all — fallback to template.referenceImages[0]
+        templateImageUrl = template.referenceImages?.[0]?.trim() || "";
+      }
 
       if (!templateImageUrl) {
         return NextResponse.json(
