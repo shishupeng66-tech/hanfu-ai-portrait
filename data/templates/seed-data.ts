@@ -66,7 +66,7 @@ export const TEMPLATE_SEEDS: TemplateSeed[] = [
         sortOrder: 1,
         titleZh: "灯市初遇",
         titleEn: "Lanterns at Nightfall",
-        referenceImage: "",
+        referenceImage: "https://pub-8f864adfb2174af9ba9aa03f83a659f7.r2.dev/templates/tang-lantern-festival-night-fair/shot1.png",
         stylePrompt: "夜景灯光，手持花灯，温暖烛光映照面容",
       },
       {
@@ -74,7 +74,7 @@ export const TEMPLATE_SEEDS: TemplateSeed[] = [
         sortOrder: 2,
         titleZh: "玉兔花灯",
         titleEn: "Jade Rabbit Lantern",
-        referenceImage: "",
+        referenceImage: "https://pub-8f864adfb2174af9ba9aa03f83a659f7.r2.dev/templates/tang-lantern-festival-night-fair/shot2.png",
         stylePrompt: "兔子造型花灯，月色朦胧，粉色罗裙",
       },
       {
@@ -82,7 +82,7 @@ export const TEMPLATE_SEEDS: TemplateSeed[] = [
         sortOrder: 3,
         titleZh: "锦绣华裳",
         titleEn: "Splendid Attire",
-        referenceImage: "",
+        referenceImage: "https://pub-8f864adfb2174af9ba9aa03f83a659f7.r2.dev/templates/tang-lantern-festival-night-fair/shot3.png",
         stylePrompt: "锦绣华服特写，金线刺绣，牡丹花纹",
       },
       {
@@ -90,7 +90,7 @@ export const TEMPLATE_SEEDS: TemplateSeed[] = [
         sortOrder: 4,
         titleZh: "月上柳梢",
         titleEn: "Moonlit Promise",
-        referenceImage: "",
+        referenceImage: "https://pub-8f864adfb2174af9ba9aa03f83a659f7.r2.dev/templates/tang-lantern-festival-night-fair/shot4.png",
         stylePrompt: "柳树月下，圆月背景，清冷优雅氛围",
       },
       {
@@ -98,7 +98,7 @@ export const TEMPLATE_SEEDS: TemplateSeed[] = [
         sortOrder: 5,
         titleZh: "鱼龙夜舞",
         titleEn: "Fish and Dragon Dance",
-        referenceImage: "",
+        referenceImage: "https://pub-8f864adfb2174af9ba9aa03f83a659f7.r2.dev/templates/tang-lantern-festival-night-fair/shot5.png",
         stylePrompt: "鱼龙灯舞，热闹街市，动态光影",
       },
       {
@@ -106,7 +106,7 @@ export const TEMPLATE_SEEDS: TemplateSeed[] = [
         sortOrder: 6,
         titleZh: "花好月圆",
         titleEn: "Blissful Union",
-        referenceImage: "",
+        referenceImage: "https://pub-8f864adfb2174af9ba9aa03f83a659f7.r2.dev/templates/tang-lantern-festival-night-fair/shot6.png",
         stylePrompt: "花丛月下，团扇遮面，浪漫唯美氛围",
       },
       {
@@ -114,7 +114,7 @@ export const TEMPLATE_SEEDS: TemplateSeed[] = [
         sortOrder: 7,
         titleZh: "春宵灯影",
         titleEn: "Spring Night Shadows",
-        referenceImage: "",
+        referenceImage: "https://pub-8f864adfb2174af9ba9aa03f83a659f7.r2.dev/templates/tang-lantern-festival-night-fair/shot7.png",
         stylePrompt: "春夜灯影摇曳，朦胧光晕，诗意氛围",
       },
       {
@@ -122,7 +122,7 @@ export const TEMPLATE_SEEDS: TemplateSeed[] = [
         sortOrder: 8,
         titleZh: "盛世红妆",
         titleEn: "Imperial Elegance",
-        referenceImage: "",
+        referenceImage: "https://pub-8f864adfb2174af9ba9aa03f83a659f7.r2.dev/templates/tang-lantern-festival-night-fair/shot8.png",
         stylePrompt: "宫廷红妆，金饰凤冠，华丽盛唐风范",
       },
     ],
