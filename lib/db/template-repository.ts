@@ -47,9 +47,10 @@ export type PublicTemplate = {
   dynasty: string;
   styles: string[];
   tags: string[];
+  stylePrompt: string;
   coverImage: string;
   previewImages: string[];
-  shots: { id: string; shotKey: string; order: number; title: { zh: string; en: string }; referenceImage: string }[];
+  shots: { id: string; shotKey: string; order: number; title: { zh: string; en: string }; referenceImage: string; stylePrompt: string }[];
   featured: boolean;
   sortOrder: number;
   creditsPerGeneration: number;
@@ -71,6 +72,7 @@ function toPublicTemplate(t: TemplateWithShots): PublicTemplate {
     dynasty: t.dynasty ?? "",
     styles: t.styles ?? [],
     tags: t.tags ?? [],
+    stylePrompt: t.stylePrompt ?? "",
     coverImage: t.coverImage ?? "",
     previewImages: t.previewImages ?? [],
     shots: (t.shots ?? []).map((s) => ({
@@ -79,6 +81,7 @@ function toPublicTemplate(t: TemplateWithShots): PublicTemplate {
       order: s.sortOrder,
       title: { zh: s.titleZh, en: s.titleEn },
       referenceImage: s.referenceImage ?? "",
+      stylePrompt: s.stylePrompt ?? "",
     })),
     featured: t.featured ?? false,
     sortOrder: t.sortOrder ?? 0,
@@ -350,6 +353,7 @@ export async function duplicateTemplate(
       dynasty: existing.dynasty,
       styles: existing.styles,
       tags: existing.tags,
+      stylePrompt: existing.stylePrompt,
       coverImage: existing.coverImage,
       previewImages: existing.previewImages,
       referenceImages: existing.referenceImages,
@@ -379,6 +383,7 @@ export async function duplicateTemplate(
           camera: s.camera,
           composition: s.composition,
           expression: s.expression,
+          stylePrompt: s.stylePrompt,
           referenceImage: s.referenceImage,
           createdAt: now,
           updatedAt: now,

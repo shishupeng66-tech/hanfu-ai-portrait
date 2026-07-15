@@ -218,12 +218,13 @@ export const portraitTemplate = pgTable(
     dynasty: varchar("dynasty", { length: 64 }).default(""),
     styles: text("styles").array().default([]),
     tags: text("tags").array().default([]),
+    stylePrompt: text("style_prompt").default(""),
     coverImage: text("cover_image").default(""),
     previewImages: text("preview_images").array().default([]),
     referenceImages: text("reference_images").array().default([]),
     basePrompt: text("base_prompt").notNull(),
     negativePrompt: text("negative_prompt").default(""),
-    generationConfig: text("generation_config").default("{}"), // JSON string
+    generationConfig: text("generation_config").default('{"model":"doubao-seedream-5-0-lite","size":"3072x4096","aspectRatio":"3:4","count":1,"workflow":"identity_transfer"}'),
     creditsPerGeneration: integer("credits_per_generation").default(4).notNull(),
     memberCreditsPerGeneration: integer("member_credits_per_generation"),
     featured: boolean("featured").default(false).notNull(),
@@ -263,6 +264,7 @@ export const portraitTemplateShot = pgTable(
     camera: text("camera").default(""),
     composition: text("composition").default(""),
     expression: text("expression").default(""),
+    stylePrompt: text("style_prompt").default(""),
     referenceImage: text("reference_image").default(""),
     createdAt: timestamp("created_at").defaultNow().notNull(),
     updatedAt: timestamp("updated_at")

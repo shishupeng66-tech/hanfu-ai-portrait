@@ -12,11 +12,12 @@ export const TemplateShotSchema = z.object({
     zh: z.string(),
     en: z.string(),
   }),
-  prompt: z.string(),
+  prompt: z.string().optional().default(""),
   pose: z.string().optional().default(""),
   camera: z.string().optional().default(""),
   composition: z.string().optional().default(""),
   expression: z.string().optional().default(""),
+  stylePrompt: z.string().optional().default(""),
   referenceImage: z.string().optional().default(""),
 });
 
@@ -27,10 +28,10 @@ export const TemplatePromptSchema = z.object({
 
 export const TemplateGenerationSchema = z.object({
   workflow: z.string().default("identity_transfer"),
-  model: z.string().default(""),
+  model: z.string().default("doubao-seedream-5-0-lite"),
   size: z.string().default("3072x4096"),
   aspectRatio: z.string().default("3:4"),
-  imageCount: z.number().int().positive().default(1),
+  count: z.number().int().positive().default(1),
 });
 
 // =============================================================================
@@ -54,10 +55,11 @@ export const TemplateDefinitionSchema = z.object({
   dynasty: z.string().optional().default(""),
   styles: z.array(z.string()).optional().default([]),
   tags: z.array(z.string()).optional().default([]),
+  stylePrompt: z.string().optional().default(""),
   coverImage: z.string().optional().default(""),
   previewImages: z.array(z.string()).optional().default([]),
   referenceImages: z.array(z.string()).optional().default([]),
-  prompt: TemplatePromptSchema,
+  prompt: TemplatePromptSchema.optional(),
   shots: z.array(TemplateShotSchema).optional().default([]),
   generation: TemplateGenerationSchema.optional(),
   featured: z.boolean().optional().default(false),
@@ -80,6 +82,7 @@ export type PublicTemplateShot = {
   order: number;
   title: { zh: string; en: string };
   referenceImage: string;
+  stylePrompt: string;
 };
 
 export type PublicTemplate = {
@@ -93,6 +96,7 @@ export type PublicTemplate = {
   dynasty: string;
   styles: string[];
   tags: string[];
+  stylePrompt: string;
   coverImage: string;
   previewImages: string[];
   shots: PublicTemplateShot[];
@@ -116,6 +120,7 @@ export function toPublicTemplate(template: TemplateDefinition): PublicTemplate {
     dynasty: template.dynasty ?? "",
     styles: template.styles ?? [],
     tags: template.tags ?? [],
+    stylePrompt: template.stylePrompt ?? "",
     coverImage: template.coverImage ?? "",
     previewImages: template.previewImages ?? [],
     shots: (template.shots ?? []).map((s) => ({
@@ -124,6 +129,7 @@ export function toPublicTemplate(template: TemplateDefinition): PublicTemplate {
       order: s.order,
       title: s.title,
       referenceImage: s.referenceImage ?? "",
+      stylePrompt: s.stylePrompt ?? "",
     })),
     featured: template.featured ?? false,
     sortOrder: template.sortOrder ?? 0,
@@ -147,8 +153,7 @@ export function isPublishedTemplateComplete(template: TemplateDefinition): boole
   return (
     template.name.zh.length > 0 &&
     template.name.en.length > 0 &&
-    template.coverImage.length > 0 &&
-    template.prompt.base.length > 0
+    template.coverImage.length > 0
   );
 }
 
