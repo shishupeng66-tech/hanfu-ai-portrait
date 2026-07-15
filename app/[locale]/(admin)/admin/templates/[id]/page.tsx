@@ -28,12 +28,8 @@ type ShotForm = {
   sortOrder: number;
   titleZh: string;
   titleEn: string;
-  prompt: string;
-  pose: string;
-  camera: string;
-  composition: string;
-  expression: string;
   referenceImage: string;
+  stylePrompt: string;
 };
 
 type TemplateFormData = {
@@ -46,8 +42,10 @@ type TemplateFormData = {
   dynasty: string;
   styles: string[];
   tags: string[];
+  stylePrompt: string;
   coverImage: string;
   previewImages: string[];
+  // Legacy fields — kept for backward data compatibility, not shown in UI
   referenceImages: string[];
   basePrompt: string;
   negativePrompt: string;
@@ -71,12 +69,13 @@ const DEFAULT_FORM: TemplateFormData = {
   dynasty: "",
   styles: [],
   tags: [],
+  stylePrompt: "",
   coverImage: "",
   previewImages: [],
   referenceImages: [],
   basePrompt: "",
   negativePrompt: "",
-  generationConfig: JSON.stringify({ workflow: "identity_transfer", model: "", size: "3072x4096", aspectRatio: "3:4", imageCount: 1 }, null, 2),
+  generationConfig: JSON.stringify({ model: "doubao-seedream-5-0-lite", size: "3072x4096", aspectRatio: "3:4", count: 1, workflow: "identity_transfer" }, null, 2),
   creditsPerGeneration: 4,
   memberCreditsPerGeneration: null,
   featured: false,
@@ -143,6 +142,7 @@ export function AdminTemplateForm({ templateId }: { templateId?: string }) {
           dynasty: data.dynasty ?? "",
           styles: data.styles ?? [],
           tags: data.tags ?? [],
+          stylePrompt: data.stylePrompt ?? "",
           coverImage: data.coverImage ?? "",
           previewImages: data.previewImages ?? [],
           referenceImages: data.referenceImages ?? [],
@@ -161,12 +161,8 @@ export function AdminTemplateForm({ templateId }: { templateId?: string }) {
             sortOrder: s.sortOrder,
             titleZh: s.titleZh,
             titleEn: s.titleEn,
-            prompt: s.prompt ?? "",
-            pose: s.pose ?? "",
-            camera: s.camera ?? "",
-            composition: s.composition ?? "",
-            expression: s.expression ?? "",
             referenceImage: s.referenceImage ?? "",
+            stylePrompt: s.stylePrompt ?? "",
           })),
         });
       })
@@ -210,12 +206,8 @@ export function AdminTemplateForm({ templateId }: { templateId?: string }) {
           sortOrder: idx + 1,
           titleZh: "",
           titleEn: "",
-          prompt: "",
-          pose: "",
-          camera: "",
-          composition: "",
-          expression: "",
           referenceImage: "",
+          stylePrompt: "",
         },
       ],
     }));
@@ -281,12 +273,8 @@ export function AdminTemplateForm({ templateId }: { templateId?: string }) {
           sortOrder: s.sortOrder,
           titleZh: s.titleZh,
           titleEn: s.titleEn,
-          prompt: s.prompt,
-          pose: s.pose,
-          camera: s.camera,
-          composition: s.composition,
-          expression: s.expression,
           referenceImage: s.referenceImage,
+          stylePrompt: s.stylePrompt,
         })),
       };
 
@@ -352,23 +340,24 @@ export function AdminTemplateForm({ templateId }: { templateId?: string }) {
   const handleJsonImport = () => {
     try {
       const parsed = JSON.parse(jsonImport);
-      // Map from static template JSON format to form format
+      // Map from new identity-transfer template JSON format to form format
       setForm({
         slug: parsed.slug ?? "",
-        nameZh: parsed.name?.zh ?? "",
-        nameEn: parsed.name?.en ?? "",
-        descriptionZh: parsed.description?.zh ?? "",
-        descriptionEn: parsed.description?.en ?? "",
+        nameZh: parsed.nameZh ?? parsed.name?.zh ?? "",
+        nameEn: parsed.nameEn ?? parsed.name?.en ?? "",
+        descriptionZh: parsed.descriptionZh ?? parsed.description?.zh ?? "",
+        descriptionEn: parsed.descriptionEn ?? parsed.description?.en ?? "",
         category: parsed.category ?? "hanfu",
         dynasty: parsed.dynasty ?? "",
         styles: parsed.styles ?? [],
         tags: parsed.tags ?? [],
+        stylePrompt: parsed.stylePrompt ?? "",
         coverImage: parsed.coverImage ?? "",
         previewImages: parsed.previewImages ?? [],
         referenceImages: parsed.referenceImages ?? [],
-        basePrompt: parsed.prompt?.base ?? "",
-        negativePrompt: parsed.prompt?.negative ?? "",
-        generationConfig: JSON.stringify(parsed.generation ?? { model: "seedream-4.5", aspectRatio: "3:4", width: 1536, height: 2048, imageCount: 6 }, null, 2),
+        basePrompt: "",
+        negativePrompt: "",
+        generationConfig: JSON.stringify(parsed.generationConfig ?? { model: "doubao-seedream-5-0-lite", size: "3072x4096", aspectRatio: "3:4", count: 1, workflow: "identity_transfer" }, null, 2),
         creditsPerGeneration: parsed.creditsPerGeneration ?? 4,
         memberCreditsPerGeneration: null,
         featured: parsed.featured ?? false,
@@ -377,16 +366,12 @@ export function AdminTemplateForm({ templateId }: { templateId?: string }) {
         status: "draft",
         shots: (parsed.shots ?? []).map((s: Record<string, unknown>, i: number) => ({
           key: `import-${i}`,
-          shotKey: (s.id as string) ?? `shot-${String(i + 1).padStart(2, "0")}`,
-          sortOrder: (s.order as number) ?? i + 1,
-          titleZh: (s.title as { zh: string })?.zh ?? "",
-          titleEn: (s.title as { en: string })?.en ?? "",
-          prompt: (s.prompt as string) ?? "",
-          pose: (s.pose as string) ?? "",
-          camera: (s.camera as string) ?? "",
-          composition: (s.composition as string) ?? "",
-          expression: (s.expression as string) ?? "",
+          shotKey: (s.shotKey as string) ?? (s.id as string) ?? `shot-${String(i + 1).padStart(2, "0")}`,
+          sortOrder: (s.sortOrder as number) ?? (s.order as number) ?? i + 1,
+          titleZh: (s.titleZh as string) ?? (s.title as { zh: string })?.zh ?? "",
+          titleEn: (s.titleEn as string) ?? (s.title as { en: string })?.en ?? "",
           referenceImage: (s.referenceImage as string) ?? "",
+          stylePrompt: (s.stylePrompt as string) ?? "",
         })),
       });
       setShowJsonImport(false);
@@ -591,40 +576,10 @@ export function AdminTemplateForm({ templateId }: { templateId?: string }) {
               uploading={uploading}
             />
           </div>
-          {/* Reference Images */}
-          <div>
-            <label className={labelClass}>{isZh ? "身份迁移模板原图" : "Identity Transfer Template Image"}</label>
-            <p className="text-xs text-muted-foreground mb-2">
-              {isZh
-                ? "第一阶段请上传1张高清、无水印、竖版3:4模板原图。此图片会作为生成请求中的图二。"
-                : "Upload one high-resolution, watermark-free, vertical 3:4 template image. It will be sent as image 2."
-              }
-            </p>
-            <MultiImageUploader
-              urls={form.referenceImages}
-              onUpload={(file) => handleImageUpload(file, "references", (url) => updateField("referenceImages", [...form.referenceImages, url]))}
-              onRemove={(idx) => updateField("referenceImages", form.referenceImages.filter((_, i) => i !== idx))}
-              uploading={uploading}
-            />
-          </div>
         </div>
       </Section>
 
-      {/* Section 3: Prompts */}
-      <Section title={isZh ? "提示词" : "Prompts"}>
-        <div className="space-y-4">
-          <div>
-            <label className={labelClass}>{isZh ? "基础提示词 *" : "Base Prompt *"}</label>
-            <textarea className={textareaClass} rows={6} value={form.basePrompt} onChange={(e) => updateField("basePrompt", e.target.value)} />
-          </div>
-          <div>
-            <label className={labelClass}>{isZh ? "负面提示词" : "Negative Prompt"}</label>
-            <textarea className={textareaClass} rows={4} value={form.negativePrompt} onChange={(e) => updateField("negativePrompt", e.target.value)} />
-          </div>
-        </div>
-      </Section>
-
-      {/* Section 4: Shots */}
+      {/* Section 3: Shots */}
       <Section
         title={isZh ? "分镜" : "Shots"}
         action={
@@ -675,33 +630,11 @@ export function AdminTemplateForm({ templateId }: { templateId?: string }) {
                   </div>
                 </div>
                 <div>
-                  <label className="block text-xs text-muted-foreground mb-1">{isZh ? "镜头提示词" : "Shot Prompt"}</label>
-                  <textarea className={textareaClass} rows={3} value={shot.prompt} onChange={(e) => updateShot(idx, "prompt", e.target.value)} />
-                </div>
-                <div className="grid grid-cols-3 gap-3">
-                  <div>
-                    <label className="block text-xs text-muted-foreground mb-1">{isZh ? "姿态" : "Pose"}</label>
-                    <input className={inputClass} value={shot.pose} onChange={(e) => updateShot(idx, "pose", e.target.value)} />
-                  </div>
-                  <div>
-                    <label className="block text-xs text-muted-foreground mb-1">{isZh ? "表情" : "Expression"}</label>
-                    <input className={inputClass} value={shot.expression} onChange={(e) => updateShot(idx, "expression", e.target.value)} />
-                  </div>
-                  <div>
-                    <label className="block text-xs text-muted-foreground mb-1">{isZh ? "机位" : "Camera"}</label>
-                    <input className={inputClass} value={shot.camera} onChange={(e) => updateShot(idx, "camera", e.target.value)} />
-                  </div>
-                </div>
-                <div>
-                  <label className="block text-xs text-muted-foreground mb-1">{isZh ? "构图" : "Composition"}</label>
-                  <input className={inputClass} value={shot.composition} onChange={(e) => updateShot(idx, "composition", e.target.value)} />
-                </div>
-                <div>
-                  <label className="block text-xs text-muted-foreground mb-1">{isZh ? "分镜模板原图" : "Shot Template Image"}</label>
+                  <label className="block text-xs text-muted-foreground mb-1">{isZh ? "参考图片" : "Reference Image"}</label>
                   <p className="text-xs text-muted-foreground mb-2">
                     {isZh
-                      ? "此图片会作为身份迁移请求中的图二。每个分镜只能绑定一张高清、无水印、竖版3:4模板原图。"
-                      : "This image will be sent as image 2 in the identity transfer request. Each shot should use one high-resolution, watermark-free, vertical 3:4 template image."
+                      ? "此图片作为身份迁移的参考图。上传高清、无水印、竖版3:4模板原图。"
+                      : "This image is used as the reference for identity transfer. Upload a high-resolution, watermark-free, vertical 3:4 template image."
                     }
                   </p>
                   <ImageUploader
@@ -713,24 +646,86 @@ export function AdminTemplateForm({ templateId }: { templateId?: string }) {
                     small
                   />
                 </div>
+                <div>
+                  <label className="block text-xs text-muted-foreground mb-1">{isZh ? "风格补充（可选）" : "Style Prompt (optional)"}</label>
+                  <textarea className={textareaClass} rows={2} value={shot.stylePrompt} onChange={(e) => updateShot(idx, "stylePrompt", e.target.value)} placeholder={isZh ? "可选，用于微调该镜头的风格" : "Optional, for fine-tuning this shot's style"} />
+                </div>
               </div>
             ))}
           </div>
         )}
       </Section>
 
+      {/* Section 4: Style Prompt */}
+      <Section title={isZh ? "风格描述" : "Style Prompt"}>
+        <div>
+          <label className={labelClass}>{isZh ? "模板风格描述（可选）" : "Template Style Prompt (optional)"}</label>
+          <p className="text-xs text-muted-foreground mb-2">
+            {isZh ? "轻量文字补充，描述该模板的整体视觉风格。生成时会拼接在全局身份保持 prompt 之后。" : "Lightweight text supplement describing the overall visual style of this template. Appended after the global identity preservation prompt during generation."}
+          </p>
+          <textarea className={textareaClass} rows={3} value={form.stylePrompt} onChange={(e) => updateField("stylePrompt", e.target.value)} />
+        </div>
+      </Section>
+
       {/* Section 5: Generation Config */}
       <Section title={isZh ? "生成配置" : "Generation Config"}>
-        <div>
+        <div className="grid grid-cols-3 gap-4">
+          <div>
+            <label className={labelClass}>{isZh ? "模型" : "Model"}</label>
+            <input
+              className={inputClass}
+              value={(() => { try { return JSON.parse(form.generationConfig).model ?? ""; } catch { return ""; } })()}
+              onChange={(e) => {
+                try {
+                  const config = JSON.parse(form.generationConfig);
+                  config.model = e.target.value;
+                  updateField("generationConfig", JSON.stringify(config, null, 2));
+                } catch { /* ignore */ }
+              }}
+              placeholder="doubao-seedream-5-0-lite"
+            />
+          </div>
+          <div>
+            <label className={labelClass}>{isZh ? "比例" : "Aspect Ratio"}</label>
+            <input
+              className={inputClass}
+              value={(() => { try { return JSON.parse(form.generationConfig).aspectRatio ?? ""; } catch { return ""; } })()}
+              onChange={(e) => {
+                try {
+                  const config = JSON.parse(form.generationConfig);
+                  config.aspectRatio = e.target.value;
+                  updateField("generationConfig", JSON.stringify(config, null, 2));
+                } catch { /* ignore */ }
+              }}
+              placeholder="3:4"
+            />
+          </div>
+          <div>
+            <label className={labelClass}>{isZh ? "尺寸" : "Size"}</label>
+            <input
+              className={inputClass}
+              value={(() => { try { return JSON.parse(form.generationConfig).size ?? ""; } catch { return ""; } })()}
+              onChange={(e) => {
+                try {
+                  const config = JSON.parse(form.generationConfig);
+                  config.size = e.target.value;
+                  updateField("generationConfig", JSON.stringify(config, null, 2));
+                } catch { /* ignore */ }
+              }}
+              placeholder="3072x4096"
+            />
+          </div>
+        </div>
+        <div className="mt-4">
           <label className={labelClass}>{isZh ? "生成配置 (JSON)" : "Generation Config (JSON)"}</label>
           <textarea
             className={cn(textareaClass, "font-mono text-xs")}
-            rows={8}
+            rows={6}
             value={form.generationConfig}
             onChange={(e) => updateField("generationConfig", e.target.value)}
           />
           <p className="text-xs text-muted-foreground mt-1">
-            {isZh ? "model, aspectRatio, width, height, imageCount" : "model, aspectRatio, width, height, imageCount"}
+            {isZh ? "model, aspectRatio, size, count, workflow" : "model, aspectRatio, size, count, workflow"}
           </p>
         </div>
       </Section>
