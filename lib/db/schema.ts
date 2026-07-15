@@ -166,7 +166,7 @@ export const generationHistory = pgTable("generation_history", {
   id: text("id").primaryKey(),
   userId: text("user_id").notNull().references(() => user.id, { onDelete: "cascade" }),
   type: varchar("type", { length: 16 }).notNull(), // 'image' | 'video'
-  prompt: text("prompt").notNull(),
+   prompt: text("prompt").notNull(),
   imageUrl: text("image_url"), // For image-to-video generation
   resultUrl: text("result_url"), // Final result URL
   taskId: text("task_id"), // For async video generation tracking
@@ -222,7 +222,7 @@ export const portraitTemplate = pgTable(
     coverImage: text("cover_image").default(""),
     previewImages: text("preview_images").array().default([]),
     referenceImages: text("reference_images").array().default([]),
-    basePrompt: text("base_prompt").notNull(),
+    basePrompt: text("base_prompt").default(""),
     negativePrompt: text("negative_prompt").default(""),
     generationConfig: text("generation_config").default('{"model":"doubao-seedream-5-0-lite","size":"3072x4096","aspectRatio":"3:4","count":1,"workflow":"identity_transfer"}'),
     creditsPerGeneration: integer("credits_per_generation").default(4).notNull(),
@@ -259,7 +259,7 @@ export const portraitTemplateShot = pgTable(
     sortOrder: integer("sort_order").default(0).notNull(),
     titleZh: text("title_zh").notNull(),
     titleEn: text("title_en").notNull(),
-    prompt: text("prompt").notNull(),
+    prompt: text("prompt").default(""),
     pose: text("pose").default(""),
     camera: text("camera").default(""),
     composition: text("composition").default(""),

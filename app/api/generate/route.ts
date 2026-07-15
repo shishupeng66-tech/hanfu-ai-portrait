@@ -59,7 +59,7 @@ function buildGenerationPrompt(
     shot = template.shots?.[0];
   }
 
-  const basePrompt = template.basePrompt;
+  const basePrompt = template.basePrompt ?? "";
   const shotPrompt = shot?.prompt ?? "";
   const prompt = shotPrompt ? `${basePrompt}\n\n${shotPrompt}` : basePrompt;
 

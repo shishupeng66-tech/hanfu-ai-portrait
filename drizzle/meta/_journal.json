@@ -78,6 +78,13 @@
       "when": 1784123625190,
       "tag": "0011_wooden_starhawk",
       "breakpoints": true
+    },
+    {
+      "idx": 11,
+      "version": "7",
+      "when": 1784131050973,
+      "tag": "0012_common_vulcan",
+      "breakpoints": true
     }
   ]
 }

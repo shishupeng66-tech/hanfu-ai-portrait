@@ -1,6 +1,6 @@
 {
-  "id": "e40639e8-a218-4f87-89bc-6694c438dc24",
-  "prevId": "3fef7386-5c8c-42a6-a840-84078b54c1ee",
+  "id": "0ddd5de5-257f-4f46-9f3f-4a7fb3977dae",
+  "prevId": "e40639e8-a218-4f87-89bc-6694c438dc24",
   "version": "7",
   "dialect": "postgresql",
   "tables": {
@@ -820,7 +820,8 @@
           "name": "base_prompt",
           "type": "text",
           "primaryKey": false,
-          "notNull": true
+          "notNull": false,
+          "default": "''"
         },
         "negative_prompt": {
           "name": "negative_prompt",
@@ -1009,7 +1010,8 @@
           "name": "prompt",
           "type": "text",
           "primaryKey": false,
-          "notNull": true
+          "notNull": false,
+          "default": "''"
         },
         "pose": {
           "name": "pose",
