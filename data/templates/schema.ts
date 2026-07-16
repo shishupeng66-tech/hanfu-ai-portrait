@@ -152,8 +152,7 @@ export function safeValidateTemplate(data: unknown) {
 export function isPublishedTemplateComplete(template: TemplateDefinition): boolean {
   return (
     template.name.zh.length > 0 &&
-    template.name.en.length > 0 &&
-    template.coverImage.length > 0
+    template.name.en.length > 0
   );
 }
 

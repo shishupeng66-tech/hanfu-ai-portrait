@@ -503,7 +503,13 @@ export function AdminTemplateForm({ templateId }: { templateId?: string }) {
         <div className="space-y-4">
           {/* Cover Image */}
           <div>
-            <label className={labelClass}>{isZh ? "封面图 *" : "Cover Image *"}</label>
+            <label className={labelClass}>{isZh ? "封面图（可选）" : "Cover Image (optional)"}</label>
+            <p className="text-xs text-muted-foreground mb-2">
+              {isZh
+                ? "未上传封面时，系统将自动使用 Shot 套图进行轮播展示。"
+                : "When no cover is uploaded, the system will auto-rotate through shot images."
+              }
+            </p>
             <ImageUploader
               currentUrl={form.coverImage}
               onUpload={(file) => handleImageUpload(file, "cover", (url) => updateField("coverImage", url))}

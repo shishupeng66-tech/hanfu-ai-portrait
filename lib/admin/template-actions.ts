@@ -31,7 +31,6 @@ export async function publishTemplate(
     if (!template.nameZh) errors.push("Chinese name is required");
     if (!template.nameEn) errors.push("English name is required");
     if (!template.slug) errors.push("Slug is required");
-    if (!template.coverImage) errors.push("Cover image is required");
     if (template.creditsPerGeneration < 0) errors.push("Credits must be >= 0");
 
     let genConfig: Record<string, unknown> = {};
@@ -51,24 +50,12 @@ export async function publishTemplate(
 
       if (!hasTemplateImage) {
         errors.push(
-          "Identity transfer requires a template reference image (referenceImages[0] or at least one shot.referenceImage)",
+          "Identity transfer requires at least one shot with a reference image",
         );
       }
 
       if (!genConfig.model || typeof genConfig.model !== "string" || !genConfig.model.trim()) {
         errors.push("Model is required in generationConfig for identity_transfer");
-      }
-
-      if (genConfig.size !== "3072x4096") {
-        errors.push("Size must be 3072x4096 for identity_transfer");
-      }
-
-      if (genConfig.aspectRatio !== "3:4") {
-        errors.push("Aspect ratio must be 3:4 for identity_transfer");
-      }
-
-      if (genConfig.count !== 1) {
-        errors.push("Image count must be 1 for identity_transfer");
       }
     } else {
       // prompt_generation: keep existing validation

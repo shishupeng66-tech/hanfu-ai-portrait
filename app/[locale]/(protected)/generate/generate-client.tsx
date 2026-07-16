@@ -583,13 +583,19 @@ export default function GenerateClientPage({
                         }}
                       >
                         <div className="relative aspect-[3/4] overflow-hidden">
-                          {template.coverImage ? (
-                            <Image src={template.coverImage} alt={template.name.zh || template.name.en} fill className="object-cover transition duration-500 group-hover:scale-[1.035] group-hover:brightness-110" sizes="180px" />
-                          ) : (
-                            <div className="flex items-center justify-center h-full bg-[#1a1a1e]">
-                              <span className="text-xs text-[rgba(255,247,236,0.2)]">No preview</span>
-                            </div>
-                          )}
+                          {(() => {
+                            const firstShotImg = template.shots
+                              ?.filter((s) => s.referenceImage?.trim())
+                              ?.sort((a, b) => a.order - b.order)[0]?.referenceImage;
+                            const imgSrc = firstShotImg || template.coverImage;
+                            return imgSrc ? (
+                              <Image src={imgSrc} alt={template.name.zh || template.name.en} fill className="object-cover transition duration-500 group-hover:scale-[1.035] group-hover:brightness-110" sizes="180px" />
+                            ) : (
+                              <div className="flex items-center justify-center h-full bg-[#1a1a1e]">
+                                <span className="text-xs text-[rgba(255,247,236,0.2)]">No preview</span>
+                              </div>
+                            );
+                          })()}
                           <div className="absolute inset-x-0 bottom-0 h-16 bg-gradient-to-t from-[#111114] to-transparent" />
                         </div>
                         <div className="px-4 pb-4 pt-3">

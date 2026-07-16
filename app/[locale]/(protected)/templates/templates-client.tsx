@@ -1,7 +1,7 @@
 "use client";
 
 import Image from "next/image";
-import { useMemo, useState } from "react";
+import { useMemo, useState, useEffect, useRef, useCallback } from "react";
 import { useLocale, useTranslations } from "next-intl";
 import { useRouter } from "next/navigation";
 import type { PublicTemplate } from "@/data/templates/client";
@@ -9,11 +9,87 @@ import type { PublicTemplate } from "@/data/templates/client";
 const categoryTabs = ["all", "tang", "song", "yuan", "ming", "qing", "modern", "dunhuang", "qipao"] as const;
 const filterChips = ["popular", "new", "premium", "free", "favorited"] as const;
 
+const CAROUSEL_INTERVAL_MS = 4000;
+
 function HeartIcon({ filled }: { filled: boolean }) {
   return (
     <svg width="18" height="18" viewBox="0 0 24 24" fill={filled ? "currentColor" : "none"} stroke="currentColor" strokeWidth="1.8" aria-hidden="true">
       <path d="M20.8 4.61a5.5 5.5 0 0 0-7.78 0L12 5.67l-1.02-1.06a5.5 5.5 0 0 0-7.78 7.78l1.06 1.06L12 21.23l7.74-7.74 1.06-1.06a5.5 5.5 0 0 0 0-7.78Z" />
     </svg>
+  );
+}
+
+/**
+ * Resolve the list of display images for a template card.
+ * Priority: shots[].referenceImage > coverImage
+ */
+function getDisplayImages(template: PublicTemplate): string[] {
+  const shotImages = template.shots
+    .filter((s) => s.referenceImage?.trim())
+    .sort((a, b) => a.order - b.order)
+    .map((s) => s.referenceImage);
+
+  if (shotImages.length > 0) return shotImages;
+  if (template.coverImage?.trim()) return [template.coverImage];
+  return [];
+}
+
+function TemplateCardImage({ template }: { template: PublicTemplate }) {
+  const images = useMemo(() => getDisplayImages(template), [template]);
+  const [currentIndex, setCurrentIndex] = useState(0);
+  const [isHovering, setIsHovering] = useState(false);
+  const intervalRef = useRef<ReturnType<typeof setInterval> | null>(null);
+
+  const nextImage = useCallback(() => {
+    setCurrentIndex((prev) => (prev + 1) % images.length);
+  }, [images.length]);
+
+  useEffect(() => {
+    if (images.length <= 1 || isHovering) return;
+    intervalRef.current = setInterval(nextImage, CAROUSEL_INTERVAL_MS);
+    return () => {
+      if (intervalRef.current) clearInterval(intervalRef.current);
+    };
+  }, [images.length, isHovering, nextImage]);
+
+  if (images.length === 0) {
+    return (
+      <div className="flex items-center justify-center h-full bg-[#1a1a1e]">
+        <span className="text-sm text-[rgba(255,247,236,0.25)]">No preview</span>
+      </div>
+    );
+  }
+
+  return (
+    <div
+      className="aspect-[3/4] relative overflow-hidden"
+      onMouseEnter={() => setIsHovering(true)}
+      onMouseLeave={() => setIsHovering(false)}
+    >
+      <Image
+        key={currentIndex}
+        src={images[currentIndex]}
+        alt={template.name.zh || template.name.en}
+        fill
+        sizes="(max-width: 768px) 50vw, (max-width: 1200px) 33vw, 25vw"
+        className="object-cover transition-opacity duration-500"
+      />
+      {images.length > 1 && (
+        <div className="absolute bottom-2 left-1/2 -translate-x-1/2 flex gap-1.5">
+          {images.map((_, idx) => (
+            <span
+              key={idx}
+              className="h-1.5 w-1.5 rounded-full transition-colors"
+              style={{
+                background: idx === currentIndex
+                  ? "rgba(232, 194, 122, 0.9)"
+                  : "rgba(255, 247, 236, 0.3)",
+              }}
+            />
+          ))}
+        </div>
+      )}
+    </div>
   );
 }
 
@@ -44,7 +120,6 @@ export default function TemplatesClientPage({ templates }: { templates: PublicTe
         return false;
       }
       if (activeFilters.size > 0) {
-        // Simple filter: featured for "popular", tags for others
         if (activeFilters.has("popular") && !template.featured) return false;
         if (activeFilters.has("new") && !template.tags.includes("new")) return false;
         if (activeFilters.has("premium") && !template.tags.includes("premium")) return false;
@@ -119,22 +194,8 @@ export default function TemplatesClientPage({ templates }: { templates: PublicTe
                   border: "1px solid rgba(255, 247, 236, 0.08)",
                 }}
               >
-                {/* Preview Image */}
-                <div className="aspect-[3/4] relative overflow-hidden">
-                  {template.coverImage ? (
-                    <Image
-                      src={template.coverImage}
-                      alt={template.name.zh || template.name.en}
-                      fill
-                      sizes="(max-width: 768px) 50vw, (max-width: 1200px) 33vw, 25vw"
-                      className="object-cover transition-transform duration-500 group-hover:scale-105"
-                    />
-                  ) : (
-                    <div className="flex items-center justify-center h-full bg-[#1a1a1e]">
-                      <span className="text-sm text-[rgba(255,247,236,0.25)]">No preview</span>
-                    </div>
-                  )}
-                </div>
+                {/* Preview Image with shot carousel */}
+                <TemplateCardImage template={template} />
 
                 {/* Info */}
                 <div className="p-4">

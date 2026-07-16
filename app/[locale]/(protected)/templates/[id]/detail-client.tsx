@@ -2,10 +2,21 @@
 
 import Image from "next/image";
 import Link from "next/link";
-import { useState } from "react";
+import { useState, useMemo } from "react";
 import { useLocale, useTranslations } from "next-intl";
 import { ArrowLeft, Heart, Sparkles } from "lucide-react";
 import type { PublicTemplate } from "@/data/templates/client";
+
+function getDisplayImages(template: PublicTemplate): string[] {
+  const shotImages = template.shots
+    .filter((s) => s.referenceImage?.trim())
+    .sort((a, b) => a.order - b.order)
+    .map((s) => s.referenceImage);
+
+  if (shotImages.length > 0) return shotImages;
+  if (template.coverImage?.trim()) return [template.coverImage];
+  return [];
+}
 
 export default function TemplateDetailClientPage({
   template,
@@ -15,6 +26,17 @@ export default function TemplateDetailClientPage({
   const t = useTranslations("templates.detail");
   const locale = useLocale();
   const [isFavorited, setIsFavorited] = useState(false);
+  const [activeImageIndex, setActiveImageIndex] = useState(0);
+
+  // Hooks must be called before any early return
+  const displayImages = useMemo(
+    () => (template ? getDisplayImages(template) : []),
+    [template],
+  );
+  const sortedShots = useMemo(
+    () => (template ? [...template.shots].sort((a, b) => a.order - b.order) : []),
+    [template],
+  );
 
   if (!template) {
     return (
@@ -70,9 +92,9 @@ export default function TemplateDetailClientPage({
                 border: "1px solid rgba(255, 247, 236, 0.08)",
               }}
             >
-              {template.coverImage ? (
+              {displayImages.length > 0 ? (
                 <Image
-                  src={template.coverImage}
+                  src={displayImages[activeImageIndex]}
                   alt={displayName}
                   fill
                   sizes="(max-width: 1024px) 100vw, 60vw"
@@ -86,8 +108,8 @@ export default function TemplateDetailClientPage({
               )}
             </div>
 
-            {/* Gallery Section */}
-            {template.previewImages.length > 0 && (
+            {/* Shot Gallery */}
+            {sortedShots.length > 0 && (
               <div className="mt-8">
                 <h3 className="text-lg font-semibold mb-2" style={{ color: "rgba(255, 247, 236, 0.92)" }}>
                   {t("morePreviews")}
@@ -95,6 +117,54 @@ export default function TemplateDetailClientPage({
                 <p className="text-sm mb-4" style={{ color: "rgba(255, 247, 236, 0.5)" }}>
                   {t("morePreviewsSubtitle")}
                 </p>
+                <div className="grid grid-cols-2 sm:grid-cols-3 gap-3">
+                  {sortedShots.map((shot, index) => {
+                    const isActive = index === activeImageIndex;
+                    const img = shot.referenceImage;
+                    return (
+                      <button
+                        key={shot.shotKey}
+                        type="button"
+                        onClick={() => setActiveImageIndex(index)}
+                        className="aspect-[3/4] relative rounded-lg overflow-hidden transition-all"
+                        style={{
+                          background: "#111114",
+                          border: isActive
+                            ? "2px solid rgba(232, 194, 122, 0.6)"
+                            : "1px solid rgba(255, 247, 236, 0.08)",
+                        }}
+                      >
+                        {img ? (
+                          <Image
+                            src={img}
+                            alt={shot.title.zh || shot.title.en || shot.shotKey}
+                            fill
+                            sizes="(max-width: 640px) 50vw, 33vw"
+                            className="object-cover"
+                          />
+                        ) : (
+                          <div className="flex items-center justify-center h-full">
+                            <span className="text-xs text-[rgba(255,247,236,0.2)]">No img</span>
+                          </div>
+                        )}
+                        <div className="absolute inset-x-0 bottom-0 bg-gradient-to-t from-black/60 to-transparent p-2">
+                          <span className="text-xs text-white font-medium">
+                            {shot.title.zh || shot.title.en || shot.shotKey}
+                          </span>
+                        </div>
+                      </button>
+                    );
+                  })}
+                </div>
+              </div>
+            )}
+
+            {/* Fallback previewImages gallery */}
+            {sortedShots.length === 0 && template.previewImages.length > 0 && (
+              <div className="mt-8">
+                <h3 className="text-lg font-semibold mb-2" style={{ color: "rgba(255, 247, 236, 0.92)" }}>
+                  {t("morePreviews")}
+                </h3>
                 <div className="grid grid-cols-2 sm:grid-cols-3 gap-3">
                   {template.previewImages.map((img, index) => (
                     <div

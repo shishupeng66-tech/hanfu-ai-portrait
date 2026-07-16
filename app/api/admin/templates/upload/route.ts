@@ -61,10 +61,12 @@ export async function POST(req: NextRequest) {
     let url: string;
     try {
       url = await uploadToR2(key, buffer, file.type);
-    } catch {
-      // R2 might not be configured, fall back to base64
-      const base64 = buffer.toString("base64");
-      url = `data:${file.type};base64,${base64}`;
+    } catch (r2Error) {
+      console.error("[admin] R2 upload failed:", r2Error);
+      return NextResponse.json(
+        { error: "R2 storage is not configured. Please configure STORAGE_* environment variables. Template images cannot be saved as base64." },
+        { status: 500 },
+      );
     }
 
     return NextResponse.json({
