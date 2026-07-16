@@ -85,6 +85,13 @@
       "when": 1784131050973,
       "tag": "0012_common_vulcan",
       "breakpoints": true
+    },
+    {
+      "idx": 12,
+      "version": "7",
+      "when": 1784213955578,
+      "tag": "0012_square_captain_stacy",
+      "breakpoints": true
     }
   ]
 }

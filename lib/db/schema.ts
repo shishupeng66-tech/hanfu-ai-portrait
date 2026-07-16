@@ -1,4 +1,5 @@
-import { pgTable, text, timestamp, boolean, integer, varchar, index } from "drizzle-orm/pg-core";
+import { pgTable, text, timestamp, boolean, integer, varchar, index, AnyPgColumn } from "drizzle-orm/pg-core";
+import { relations } from "drizzle-orm";
 
 export const user = pgTable("user", {
   id: text("id").primaryKey(),
@@ -161,22 +162,80 @@ export const chatMessage = pgTable("chat_message", {
   createdAt: timestamp("created_at").defaultNow().notNull(),
 });
 
+// Generation batch — groups multiple shot generations into a single "set" or "trial"
+export const generationBatch = pgTable(
+  "generation_batch",
+  {
+    id: text("id").primaryKey(),
+    userId: text("user_id")
+      .notNull()
+      .references(() => user.id, { onDelete: "cascade" }),
+    templateId: text("template_id"),
+    templateSlug: text("template_slug"),
+    templateNameZh: text("template_name_zh").default(""),
+    templateNameEn: text("template_name_en").default(""),
+    generationType: varchar("generation_type", { length: 16 }).notNull().default("set"),
+    totalCredits: integer("total_credits").notNull().default(0),
+    totalShots: integer("total_shots").notNull().default(0),
+    completedShots: integer("completed_shots").notNull().default(0),
+    failedShots: integer("failed_shots").notNull().default(0),
+    status: varchar("status", { length: 16 }).notNull().default("pending"),
+    trialBatchId: text("trial_batch_id").references(
+      (): AnyPgColumn => generationBatch.id,
+      { onDelete: "set null" },
+    ),
+    sourceImage: text("source_image"),
+    createdAt: timestamp("created_at").defaultNow().notNull(),
+    updatedAt: timestamp("updated_at")
+      .defaultNow()
+      .$onUpdate(() => new Date())
+      .notNull(),
+  },
+  (table) => ({
+    userIdx: index("generation_batch_user_idx").on(
+      table.userId,
+      table.createdAt.desc(),
+    ),
+    statusIdx: index("generation_batch_status_idx").on(table.status),
+    templateIdx: index("generation_batch_template_idx").on(table.templateId),
+  }),
+);
+
 // Generation history for images and videos
-export const generationHistory = pgTable("generation_history", {
-  id: text("id").primaryKey(),
-  userId: text("user_id").notNull().references(() => user.id, { onDelete: "cascade" }),
-  type: varchar("type", { length: 16 }).notNull(), // 'image' | 'video'
-   prompt: text("prompt").notNull(),
-  imageUrl: text("image_url"), // For image-to-video generation
-  resultUrl: text("result_url"), // Final result URL
-  taskId: text("task_id"), // For async video generation tracking
-  status: varchar("status", { length: 16 }).notNull().default("pending"), // pending, processing, completed, failed
-  creditsUsed: integer("credits_used").default(0).notNull(),
-  metadata: text("metadata"), // JSON string for additional data
-  error: text("error"), // Error message if failed
-  createdAt: timestamp("created_at").defaultNow().notNull(),
-  updatedAt: timestamp("updated_at").defaultNow().$onUpdate(() => new Date()).notNull(),
-});
+export const generationHistory = pgTable(
+  "generation_history",
+  {
+    id: text("id").primaryKey(),
+    userId: text("user_id")
+      .notNull()
+      .references(() => user.id, { onDelete: "cascade" }),
+    type: varchar("type", { length: 16 }).notNull(), // 'image' | 'video'
+    prompt: text("prompt").notNull(),
+    imageUrl: text("image_url"), // For image-to-video generation
+    resultUrl: text("result_url"), // Final result URL
+    taskId: text("task_id"), // For async video generation tracking
+    status: varchar("status", { length: 16 }).notNull().default("pending"), // pending, processing, completed, failed
+    creditsUsed: integer("credits_used").default(0).notNull(),
+    metadata: text("metadata"), // JSON string for additional data
+    error: text("error"), // Error message if failed
+
+    // Phase 8.1 — batch & shot linkage
+    batchId: text("batch_id").references(() => generationBatch.id, { onDelete: "set null" }),
+    generationType: varchar("generation_type", { length: 16 }), // NULL for legacy records; 'trial' | 'set' for new
+    shotId: text("shot_id"),
+    shotOrder: integer("shot_order"),
+
+    createdAt: timestamp("created_at").defaultNow().notNull(),
+    updatedAt: timestamp("updated_at")
+      .defaultNow()
+      .$onUpdate(() => new Date())
+      .notNull(),
+  },
+  (table) => ({
+    batchIdx: index("generation_history_batch_idx").on(table.batchId),
+    batchShotIdx: index("generation_history_batch_shot_idx").on(table.batchId, table.shotId),
+  }),
+);
 
 // Password reset tokens
 export const passwordResetToken = pgTable("password_reset_token", {
@@ -225,7 +284,7 @@ export const portraitTemplate = pgTable(
     basePrompt: text("base_prompt").default(""),
     negativePrompt: text("negative_prompt").default(""),
     generationConfig: text("generation_config").default('{"model":"doubao-seedream-5-0-lite","size":"3072x4096","aspectRatio":"3:4","count":1,"workflow":"identity_transfer"}'),
-    creditsPerGeneration: integer("credits_per_generation").default(4).notNull(),
+    creditsPerGeneration: integer("credits_per_generation").default(1).notNull(),
     memberCreditsPerGeneration: integer("member_credits_per_generation"),
     featured: boolean("featured").default(false).notNull(),
     sortOrder: integer("sort_order").default(0).notNull(),
@@ -277,3 +336,31 @@ export const portraitTemplateShot = pgTable(
     templateKeyIdx: index("portrait_template_shot_key_idx").on(table.templateId, table.shotKey),
   }),
 );
+
+// ---------------------------------------------------------------------------
+// Drizzle relations
+// ---------------------------------------------------------------------------
+
+export const generationBatchRelations = relations(generationBatch, ({ one, many }) => ({
+  user: one(user, {
+    fields: [generationBatch.userId],
+    references: [user.id],
+  }),
+  trialBatch: one(generationBatch, {
+    fields: [generationBatch.trialBatchId],
+    references: [generationBatch.id],
+    relationName: "trial_batch_self_ref",
+  }),
+  generationHistory: many(generationHistory),
+}));
+
+export const generationHistoryRelations = relations(generationHistory, ({ one }) => ({
+  user: one(user, {
+    fields: [generationHistory.userId],
+    references: [user.id],
+  }),
+  batch: one(generationBatch, {
+    fields: [generationHistory.batchId],
+    references: [generationBatch.id],
+  }),
+}));

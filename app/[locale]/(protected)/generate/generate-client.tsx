@@ -80,6 +80,13 @@ export default function GenerateClientPage({
     }
   }, [selectedTemplateSlug, updateScrollArrows]);
 
+  const session = useSession();
+  const isLoggedIn = !!session.data?.user;
+
+  const hasTemplates = templates.length > 0;
+  const activeTemplate = templates.find((t) => t.slug === selectedTemplateSlug) ?? null;
+  const activeTemplateShots = activeTemplate?.shots ?? [];
+
   // Update arrows on mount, resize, and after shots render
   useEffect(() => {
     updateScrollArrows();
@@ -103,14 +110,6 @@ export default function GenerateClientPage({
     el.scrollBy({ left: 120, behavior: "smooth" });
   };
 
-  const session = useSession();
-  const isLoggedIn = !!session.data?.user;
-
-  const hasTemplates = templates.length > 0;
-  const activeTemplate = templates.find((t) => t.slug === selectedTemplateSlug) ?? null;
-
-  // Auto-select first shot when template changes
-  const activeTemplateShots = activeTemplate?.shots ?? [];
   useEffect(() => {
     if (activeTemplateShots.length > 0) {
       const sorted = [...activeTemplateShots].sort((a, b) => a.order - b.order);
