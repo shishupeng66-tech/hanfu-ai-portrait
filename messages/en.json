@@ -134,6 +134,11 @@
     "styleSelection": {
       "title": "Choose Your Style",
       "currentSelection": "Current Selection",
+      "currentSeries": "Current series",
+      "totalShots": "{count} shots total",
+      "chooseShot": "Choose a shot to generate",
+      "scrollLeft": "Scroll left",
+      "scrollRight": "Scroll right",
       "featuredTemplates": "Featured Templates",
       "generationCost": "Consumes",
       "generating": "AI is generating your Hanfu portrait, please wait...",

@@ -1789,6 +1789,11 @@
     "styleSelection": {
       "title": "选择风格",
       "currentSelection": "当前选择",
+      "currentSeries": "当前套系",
+      "totalShots": "共 {count} 个镜头",
+      "chooseShot": "选择一张试生成",
+      "scrollLeft": "向左滚动",
+      "scrollRight": "向右滚动",
       "featuredTemplates": "精选模板",
       "generationCost": "生成消耗",
       "generating": "AI 正在生成您的汉服写真，请耐心等待...",

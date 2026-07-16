@@ -1,7 +1,7 @@
 "use client";
 
 import Image from "next/image";
-import { ChangeEvent, useState, useMemo, useEffect, useCallback } from "react";
+import { ChangeEvent, useState, useMemo, useEffect, useCallback, useRef } from "react";
 import { useLocale, useTranslations } from "next-intl";
 import { useSession } from "@/lib/auth-client";
 import type { PublicTemplate } from "@/data/templates/client";
@@ -59,6 +59,49 @@ export default function GenerateClientPage({
   const [userCredits, setUserCredits] = useState<number>(0);
   const [currentPreviewIndex, setCurrentPreviewIndex] = useState(0);
   const [generationError, setGenerationError] = useState<string | null>(null);
+
+  // Shot horizontal scroll
+  const shotScrollRef = useRef<HTMLDivElement>(null);
+  const [canScrollLeft, setCanScrollLeft] = useState(false);
+  const [canScrollRight, setCanScrollRight] = useState(false);
+
+  const updateScrollArrows = useCallback(() => {
+    const el = shotScrollRef.current;
+    if (!el) return;
+    setCanScrollLeft(el.scrollLeft > 1);
+    setCanScrollRight(el.scrollLeft + el.clientWidth < el.scrollWidth - 1);
+  }, []);
+
+  // Reset scroll position when template changes
+  useEffect(() => {
+    if (shotScrollRef.current) {
+      shotScrollRef.current.scrollLeft = 0;
+      updateScrollArrows();
+    }
+  }, [selectedTemplateSlug, updateScrollArrows]);
+
+  // Update arrows on mount, resize, and after shots render
+  useEffect(() => {
+    updateScrollArrows();
+    const timer = setTimeout(updateScrollArrows, 120);
+    window.addEventListener("resize", updateScrollArrows);
+    return () => {
+      clearTimeout(timer);
+      window.removeEventListener("resize", updateScrollArrows);
+    };
+  }, [updateScrollArrows, activeTemplateShots]);
+
+  const scrollShotsLeft = () => {
+    const el = shotScrollRef.current;
+    if (!el) return;
+    el.scrollBy({ left: -120, behavior: "smooth" });
+  };
+
+  const scrollShotsRight = () => {
+    const el = shotScrollRef.current;
+    if (!el) return;
+    el.scrollBy({ left: 120, behavior: "smooth" });
+  };
 
   const session = useSession();
   const isLoggedIn = !!session.data?.user;
@@ -454,56 +497,104 @@ export default function GenerateClientPage({
 
                       {activeTemplateShots.length > 1 && (
                         <div className="mt-4">
-                          <p className="mb-2 text-xs font-medium text-[rgba(255,247,236,0.55)]">
-                            {t("styleSelection.chooseShot") ?? "Choose a shot"}
+                          <p className="mb-0.5 text-xs text-[rgba(255,247,236,0.45)]">
+                            {t("styleSelection.currentSeries")}:{" "}
+                            <span className="font-medium text-[#E8C27A]">{templateDisplayName}</span>
                           </p>
-                          <div className="flex gap-2">
-                            {[...activeTemplateShots]
-                              .sort((a, b) => a.order - b.order)
-                              .map((shot) => {
-                                const isShotSelected = selectedShotId === shot.shotKey;
-                                return (
-                                  <button
-                                    key={shot.shotKey}
-                                    type="button"
-                                    onClick={() => setSelectedShotId(shot.shotKey)}
-                                    className="flex flex-col items-center gap-1 rounded-lg border p-2 transition hover:border-[rgba(232,194,122,0.34)]"
-                                    style={{
-                                      background: isShotSelected ? "rgba(232,194,122,0.10)" : "rgba(255,247,236,0.03)",
-                                      borderColor: isShotSelected ? "rgba(232,194,122,0.68)" : "rgba(255,247,236,0.08)",
-                                    }}
-                                  >
-                                    {shot.referenceImage ? (
-                                      <div className="relative h-20 w-[60px] overflow-hidden rounded-md">
-                                        <Image
-                                          src={shot.referenceImage}
-                                          alt={shot.title.zh || shot.title.en || shot.shotKey}
-                                          fill
-                                          className="object-cover"
-                                          unoptimized
-                                        />
-                                      </div>
-                                    ) : (
-                                      <div className="flex h-20 w-[60px] items-center justify-center rounded-md bg-[#1a1a1e]">
-                                        <span className="text-[10px] text-[rgba(255,247,236,0.2)]">No img</span>
-                                      </div>
-                                    )}
-                                    <span
-                                      className="max-w-[70px] truncate text-center text-xs"
-                                      style={{ color: isShotSelected ? "#E8C27A" : "rgba(255,247,236,0.55)" }}
+                          <p className="mb-1 text-xs text-[rgba(255,247,236,0.45)]">
+                            {t("styleSelection.totalShots", { count: activeTemplateShots.length })}
+                          </p>
+                          <p className="mb-2 text-xs font-medium text-[rgba(255,247,236,0.55)]">
+                            {t("styleSelection.chooseShot")}
+                          </p>
+                          <div className="relative">
+                            {/* Left scroll arrow */}
+                            {canScrollLeft && (
+                              <button
+                                type="button"
+                                aria-label={t("styleSelection.scrollLeft")}
+                                onClick={scrollShotsLeft}
+                                className="absolute -left-1 top-1/2 z-10 flex h-7 w-7 -translate-y-1/2 items-center justify-center rounded-full border border-[rgba(232,194,122,0.22)] bg-[#141418] text-[#E8C27A] shadow-[0_4px_16px_rgba(0,0,0,0.5)] transition hover:border-[rgba(232,194,122,0.42)] hover:bg-[rgba(232,194,122,0.08)]"
+                              >
+                                <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5">
+                                  <path d="m15 18-6-6 6-6" />
+                                </svg>
+                              </button>
+                            )}
+                            {/* Scrollable shot list */}
+                            <div
+                              ref={shotScrollRef}
+                              onScroll={updateScrollArrows}
+                              className="flex gap-3 overflow-x-auto scroll-smooth snap-x snap-mandatory [scrollbar-width:none] [&::-webkit-scrollbar]:hidden"
+                            >
+                              {[...activeTemplateShots]
+                                .sort((a, b) => a.order - b.order)
+                                .map((shot) => {
+                                  const isShotSelected = selectedShotId === shot.shotKey;
+                                  return (
+                                    <button
+                                      key={shot.shotKey}
+                                      type="button"
+                                      onClick={() => setSelectedShotId(shot.shotKey)}
+                                      className="relative flex w-[104px] shrink-0 snap-start flex-col items-center gap-1.5 rounded-lg border p-2 transition hover:border-[rgba(232,194,122,0.34)] hover:brightness-110"
+                                      style={{
+                                        background: isShotSelected ? "rgba(232,194,122,0.10)" : "rgba(255,247,236,0.03)",
+                                        borderColor: isShotSelected ? "rgba(232,194,122,0.68)" : "rgba(255,247,236,0.08)",
+                                      }}
                                     >
-                                      {shot.title.zh || shot.title.en || shot.shotKey}
-                                    </span>
-                                    {isShotSelected && (
-                                      <span className="flex h-4 w-4 items-center justify-center rounded-full bg-[#E8C27A]">
-                                        <svg width="10" height="10" viewBox="0 0 24 24" fill="none" stroke="#0B0B0D" strokeWidth="3">
-                                          <path d="m20 6-11 11-5-5" />
-                                        </svg>
+                                      {shot.referenceImage ? (
+                                        <div className="relative aspect-[3/4] w-full overflow-hidden rounded-md">
+                                          <Image
+                                            src={shot.referenceImage}
+                                            alt={shot.title.zh || shot.title.en || shot.shotKey}
+                                            fill
+                                            className="object-cover"
+                                            sizes="88px"
+                                            unoptimized
+                                          />
+                                        </div>
+                                      ) : (
+                                        <div className="flex aspect-[3/4] w-full items-center justify-center rounded-md bg-[#1a1a1e]">
+                                          <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="rgba(255,247,236,0.12)" strokeWidth="1.5">
+                                            <rect x="3" y="3" width="18" height="18" rx="2" />
+                                            <circle cx="8.5" cy="8.5" r="1.5" />
+                                            <path d="m21 15-5-5L5 21" />
+                                          </svg>
+                                        </div>
+                                      )}
+                                      <span
+                                        className="line-clamp-2 w-full text-center text-[11px] leading-tight"
+                                        style={{ color: isShotSelected ? "#E8C27A" : "rgba(255,247,236,0.55)" }}
+                                      >
+                                        {shot.title.zh || shot.title.en || shot.shotKey}
                                       </span>
-                                    )}
-                                  </button>
-                                );
-                              })}
+                                      {isShotSelected && (
+                                        <span className="absolute -right-1.5 -top-1.5 flex h-5 w-5 items-center justify-center rounded-full bg-[#E8C27A] shadow-[0_2px_8px_rgba(0,0,0,0.3)]">
+                                          <svg width="10" height="10" viewBox="0 0 24 24" fill="none" stroke="#0B0B0D" strokeWidth="3">
+                                            <path d="m20 6-11 11-5-5" />
+                                          </svg>
+                                        </span>
+                                      )}
+                                    </button>
+                                  );
+                                })}
+                            </div>
+                            {/* Right scroll arrow */}
+                            {canScrollRight && (
+                              <button
+                                type="button"
+                                aria-label={t("styleSelection.scrollRight")}
+                                onClick={scrollShotsRight}
+                                className="absolute -right-1 top-1/2 z-10 flex h-7 w-7 -translate-y-1/2 items-center justify-center rounded-full border border-[rgba(232,194,122,0.22)] bg-[#141418] text-[#E8C27A] shadow-[0_4px_16px_rgba(0,0,0,0.5)] transition hover:border-[rgba(232,194,122,0.42)] hover:bg-[rgba(232,194,122,0.08)]"
+                              >
+                                <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5">
+                                  <path d="m9 18 6-6-6-6" />
+                                </svg>
+                              </button>
+                            )}
+                            {/* Gradient fade masks */}
+                            <div className="pointer-events-none absolute inset-y-0 left-0 w-6 bg-gradient-to-r from-[#141418] to-transparent" />
+                            <div className="pointer-events-none absolute inset-y-0 right-0 w-6 bg-gradient-to-r from-transparent to-[#141418]" />
                           </div>
                         </div>
                       )}
