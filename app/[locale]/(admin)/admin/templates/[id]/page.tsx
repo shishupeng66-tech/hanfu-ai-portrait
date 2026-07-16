@@ -255,7 +255,7 @@ export function AdminTemplateForm({ templateId }: { templateId?: string }) {
     try {
       const fd = new FormData();
       fd.append("file", file);
-      fd.append("templateId", templateId || form.slug || "new");
+      fd.append("templateId", form.slug || templateId || "new");
       fd.append("folder", folder);
 
       const res = await fetch("/api/admin/templates/upload", { method: "POST", body: fd });
@@ -503,11 +503,11 @@ export function AdminTemplateForm({ templateId }: { templateId?: string }) {
         <div className="space-y-4">
           {/* Cover Image */}
           <div>
-            <label className={labelClass}>{isZh ? "封面图（可选）" : "Cover Image (optional)"}</label>
+            <label className={labelClass}>{isZh ? "模板封面图（可选）" : "Cover Image (optional)"}</label>
             <p className="text-xs text-muted-foreground mb-2">
               {isZh
-                ? "未上传封面时，系统将自动使用 Shot 套图进行轮播展示。"
-                : "When no cover is uploaded, the system will auto-rotate through shot images."
+                ? "用于模板库展示，未上传时自动使用第一张镜头图。"
+                : "Used for template library display. When not uploaded, the first shot image is used automatically."
               }
             </p>
             <ImageUploader

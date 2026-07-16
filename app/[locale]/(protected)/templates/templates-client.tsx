@@ -1,15 +1,13 @@
 "use client";
 
 import Image from "next/image";
-import { useMemo, useState, useEffect, useRef, useCallback } from "react";
+import { useMemo, useState } from "react";
 import { useLocale, useTranslations } from "next-intl";
 import { useRouter } from "next/navigation";
 import type { PublicTemplate } from "@/data/templates/client";
 
 const categoryTabs = ["all", "tang", "song", "yuan", "ming", "qing", "modern", "dunhuang", "qipao"] as const;
 const filterChips = ["popular", "new", "premium", "free", "favorited"] as const;
-
-const CAROUSEL_INTERVAL_MS = 4000;
 
 function HeartIcon({ filled }: { filled: boolean }) {
   return (
@@ -20,75 +18,38 @@ function HeartIcon({ filled }: { filled: boolean }) {
 }
 
 /**
- * Resolve the list of display images for a template card.
- * Priority: shots[].referenceImage > coverImage
+ * Resolve the display image for a template card.
+ * Priority: coverImage > shots[0].referenceImage
  */
-function getDisplayImages(template: PublicTemplate): string[] {
-  const shotImages = template.shots
+function getDisplayImage(template: PublicTemplate): string | null {
+  if (template.coverImage?.trim()) return template.coverImage;
+  const firstShot = template.shots
     .filter((s) => s.referenceImage?.trim())
-    .sort((a, b) => a.order - b.order)
-    .map((s) => s.referenceImage);
-
-  if (shotImages.length > 0) return shotImages;
-  if (template.coverImage?.trim()) return [template.coverImage];
-  return [];
+    .sort((a, b) => a.order - b.order)[0];
+  if (firstShot?.referenceImage) return firstShot.referenceImage;
+  return null;
 }
 
 function TemplateCardImage({ template }: { template: PublicTemplate }) {
-  const images = useMemo(() => getDisplayImages(template), [template]);
-  const [currentIndex, setCurrentIndex] = useState(0);
-  const [isHovering, setIsHovering] = useState(false);
-  const intervalRef = useRef<ReturnType<typeof setInterval> | null>(null);
+  const image = useMemo(() => getDisplayImage(template), [template]);
 
-  const nextImage = useCallback(() => {
-    setCurrentIndex((prev) => (prev + 1) % images.length);
-  }, [images.length]);
-
-  useEffect(() => {
-    if (images.length <= 1 || isHovering) return;
-    intervalRef.current = setInterval(nextImage, CAROUSEL_INTERVAL_MS);
-    return () => {
-      if (intervalRef.current) clearInterval(intervalRef.current);
-    };
-  }, [images.length, isHovering, nextImage]);
-
-  if (images.length === 0) {
+  if (!image) {
     return (
-      <div className="flex items-center justify-center h-full bg-[#1a1a1e]">
+      <div className="aspect-[3/4] flex items-center justify-center bg-[#1a1a1e]">
         <span className="text-sm text-[rgba(255,247,236,0.25)]">No preview</span>
       </div>
     );
   }
 
   return (
-    <div
-      className="aspect-[3/4] relative overflow-hidden"
-      onMouseEnter={() => setIsHovering(true)}
-      onMouseLeave={() => setIsHovering(false)}
-    >
+    <div className="aspect-[3/4] relative overflow-hidden">
       <Image
-        key={currentIndex}
-        src={images[currentIndex]}
+        src={image}
         alt={template.name.zh || template.name.en}
         fill
         sizes="(max-width: 768px) 50vw, (max-width: 1200px) 33vw, 25vw"
-        className="object-cover transition-opacity duration-500"
+        className="object-cover"
       />
-      {images.length > 1 && (
-        <div className="absolute bottom-2 left-1/2 -translate-x-1/2 flex gap-1.5">
-          {images.map((_, idx) => (
-            <span
-              key={idx}
-              className="h-1.5 w-1.5 rounded-full transition-colors"
-              style={{
-                background: idx === currentIndex
-                  ? "rgba(232, 194, 122, 0.9)"
-                  : "rgba(255, 247, 236, 0.3)",
-              }}
-            />
-          ))}
-        </div>
-      )}
     </div>
   );
 }
@@ -183,7 +144,7 @@ export default function TemplatesClientPage({ templates }: { templates: PublicTe
 
         {/* Templates Grid */}
         {filteredTemplates.length > 0 ? (
-          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4 md:gap-6">
+          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4 md:gap-6">
             {filteredTemplates.map((template) => (
               <button
                 key={template.id}
@@ -194,7 +155,7 @@ export default function TemplatesClientPage({ templates }: { templates: PublicTe
                   border: "1px solid rgba(255, 247, 236, 0.08)",
                 }}
               >
-                {/* Preview Image with shot carousel */}
+                {/* Preview Image */}
                 <TemplateCardImage template={template} />
 
                 {/* Info */}
