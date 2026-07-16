@@ -666,7 +666,11 @@
         "emailRequired": "Please enter email",
         "passwordRequired": "Please enter password",
         "loginFailed": "Login failed. Please try again.",
-        "googleLoginFailed": "Google login failed. Please try again."
+        "googleLoginFailed": "Google login failed. Please try again.",
+        "configMissing": "Authentication service configuration error. Please contact support.",
+        "invalidCredentials": "Invalid email or password.",
+        "databaseError": "Service temporarily unavailable. Please try again later.",
+        "oauthConfigMissing": "Google sign-in is not configured. Please contact support."
       }
     },
     "signup": {

@@ -645,7 +645,11 @@
         "emailRequired": "请输入邮箱地址",
         "passwordRequired": "请输入密码",
         "loginFailed": "登录失败，请重试。",
-        "googleLoginFailed": "Google 登录失败，请重试。"
+        "googleLoginFailed": "Google 登录失败，请重试。",
+        "configMissing": "认证服务配置错误，请联系管理员。",
+        "invalidCredentials": "邮箱或密码不正确。",
+        "databaseError": "服务暂时不可用，请稍后重试。",
+        "oauthConfigMissing": "Google 登录未配置，请联系管理员。"
       }
     },
     "signup": {

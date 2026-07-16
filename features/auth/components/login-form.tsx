@@ -43,19 +43,29 @@ export function LoginForm({ showGoogleAuth = true }: LoginFormProps) {
       setIsLoading(true);
       setError(null);
 
-      const { error } = await signIn.email({
+      const result = await signIn.email({
         email: values.email,
         password: values.password,
       });
 
-      if (error) {
-        setError(error.message || t('errors.loginFailed'));
+      if (result.error) {
+        const msg = result.error.message || "";
+        if (msg.includes("trusted") || msg.includes("origin") || msg.includes("CORS")) {
+          setError(t('errors.configMissing') || "Authentication configuration error. Please contact support.");
+        } else if (msg.includes("credential") || msg.includes("password") || msg.includes("Invalid")) {
+          setError(t('errors.invalidCredentials') || "Invalid email or password");
+        } else if (msg.includes("database") || msg.includes("connection")) {
+          setError(t('errors.databaseError') || "Service temporarily unavailable");
+        } else {
+          setError(msg || t('errors.loginFailed'));
+        }
         return;
       }
 
       router.refresh();
       router.replace(callbackUrl);
-    } catch {
+    } catch (err) {
+      console.error("[Login] Unexpected error:", err instanceof Error ? err.message : String(err));
       setError(t('errors.loginFailed'));
     } finally {
       setIsLoading(false);
@@ -65,12 +75,19 @@ export function LoginForm({ showGoogleAuth = true }: LoginFormProps) {
   async function handleGoogleSignIn() {
     try {
       setIsLoading(true);
+      setError(null);
       await signIn.social({
         provider: "google",
         callbackURL: callbackUrl,
       });
-    } catch {
-      setError(t('errors.googleLoginFailed'));
+    } catch (err) {
+      console.error("[Login] Google OAuth error:", err instanceof Error ? err.message : String(err));
+      const msg = err instanceof Error ? err.message : "";
+      if (msg.includes("configuration") || msg.includes("not enabled") || msg.includes("provider")) {
+        setError(t('errors.oauthConfigMissing') || "Google sign-in is not configured. Please contact support.");
+      } else {
+        setError(t('errors.googleLoginFailed'));
+      }
     } finally {
       setIsLoading(false);
     }
