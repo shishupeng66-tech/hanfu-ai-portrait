@@ -22,6 +22,8 @@ const allowedDevOrigins = [
   envHostname(process.env.BETTER_AUTH_URL),
 ].filter(Boolean);
 
+const r2Hostname = envHostname(process.env.STORAGE_PUBLIC_URL);
+
 /** @type {import('next').NextConfig} */
 const nextConfig = {
   images: {
@@ -38,6 +40,7 @@ const nextConfig = {
         protocol: "https",
         hostname: "lh3.googleusercontent.com",
       },
+      ...(r2Hostname ? [{ protocol: "https", hostname: r2Hostname }] : []),
     ],
   },
   pageExtensions: ["ts", "tsx", "mdx"],
