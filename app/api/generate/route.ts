@@ -1,11 +1,7 @@
 import { NextRequest, NextResponse } from "next/server";
-import { randomUUID } from "crypto";
-import { eq } from "drizzle-orm";
 
 import { createCreditCompensation } from "@/lib/credit-compensation";
 import { canUserAfford, deductCredits } from "@/lib/credits";
-import { db } from "@/lib/db";
-import { generationHistory } from "@/lib/db/schema";
 import { uploadToR2, generateImageKey } from "@/lib/r2";
 import { getActiveSessionUser } from "@/lib/auth/session";
 import { getErrorMessage } from "@/lib/error-utils";
@@ -13,6 +9,17 @@ import { volcanoEngineConfig, getHeaders, validateConfig } from "@/lib/volcano-e
 import { getTemplateBySlug, getTemplateById } from "@/lib/db/template-repository";
 import type { TemplateWithShots } from "@/lib/db/template-repository";
 import { buildIdentityTransferPrompt } from "@/lib/prompts/identity-preservation";
+import {
+  createGenerationBatch,
+  createGenerationHistory,
+  updateHistoryCompleted,
+  updateHistoryFailed,
+  updateBatchStatus,
+  incrementCompletedShots,
+  incrementFailedShots,
+  findTrialBatch,
+  checkTrialAlreadyUsed,
+} from "@/lib/db/generation-batch-repository";
 
 // ---------------------------------------------------------------------------
 // Configuration
@@ -54,7 +61,6 @@ function buildGenerationPrompt(
   if (shotId) {
     shot = template.shots?.find((s) => s.shotKey === shotId);
   }
-  // Default to first shot if not specified or not found
   if (!shot) {
     shot = template.shots?.[0];
   }
@@ -103,7 +109,6 @@ async function generatePortraitImages({
       size: "3072x4096",
       stream: false,
       watermark: false,
-      // TODO: 复核 denoising_strength 等参数在 prompt_generation 模式下的必要性
       denoising_strength: 0.35,
     }),
   });
@@ -188,6 +193,70 @@ async function generateIdentityTransferImages({
 }
 
 // ---------------------------------------------------------------------------
+// Shot-level generation helper
+// ---------------------------------------------------------------------------
+
+async function generateSingleShotImage({
+  shot,
+  template,
+  imageBase64,
+  mimeType,
+  model,
+  size,
+  workflow,
+  templateImageUrl,
+}: {
+  shot: TemplateWithShots["shots"][number];
+  template: TemplateWithShots;
+  imageBase64: string;
+  mimeType: string;
+  model: string;
+  size: string;
+  workflow: string;
+  templateImageUrl: string;
+}): Promise<string> {
+  let prompt: string;
+
+  if (workflow === "identity_transfer") {
+    prompt = buildIdentityTransferPrompt({
+      templateStylePrompt: template.stylePrompt ?? "",
+      shotStylePrompt: shot.stylePrompt ?? undefined,
+    });
+  } else {
+    const built = buildGenerationPrompt(template, shot.shotKey);
+    prompt = built.prompt;
+  }
+
+  let generatedUrls: string[];
+
+  if (workflow === "identity_transfer") {
+    generatedUrls = await generateIdentityTransferImages({
+      prompt,
+      userImageBase64: imageBase64,
+      userImageMimeType: mimeType,
+      templateImageUrl,
+      model,
+      size,
+    });
+  } else {
+    generatedUrls = await generatePortraitImages({
+      prompt,
+      negativePrompt: template.negativePrompt ?? "",
+      imageBase64,
+      mimeType,
+      maxImages: 1,
+    });
+  }
+
+  const url = generatedUrls[0];
+  if (!url) {
+    throw new Error(`No image generated for shot "${shot.shotKey}"`);
+  }
+
+  return url;
+}
+
+// ---------------------------------------------------------------------------
 // POST /api/generate
 // ---------------------------------------------------------------------------
 
@@ -205,9 +274,20 @@ export async function POST(req: NextRequest) {
     const templateSlug = formData.get("templateSlug");
     const templateId = formData.get("templateId");
     const shotId = formData.get("shotId");
-    const modeEntry = formData.get("mode");
-    const trialAlreadyUsed = formData.get("trialAlreadyUsed") === "true";
-    const mode = modeEntry === "trial" ? "trial" : "set";
+    const generationTypeEntry = formData.get("generationType");
+    const trialBatchIdEntry = formData.get("trialBatchId");
+
+    // generationType: new parameter, defaults to "trial" for backward compat
+    const generationType: "trial" | "set" =
+      (typeof generationTypeEntry === "string" &&
+        (generationTypeEntry === "trial" || generationTypeEntry === "set"))
+        ? generationTypeEntry
+        : "trial";
+
+    const trialBatchId =
+      typeof trialBatchIdEntry === "string" && trialBatchIdEntry.trim()
+        ? trialBatchIdEntry.trim()
+        : null;
 
     // Validate file
     if (!(file instanceof File)) {
@@ -247,7 +327,7 @@ export async function POST(req: NextRequest) {
     const genConfig = JSON.parse(template.generationConfig ?? "{}");
     const workflow: string = genConfig.workflow ?? "prompt_generation";
 
-    // Resolve model: generationConfig.model takes priority over global env
+    // Resolve model
     const model =
       typeof genConfig.model === "string" && genConfig.model.trim()
         ? genConfig.model.trim()
@@ -255,11 +335,10 @@ export async function POST(req: NextRequest) {
 
     const resolvedShotId = typeof shotId === "string" ? shotId : null;
 
-    // Resolve shot with strict validation
+    // Resolve shot
     let activeShot: typeof template.shots[number] | null = null;
 
     if (resolvedShotId) {
-      // User specified a shot — must find it exactly, no silent fallback
       activeShot = template.shots?.find((s) => s.shotKey === resolvedShotId) ?? null;
       if (!activeShot) {
         return NextResponse.json(
@@ -268,7 +347,6 @@ export async function POST(req: NextRequest) {
         );
       }
     } else if (workflow === "identity_transfer") {
-      // No shotId provided for identity_transfer
       const shotCount = template.shots?.length ?? 0;
       if (shotCount > 1) {
         return NextResponse.json(
@@ -276,28 +354,31 @@ export async function POST(req: NextRequest) {
           { status: 400 },
         );
       }
-      // 0 or 1 shot: auto-use the only shot (or null)
       activeShot = template.shots?.[0] ?? null;
     } else {
-      // prompt_generation: keep existing behavior — auto-fallback to first shot
       activeShot = template.shots?.find((s) => s.shotKey === resolvedShotId) ?? template.shots?.[0] ?? null;
     }
 
-    let prompt: string;
-    let negativePrompt: string;
-    let templateImageUrl: string;
-    let maxImages: number;
-    let size: string;
+    // For trial: shotId is required
+    if (generationType === "trial" && !activeShot) {
+      return NextResponse.json(
+        { error: "shotId is required for trial generation" },
+        { status: 400 },
+      );
+    }
 
+    // Resolve size
+    const size =
+      typeof genConfig.size === "string" && genConfig.size.trim()
+        ? genConfig.size.trim()
+        : "3072x4096";
+
+    // Resolve template image for identity_transfer
+    let templateImageUrl = "";
     if (workflow === "identity_transfer") {
-      // identity_transfer: fixed 1 image, template image required
-      maxImages = 1;
-
-      // Resolve template image: shot.referenceImage takes priority, fallback to template.referenceImages[0]
       if (activeShot) {
         templateImageUrl = activeShot.referenceImage?.trim() || "";
         if (!templateImageUrl) {
-          // Fallback to template-level referenceImages for backward compatibility
           templateImageUrl = template.referenceImages?.[0]?.trim() || "";
         }
         if (!templateImageUrl) {
@@ -307,7 +388,6 @@ export async function POST(req: NextRequest) {
           );
         }
       } else {
-        // No shots at all — fallback to template.referenceImages[0]
         templateImageUrl = template.referenceImages?.[0]?.trim() || "";
       }
 
@@ -321,95 +401,90 @@ export async function POST(req: NextRequest) {
           { status: 400 },
         );
       }
-
-      // Build prompt using the new identity-transfer prompt structure:
-      // IDENTITY_PRESERVATION_PROMPT + template.stylePrompt + shot.stylePrompt
-      prompt = buildIdentityTransferPrompt({
-        templateStylePrompt: template.stylePrompt ?? "",
-        shotStylePrompt: activeShot?.stylePrompt ?? undefined,
-      });
-
-      negativePrompt = "";
-
-      // Resolve size from generationConfig, fallback to default
-      size = typeof genConfig.size === "string" && genConfig.size.trim()
-        ? genConfig.size.trim()
-        : "3072x4096";
-
-      // Secure log — no user image base64
-      console.log("identity_transfer request:", {
-        workflow,
-        model,
-        size,
-        referenceImageCount: 2,
-        templateImageUrl,
-        promptLength: prompt.length,
-      });
-    } else {
-      // prompt_generation: keep existing behavior
-      const built = buildGenerationPrompt(template, resolvedShotId);
-      prompt = built.prompt;
-      negativePrompt = built.negativePrompt;
-      maxImages = genConfig.imageCount ?? 6;
-      templateImageUrl = "";
-      size = "3072x4096";
-
-      console.log("开始处理图片，文件大小:", file.size);
-      console.log("VOLCANO_ENGINE_API_URL:", volcanoEngineConfig.apiUrl);
-      console.log("VOLCANO_IMAGE_GENERATION_URL:", getImageGenerationUrl());
-      console.log("VOLCANO_ENGINE_API_KEY exists:", !!volcanoEngineConfig.apiKey);
     }
 
-    const creditsNeeded = template.creditsPerGeneration ?? 4;
+    // ---------------------------------------------------------------------------
+    // Calculate credits
+    // ---------------------------------------------------------------------------
 
-    const hasCredits = await canUserAfford(userId, creditsNeeded);
+    const perShotCredits = template.creditsPerGeneration ?? 1;
+    const shots = (template.shots ?? []).sort((a, b) => a.sortOrder - b.sortOrder);
+
+    let totalCredits: number;
+
+    // Trial deduction
+    let trialDeduction = 0;
+    let resolvedTrialBatch: { id: string; totalCredits: number } | null = null;
+
+    if (generationType === "set" && trialBatchId) {
+      // Validate trial batch
+      const trial = await findTrialBatch(trialBatchId, userId, template.id);
+      if (!trial) {
+        return NextResponse.json(
+          { error: "Invalid trial batch. Must be a completed trial for the same template." },
+          { status: 400 },
+        );
+      }
+
+      // Check not already used
+      const alreadyUsed = await checkTrialAlreadyUsed(trialBatchId);
+      if (alreadyUsed) {
+        return NextResponse.json(
+          { error: "This trial generation has already been used for a set purchase." },
+          { status: 409 },
+        );
+      }
+
+      resolvedTrialBatch = { id: trial.id, totalCredits: trial.totalCredits };
+      trialDeduction = trial.totalCredits;
+    }
+
+    if (generationType === "trial") {
+      totalCredits = perShotCredits;
+    } else {
+      // set
+      const fullCredits = shots.length * perShotCredits;
+      totalCredits = Math.max(0, fullCredits - trialDeduction);
+    }
+
+    // Check credit balance
+    const hasCredits = await canUserAfford(userId, totalCredits);
     if (!hasCredits) {
       return NextResponse.json(
         {
           error: "Insufficient credits",
-          creditsNeeded,
+          creditsNeeded: totalCredits,
           remainingCredits: 0,
         },
         { status: 402 }
       );
     }
 
-    const historyId = randomUUID();
+    // ---------------------------------------------------------------------------
+    // Create generation batch
+    // ---------------------------------------------------------------------------
 
-    await db.insert(generationHistory).values({
-      id: historyId,
+    const batch = await createGenerationBatch({
       userId,
-      type: "image",
-      prompt,
-      status: "processing",
-      creditsUsed: creditsNeeded,
-      metadata: JSON.stringify({
-        workflow,
-        templateId: template.id,
-        templateSlug: template.slug,
-        templateVersion: template.version,
-        templateName: { zh: template.nameZh, en: template.nameEn },
-        shotId: activeShot?.shotKey ?? null,
-        shotOrder: activeShot?.sortOrder ?? null,
-        templateImageUrl: workflow === "identity_transfer" ? templateImageUrl : undefined,
-        model,
-        size: workflow === "identity_transfer" ? size : undefined,
-        aspectRatio: genConfig.aspectRatio ?? "3:4",
-        promptVersion: template.version,
-        mode,
-        maxImages,
-        trialAlreadyUsed,
-        creditsNeeded,
-      }),
+      templateId: template.id,
+      templateSlug: template.slug,
+      templateNameZh: template.nameZh,
+      templateNameEn: template.nameEn,
+      generationType,
+      totalCredits,
+      totalShots: generationType === "trial" ? 1 : shots.length,
+      trialBatchId: resolvedTrialBatch?.id ?? null,
+      sourceImage: null, // R2 URL will be set after upload if needed
     });
 
-    const deductResult = await deductCredits(userId, creditsNeeded, "portrait_generation", historyId);
-    if (!deductResult.success) {
-      await db
-        .update(generationHistory)
-        .set({ status: "failed", error: deductResult.error, updatedAt: new Date() })
-        .where(eq(generationHistory.id, historyId));
+    // ---------------------------------------------------------------------------
+    // Deduct credits
+    // ---------------------------------------------------------------------------
 
+    const reason = generationType === "trial" ? "portrait_trial" : "portrait_set";
+    const deductResult = await deductCredits(userId, totalCredits, reason, batch.id);
+    if (!deductResult.success) {
+      await updateBatchStatus(batch.id, "failed");
       return NextResponse.json(
         {
           error: deductResult.error || "Failed to deduct credits",
@@ -421,104 +496,228 @@ export async function POST(req: NextRequest) {
 
     const compensation = createCreditCompensation({
       userId,
-      amount: creditsNeeded,
-      reason: "image_generation_refund",
-      referenceId: historyId,
+      amount: totalCredits,
+      reason: reason === "portrait_trial" ? "portrait_trial_refund" : "portrait_set_refund",
+      referenceId: batch.id,
     });
 
-    let validUrls: string[] = [];
+    // ---------------------------------------------------------------------------
+    // Generate images
+    // ---------------------------------------------------------------------------
+
+    const shotResults: Array<{
+      shotId: string;
+      shotOrder: number;
+      imageUrl: string | null;
+      status: "completed" | "failed";
+      error?: string;
+    }> = [];
+
     try {
-      let generatedUrls: string[];
-
-      if (workflow === "identity_transfer") {
-        generatedUrls = await generateIdentityTransferImages({
-          prompt,
-          userImageBase64: imageBase64,
-          userImageMimeType: mimeType,
-          templateImageUrl,
-          model,
-          size,
+      if (generationType === "trial") {
+        // ===== TRIAL: single shot =====
+        const historyId = await createGenerationHistory({
+          batchId: batch.id,
+          userId,
+          generationType: "trial",
+          shotId: activeShot!.shotKey,
+          shotOrder: activeShot!.sortOrder,
+          prompt: "",
+          creditsUsed: totalCredits,
+          metadata: {
+            workflow,
+            templateId: template.id,
+            templateSlug: template.slug,
+            templateVersion: template.version,
+            model,
+            size,
+          },
         });
-      } else {
-        generatedUrls = await generatePortraitImages({
-          prompt,
-          negativePrompt,
-          imageBase64,
-          mimeType,
-          maxImages,
-        });
-      }
 
-      const imageUrls = await Promise.all(
-        generatedUrls.map(async (url, index) => {
+        try {
+          const imageUrl = await generateSingleShotImage({
+            shot: activeShot!,
+            template,
+            imageBase64,
+            mimeType,
+            model,
+            size,
+            workflow,
+            templateImageUrl,
+          });
+
+          // Upload to R2
+          let finalUrl: string;
           try {
-            const buffer = await downloadImage(url);
-            const key = generateImageKey(userId, `-${index}`);
-            return await uploadToR2(buffer, key, "image/jpeg");
+            const buffer = await downloadImage(imageUrl);
+            const key = generateImageKey(userId, `-${activeShot!.shotKey}`);
+            finalUrl = await uploadToR2(buffer, key, "image/jpeg");
           } catch {
-            return url;
+            finalUrl = imageUrl;
           }
-        })
-      );
 
-      validUrls = imageUrls.filter(Boolean) as string[];
-
-      if (validUrls.length === 0) {
-        throw new Error("No images generated");
-      }
-
-      await db
-        .update(generationHistory)
-        .set({
-          status: "completed",
-          resultUrl: validUrls[0],
-          updatedAt: new Date(),
-          metadata: JSON.stringify({
+          await updateHistoryCompleted(historyId, finalUrl, {
             workflow,
             templateId: template.id,
             templateSlug: template.slug,
             templateVersion: template.version,
             templateName: { zh: template.nameZh, en: template.nameEn },
-            shotId: activeShot?.shotKey ?? null,
-            shotOrder: activeShot?.sortOrder ?? null,
-            templateImageUrl: workflow === "identity_transfer" ? templateImageUrl : undefined,
+            shotId: activeShot!.shotKey,
+            shotOrder: activeShot!.sortOrder,
             model,
-            size: workflow === "identity_transfer" ? size : undefined,
-            aspectRatio: genConfig.aspectRatio ?? "3:4",
-            promptVersion: template.version,
-            mode,
-            maxImages,
-            trialAlreadyUsed,
-            creditsNeeded,
-            imageUrls: validUrls,
-          }),
-        })
-        .where(eq(generationHistory.id, historyId));
+            size,
+            generationType: "trial",
+          });
 
-      compensation.settle();
-    } catch (generationError) {
-      await compensation.compensate();
-      await db
-        .update(generationHistory)
-        .set({
-          status: "failed",
-          error: getErrorMessage(generationError, "Failed to generate portrait"),
-          updatedAt: new Date(),
-        })
-        .where(eq(generationHistory.id, historyId));
+          await incrementCompletedShots(batch.id);
+          await updateBatchStatus(batch.id, "completed");
 
-      throw generationError;
+          shotResults.push({
+            shotId: activeShot!.shotKey,
+            shotOrder: activeShot!.sortOrder,
+            imageUrl: finalUrl,
+            status: "completed",
+          });
+
+          compensation.settle();
+        } catch (shotError) {
+          const errorMsg = getErrorMessage(shotError, "Failed to generate portrait");
+          await updateHistoryFailed(historyId, errorMsg);
+          await incrementFailedShots(batch.id);
+          await updateBatchStatus(batch.id, "failed");
+
+          shotResults.push({
+            shotId: activeShot!.shotKey,
+            shotOrder: activeShot!.sortOrder,
+            imageUrl: null,
+            status: "failed",
+            error: errorMsg,
+          });
+
+          await compensation.compensate();
+          throw shotError;
+        }
+      } else {
+        // ===== SET: loop over all shots =====
+        let anySuccess = false;
+
+        for (const shot of shots) {
+          const historyId = await createGenerationHistory({
+            batchId: batch.id,
+            userId,
+            generationType: "set",
+            shotId: shot.shotKey,
+            shotOrder: shot.sortOrder,
+            prompt: "",
+            creditsUsed: 0, // credits tracked at batch level
+            metadata: {
+              workflow,
+              templateId: template.id,
+              templateSlug: template.slug,
+              templateVersion: template.version,
+              model,
+              size,
+            },
+          });
+
+          try {
+            const imageUrl = await generateSingleShotImage({
+              shot,
+              template,
+              imageBase64,
+              mimeType,
+              model,
+              size,
+              workflow,
+              templateImageUrl,
+            });
+
+            // Upload to R2
+            let finalUrl: string;
+            try {
+              const buffer = await downloadImage(imageUrl);
+              const key = generateImageKey(userId, `-${shot.shotKey}`);
+              finalUrl = await uploadToR2(buffer, key, "image/jpeg");
+            } catch {
+              finalUrl = imageUrl;
+            }
+
+            await updateHistoryCompleted(historyId, finalUrl, {
+              workflow,
+              templateId: template.id,
+              templateSlug: template.slug,
+              templateVersion: template.version,
+              templateName: { zh: template.nameZh, en: template.nameEn },
+              shotId: shot.shotKey,
+              shotOrder: shot.sortOrder,
+              model,
+              size,
+              generationType: "set",
+            });
+
+            await incrementCompletedShots(batch.id);
+            anySuccess = true;
+
+            shotResults.push({
+              shotId: shot.shotKey,
+              shotOrder: shot.sortOrder,
+              imageUrl: finalUrl,
+              status: "completed",
+            });
+          } catch (shotError) {
+            const errorMsg = getErrorMessage(shotError, `Failed to generate shot "${shot.shotKey}"`);
+            console.error(`[set] Shot ${shot.shotKey} failed:`, errorMsg);
+
+            await updateHistoryFailed(historyId, errorMsg);
+            await incrementFailedShots(batch.id);
+
+            shotResults.push({
+              shotId: shot.shotKey,
+              shotOrder: shot.sortOrder,
+              imageUrl: null,
+              status: "failed",
+              error: errorMsg,
+            });
+          }
+        }
+
+        // Determine final batch status
+        if (!anySuccess) {
+          await updateBatchStatus(batch.id, "failed");
+          await compensation.compensate();
+        } else {
+          const allSuccess = shotResults.every((r) => r.status === "completed");
+          await updateBatchStatus(batch.id, allSuccess ? "completed" : "partial");
+          compensation.settle();
+        }
+      }
+    } catch (outerError) {
+      // Only reached for trial failure (which re-throws) or unexpected errors
+      return NextResponse.json(
+        { error: getErrorMessage(outerError, "Failed to generate portrait") },
+        { status: 500 },
+      );
     }
 
+    // ---------------------------------------------------------------------------
+    // Response
+    // ---------------------------------------------------------------------------
+
+    const allImageUrls = shotResults
+      .filter((r) => r.imageUrl)
+      .map((r) => r.imageUrl!);
+
     return NextResponse.json({
-      id: historyId,
-      imageUrls: validUrls,
+      batchId: batch.id,
+      generationType,
+      totalCredits,
+      trialDeduction: trialDeduction > 0 ? trialDeduction : undefined,
+      shots: shotResults,
+      imageUrls: allImageUrls, // backward compatible
+      resultUrl: allImageUrls[0] ?? null, // backward compatible: first image
       templateName: { zh: template.nameZh, en: template.nameEn },
       templateSlug: template.slug,
       templateId: template.id,
-      mode,
-      totalShots: maxImages,
-      creditsUsed: creditsNeeded,
       remainingCredits: deductResult.remainingCredits,
     });
 
