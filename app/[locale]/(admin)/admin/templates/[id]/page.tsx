@@ -14,7 +14,6 @@ import {
   Archive,
   X,
   ImageIcon,
-  ChevronDown,
 } from "lucide-react";
 import { cn } from "@/lib/utils";
 
@@ -45,7 +44,7 @@ type TemplateFormData = {
   stylePrompt: string;
   coverImage: string;
   previewImages: string[];
-  // Legacy fields — kept for backward data compatibility, not shown in UI
+  // Legacy fields — not shown in UI, kept for API/DB compatibility
   referenceImages: string[];
   basePrompt: string;
   negativePrompt: string;
@@ -101,7 +100,23 @@ const DYNASTIES = [
   { value: "qing", labelZh: "清", labelEn: "Qing" },
   { value: "modern", labelZh: "现代", labelEn: "Modern" },
   { value: "dunhuang", labelZh: "敦煌", labelEn: "Dunhuang" },
-]; 
+];
+
+const MODEL_OPTIONS = [
+  "doubao-seedream-5-0-lite",
+];
+
+const SIZE_OPTIONS = [
+  "2048x2732",
+  "3072x4096",
+];
+
+const ASPECT_RATIO_OPTIONS = [
+  "2:3",
+  "3:4",
+  "1:1",
+  "4:3",
+];
 
 // ---------------------------------------------------------------------------
 // Component
@@ -119,8 +134,6 @@ export function AdminTemplateForm({ templateId }: { templateId?: string }) {
   const [error, setError] = useState<string | null>(null);
   const [uploading, setUploading] = useState(false);
   const [hasUnsaved, setHasUnsaved] = useState(false);
-  const [jsonImport, setJsonImport] = useState("");
-  const [showJsonImport, setShowJsonImport] = useState(false);
 
   // Load template for edit
   useEffect(() => {
@@ -148,7 +161,7 @@ export function AdminTemplateForm({ templateId }: { templateId?: string }) {
           referenceImages: data.referenceImages ?? [],
           basePrompt: data.basePrompt ?? "",
           negativePrompt: data.negativePrompt ?? "",
-          generationConfig: data.generationConfig ?? "{}",
+          generationConfig: data.generationConfig ?? JSON.stringify({ model: "doubao-seedream-5-0-lite", size: "3072x4096", aspectRatio: "3:4", count: 1, workflow: "identity_transfer" }, null, 2),
           creditsPerGeneration: data.creditsPerGeneration ?? 4,
           memberCreditsPerGeneration: data.memberCreditsPerGeneration ?? null,
           featured: data.featured ?? false,
@@ -263,10 +276,23 @@ export function AdminTemplateForm({ templateId }: { templateId?: string }) {
     setSaving(true);
     setError(null);
     try {
+      // Build generationConfig JSON from structured fields
+      const genConfig = (() => {
+        try { return JSON.parse(form.generationConfig); } catch { return {}; }
+      })();
+      const updatedGenConfig = {
+        ...genConfig,
+        model: (() => { try { return JSON.parse(form.generationConfig).model ?? ""; } catch { return ""; } })(),
+        size: (() => { try { return JSON.parse(form.generationConfig).size ?? ""; } catch { return ""; } })(),
+        aspectRatio: (() => { try { return JSON.parse(form.generationConfig).aspectRatio ?? ""; } catch { return ""; } })(),
+        count: 1,
+        workflow: "identity_transfer",
+      };
+
       const body = {
         ...form,
         status: targetStatus ?? form.status,
-        generationConfig: form.generationConfig,
+        generationConfig: JSON.stringify(updatedGenConfig),
         memberCreditsPerGeneration: form.memberCreditsPerGeneration ?? undefined,
         shots: form.shots.map((s) => ({
           shotKey: s.shotKey,
@@ -337,51 +363,6 @@ export function AdminTemplateForm({ templateId }: { templateId?: string }) {
     router.push(`/${locale}/admin/templates`);
   };
 
-  const handleJsonImport = () => {
-    try {
-      const parsed = JSON.parse(jsonImport);
-      // Map from new identity-transfer template JSON format to form format
-      setForm({
-        slug: parsed.slug ?? "",
-        nameZh: parsed.nameZh ?? parsed.name?.zh ?? "",
-        nameEn: parsed.nameEn ?? parsed.name?.en ?? "",
-        descriptionZh: parsed.descriptionZh ?? parsed.description?.zh ?? "",
-        descriptionEn: parsed.descriptionEn ?? parsed.description?.en ?? "",
-        category: parsed.category ?? "hanfu",
-        dynasty: parsed.dynasty ?? "",
-        styles: parsed.styles ?? [],
-        tags: parsed.tags ?? [],
-        stylePrompt: parsed.stylePrompt ?? "",
-        coverImage: parsed.coverImage ?? "",
-        previewImages: parsed.previewImages ?? [],
-        referenceImages: parsed.referenceImages ?? [],
-        basePrompt: "",
-        negativePrompt: "",
-        generationConfig: JSON.stringify(parsed.generationConfig ?? { model: "doubao-seedream-5-0-lite", size: "3072x4096", aspectRatio: "3:4", count: 1, workflow: "identity_transfer" }, null, 2),
-        creditsPerGeneration: parsed.creditsPerGeneration ?? 4,
-        memberCreditsPerGeneration: null,
-        featured: parsed.featured ?? false,
-        sortOrder: parsed.sortOrder ?? 0,
-        version: parsed.version ?? 1,
-        status: "draft",
-        shots: (parsed.shots ?? []).map((s: Record<string, unknown>, i: number) => ({
-          key: `import-${i}`,
-          shotKey: (s.shotKey as string) ?? (s.id as string) ?? `shot-${String(i + 1).padStart(2, "0")}`,
-          sortOrder: (s.sortOrder as number) ?? (s.order as number) ?? i + 1,
-          titleZh: (s.titleZh as string) ?? (s.title as { zh: string })?.zh ?? "",
-          titleEn: (s.titleEn as string) ?? (s.title as { en: string })?.en ?? "",
-          referenceImage: (s.referenceImage as string) ?? "",
-          stylePrompt: (s.stylePrompt as string) ?? "",
-        })),
-      });
-      setShowJsonImport(false);
-      setJsonImport("");
-      setHasUnsaved(true);
-    } catch {
-      alert(isZh ? "JSON 格式无效" : "Invalid JSON format");
-    }
-  };
-
   if (loading) {
     return <div className="text-center py-12 text-muted-foreground">Loading...</div>;
   }
@@ -389,6 +370,20 @@ export function AdminTemplateForm({ templateId }: { templateId?: string }) {
   const inputClass = "w-full rounded-lg border border-border bg-secondary px-4 py-2 text-sm text-secondary-foreground placeholder:text-muted-foreground hover:border-muted-foreground/50 focus:outline-none focus:ring-2 focus:ring-ring/50 focus:border-ring transition-colors";
   const textareaClass = "w-full rounded-lg border border-border bg-secondary px-4 py-2 text-sm text-secondary-foreground placeholder:text-muted-foreground hover:border-muted-foreground/50 focus:outline-none focus:ring-2 focus:ring-ring/50 focus:border-ring min-h-[80px] transition-colors";
   const labelClass = "block text-sm font-medium text-foreground mb-1.5";
+
+  // Parse generation config for structured fields
+  const genConfig = (() => { try { return JSON.parse(form.generationConfig); } catch { return {}; } })();
+  const genModel = typeof genConfig.model === "string" ? genConfig.model : "doubao-seedream-5-0-lite";
+  const genSize = typeof genConfig.size === "string" ? genConfig.size : "3072x4096";
+  const genAspectRatio = typeof genConfig.aspectRatio === "string" ? genConfig.aspectRatio : "3:4";
+
+  const updateGenConfig = (key: string, value: string) => {
+    try {
+      const config = JSON.parse(form.generationConfig);
+      config[key] = value;
+      updateField("generationConfig", JSON.stringify(config, null, 2));
+    } catch { /* ignore */ }
+  };
 
   return (
     <div className="space-y-6 max-w-4xl">
@@ -437,49 +432,6 @@ export function AdminTemplateForm({ templateId }: { templateId?: string }) {
         </div>
       )}
 
-      {/* JSON Import */}
-      <div className="overflow-hidden rounded-xl border border-border bg-card/60">
-        <button
-          type="button"
-          aria-expanded={showJsonImport}
-          aria-controls="json-import-panel"
-          onClick={() => setShowJsonImport((v) => !v)}
-          className="flex w-full items-center justify-between px-5 py-4 text-left transition-colors hover:bg-accent focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-inset"
-        >
-          <div>
-            <div className="text-sm font-medium text-foreground">
-              {isZh ? "从 JSON 导入" : "Import from JSON"}
-            </div>
-            <div className="text-xs text-muted-foreground mt-0.5">
-              {isZh ? "粘贴符合模板规范的 JSON，自动填充表单" : "Paste a valid template JSON to auto-fill the form"}
-            </div>
-          </div>
-          <ChevronDown
-            className={cn(
-              "h-5 w-5 text-muted-foreground shrink-0 transition-transform duration-200",
-              showJsonImport && "rotate-180"
-            )}
-          />
-        </button>
-        {showJsonImport && (
-          <div id="json-import-panel" className="border-t border-border px-5 py-4 space-y-3">
-            <textarea
-              className={textareaClass}
-              rows={6}
-              placeholder={isZh ? "粘贴模板 JSON..." : "Paste template JSON..."}
-              value={jsonImport}
-              onChange={(e) => setJsonImport(e.target.value)}
-            />
-            <button
-              onClick={handleJsonImport}
-              className="rounded-lg bg-primary px-4 py-2 text-sm font-medium text-primary-foreground hover:bg-primary/90 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 focus-visible:ring-offset-background transition-colors"
-            >
-              {isZh ? "导入并预览" : "Import & Preview"}
-            </button>
-          </div>
-        )}
-      </div>
-
       {/* Section 1: Basic Info */}
       <Section title={isZh ? "基本信息" : "Basic Info"}>
         <div className="grid grid-cols-2 gap-4">
@@ -496,8 +448,12 @@ export function AdminTemplateForm({ templateId }: { templateId?: string }) {
             <input className={inputClass} value={form.slug} onChange={(e) => updateField("slug", e.target.value)} placeholder="tang-glamour" />
           </div>
           <div>
-            <label className={labelClass}>{isZh ? "版本" : "Version"}</label>
-            <input className={inputClass} type="number" value={form.version} onChange={(e) => updateField("version", Number(e.target.value))} />
+            <label className={labelClass}>{isZh ? "分类" : "Category"}</label>
+            <select className={inputClass} value={form.category} onChange={(e) => updateField("category", e.target.value)}>
+              {CATEGORIES.map((c) => (
+                <option key={c.value} value={c.value}>{isZh ? c.labelZh : c.labelEn}</option>
+              ))}
+            </select>
           </div>
         </div>
         <div className="grid grid-cols-2 gap-4 mt-4">
@@ -511,14 +467,6 @@ export function AdminTemplateForm({ templateId }: { templateId?: string }) {
           </div>
         </div>
         <div className="grid grid-cols-3 gap-4 mt-4">
-          <div>
-            <label className={labelClass}>{isZh ? "分类" : "Category"}</label>
-            <select className={inputClass} value={form.category} onChange={(e) => updateField("category", e.target.value)}>
-              {CATEGORIES.map((c) => (
-                <option key={c.value} value={c.value}>{isZh ? c.labelZh : c.labelEn}</option>
-              ))}
-            </select>
-          </div>
           <div>
             <label className={labelClass}>{isZh ? "朝代" : "Dynasty"}</label>
             <select className={inputClass} value={form.dynasty} onChange={(e) => updateField("dynasty", e.target.value)}>
@@ -534,26 +482,24 @@ export function AdminTemplateForm({ templateId }: { templateId?: string }) {
               <option value="true">{isZh ? "是" : "Yes"}</option>
             </select>
           </div>
-        </div>
-        <div className="grid grid-cols-2 gap-4 mt-4">
           <div>
             <label className={labelClass}>{isZh ? "排序" : "Sort Order"}</label>
             <input className={inputClass} type="number" value={form.sortOrder} onChange={(e) => updateField("sortOrder", Number(e.target.value))} />
           </div>
-          <div>
-            <label className={labelClass}>{isZh ? "标签（逗号分隔）" : "Tags (comma-separated)"}</label>
-            <input
-              className={inputClass}
-              value={form.tags.join(", ")}
-              onChange={(e) => updateField("tags", e.target.value.split(",").map((t) => t.trim()).filter(Boolean))}
-              placeholder="portrait, hanfu, tang"
-            />
-          </div>
+        </div>
+        <div className="mt-4">
+          <label className={labelClass}>{isZh ? "标签（逗号分隔）" : "Tags (comma-separated)"}</label>
+          <input
+            className={inputClass}
+            value={form.tags.join(", ")}
+            onChange={(e) => updateField("tags", e.target.value.split(",").map((t) => t.trim()).filter(Boolean))}
+            placeholder="portrait, hanfu, tang"
+          />
         </div>
       </Section>
 
       {/* Section 2: Images */}
-      <Section title={isZh ? "图片" : "Images"}>
+      <Section title={isZh ? "图片资源" : "Images"}>
         <div className="space-y-4">
           {/* Cover Image */}
           <div>
@@ -581,7 +527,7 @@ export function AdminTemplateForm({ templateId }: { templateId?: string }) {
 
       {/* Section 3: Shots */}
       <Section
-        title={isZh ? "分镜" : "Shots"}
+        title={isZh ? "分镜管理" : "Shots"}
         action={
           <button onClick={addShot} className="flex items-center gap-1.5 rounded-lg border border-border px-3 py-1.5 text-xs text-foreground hover:bg-accent focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring/50 transition-colors">
             <Plus className="h-3 w-3" />
@@ -630,11 +576,11 @@ export function AdminTemplateForm({ templateId }: { templateId?: string }) {
                   </div>
                 </div>
                 <div>
-                  <label className="block text-xs text-muted-foreground mb-1">{isZh ? "参考图片" : "Reference Image"}</label>
+                  <label className="block text-xs text-muted-foreground mb-1">{isZh ? "参考模板图 *" : "Reference Template Image *"}</label>
                   <p className="text-xs text-muted-foreground mb-2">
                     {isZh
-                      ? "此图片作为身份迁移的参考图。上传高清、无水印、竖版3:4模板原图。"
-                      : "This image is used as the reference for identity transfer. Upload a high-resolution, watermark-free, vertical 3:4 template image."
+                      ? "身份迁移的参考图。上传高清、无水印、竖版3:4模板原图。"
+                      : "Reference image for identity transfer. Upload a high-resolution, watermark-free, vertical 3:4 template image."
                     }
                   </p>
                   <ImageUploader
@@ -656,98 +602,68 @@ export function AdminTemplateForm({ templateId }: { templateId?: string }) {
         )}
       </Section>
 
-      {/* Section 4: Style Prompt */}
-      <Section title={isZh ? "风格描述" : "Style Prompt"}>
-        <div>
-          <label className={labelClass}>{isZh ? "模板风格描述（可选）" : "Template Style Prompt (optional)"}</label>
-          <p className="text-xs text-muted-foreground mb-2">
-            {isZh ? "轻量文字补充，描述该模板的整体视觉风格。生成时会拼接在全局身份保持 prompt 之后。" : "Lightweight text supplement describing the overall visual style of this template. Appended after the global identity preservation prompt during generation."}
-          </p>
-          <textarea className={textareaClass} rows={3} value={form.stylePrompt} onChange={(e) => updateField("stylePrompt", e.target.value)} />
-        </div>
-      </Section>
-
-      {/* Section 5: Generation Config */}
-      <Section title={isZh ? "生成配置" : "Generation Config"}>
+      {/* Section 4: Identity Transfer Config */}
+      <Section title={isZh ? "身份迁移配置" : "Identity Transfer Config"}>
         <div className="grid grid-cols-3 gap-4">
           <div>
             <label className={labelClass}>{isZh ? "模型" : "Model"}</label>
-            <input
+            <select
               className={inputClass}
-              value={(() => { try { return JSON.parse(form.generationConfig).model ?? ""; } catch { return ""; } })()}
-              onChange={(e) => {
-                try {
-                  const config = JSON.parse(form.generationConfig);
-                  config.model = e.target.value;
-                  updateField("generationConfig", JSON.stringify(config, null, 2));
-                } catch { /* ignore */ }
-              }}
-              placeholder="doubao-seedream-5-0-lite"
-            />
+              value={genModel}
+              onChange={(e) => updateGenConfig("model", e.target.value)}
+            >
+              {MODEL_OPTIONS.map((m) => (
+                <option key={m} value={m}>{m}</option>
+              ))}
+            </select>
           </div>
           <div>
-            <label className={labelClass}>{isZh ? "比例" : "Aspect Ratio"}</label>
-            <input
+            <label className={labelClass}>{isZh ? "输出尺寸" : "Size"}</label>
+            <select
               className={inputClass}
-              value={(() => { try { return JSON.parse(form.generationConfig).aspectRatio ?? ""; } catch { return ""; } })()}
-              onChange={(e) => {
-                try {
-                  const config = JSON.parse(form.generationConfig);
-                  config.aspectRatio = e.target.value;
-                  updateField("generationConfig", JSON.stringify(config, null, 2));
-                } catch { /* ignore */ }
-              }}
-              placeholder="3:4"
-            />
+              value={genSize}
+              onChange={(e) => updateGenConfig("size", e.target.value)}
+            >
+              {SIZE_OPTIONS.map((s) => (
+                <option key={s} value={s}>{s}</option>
+              ))}
+            </select>
           </div>
           <div>
-            <label className={labelClass}>{isZh ? "尺寸" : "Size"}</label>
-            <input
+            <label className={labelClass}>{isZh ? "宽高比" : "Aspect Ratio"}</label>
+            <select
               className={inputClass}
-              value={(() => { try { return JSON.parse(form.generationConfig).size ?? ""; } catch { return ""; } })()}
-              onChange={(e) => {
-                try {
-                  const config = JSON.parse(form.generationConfig);
-                  config.size = e.target.value;
-                  updateField("generationConfig", JSON.stringify(config, null, 2));
-                } catch { /* ignore */ }
-              }}
-              placeholder="3072x4096"
-            />
+              value={genAspectRatio}
+              onChange={(e) => updateGenConfig("aspectRatio", e.target.value)}
+            >
+              {ASPECT_RATIO_OPTIONS.map((a) => (
+                <option key={a} value={a}>{a}</option>
+              ))}
+            </select>
           </div>
         </div>
         <div className="mt-4">
-          <label className={labelClass}>{isZh ? "生成配置 (JSON)" : "Generation Config (JSON)"}</label>
-          <textarea
-            className={cn(textareaClass, "font-mono text-xs")}
-            rows={6}
-            value={form.generationConfig}
-            onChange={(e) => updateField("generationConfig", e.target.value)}
-          />
-          <p className="text-xs text-muted-foreground mt-1">
-            {isZh ? "model, aspectRatio, size, count, workflow" : "model, aspectRatio, size, count, workflow"}
+          <label className={labelClass}>{isZh ? "模板风格描述（可选）" : "Template Style Prompt (optional)"}</label>
+          <p className="text-xs text-muted-foreground mb-2">
+            {isZh
+              ? "轻量文字补充，描述该模板的整体视觉风格。生成时会拼接在全局身份保持 prompt 之后。"
+              : "Lightweight text supplement describing the overall visual style. Appended after the global identity preservation prompt during generation."
+            }
           </p>
+          <textarea className={textareaClass} rows={3} value={form.stylePrompt} onChange={(e) => updateField("stylePrompt", e.target.value)} />
+        </div>
+        <div className="mt-3 flex items-center gap-2 rounded-lg border border-border bg-secondary/50 px-3 py-2">
+          <span className="text-xs text-muted-foreground">{isZh ? "工作流：" : "Workflow:"}</span>
+          <span className="text-xs font-mono font-medium text-foreground">identity_transfer</span>
+          <span className="text-xs text-muted-foreground">{isZh ? "（固定）" : "(fixed)"}</span>
         </div>
       </Section>
 
-      {/* Section 6: Credits Config */}
+      {/* Section 5: Credits Config */}
       <Section title={isZh ? "积分配置" : "Credits Config"}>
-        <div className="grid grid-cols-2 gap-4">
-          <div>
-            <label className={labelClass}>{isZh ? "每次生成消耗积分 *" : "Credits per Generation *"}</label>
-            <input className={inputClass} type="number" min={0} value={form.creditsPerGeneration} onChange={(e) => updateField("creditsPerGeneration", Number(e.target.value))} />
-          </div>
-          <div>
-            <label className={labelClass}>{isZh ? "会员每次生成消耗积分" : "Member Credits per Generation"}</label>
-            <input
-              className={inputClass}
-              type="number"
-              min={0}
-              value={form.memberCreditsPerGeneration ?? ""}
-              onChange={(e) => updateField("memberCreditsPerGeneration", e.target.value ? Number(e.target.value) : null)}
-              placeholder={isZh ? "留空使用默认" : "Leave empty for default"}
-            />
-          </div>
+        <div>
+          <label className={labelClass}>{isZh ? "每次生成消耗积分 *" : "Credits per Generation *"}</label>
+          <input className={cn(inputClass, "max-w-xs")} type="number" min={0} value={form.creditsPerGeneration} onChange={(e) => updateField("creditsPerGeneration", Number(e.target.value))} />
         </div>
       </Section>
 
