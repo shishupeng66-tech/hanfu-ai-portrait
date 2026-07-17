@@ -3,7 +3,7 @@ import "server-only";
 import { randomUUID } from "crypto";
 import { db } from "@/lib/db";
 import { generationBatch, generationHistory } from "@/lib/db/schema";
-import { eq, and, sql } from "drizzle-orm";
+import { eq, and, sql, isNull, lt, or } from "drizzle-orm";
 
 // ---------------------------------------------------------------------------
 // Types
@@ -56,7 +56,7 @@ export async function createGenerationBatch(input: CreateBatchInput): Promise<Db
     totalShots: input.totalShots,
     completedShots: 0,
     failedShots: 0,
-    status: "processing",
+    status: "pending",
     trialBatchId: input.trialBatchId ?? null,
     sourceImage: input.sourceImage ?? null,
     createdAt: now,
@@ -75,9 +75,18 @@ export async function createGenerationBatch(input: CreateBatchInput): Promise<Db
     totalShots: input.totalShots,
     completedShots: 0,
     failedShots: 0,
-    status: "processing",
+    status: "pending" as const,
     trialBatchId: input.trialBatchId ?? null,
     sourceImage: input.sourceImage ?? null,
+    workerStartedAt: null,
+    heartbeatAt: null,
+    attemptCount: 0,
+    lastError: null,
+    refundedCredits: 0,
+    lockedAt: null,
+    lockedBy: null,
+    queuedAt: null,
+    dispatchAttemptCount: 0,
     createdAt: now,
     updatedAt: now,
   };
@@ -201,4 +210,188 @@ export async function updateHistoryFailed(
       updatedAt: new Date(),
     })
     .where(eq(generationHistory.id, historyId));
+}
+
+// ---------------------------------------------------------------------------
+// Phase 8.3.1 — Task locking & heartbeat
+// ---------------------------------------------------------------------------
+
+const HEARTBEAT_TIMEOUT_MS = 120_000; // 2 min — if no heartbeat, task is stale
+
+/**
+ * Atomically try to lock a batch for processing.
+ * Only locks if: status is "processing" or "pending", and (not locked OR locked by a stale worker).
+ * Returns the updated batch row if lock acquired, null otherwise.
+ */
+export async function tryLockBatch(
+  batchId: string,
+  workerId: string,
+): Promise<DbGenerationBatch | null> {
+  const now = new Date();
+  const staleThreshold = new Date(now.getTime() - HEARTBEAT_TIMEOUT_MS);
+
+  const rows = await db
+    .update(generationBatch)
+    .set({
+      lockedAt: now,
+      lockedBy: workerId,
+      workerStartedAt: now,
+      heartbeatAt: now,
+      attemptCount: sql`${generationBatch.attemptCount} + 1`,
+      updatedAt: now,
+    })
+    .where(
+      and(
+        eq(generationBatch.id, batchId),
+        or(
+          eq(generationBatch.status, "processing"),
+          eq(generationBatch.status, "pending"),
+        ),
+        or(
+          isNull(generationBatch.lockedAt),
+          lt(generationBatch.lockedAt, staleThreshold),
+        ),
+      ),
+    )
+    .returning();
+
+  return rows[0] ?? null;
+}
+
+/** Update heartbeat timestamp */
+export async function updateHeartbeat(batchId: string): Promise<void> {
+  await db
+    .update(generationBatch)
+    .set({ heartbeatAt: new Date(), updatedAt: new Date() })
+    .where(eq(generationBatch.id, batchId));
+}
+
+/** Record refund amount atomically */
+export async function addRefundedCredits(
+  batchId: string,
+  amount: number,
+): Promise<void> {
+  await db
+    .update(generationBatch)
+    .set({
+      refundedCredits: sql`${generationBatch.refundedCredits} + ${amount}`,
+      updatedAt: new Date(),
+    })
+    .where(eq(generationBatch.id, batchId));
+}
+
+/** Clear trialBatchId (all-fail release) */
+export async function clearTrialBatchId(batchId: string): Promise<void> {
+  await db
+    .update(generationBatch)
+    .set({ trialBatchId: null, updatedAt: new Date() })
+    .where(eq(generationBatch.id, batchId));
+}
+
+/** Record last error */
+export async function setLastError(
+  batchId: string,
+  error: string,
+): Promise<void> {
+  await db
+    .update(generationBatch)
+    .set({ lastError: error, updatedAt: new Date() })
+    .where(eq(generationBatch.id, batchId));
+}
+
+/** Get batch by id */
+export async function getBatchById(
+  batchId: string,
+): Promise<DbGenerationBatch | null> {
+  const rows = await db
+    .select()
+    .from(generationBatch)
+    .where(eq(generationBatch.id, batchId))
+    .limit(1);
+  return rows[0] ?? null;
+}
+
+/** Get all pending/failed histories for a batch (for worker to process) */
+export async function getPendingOrFailedHistories(batchId: string) {
+  return db
+    .select()
+    .from(generationHistory)
+    .where(
+      and(
+        eq(generationHistory.batchId, batchId),
+        or(
+          eq(generationHistory.status, "pending"),
+          eq(generationHistory.status, "failed"),
+        ),
+      ),
+    )
+    .orderBy(generationHistory.shotOrder);
+}
+
+// ---------------------------------------------------------------------------
+// Phase 8.3.2 — Dispatch & recovery
+// ---------------------------------------------------------------------------
+
+const MAX_ATTEMPTS = 3;
+const HEARTBEAT_TIMEOUT_MS_2 = 120_000; // 2 min
+
+/** Increment dispatch attempt count and set queuedAt */
+export async function incrementDispatchAttempt(batchId: string): Promise<void> {
+  await db
+    .update(generationBatch)
+    .set({
+      dispatchAttemptCount: sql`${generationBatch.dispatchAttemptCount} + 1`,
+      queuedAt: new Date(),
+      updatedAt: new Date(),
+    })
+    .where(eq(generationBatch.id, batchId));
+}
+
+/** Get batches that need processing (pending or stale processing) */
+export async function getBatchesNeedingProcessing(): Promise<DbGenerationBatch[]> {
+  const staleThreshold = new Date(Date.now() - HEARTBEAT_TIMEOUT_MS_2);
+
+  return db
+    .select()
+    .from(generationBatch)
+    .where(
+      and(
+        eq(generationBatch.generationType, "set"),
+        or(
+          // pending — never started
+          and(
+            eq(generationBatch.status, "pending"),
+            isNull(generationBatch.lockedAt),
+          ),
+          // processing but heartbeat stale
+          and(
+            eq(generationBatch.status, "processing"),
+            lt(generationBatch.heartbeatAt, staleThreshold),
+          ),
+        ),
+        // under max attempts
+        lt(generationBatch.attemptCount, MAX_ATTEMPTS),
+      ),
+    )
+    .limit(10);
+}
+
+/** Finalize a batch that exceeded max attempts */
+export async function finalizeExceededBatch(batchId: string): Promise<void> {
+  const batch = await getBatchById(batchId);
+  if (!batch) return;
+
+  if (batch.completedShots > 0) {
+    await updateBatchStatus(batchId, "partial");
+  } else {
+    await updateBatchStatus(batchId, "failed");
+  }
+
+  await db
+    .update(generationBatch)
+    .set({
+      lastError: `Exceeded max attempts (${MAX_ATTEMPTS}). completedShots=${batch.completedShots}, failedShots=${batch.failedShots}`,
+      updatedAt: new Date(),
+    })
+    .where(eq(generationBatch.id, batchId));
 }

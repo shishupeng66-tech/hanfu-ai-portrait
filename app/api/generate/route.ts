@@ -6,6 +6,7 @@ import { getActiveSessionUser } from "@/lib/auth/session";
 import { getErrorMessage } from "@/lib/error-utils";
 import { volcanoEngineConfig, validateConfig } from "@/lib/volcano-engine/config";
 import { getTemplateBySlug, getTemplateById } from "@/lib/db/template-repository";
+import { uploadToR2, generateImageKey } from "@/lib/r2";
 import {
   createGenerationBatch,
   createGenerationHistory,
@@ -230,6 +231,21 @@ export async function POST(req: NextRequest) {
     }
 
     // ---------------------------------------------------------------------------
+    // Upload source image to R2 (before creating batch)
+    // ---------------------------------------------------------------------------
+
+    let sourceImageUrl: string | null = null;
+    try {
+      const key = generateImageKey(userId, "-source");
+      sourceImageUrl = await uploadToR2(Buffer.from(arrayBuffer), key, mimeType);
+    } catch {
+      return NextResponse.json(
+        { error: "Failed to upload source image" },
+        { status: 500 },
+      );
+    }
+
+    // ---------------------------------------------------------------------------
     // Create batch + deduct credits
     // ---------------------------------------------------------------------------
 
@@ -243,7 +259,7 @@ export async function POST(req: NextRequest) {
       totalCredits,
       totalShots: generationType === "trial" ? 1 : shots.length,
       trialBatchId: resolvedTrialBatch?.id ?? null,
-      sourceImage: null,
+      sourceImage: sourceImageUrl,
     });
 
     const reason = generationType === "trial" ? "portrait_trial" : "portrait_set";
@@ -260,22 +276,45 @@ export async function POST(req: NextRequest) {
     }
 
     // ---------------------------------------------------------------------------
-    // SET: async — return immediately, worker processes in background
+    // SET: create pending histories, return immediately — worker picks up via batchId
     // ---------------------------------------------------------------------------
 
     if (generationType === "set") {
-      // Fire-and-forget: start worker in background, don't await
-      import("@/lib/jobs/generation-worker").then(({ processSetBatch }) => {
-        processSetBatch(batch.id, userId, imageBase64, mimeType).catch((err) => {
-          console.error("[worker] Unhandled worker error:", err);
+      for (const shot of shots) {
+        await createGenerationHistory({
+          batchId: batch.id,
+          userId,
+          generationType: "set",
+          shotId: shot.shotKey,
+          shotOrder: shot.sortOrder,
+          prompt: "",
+          creditsUsed: 0,
+          metadata: {
+            workflow,
+            templateId: template.id,
+            templateSlug: template.slug,
+            templateVersion: template.version,
+            model,
+            size,
+          },
         });
-      });
+      }
+
+      // Auto-dispatch worker via internal endpoint
+      const taskSecret = process.env.TASK_SECRET;
+      if (taskSecret) {
+        const appUrl = process.env.NEXT_PUBLIC_APP_URL || "http://localhost:3000";
+        fetch(`${appUrl}/api/generation-batch/${batch.id}/process`, {
+          method: "POST",
+          headers: { Authorization: `Bearer ${taskSecret}` },
+        }).catch(() => {});
+      }
 
       return NextResponse.json({
         success: true,
         batchId: batch.id,
         generationType: "set",
-        status: "processing",
+        status: "pending",
         totalCredits,
         totalShots: shots.length,
         trialDeduction: trialDeduction > 0 ? trialDeduction : undefined,

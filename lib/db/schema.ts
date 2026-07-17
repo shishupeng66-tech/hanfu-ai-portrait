@@ -185,6 +185,17 @@ export const generationBatch = pgTable(
       { onDelete: "set null" },
     ),
     sourceImage: text("source_image"),
+    // Phase 8.3.1 — worker task locking & partial refund
+    workerStartedAt: timestamp("worker_started_at"),
+    heartbeatAt: timestamp("heartbeat_at"),
+    attemptCount: integer("attempt_count").notNull().default(0),
+    lastError: text("last_error"),
+    refundedCredits: integer("refunded_credits").notNull().default(0),
+    lockedAt: timestamp("locked_at"),
+    lockedBy: text("locked_by"),
+    // Phase 8.3.2 — dispatch tracking
+    queuedAt: timestamp("queued_at"),
+    dispatchAttemptCount: integer("dispatch_attempt_count").notNull().default(0),
     createdAt: timestamp("created_at").defaultNow().notNull(),
     updatedAt: timestamp("updated_at")
       .defaultNow()
