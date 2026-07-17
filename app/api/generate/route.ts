@@ -2,13 +2,10 @@ import { NextRequest, NextResponse } from "next/server";
 
 import { createCreditCompensation } from "@/lib/credit-compensation";
 import { canUserAfford, deductCredits } from "@/lib/credits";
-import { uploadToR2, generateImageKey } from "@/lib/r2";
 import { getActiveSessionUser } from "@/lib/auth/session";
 import { getErrorMessage } from "@/lib/error-utils";
-import { volcanoEngineConfig, getHeaders, validateConfig } from "@/lib/volcano-engine/config";
+import { volcanoEngineConfig, validateConfig } from "@/lib/volcano-engine/config";
 import { getTemplateBySlug, getTemplateById } from "@/lib/db/template-repository";
-import type { TemplateWithShots } from "@/lib/db/template-repository";
-import { buildIdentityTransferPrompt } from "@/lib/prompts/identity-preservation";
 import {
   createGenerationBatch,
   createGenerationHistory,
@@ -20,6 +17,7 @@ import {
   findTrialBatch,
   checkTrialAlreadyUsed,
 } from "@/lib/db/generation-batch-repository";
+import { runShotGenerationPipeline } from "@/lib/generation/core";
 
 // ---------------------------------------------------------------------------
 // Configuration
@@ -27,240 +25,11 @@ import {
 
 const MAX_IMAGE_SIZE = 10 * 1024 * 1024; // 10 MB
 
-// ---------------------------------------------------------------------------
-// Helpers
-// ---------------------------------------------------------------------------
-
-async function downloadImage(url: string): Promise<Buffer> {
-  const response = await fetch(url);
-  const arrayBuffer = await response.arrayBuffer();
-  return Buffer.from(arrayBuffer);
-}
-
-function getImageGenerationUrl() {
-  const apiUrl = volcanoEngineConfig.apiUrl
-    .replace("https://ark.byteplus.com", "https://ark.ap-southeast.bytepluses.com")
-    .replace(/\/+$/, "");
-  return apiUrl.endsWith("/images/generations")
-    ? apiUrl
-    : `${apiUrl}/images/generations`;
-}
-
 function ensureGenerateConfig() {
   validateConfig();
   if (!volcanoEngineConfig.apiUrl) {
     throw new Error("VOLCANO_ENGINE_API_URL is not configured");
   }
-}
-
-function buildGenerationPrompt(
-  template: TemplateWithShots,
-  shotId?: string | null
-): { prompt: string; negativePrompt: string } {
-  let shot = undefined;
-  if (shotId) {
-    shot = template.shots?.find((s) => s.shotKey === shotId);
-  }
-  if (!shot) {
-    shot = template.shots?.[0];
-  }
-
-  const basePrompt = template.basePrompt ?? "";
-  const shotPrompt = shot?.prompt ?? "";
-  const prompt = shotPrompt ? `${basePrompt}\n\n${shotPrompt}` : basePrompt;
-
-  return {
-    prompt,
-    negativePrompt: template.negativePrompt ?? "",
-  };
-}
-
-async function generatePortraitImages({
-  prompt,
-  negativePrompt,
-  imageBase64,
-  mimeType,
-  maxImages,
-}: {
-  prompt: string;
-  negativePrompt: string;
-  imageBase64: string;
-  mimeType: string;
-  maxImages: number;
-}): Promise<string[]> {
-  const isSet = maxImages > 1;
-  const response = await fetch(getImageGenerationUrl(), {
-    method: "POST",
-    headers: getHeaders(),
-    body: JSON.stringify({
-      model: volcanoEngineConfig.imageModel,
-      prompt,
-      negative_prompt: negativePrompt,
-      image: `data:${mimeType};base64,${imageBase64}`,
-      sequential_image_generation: isSet ? "auto" : "disabled",
-      ...(isSet
-        ? {
-            sequential_image_generation_options: {
-              max_images: maxImages,
-            },
-          }
-        : {}),
-      response_format: "url",
-      size: "3072x4096",
-      stream: false,
-      watermark: false,
-      denoising_strength: 0.35,
-    }),
-  });
-
-  const responseText = await response.text();
-  let data: unknown = responseText;
-  try {
-    data = JSON.parse(responseText);
-  } catch {
-    // Keep the raw body for providers that return plain-text errors.
-  }
-
-  console.log("ARK image status:", response.status);
-  console.log("ARK image response:", JSON.stringify(data).substring(0, 500));
-
-  if (!response.ok) {
-    throw new Error(`ARK API error: ${JSON.stringify(data)}`);
-  }
-
-  return (
-    (data as { data?: Array<{ url?: string }> }).data
-      ?.map((item) => item.url)
-      .filter((url): url is string => Boolean(url)) || []
-  );
-}
-
-async function generateIdentityTransferImages({
-  prompt,
-  userImageBase64,
-  userImageMimeType,
-  templateImageUrl,
-  model,
-  size,
-}: {
-  prompt: string;
-  userImageBase64: string;
-  userImageMimeType: string;
-  templateImageUrl: string;
-  model: string;
-  size: string;
-}): Promise<string[]> {
-  const response = await fetch(getImageGenerationUrl(), {
-    method: "POST",
-    headers: getHeaders(),
-    body: JSON.stringify({
-      model,
-      prompt,
-      image: [
-        `data:${userImageMimeType};base64,${userImageBase64}`,
-        templateImageUrl,
-      ],
-      size,
-      response_format: "url",
-      stream: false,
-      watermark: false,
-    }),
-  });
-
-  const responseText = await response.text();
-  let data: unknown = responseText;
-  try {
-    data = JSON.parse(responseText);
-  } catch {
-    // Keep the raw body for providers that return plain-text errors.
-  }
-
-  console.log("ARK identity_transfer status:", response.status);
-  console.log(
-    "ARK identity_transfer response:",
-    JSON.stringify(data).substring(0, 500),
-  );
-
-  if (!response.ok) {
-    throw new Error(`ARK API error: ${JSON.stringify(data)}`);
-  }
-
-  return (
-    (data as { data?: Array<{ url?: string }> }).data
-      ?.map((item) => item.url)
-      .filter((url): url is string => Boolean(url)) || []
-  );
-}
-
-// ---------------------------------------------------------------------------
-// Shot-level generation helper
-// ---------------------------------------------------------------------------
-
-async function generateSingleShotImage({
-  shot,
-  template,
-  imageBase64,
-  mimeType,
-  model,
-  size,
-  workflow,
-}: {
-  shot: TemplateWithShots["shots"][number];
-  template: TemplateWithShots;
-  imageBase64: string;
-  mimeType: string;
-  model: string;
-  size: string;
-  workflow: string;
-}): Promise<string> {
-  let prompt: string;
-
-  if (workflow === "identity_transfer") {
-    prompt = buildIdentityTransferPrompt({
-      templateStylePrompt: template.stylePrompt ?? "",
-      shotStylePrompt: shot.stylePrompt ?? undefined,
-    });
-  } else {
-    const built = buildGenerationPrompt(template, shot.shotKey);
-    prompt = built.prompt;
-  }
-
-  // Resolve per-shot reference image for identity_transfer
-  let templateImageUrl = shot.referenceImage?.trim() || "";
-  if (!templateImageUrl) {
-    templateImageUrl = template.referenceImages?.[0]?.trim() || "";
-  }
-  if (!templateImageUrl) {
-    throw new Error(`Shot "${shot.shotKey}" is missing its reference image.`);
-  }
-
-  let generatedUrls: string[];
-
-  if (workflow === "identity_transfer") {
-    generatedUrls = await generateIdentityTransferImages({
-      prompt,
-      userImageBase64: imageBase64,
-      userImageMimeType: mimeType,
-      templateImageUrl,
-      model,
-      size,
-    });
-  } else {
-    generatedUrls = await generatePortraitImages({
-      prompt,
-      negativePrompt: template.negativePrompt ?? "",
-      imageBase64,
-      mimeType,
-      maxImages: 1,
-    });
-  }
-
-  const url = generatedUrls[0];
-  if (!url) {
-    throw new Error(`No image generated for shot "${shot.shotKey}"`);
-  }
-
-  return url;
 }
 
 // ---------------------------------------------------------------------------
@@ -284,7 +53,6 @@ export async function POST(req: NextRequest) {
     const generationTypeEntry = formData.get("generationType");
     const trialBatchIdEntry = formData.get("trialBatchId");
 
-    // generationType: new parameter, defaults to "trial" for backward compat
     const generationType: "trial" | "set" =
       (typeof generationTypeEntry === "string" &&
         (generationTypeEntry === "trial" || generationTypeEntry === "set"))
@@ -330,11 +98,9 @@ export async function POST(req: NextRequest) {
 
     const userId = access.user.id;
 
-    // Parse generation config and determine workflow
     const genConfig = JSON.parse(template.generationConfig ?? "{}");
     const workflow: string = genConfig.workflow ?? "prompt_generation";
 
-    // Resolve model
     const model =
       typeof genConfig.model === "string" && genConfig.model.trim()
         ? genConfig.model.trim()
@@ -354,7 +120,6 @@ export async function POST(req: NextRequest) {
         );
       }
     } else if (workflow === "identity_transfer") {
-      // For set generation, we don't need a single shot — all shots are handled in the set loop
       if (generationType === "set") {
         activeShot = null;
       } else {
@@ -371,7 +136,6 @@ export async function POST(req: NextRequest) {
       activeShot = template.shots?.find((s) => s.shotKey === resolvedShotId) ?? template.shots?.[0] ?? null;
     }
 
-    // For trial: shotId is required
     if (generationType === "trial" && !activeShot) {
       return NextResponse.json(
         { error: "shotId is required for trial generation" },
@@ -379,7 +143,6 @@ export async function POST(req: NextRequest) {
       );
     }
 
-    // Resolve size
     const size =
       typeof genConfig.size === "string" && genConfig.size.trim()
         ? genConfig.size.trim()
@@ -423,13 +186,10 @@ export async function POST(req: NextRequest) {
     const shots = (template.shots ?? []).sort((a, b) => a.sortOrder - b.sortOrder);
 
     let totalCredits: number;
-
-    // Trial deduction
     let trialDeduction = 0;
     let resolvedTrialBatch: { id: string; totalCredits: number } | null = null;
 
     if (generationType === "set" && trialBatchId) {
-      // Validate trial batch
       const trial = await findTrialBatch(trialBatchId, userId, template.id);
       if (!trial) {
         return NextResponse.json(
@@ -438,7 +198,6 @@ export async function POST(req: NextRequest) {
         );
       }
 
-      // Check not already used
       const alreadyUsed = await checkTrialAlreadyUsed(trialBatchId);
       if (alreadyUsed) {
         return NextResponse.json(
@@ -454,12 +213,10 @@ export async function POST(req: NextRequest) {
     if (generationType === "trial") {
       totalCredits = perShotCredits;
     } else {
-      // set
       const fullCredits = shots.length * perShotCredits;
       totalCredits = Math.max(0, fullCredits - trialDeduction);
     }
 
-    // Check credit balance
     const hasCredits = await canUserAfford(userId, totalCredits);
     if (!hasCredits) {
       return NextResponse.json(
@@ -473,7 +230,7 @@ export async function POST(req: NextRequest) {
     }
 
     // ---------------------------------------------------------------------------
-    // Create generation batch
+    // Create batch + deduct credits
     // ---------------------------------------------------------------------------
 
     const batch = await createGenerationBatch({
@@ -486,12 +243,8 @@ export async function POST(req: NextRequest) {
       totalCredits,
       totalShots: generationType === "trial" ? 1 : shots.length,
       trialBatchId: resolvedTrialBatch?.id ?? null,
-      sourceImage: null, // R2 URL will be set after upload if needed
+      sourceImage: null,
     });
-
-    // ---------------------------------------------------------------------------
-    // Deduct credits
-    // ---------------------------------------------------------------------------
 
     const reason = generationType === "trial" ? "portrait_trial" : "portrait_set";
     const deductResult = await deductCredits(userId, totalCredits, reason, batch.id);
@@ -506,16 +259,40 @@ export async function POST(req: NextRequest) {
       );
     }
 
+    // ---------------------------------------------------------------------------
+    // SET: async — return immediately, worker processes in background
+    // ---------------------------------------------------------------------------
+
+    if (generationType === "set") {
+      // Fire-and-forget: start worker in background, don't await
+      import("@/lib/jobs/generation-worker").then(({ processSetBatch }) => {
+        processSetBatch(batch.id, userId, imageBase64, mimeType).catch((err) => {
+          console.error("[worker] Unhandled worker error:", err);
+        });
+      });
+
+      return NextResponse.json({
+        success: true,
+        batchId: batch.id,
+        generationType: "set",
+        status: "processing",
+        totalCredits,
+        totalShots: shots.length,
+        trialDeduction: trialDeduction > 0 ? trialDeduction : undefined,
+        remainingCredits: deductResult.remainingCredits,
+      });
+    }
+
+    // ---------------------------------------------------------------------------
+    // TRIAL: synchronous (unchanged)
+    // ---------------------------------------------------------------------------
+
     const compensation = createCreditCompensation({
       userId,
       amount: totalCredits,
-      reason: reason === "portrait_trial" ? "portrait_trial_refund" : "portrait_set_refund",
+      reason: "portrait_trial_refund",
       referenceId: batch.id,
     });
-
-    // ---------------------------------------------------------------------------
-    // Generate images
-    // ---------------------------------------------------------------------------
 
     const shotResults: Array<{
       shotId: string;
@@ -526,192 +303,83 @@ export async function POST(req: NextRequest) {
     }> = [];
 
     try {
-      if (generationType === "trial") {
-        // ===== TRIAL: single shot =====
-        const historyId = await createGenerationHistory({
-          batchId: batch.id,
+      const historyId = await createGenerationHistory({
+        batchId: batch.id,
+        userId,
+        generationType: "trial",
+        shotId: activeShot!.shotKey,
+        shotOrder: activeShot!.sortOrder,
+        prompt: "",
+        creditsUsed: totalCredits,
+        metadata: {
+          workflow,
+          templateId: template.id,
+          templateSlug: template.slug,
+          templateVersion: template.version,
+          model,
+          size,
+        },
+      });
+
+      try {
+        const finalUrl = await runShotGenerationPipeline({
+          shot: activeShot!,
+          template,
+          imageBase64,
+          mimeType,
+          model,
+          size,
+          workflow,
           userId,
-          generationType: "trial",
-          shotId: activeShot!.shotKey,
-          shotOrder: activeShot!.sortOrder,
-          prompt: "",
-          creditsUsed: totalCredits,
-          metadata: {
-            workflow,
-            templateId: template.id,
-            templateSlug: template.slug,
-            templateVersion: template.version,
-            model,
-            size,
-          },
         });
 
-        try {
-          const imageUrl = await generateSingleShotImage({
-            shot: activeShot!,
-            template,
-            imageBase64,
-            mimeType,
-            model,
-            size,
-            workflow,
-          });
+        await updateHistoryCompleted(historyId, finalUrl, {
+          workflow,
+          templateId: template.id,
+          templateSlug: template.slug,
+          templateVersion: template.version,
+          templateName: { zh: template.nameZh, en: template.nameEn },
+          shotId: activeShot!.shotKey,
+          shotOrder: activeShot!.sortOrder,
+          model,
+          size,
+          generationType: "trial",
+        });
 
-          // Upload to R2
-          let finalUrl: string;
-          try {
-            const buffer = await downloadImage(imageUrl);
-            const key = generateImageKey(userId, `-${activeShot!.shotKey}`);
-            finalUrl = await uploadToR2(buffer, key, "image/jpeg");
-          } catch {
-            finalUrl = imageUrl;
-          }
+        await incrementCompletedShots(batch.id);
+        await updateBatchStatus(batch.id, "completed");
 
-          await updateHistoryCompleted(historyId, finalUrl, {
-            workflow,
-            templateId: template.id,
-            templateSlug: template.slug,
-            templateVersion: template.version,
-            templateName: { zh: template.nameZh, en: template.nameEn },
-            shotId: activeShot!.shotKey,
-            shotOrder: activeShot!.sortOrder,
-            model,
-            size,
-            generationType: "trial",
-          });
+        shotResults.push({
+          shotId: activeShot!.shotKey,
+          shotOrder: activeShot!.sortOrder,
+          imageUrl: finalUrl,
+          status: "completed",
+        });
 
-          await incrementCompletedShots(batch.id);
-          await updateBatchStatus(batch.id, "completed");
+        compensation.settle();
+      } catch (shotError) {
+        const errorMsg = getErrorMessage(shotError, "Failed to generate portrait");
+        await updateHistoryFailed(historyId, errorMsg);
+        await incrementFailedShots(batch.id);
+        await updateBatchStatus(batch.id, "failed");
 
-          shotResults.push({
-            shotId: activeShot!.shotKey,
-            shotOrder: activeShot!.sortOrder,
-            imageUrl: finalUrl,
-            status: "completed",
-          });
+        shotResults.push({
+          shotId: activeShot!.shotKey,
+          shotOrder: activeShot!.sortOrder,
+          imageUrl: null,
+          status: "failed",
+          error: errorMsg,
+        });
 
-          compensation.settle();
-        } catch (shotError) {
-          const errorMsg = getErrorMessage(shotError, "Failed to generate portrait");
-          await updateHistoryFailed(historyId, errorMsg);
-          await incrementFailedShots(batch.id);
-          await updateBatchStatus(batch.id, "failed");
-
-          shotResults.push({
-            shotId: activeShot!.shotKey,
-            shotOrder: activeShot!.sortOrder,
-            imageUrl: null,
-            status: "failed",
-            error: errorMsg,
-          });
-
-          await compensation.compensate();
-          throw shotError;
-        }
-      } else {
-        // ===== SET: loop over all shots =====
-        let anySuccess = false;
-
-        for (const shot of shots) {
-          const historyId = await createGenerationHistory({
-            batchId: batch.id,
-            userId,
-            generationType: "set",
-            shotId: shot.shotKey,
-            shotOrder: shot.sortOrder,
-            prompt: "",
-            creditsUsed: 0, // credits tracked at batch level
-            metadata: {
-              workflow,
-              templateId: template.id,
-              templateSlug: template.slug,
-              templateVersion: template.version,
-              model,
-              size,
-            },
-          });
-
-          try {
-            const imageUrl = await generateSingleShotImage({
-              shot,
-              template,
-              imageBase64,
-              mimeType,
-              model,
-              size,
-              workflow,
-            });
-
-            // Upload to R2
-            let finalUrl: string;
-            try {
-              const buffer = await downloadImage(imageUrl);
-              const key = generateImageKey(userId, `-${shot.shotKey}`);
-              finalUrl = await uploadToR2(buffer, key, "image/jpeg");
-            } catch {
-              finalUrl = imageUrl;
-            }
-
-            await updateHistoryCompleted(historyId, finalUrl, {
-              workflow,
-              templateId: template.id,
-              templateSlug: template.slug,
-              templateVersion: template.version,
-              templateName: { zh: template.nameZh, en: template.nameEn },
-              shotId: shot.shotKey,
-              shotOrder: shot.sortOrder,
-              model,
-              size,
-              generationType: "set",
-            });
-
-            await incrementCompletedShots(batch.id);
-            anySuccess = true;
-
-            shotResults.push({
-              shotId: shot.shotKey,
-              shotOrder: shot.sortOrder,
-              imageUrl: finalUrl,
-              status: "completed",
-            });
-          } catch (shotError) {
-            const errorMsg = getErrorMessage(shotError, `Failed to generate shot "${shot.shotKey}"`);
-            console.error(`[set] Shot ${shot.shotKey} failed:`, errorMsg);
-
-            await updateHistoryFailed(historyId, errorMsg);
-            await incrementFailedShots(batch.id);
-
-            shotResults.push({
-              shotId: shot.shotKey,
-              shotOrder: shot.sortOrder,
-              imageUrl: null,
-              status: "failed",
-              error: errorMsg,
-            });
-          }
-        }
-
-        // Determine final batch status
-        if (!anySuccess) {
-          await updateBatchStatus(batch.id, "failed");
-          await compensation.compensate();
-        } else {
-          const allSuccess = shotResults.every((r) => r.status === "completed");
-          await updateBatchStatus(batch.id, allSuccess ? "completed" : "partial");
-          compensation.settle();
-        }
+        await compensation.compensate();
+        throw shotError;
       }
     } catch (outerError) {
-      // Only reached for trial failure (which re-throws) or unexpected errors
       return NextResponse.json(
         { error: getErrorMessage(outerError, "Failed to generate portrait") },
         { status: 500 },
       );
     }
-
-    // ---------------------------------------------------------------------------
-    // Response
-    // ---------------------------------------------------------------------------
 
     const allImageUrls = shotResults
       .filter((r) => r.imageUrl)
@@ -723,8 +391,8 @@ export async function POST(req: NextRequest) {
       totalCredits,
       trialDeduction: trialDeduction > 0 ? trialDeduction : undefined,
       shots: shotResults,
-      imageUrls: allImageUrls, // backward compatible
-      resultUrl: allImageUrls[0] ?? null, // backward compatible: first image
+      imageUrls: allImageUrls,
+      resultUrl: allImageUrls[0] ?? null,
       templateName: { zh: template.nameZh, en: template.nameEn },
       templateSlug: template.slug,
       templateId: template.id,
