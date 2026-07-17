@@ -236,6 +236,14 @@ export const generationHistory = pgTable(
     shotId: text("shot_id"),
     shotOrder: integer("shot_order"),
 
+    // Phase 8.3.3 — shot-level task locking & retry
+    attemptCount: integer("attempt_count").notNull().default(0),
+    lockedAt: timestamp("locked_at"),
+    lockedBy: text("locked_by"),
+    startedAt: timestamp("started_at"),
+    heartbeatAt: timestamp("heartbeat_at"),
+    lastError: text("last_error"),
+
     createdAt: timestamp("created_at").defaultNow().notNull(),
     updatedAt: timestamp("updated_at")
       .defaultNow()

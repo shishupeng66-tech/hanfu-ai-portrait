@@ -4,8 +4,11 @@
     "app/api/generate/route.ts": {
       "maxDuration": 60
     },
+    "app/api/generation-batch/[id]/process/route.ts": {
+      "maxDuration": 120
+    },
     "app/api/cron/process-batches/route.ts": {
-      "maxDuration": 300
+      "maxDuration": 30
     }
   },
   "crons": [

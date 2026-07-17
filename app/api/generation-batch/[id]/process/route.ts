@@ -1,11 +1,7 @@
 import { NextRequest, NextResponse } from "next/server";
-import { processSetBatch } from "@/lib/jobs/generation-worker";
+import { processNextBatchShot } from "@/lib/jobs/generation-worker";
 import { getBatchById } from "@/lib/db/generation-batch-repository";
 
-/**
- * Internal worker trigger endpoint.
- * Protected by TASK_SECRET — only callable by internal services, not users.
- */
 export async function POST(
   req: NextRequest,
   { params }: { params: Promise<{ id: string }> },
@@ -25,20 +21,17 @@ export async function POST(
   }
 
   if (batch.generationType !== "set") {
-    return NextResponse.json({ error: "Only set batches can be processed" }, { status: 400 });
+    return NextResponse.json({ error: "Only set batches supported" }, { status: 400 });
   }
 
-  if (batch.status === "completed" || batch.status === "failed") {
+  if (batch.status === "completed" || batch.status === "partial" || batch.status === "failed") {
     return NextResponse.json(
-      { error: `Batch is already ${batch.status}` },
+      { error: `Batch is already ${batch.status}`, batchId, batchStatus: batch.status },
       { status: 409 },
     );
   }
 
-  // Fire-and-forget from this endpoint
-  processSetBatch(batchId).catch((err) => {
-    console.error("[process] Worker error:", err);
-  });
+  const result = await processNextBatchShot(batchId);
 
-  return NextResponse.json({ success: true, batchId });
+  return NextResponse.json(result);
 }
