@@ -204,7 +204,6 @@ async function generateSingleShotImage({
   model,
   size,
   workflow,
-  templateImageUrl,
 }: {
   shot: TemplateWithShots["shots"][number];
   template: TemplateWithShots;
@@ -213,7 +212,6 @@ async function generateSingleShotImage({
   model: string;
   size: string;
   workflow: string;
-  templateImageUrl: string;
 }): Promise<string> {
   let prompt: string;
 
@@ -225,6 +223,15 @@ async function generateSingleShotImage({
   } else {
     const built = buildGenerationPrompt(template, shot.shotKey);
     prompt = built.prompt;
+  }
+
+  // Resolve per-shot reference image for identity_transfer
+  let templateImageUrl = shot.referenceImage?.trim() || "";
+  if (!templateImageUrl) {
+    templateImageUrl = template.referenceImages?.[0]?.trim() || "";
+  }
+  if (!templateImageUrl) {
+    throw new Error(`Shot "${shot.shotKey}" is missing its reference image.`);
   }
 
   let generatedUrls: string[];
@@ -347,14 +354,19 @@ export async function POST(req: NextRequest) {
         );
       }
     } else if (workflow === "identity_transfer") {
-      const shotCount = template.shots?.length ?? 0;
-      if (shotCount > 1) {
-        return NextResponse.json(
-          { error: "This template has multiple shots. Please select a specific shot." },
-          { status: 400 },
-        );
+      // For set generation, we don't need a single shot — all shots are handled in the set loop
+      if (generationType === "set") {
+        activeShot = null;
+      } else {
+        const shotCount = template.shots?.length ?? 0;
+        if (shotCount > 1) {
+          return NextResponse.json(
+            { error: "This template has multiple shots. Please select a specific shot." },
+            { status: 400 },
+          );
+        }
+        activeShot = template.shots?.[0] ?? null;
       }
-      activeShot = template.shots?.[0] ?? null;
     } else {
       activeShot = template.shots?.find((s) => s.shotKey === resolvedShotId) ?? template.shots?.[0] ?? null;
     }
@@ -373,9 +385,9 @@ export async function POST(req: NextRequest) {
         ? genConfig.size.trim()
         : "3072x4096";
 
-    // Resolve template image for identity_transfer
+    // Resolve template image for identity_transfer (skip for set — resolved per-shot)
     let templateImageUrl = "";
-    if (workflow === "identity_transfer") {
+    if (workflow === "identity_transfer" && generationType !== "set") {
       if (activeShot) {
         templateImageUrl = activeShot.referenceImage?.trim() || "";
         if (!templateImageUrl) {
@@ -543,7 +555,6 @@ export async function POST(req: NextRequest) {
             model,
             size,
             workflow,
-            templateImageUrl,
           });
 
           // Upload to R2
@@ -629,7 +640,6 @@ export async function POST(req: NextRequest) {
               model,
               size,
               workflow,
-              templateImageUrl,
             });
 
             // Upload to R2
