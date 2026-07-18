@@ -1,10 +1,10 @@
 import { VolcanoEngineConfig } from './types';
 
-export const DEFAULT_IMAGE_MODEL = 'doubao-seedream-5-0-pro-260628';
+export const DEFAULT_IMAGE_MODEL = 'doubao-seedream-5-0-lite';
 
 const LEGACY_IMAGE_MODELS = new Set([
   'doubao-seedream-4-5-251128',
-  'doubao-seedream-5-0-lite',
+  'doubao-seedream-5-0-pro-260628',
   'seedream-5-0-lite',
 ]);
 

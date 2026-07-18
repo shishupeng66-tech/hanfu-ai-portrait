@@ -166,7 +166,7 @@ describe("identity_transfer prompt building", () => {
 describe("identity_transfer request body", () => {
   it("contains only verified fields", () => {
     const request = buildIdentityTransferRequest({
-      model: "doubao-seedream-5-0-pro-260628",
+      model: "doubao-seedream-5-0-lite",
       prompt: "test prompt",
       userImageBase64: "abc123",
       userImageMimeType: "image/jpeg",

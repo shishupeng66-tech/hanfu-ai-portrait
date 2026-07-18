@@ -74,7 +74,7 @@ const DEFAULT_FORM: TemplateFormData = {
   referenceImages: [],
   basePrompt: "",
   negativePrompt: "",
-  generationConfig: JSON.stringify({ model: "doubao-seedream-5-0-pro-260628", size: "3072x4096", aspectRatio: "3:4", count: 1, workflow: "identity_transfer" }, null, 2),
+  generationConfig: JSON.stringify({ model: "doubao-seedream-5-0-lite", size: "3072x4096", aspectRatio: "3:4", count: 1, workflow: "identity_transfer" }, null, 2),
   creditsPerGeneration: 4,
   memberCreditsPerGeneration: null,
   featured: false,
@@ -103,7 +103,7 @@ const DYNASTIES = [
 ];
 
 const MODEL_OPTIONS = [
-  "doubao-seedream-5-0-pro-260628",
+  "doubao-seedream-5-0-lite",
 ];
 
 const SIZE_OPTIONS = [
@@ -161,7 +161,7 @@ export function AdminTemplateForm({ templateId }: { templateId?: string }) {
           referenceImages: data.referenceImages ?? [],
           basePrompt: data.basePrompt ?? "",
           negativePrompt: data.negativePrompt ?? "",
-          generationConfig: data.generationConfig ?? JSON.stringify({ model: "doubao-seedream-5-0-pro-260628", size: "3072x4096", aspectRatio: "3:4", count: 1, workflow: "identity_transfer" }, null, 2),
+          generationConfig: data.generationConfig ?? JSON.stringify({ model: "doubao-seedream-5-0-lite", size: "3072x4096", aspectRatio: "3:4", count: 1, workflow: "identity_transfer" }, null, 2),
           creditsPerGeneration: data.creditsPerGeneration ?? 4,
           memberCreditsPerGeneration: data.memberCreditsPerGeneration ?? null,
           featured: data.featured ?? false,
@@ -373,7 +373,7 @@ export function AdminTemplateForm({ templateId }: { templateId?: string }) {
 
   // Parse generation config for structured fields
   const genConfig = (() => { try { return JSON.parse(form.generationConfig); } catch { return {}; } })();
-  const genModel = typeof genConfig.model === "string" ? genConfig.model : "doubao-seedream-5-0-pro-260628";
+  const genModel = typeof genConfig.model === "string" ? genConfig.model : "doubao-seedream-5-0-lite";
   const genSize = typeof genConfig.size === "string" ? genConfig.size : "3072x4096";
   const genAspectRatio = typeof genConfig.aspectRatio === "string" ? genConfig.aspectRatio : "3:4";
 
