@@ -110,6 +110,7 @@ export async function processNextBatchShot(batchId: string): Promise<ProcessNext
       workflow,
       userId: batch.userId,
     });
+    assertR2ResultUrl(finalUrl);
 
     // 7. Mark completed
     await completeShot(history.id, finalUrl);
@@ -167,6 +168,13 @@ async function triggerNextShot(batchId: string): Promise<void> {
   }).catch(() => {});
 }
 
+function assertR2ResultUrl(url: string): void {
+  const publicUrl = process.env.R2_PUBLIC_URL?.replace(/\/+$/, "");
+  if (!publicUrl || !url.startsWith(`${publicUrl}/`)) {
+    throw new Error("Generated image was not persisted to R2");
+  }
+}
+
 async function buildBatchResult(
   batchId: string,
   processedShotId: string | null,
@@ -209,7 +217,7 @@ async function finalizeBatch(batchId: string): Promise<void> {
     // All failed — refund and release trial
     await updateBatchStatus(batchId, "failed");
 
-    const refundAmount = batch.totalCredits - batch.refundedCredits;
+    const refundAmount = Math.max(0, batch.totalCredits - batch.refundedCredits);
     if (refundAmount > 0) {
       await addRefundedCredits(batchId, refundAmount);
       await refundCredits(batch.userId, refundAmount, "portrait_set_refund", batchId);

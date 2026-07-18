@@ -208,6 +208,7 @@ export async function updateHistoryCompleted(
 export async function claimNextHistory(batchId: string, workerId: string) {
   const now = new Date();
   const staleThreshold = new Date(now.getTime() - SHOT_HEARTBEAT_TIMEOUT_MS);
+  const staleThresholdIso = staleThreshold.toISOString();
 
   const rows = await db
     .update(generationHistory)
@@ -234,7 +235,7 @@ export async function claimNextHistory(batchId: string, workerId: string) {
                 ${generationHistory.status} = 'processing'
                 and (
                   ${generationHistory.heartbeatAt} is null
-                  or ${generationHistory.heartbeatAt} < ${staleThreshold}
+                  or ${generationHistory.heartbeatAt} < ${staleThresholdIso}::timestamp
                 )
               )
               or (
@@ -323,7 +324,7 @@ export async function getBatchCompletionStats(batchId: string) {
     .select({
       total: sql<number>`count(*)::int`,
       completed: sql<number>`coalesce(sum(case when ${generationHistory.status} = 'completed' then 1 else 0 end), 0)::int`,
-      failed: sql<number>`coalesce(sum(case when ${generationHistory.status} = 'failed' then 1 else 0 end), 0)::int`,
+      failed: sql<number>`coalesce(sum(case when ${generationHistory.status} = 'failed' and ${generationHistory.attemptCount} >= ${SHOT_MAX_ATTEMPTS} then 1 else 0 end), 0)::int`,
     })
     .from(generationHistory)
     .where(
@@ -349,6 +350,10 @@ export async function updateHistoryFailed(
     .set({
       status: "failed",
       error,
+      lastError: error,
+      lockedAt: null,
+      lockedBy: null,
+      heartbeatAt: null,
       updatedAt: new Date(),
     })
     .where(eq(generationHistory.id, historyId));
@@ -520,6 +525,7 @@ export async function incrementDispatchAttempt(batchId: string): Promise<void> {
 
 export async function getBatchesNeedingProcessing(): Promise<DbGenerationBatch[]> {
   const staleThreshold = new Date(Date.now() - HEARTBEAT_TIMEOUT_MS_2);
+  const staleThresholdIso = staleThreshold.toISOString();
 
   return db
     .select()
@@ -543,7 +549,7 @@ export async function getBatchesNeedingProcessing(): Promise<DbGenerationBatch[]
                 ${generationHistory.status} = 'processing'
                 and (
                   ${generationHistory.heartbeatAt} is null
-                  or ${generationHistory.heartbeatAt} < ${staleThreshold}
+                  or ${generationHistory.heartbeatAt} < ${staleThresholdIso}::timestamp
                 )
               )
               or (
