@@ -10,11 +10,5 @@
     "app/api/cron/process-batches/route.ts": {
       "maxDuration": 30
     }
-  },
-  "crons": [
-    {
-      "path": "/api/cron/process-batches",
-      "schedule": "*/2 * * * *"
-    }
-  ]
+  }
 }
