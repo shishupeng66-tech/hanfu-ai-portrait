@@ -4,7 +4,7 @@ import { createCreditCompensation } from "@/lib/credit-compensation";
 import { canUserAfford, deductCredits } from "@/lib/credits";
 import { getActiveSessionUser } from "@/lib/auth/session";
 import { getErrorMessage } from "@/lib/error-utils";
-import { volcanoEngineConfig, validateConfig } from "@/lib/volcano-engine/config";
+import { resolveImageModel, validateConfig, volcanoEngineConfig } from "@/lib/volcano-engine/config";
 import { getTemplateBySlug, getTemplateById } from "@/lib/db/template-repository";
 import { uploadToR2, generateImageKey } from "@/lib/r2";
 import {
@@ -109,10 +109,7 @@ export async function POST(req: NextRequest) {
     const genConfig = JSON.parse(template.generationConfig ?? "{}");
     const workflow: string = genConfig.workflow ?? "prompt_generation";
 
-    const model =
-      typeof genConfig.model === "string" && genConfig.model.trim()
-        ? genConfig.model.trim()
-        : volcanoEngineConfig.imageModel;
+    const model = resolveImageModel(typeof genConfig.model === "string" ? genConfig.model : null);
 
     const resolvedShotId = typeof shotId === "string" ? shotId : null;
 

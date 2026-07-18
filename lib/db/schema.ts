@@ -302,7 +302,7 @@ export const portraitTemplate = pgTable(
     referenceImages: text("reference_images").array().default([]),
     basePrompt: text("base_prompt").default(""),
     negativePrompt: text("negative_prompt").default(""),
-    generationConfig: text("generation_config").default('{"model":"doubao-seedream-5-0-lite","size":"3072x4096","aspectRatio":"3:4","count":1,"workflow":"identity_transfer"}'),
+    generationConfig: text("generation_config").default('{"model":"doubao-seedream-5-0-pro-260628","size":"3072x4096","aspectRatio":"3:4","count":1,"workflow":"identity_transfer"}'),
     creditsPerGeneration: integer("credits_per_generation").default(1).notNull(),
     memberCreditsPerGeneration: integer("member_credits_per_generation"),
     featured: boolean("featured").default(false).notNull(),

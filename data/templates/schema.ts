@@ -28,7 +28,7 @@ export const TemplatePromptSchema = z.object({
 
 export const TemplateGenerationSchema = z.object({
   workflow: z.string().default("identity_transfer"),
-  model: z.string().default("doubao-seedream-5-0-lite"),
+  model: z.string().default("doubao-seedream-5-0-pro-260628"),
   size: z.string().default("3072x4096"),
   aspectRatio: z.string().default("3:4"),
   count: z.number().int().positive().default(1),

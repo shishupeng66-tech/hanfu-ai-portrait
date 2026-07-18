@@ -1,11 +1,27 @@
 import { VolcanoEngineConfig } from './types';
 
+export const DEFAULT_IMAGE_MODEL = 'doubao-seedream-5-0-pro-260628';
+
+const LEGACY_IMAGE_MODELS = new Set([
+  'doubao-seedream-4-5-251128',
+  'doubao-seedream-5-0-lite',
+  'seedream-5-0-lite',
+]);
+
+export function resolveImageModel(model?: string | null): string {
+  const trimmed = model?.trim();
+  if (!trimmed || LEGACY_IMAGE_MODELS.has(trimmed)) {
+    return DEFAULT_IMAGE_MODEL;
+  }
+  return trimmed;
+}
+
 export const volcanoEngineConfig: VolcanoEngineConfig = {
   apiKey: process.env.VOLCANO_ENGINE_API_KEY || process.env.ARK_API_KEY || '',
   apiUrl: process.env.VOLCANO_ENGINE_API_URL || process.env.ARK_API_ENDPOINT || 'https://ark.cn-beijing.volces.com/api/v3',
   // 使用模型 ID 或控制台创建的 Endpoint ID。
   textModel: 'doubao-1-5-thinking-pro-250415',  // 豆包 1.5 Thinking Pro 版本（正确的模型名）
-  imageModel: process.env.VOLCANO_ENGINE_IMAGE_MODEL || process.env.ARK_IMAGE_MODEL || 'doubao-seedream-4-5-251128',
+  imageModel: resolveImageModel(process.env.VOLCANO_ENGINE_IMAGE_MODEL || process.env.ARK_IMAGE_MODEL),
   videoModel: 'doubao-seedance-1-0-pro-250528',  // Seedance Pro 视频生成模型
 };
 

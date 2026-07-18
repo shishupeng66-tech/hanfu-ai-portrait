@@ -24,7 +24,7 @@ import {
   addRefundedCredits,
   clearTrialBatchId,
 } from "@/lib/db/generation-batch-repository";
-import { volcanoEngineConfig } from "@/lib/volcano-engine/config";
+import { resolveImageModel } from "@/lib/volcano-engine/config";
 import { db } from "@/lib/db";
 import { generationBatch } from "@/lib/db/schema";
 import { eq } from "drizzle-orm";
@@ -92,9 +92,7 @@ export async function processNextBatchShot(batchId: string): Promise<ProcessNext
 
     const genConfig = JSON.parse(template.generationConfig ?? "{}");
     const workflow: string = genConfig.workflow ?? "prompt_generation";
-    const model = typeof genConfig.model === "string" && genConfig.model.trim()
-      ? genConfig.model.trim()
-      : volcanoEngineConfig.imageModel;
+    const model = resolveImageModel(typeof genConfig.model === "string" ? genConfig.model : null);
     const size = typeof genConfig.size === "string" && genConfig.size.trim()
       ? genConfig.size.trim()
       : "3072x4096";
