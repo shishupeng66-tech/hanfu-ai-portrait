@@ -53,7 +53,7 @@ export const TEMPLATE_SEEDS: TemplateSeed[] = [
     stylePrompt:
       "盛唐风格，上元灯会场景，金碧辉煌，华丽唐装服饰，精致妆容，温暖灯光氛围，古典宫廷背景。",
     generationConfig: {
-      model: "doubao-seedream-5-0-lite",
+      model: "doubao-seedream-5-0-260128",
       size: "3072x4096",
       aspectRatio: "3:4",
       count: 1,
