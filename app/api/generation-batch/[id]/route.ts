@@ -50,7 +50,8 @@ export async function GET(
   const progress = total > 0
     ? Math.round(((batch.completedShots || 0) / total) * 100)
     : 0;
-  const isTerminal = batch.status === "completed" || batch.status === "failed";
+  const isTerminal =
+    batch.status === "completed" || batch.status === "partial" || batch.status === "failed";
   const canRetry = !isTerminal || batch.status === "partial";
 
   return NextResponse.json({

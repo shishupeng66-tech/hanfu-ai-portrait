@@ -33,6 +33,13 @@ function ensureGenerateConfig() {
   }
 }
 
+function assertR2ResultUrl(url: string): void {
+  const publicUrl = process.env.R2_PUBLIC_URL?.replace(/\/+$/, "");
+  if (!publicUrl || !url.startsWith(`${publicUrl}/`)) {
+    throw new Error("Generated image was not persisted to R2");
+  }
+}
+
 // ---------------------------------------------------------------------------
 // POST /api/generate
 // ---------------------------------------------------------------------------
@@ -371,6 +378,7 @@ export async function POST(req: NextRequest) {
           workflow,
           userId,
         });
+        assertR2ResultUrl(finalUrl);
 
         await updateHistoryCompleted(historyId, finalUrl, {
           workflow,

@@ -7,6 +7,26 @@ import { useSession } from "@/lib/auth-client";
 import type { PublicTemplate } from "@/data/templates/client";
 
 const DYNASTY_TABS = ["tang", "song", "yuan", "ming", "qing", "modern"] as const;
+const BATCH_POLL_INTERVAL_MS = 3000;
+
+type GenerationProgress = {
+  completedShots: number;
+  failedShots: number;
+  totalShots: number;
+};
+
+type BatchHistory = {
+  resultUrl?: string | null;
+  status?: string;
+};
+
+type BatchStatusResponse = {
+  status?: string;
+  completedShots?: number;
+  failedShots?: number;
+  totalShots?: number;
+  histories?: BatchHistory[];
+};
 
 function UploadIcon() {
   return (
@@ -59,6 +79,10 @@ export default function GenerateClientPage({
   const [userCredits, setUserCredits] = useState<number>(0);
   const [currentPreviewIndex, setCurrentPreviewIndex] = useState(0);
   const [generationError, setGenerationError] = useState<string | null>(null);
+  const [selectedTrialBatchId, setSelectedTrialBatchId] = useState<string | null>(null);
+  const [generationProgress, setGenerationProgress] = useState<GenerationProgress | null>(null);
+  const [activeGenerationType, setActiveGenerationType] = useState<"trial" | "set" | null>(null);
+  const batchPollTimerRef = useRef<ReturnType<typeof setTimeout> | null>(null);
 
   // Shot horizontal scroll
   const shotScrollRef = useRef<HTMLDivElement>(null);
@@ -111,6 +135,8 @@ export default function GenerateClientPage({
   };
 
   useEffect(() => {
+    setSelectedTrialBatchId(null);
+    setGenerationProgress(null);
     if (activeTemplateShots.length > 0) {
       const sorted = [...activeTemplateShots].sort((a, b) => a.order - b.order);
       setSelectedShotId(sorted[0].shotKey);
@@ -128,6 +154,12 @@ export default function GenerateClientPage({
     Number.isInteger(generationCost) &&
     generationCost >= 0;
   const creditsInsufficient = creditsValid && generationCost! > 0 && userCredits < generationCost!;
+  const setShotCount = activeTemplateShots.length > 0 ? activeTemplateShots.length : 1;
+  const setGenerationCost = creditsValid
+    ? Math.max(0, (generationCost ?? 0) * setShotCount - (selectedTrialBatchId ? (generationCost ?? 0) : 0))
+    : undefined;
+  const setCreditsInsufficient =
+    creditsValid && setGenerationCost !== undefined && setGenerationCost > 0 && userCredits < setGenerationCost;
 
   const fetchUserCredits = useCallback(async () => {
     if (!isLoggedIn) return;
@@ -147,6 +179,14 @@ export default function GenerateClientPage({
   }, [fetchUserCredits]);
 
   useEffect(() => {
+    return () => {
+      if (batchPollTimerRef.current) {
+        clearTimeout(batchPollTimerRef.current);
+      }
+    };
+  }, []);
+
+  useEffect(() => {
     const templateParam = new URLSearchParams(window.location.search).get("template");
     if (!templateParam) return;
     const matched = templates.find((t) => t.slug === templateParam || t.id === templateParam);
@@ -164,12 +204,48 @@ export default function GenerateClientPage({
     setGenerationError(null);
     setResultUrls([]);
     setCurrentPreviewIndex(0);
+    setSelectedTrialBatchId(null);
+    setGenerationProgress(null);
     setFile(nextFile);
     if (previewUrl) URL.revokeObjectURL(previewUrl);
     setPreviewUrl(nextFile ? URL.createObjectURL(nextFile) : null);
   }
 
-  async function handleGenerate() {
+  async function pollBatchStatus(batchId: string): Promise<void> {
+    const response = await fetch(`/api/generation-batch/${batchId}`);
+    const data: BatchStatusResponse = await response.json();
+    if (!response.ok) {
+      throw new Error("Failed to fetch batch status");
+    }
+
+    const completedShots = data.completedShots ?? 0;
+    const failedShots = data.failedShots ?? 0;
+    const totalShots = data.totalShots ?? 0;
+    setGenerationProgress({ completedShots, failedShots, totalShots });
+
+    if (data.status === "completed" || data.status === "partial" || data.status === "failed") {
+      const urls = (data.histories ?? [])
+        .filter((history) => history.status === "completed" && history.resultUrl)
+        .map((history) => history.resultUrl!)
+        .filter(Boolean);
+
+      if (urls.length > 0) {
+        setResultUrls(urls);
+        setCurrentPreviewIndex(0);
+        setViewMode("preview");
+      }
+
+      fetchUserCredits();
+      return;
+    }
+
+    await new Promise<void>((resolve) => {
+      batchPollTimerRef.current = setTimeout(resolve, BATCH_POLL_INTERVAL_MS);
+    });
+    await pollBatchStatus(batchId);
+  }
+
+  async function handleGenerate(generationType: "trial" | "set" = "trial") {
     if (!hasTemplates) {
       setGenerationError(t("errors.noTemplatesAvailable"));
       return;
@@ -195,24 +271,38 @@ export default function GenerateClientPage({
       return;
     }
 
-    if (creditsInsufficient) {
+    if (generationType === "trial" && creditsInsufficient) {
+      setGenerationError(t("errors.insufficientCredits"));
+      return;
+    }
+
+    if (generationType === "set" && setCreditsInsufficient) {
       setGenerationError(t("errors.insufficientCredits"));
       return;
     }
 
     setIsGenerating(true);
+    setActiveGenerationType(generationType);
     setGenerationError(null);
-    if (viewMode === "create") {
+    setGenerationProgress(null);
+    if (viewMode === "create" || generationType === "set") {
       setResultUrls([]);
       setCurrentPreviewIndex(0);
+    }
+    if (batchPollTimerRef.current) {
+      clearTimeout(batchPollTimerRef.current);
+      batchPollTimerRef.current = null;
     }
 
     const formData = new FormData();
     formData.append("image", file);
     formData.append("templateSlug", activeTemplate?.slug ?? "");
-    formData.append("mode", "set");
-    if (selectedShotId) {
+    formData.append("generationType", generationType);
+    if (generationType === "trial" && selectedShotId) {
       formData.append("shotId", selectedShotId);
+    }
+    if (generationType === "set" && selectedTrialBatchId) {
+      formData.append("trialBatchId", selectedTrialBatchId);
     }
 
     try {
@@ -224,18 +314,35 @@ export default function GenerateClientPage({
       if (!response.ok) {
         throw new Error(data.error || "Generation failed");
       }
-      if (!data.imageUrls || data.imageUrls.length === 0) {
-        throw new Error("No result");
+
+      if (generationType === "set") {
+        if (!data.batchId) {
+          throw new Error("No batchId");
+        }
+        setGenerationProgress({
+          completedShots: 0,
+          failedShots: 0,
+          totalShots: data.totalShots ?? setShotCount,
+        });
+        await pollBatchStatus(data.batchId);
+      } else {
+        if (!data.imageUrls || data.imageUrls.length === 0) {
+          throw new Error("No result");
+        }
+        if (data.batchId) {
+          setSelectedTrialBatchId(data.batchId);
+        }
+        setResultUrls(data.imageUrls);
+        setCurrentPreviewIndex(0);
+        setViewMode("preview");
+        fetchUserCredits();
       }
-      setResultUrls(data.imageUrls);
-      setCurrentPreviewIndex(0);
-      setViewMode("preview");
-      fetchUserCredits();
     } catch (err) {
       console.error(err);
       setGenerationError(t("errors.generationFailed"));
     } finally {
       setIsGenerating(false);
+      setActiveGenerationType(null);
     }
   }
 
@@ -264,6 +371,12 @@ export default function GenerateClientPage({
   const templateDisplayName = activeTemplate
     ? (activeTemplate.name.zh || activeTemplate.name.en)
     : t("styleSelection.noTemplatesAvailable");
+  const generationProgressText = generationProgress
+    ? `已完成 ${generationProgress.completedShots} 张，剩余 ${Math.max(
+        0,
+        generationProgress.totalShots - generationProgress.completedShots - generationProgress.failedShots,
+      )} 张${generationProgress.failedShots > 0 ? `，失败 ${generationProgress.failedShots} 张` : ""}`
+    : null;
 
   // Group templates by dynasty for the tab UI
   const dynastyTemplates = useMemo(() => {
@@ -375,12 +488,21 @@ export default function GenerateClientPage({
                     </button>
                     <button
                       type="button"
-                      onClick={handleGenerate}
-                      disabled={isGenerating || !hasTemplates || !activeTemplate || !creditsValid || creditsInsufficient}
+                      onClick={() => handleGenerate("set")}
+                      disabled={isGenerating || !hasTemplates || !activeTemplate || !creditsValid || setCreditsInsufficient}
                       className="flex h-11 items-center justify-center gap-2 rounded-xl bg-[#E8C27A] px-4 text-sm font-semibold text-[#0B0B0D] transition hover:bg-[#F2D38A] disabled:cursor-not-allowed disabled:opacity-70"
                     >
-                      {isGenerating && <LoadingSpinner />}
-                      {isGenerating ? t("actions.regenerating") : t("actions.regenerate")}
+                      {isGenerating && activeGenerationType === "set" && <LoadingSpinner />}
+                      {isGenerating && activeGenerationType === "set" ? "正在生成套图" : "生成完整套图"}
+                    </button>
+                    <button
+                      type="button"
+                      onClick={() => handleGenerate("trial")}
+                      disabled={isGenerating || !hasTemplates || !activeTemplate || !creditsValid || creditsInsufficient}
+                      className="flex h-11 items-center justify-center gap-2 rounded-xl border border-[rgba(232,194,122,0.22)] bg-[rgba(232,194,122,0.08)] px-4 text-sm font-medium text-[#E8C27A] transition hover:border-[rgba(232,194,122,0.42)] hover:bg-[rgba(232,194,122,0.13)] disabled:cursor-not-allowed disabled:opacity-70"
+                    >
+                      {isGenerating && activeGenerationType === "trial" && <LoadingSpinner />}
+                      {isGenerating && activeGenerationType === "trial" ? t("actions.regenerating") : t("actions.regenerate")}
                     </button>
                     <button type="button" onClick={() => setViewMode("create")} className="h-11 rounded-xl border border-[rgba(255,247,236,0.08)] bg-[rgba(255,247,236,0.04)] px-4 text-sm text-[rgba(255,247,236,0.72)] transition hover:bg-[rgba(255,247,236,0.07)]">
                       {t("actions.backToCreate")}
@@ -389,7 +511,17 @@ export default function GenerateClientPage({
                       {t("actions.viewWorks")}
                     </a>
                   </div>
-                  {isGenerating && <p className="mt-3 text-center text-xs text-[rgba(255,247,236,0.45)]">{t("styleSelection.generating")}</p>}
+                  {isGenerating && (
+                    <p className="mt-3 text-center text-xs text-[rgba(255,247,236,0.45)]">
+                      {activeGenerationType === "set" ? "生成中..." : t("styleSelection.generating")}
+                      {generationProgress && (
+                        <span className="mt-1 block">
+                          {generationProgress.completedShots} / {generationProgress.totalShots}
+                          {generationProgressText ? ` · ${generationProgressText}` : ""}
+                        </span>
+                      )}
+                    </p>
+                  )}
                   {generationError && <p className="mt-3 text-center text-xs text-[#E8C27A]">{generationError}</p>}
                 </div>
               </aside>
@@ -618,7 +750,7 @@ export default function GenerateClientPage({
               <div className="mt-5 flex flex-col items-center">
                 <button
                   type="button"
-                  onClick={handleGenerate}
+                  onClick={() => handleGenerate("trial")}
                   disabled={isGenerating || !hasTemplates || !activeTemplate || !creditsValid || creditsInsufficient}
                   className="flex h-[58px] w-[280px] items-center justify-center gap-2 rounded-xl px-8 text-base font-semibold text-[#0B0B0D] transition disabled:cursor-not-allowed disabled:opacity-70 md:w-[332px]"
                   style={{
@@ -628,8 +760,17 @@ export default function GenerateClientPage({
                     boxShadow: hasTemplates ? "inset 0 1px 0 rgba(255,255,255,0.34), 0 16px 42px rgba(232,194,122,0.15)" : "none",
                   }}
                 >
-                  {isGenerating ? <LoadingSpinner /> : <SparkIcon className="h-5 w-5" />}
-                  {isGenerating ? t("styleSelection.generating") : hasTemplates ? t("styleTemplates.generateButton") : t("styleSelection.noTemplatesAvailable")}
+                  {isGenerating && activeGenerationType === "trial" ? <LoadingSpinner /> : <SparkIcon className="h-5 w-5" />}
+                  {isGenerating && activeGenerationType === "trial" ? t("styleSelection.generating") : hasTemplates ? t("styleTemplates.generateButton") : t("styleSelection.noTemplatesAvailable")}
+                </button>
+                <button
+                  type="button"
+                  onClick={() => handleGenerate("set")}
+                  disabled={isGenerating || !hasTemplates || !activeTemplate || !creditsValid || setCreditsInsufficient}
+                  className="mt-3 flex h-11 w-[280px] items-center justify-center gap-2 rounded-xl border border-[rgba(232,194,122,0.24)] bg-[rgba(232,194,122,0.08)] px-6 text-sm font-medium text-[#E8C27A] transition hover:border-[rgba(232,194,122,0.44)] hover:bg-[rgba(232,194,122,0.13)] disabled:cursor-not-allowed disabled:opacity-70 md:w-[332px]"
+                >
+                  {isGenerating && activeGenerationType === "set" && <LoadingSpinner />}
+                  {isGenerating && activeGenerationType === "set" ? "正在生成套图" : "生成完整套图"}
                 </button>
                 <p className="mt-3 min-h-5 text-sm" style={{ color: generationError ? "#E8C27A" : "rgba(255,247,236,0.45)" }}>
                   {generationError || (
@@ -642,7 +783,17 @@ export default function GenerateClientPage({
                     </>
                   )}
                 </p>
-                {isGenerating && <p className="mt-1 text-xs text-[rgba(255,247,236,0.45)]">{t("styleSelection.generating")}</p>}
+                {isGenerating && (
+                  <p className="mt-1 text-center text-xs text-[rgba(255,247,236,0.45)]">
+                    {activeGenerationType === "set" ? "生成中..." : t("styleSelection.generating")}
+                    {generationProgress && (
+                      <span className="mt-1 block">
+                        {generationProgress.completedShots} / {generationProgress.totalShots}
+                        {generationProgressText ? ` · ${generationProgressText}` : ""}
+                      </span>
+                    )}
+                  </p>
+                )}
               </div>
             </section>
 
