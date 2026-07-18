@@ -96,6 +96,14 @@ export async function processNextBatchShot(batchId: string): Promise<ProcessNext
     const size = typeof genConfig.size === "string" && genConfig.size.trim()
       ? genConfig.size.trim()
       : "3072x4096";
+    console.log("ARK WORKER DEBUG:", JSON.stringify({
+      generationType: batch.generationType,
+      path: "worker/processNextBatchShot",
+      model,
+      workflow,
+      templateSlug: batch.templateSlug,
+      shotId: history.shotId,
+    }));
 
     // 6. Generate
     const finalUrl = await runShotGenerationPipeline({
@@ -103,6 +111,7 @@ export async function processNextBatchShot(batchId: string): Promise<ProcessNext
       template,
       imageBase64,
       mimeType,
+      userImageUrl: batch.sourceImage,
       model,
       size,
       workflow,

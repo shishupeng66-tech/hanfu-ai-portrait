@@ -14,6 +14,9 @@ import { buildIdentityTransferPrompt } from "@/lib/prompts/identity-preservation
 
 export async function downloadImage(url: string): Promise<Buffer> {
   const response = await fetch(url);
+  if (!response.ok) {
+    throw new Error(`Failed to download image: ${response.status}`);
+  }
   const arrayBuffer = await response.arrayBuffer();
   return Buffer.from(arrayBuffer);
 }
@@ -49,6 +52,45 @@ export function buildGenerationPrompt(
   };
 }
 
+function getUrlHost(value: string): string | null {
+  try {
+    return new URL(value).host;
+  } catch {
+    return null;
+  }
+}
+
+function logArkRequestDebug({
+  path,
+  endpoint,
+  model,
+  prompt,
+  images,
+  size,
+  responseFormat,
+}: {
+  path: string;
+  endpoint: string;
+  model: string;
+  prompt: string;
+  images: string[];
+  size: string;
+  responseFormat: string;
+}) {
+  console.log("ARK REQUEST DEBUG:", JSON.stringify({
+    path,
+    endpoint,
+    model,
+    promptLength: prompt.length,
+    imageFieldExists: images.length > 0,
+    imageCount: images.length,
+    imagePrefixes: images.map((image) => image.slice(0, 100)),
+    imageHosts: images.map(getUrlHost),
+    size,
+    responseFormat,
+  }));
+}
+
 export async function generatePortraitImages({
   prompt,
   negativePrompt,
@@ -63,14 +105,26 @@ export async function generatePortraitImages({
   maxImages: number;
 }): Promise<string[]> {
   const isSet = maxImages > 1;
-  const response = await fetch(getImageGenerationUrl(), {
+  const endpoint = getImageGenerationUrl();
+  const image = `data:${mimeType};base64,${imageBase64}`;
+  logArkRequestDebug({
+    path: "core/generatePortraitImages",
+    endpoint,
+    model: volcanoEngineConfig.imageModel ?? "",
+    prompt,
+    images: [image],
+    size: "3072x4096",
+    responseFormat: "url",
+  });
+
+  const response = await fetch(endpoint, {
     method: "POST",
     headers: getHeaders(),
     body: JSON.stringify({
       model: volcanoEngineConfig.imageModel,
       prompt,
       negative_prompt: negativePrompt,
-      image: `data:${mimeType};base64,${imageBase64}`,
+      image,
       sequential_image_generation: isSet ? "auto" : "disabled",
       ...(isSet
         ? {
@@ -109,6 +163,7 @@ export async function generateIdentityTransferImages({
   prompt,
   userImageBase64,
   userImageMimeType,
+  userImageUrl,
   templateImageUrl,
   model,
   size,
@@ -116,20 +171,31 @@ export async function generateIdentityTransferImages({
   prompt: string;
   userImageBase64: string;
   userImageMimeType: string;
+  userImageUrl?: string | null;
   templateImageUrl: string;
   model: string;
   size: string;
 }): Promise<string[]> {
-  const response = await fetch(getImageGenerationUrl(), {
+  const endpoint = getImageGenerationUrl();
+  const userImage = userImageUrl?.trim() || `data:${userImageMimeType};base64,${userImageBase64}`;
+  const images = [userImage, templateImageUrl];
+  logArkRequestDebug({
+    path: "core/generateIdentityTransferImages",
+    endpoint,
+    model,
+    prompt,
+    images,
+    size,
+    responseFormat: "url",
+  });
+
+  const response = await fetch(endpoint, {
     method: "POST",
     headers: getHeaders(),
     body: JSON.stringify({
       model,
       prompt,
-      image: [
-        `data:${userImageMimeType};base64,${userImageBase64}`,
-        templateImageUrl,
-      ],
+      image: images,
       size,
       response_format: "url",
       stream: false,
@@ -160,6 +226,7 @@ export async function generateSingleShotImage({
   template,
   imageBase64,
   mimeType,
+  userImageUrl,
   model,
   size,
   workflow,
@@ -168,6 +235,7 @@ export async function generateSingleShotImage({
   template: TemplateWithShots;
   imageBase64: string;
   mimeType: string;
+  userImageUrl?: string | null;
   model: string;
   size: string;
   workflow: string;
@@ -200,6 +268,7 @@ export async function generateSingleShotImage({
       prompt,
       userImageBase64: imageBase64,
       userImageMimeType: mimeType,
+      userImageUrl,
       templateImageUrl,
       model,
       size,
@@ -231,6 +300,7 @@ export async function runShotGenerationPipeline({
   template,
   imageBase64,
   mimeType,
+  userImageUrl,
   model,
   size,
   workflow,
@@ -240,6 +310,7 @@ export async function runShotGenerationPipeline({
   template: TemplateWithShots;
   imageBase64: string;
   mimeType: string;
+  userImageUrl?: string | null;
   model: string;
   size: string;
   workflow: string;
@@ -250,6 +321,7 @@ export async function runShotGenerationPipeline({
     template,
     imageBase64,
     mimeType,
+    userImageUrl,
     model,
     size,
     workflow,

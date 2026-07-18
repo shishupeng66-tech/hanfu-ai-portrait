@@ -110,6 +110,13 @@ export async function POST(req: NextRequest) {
     const workflow: string = genConfig.workflow ?? "prompt_generation";
 
     const model = resolveImageModel(typeof genConfig.model === "string" ? genConfig.model : null);
+    console.log("ARK ROUTE DEBUG:", JSON.stringify({
+      generationType,
+      path: "route/api/generate",
+      model,
+      workflow,
+      templateSlug: template.slug,
+    }));
 
     const resolvedShotId = typeof shotId === "string" ? shotId : null;
 
@@ -370,6 +377,7 @@ export async function POST(req: NextRequest) {
           template,
           imageBase64,
           mimeType,
+          userImageUrl: sourceImageUrl,
           model,
           size,
           workflow,
