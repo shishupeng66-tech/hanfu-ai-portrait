@@ -1140,7 +1140,10 @@
       "total": "{count} portraits total"
     },
     "loading": "AI is generating...",
-    "failed": "Generation Failed"
+    "failed": "Generation Failed",
+    "errorTitle": "Failed to load",
+    "errorDescription": "An error occurred while fetching your works. Please try again later.",
+    "retry": "Retry"
   },
   "contact": {
     "title": "Contact Us",

@@ -1,9 +1,9 @@
-"use client";
+'use client';
 
 import { useLocale, useTranslations } from 'next-intl';
 import { useRouter } from 'next/navigation';
 import Image from 'next/image';
-import { useState, useMemo } from 'react';
+import { useState, useMemo, useEffect } from 'react';
 import { Button } from "@/components/button";
 import { motion } from "framer-motion";
 import {
@@ -21,6 +21,20 @@ import {
   X,
   Check
 } from 'lucide-react';
+
+interface Work {
+  id: string;
+  image: string;
+  title: string;
+  templateName: string;
+  templateSlug: string;
+  generationType: string;
+  status: string;
+  createdAt: string;
+  credits: number;
+  isFavorited: boolean;
+  styleName: string;
+}
 
 function StatusBadge({ status }: { status: string }) {
   const t = useTranslations('works.status');
@@ -73,16 +87,14 @@ function WorkCard({
   onDownload,
   onDelete,
 }: {
-  // eslint-disable-next-line @typescript-eslint/no-explicit-any
-  work: Record<string, any>;
+  work: Work;
   onToggleFavorite: (id: string) => void;
   onViewDetail: (id: string) => void;
-  onRegenerate: (id: string) => void;
-  onDownload: (id: string) => void;
+  onRegenerate: () => void;
+  onDownload: () => void;
   onDelete: (id: string) => void;
 }) {
   const t = useTranslations('works.actions');
-  const tWorks = useTranslations('works');
   const [showActions, setShowActions] = useState(false);
 
   return (
@@ -133,7 +145,7 @@ function WorkCard({
           >
             <Loader2 className="w-10 h-10 animate-spin mb-3" style={{ color: '#E8C27A' }} />
             <p className="text-sm" style={{ color: 'rgba(255, 247, 236, 0.6)' }}>
-              {tWorks('loading')}
+              {t('loading')}
             </p>
           </div>
         ) : (
@@ -143,7 +155,7 @@ function WorkCard({
           >
             <AlertCircle className="w-10 h-10 mb-3" style={{ color: '#ef4444' }} />
             <p className="text-sm font-medium mb-1" style={{ color: 'rgba(255, 247, 236, 0.8)' }}>
-              {tWorks('failed')}
+              {t('failed')}
             </p>
           </div>
         )}
@@ -170,7 +182,7 @@ function WorkCard({
             <Eye className="w-5 h-5" style={{ color: 'rgba(255, 247, 236, 0.9)' }} />
           </button>
           <button
-            onClick={() => onDownload(work.id)}
+            onClick={() => onDownload()}
             className="w-10 h-10 rounded-full flex items-center justify-center transition-all hover:scale-110"
             style={{ background: 'rgba(255, 247, 236, 0.15)' }}
             title={t('download')}
@@ -178,7 +190,7 @@ function WorkCard({
             <Download className="w-5 h-5" style={{ color: 'rgba(255, 247, 236, 0.9)' }} />
           </button>
           <button
-            onClick={() => onRegenerate(work.id)}
+            onClick={() => onRegenerate()}
             className="w-10 h-10 rounded-full flex items-center justify-center transition-all hover:scale-110"
             style={{ background: 'rgba(232, 194, 122, 0.2)' }}
             title={t('regenerate')}
@@ -251,16 +263,100 @@ function EmptyState({ onStartCreate }: { onStartCreate: () => void }) {
   );
 }
 
+function LoadingState() {
+  return (
+    <div className="flex flex-col items-center justify-center py-20 px-4">
+      <Loader2 className="w-12 h-12 animate-spin mb-4" style={{ color: '#E8C27A' }} />
+      <p className="text-sm" style={{ color: 'rgba(255, 247, 236, 0.6)' }}>
+        Loading your works...
+      </p>
+    </div>
+  );
+}
+
+function ErrorState({ onRetry }: { onRetry: () => void }) {
+  const t = useTranslations('works');
+
+  return (
+    <div className="flex flex-col items-center justify-center py-20 px-4">
+      <AlertCircle className="w-12 h-12 mb-4" style={{ color: '#ef4444' }} />
+      <h3 className="text-xl font-semibold mb-2" style={{ color: 'rgba(255, 247, 236, 0.92)' }}>
+        {t('errorTitle')}
+      </h3>
+      <p className="text-sm mb-6 text-center max-w-md" style={{ color: 'rgba(255, 247, 236, 0.55)' }}>
+        {t('errorDescription')}
+      </p>
+      <Button
+        onClick={onRetry}
+        style={{
+          background: 'rgba(255, 247, 236, 0.1)',
+          border: '1px solid rgba(232, 194, 122, 0.3)',
+          color: '#E8C27A',
+        }}
+      >
+        <RefreshCw className="w-4 h-4 mr-2" />
+        {t('retry')}
+      </Button>
+    </div>
+  );
+}
+
 export default function WorksPage() {
   const t = useTranslations('works');
   const router = useRouter();
   const locale = useLocale();
-  // eslint-disable-next-line @typescript-eslint/no-explicit-any
-  const [works, setWorks] = useState<Record<string, any>[]>([]);
+
+  const [works, setWorks] = useState<Work[]>([]);
+  const [isLoading, setIsLoading] = useState(true);
+  const [error, setError] = useState<string | null>(null);
   const [activeTab, setActiveTab] = useState('all');
   const [searchQuery, setSearchQuery] = useState('');
   const [sortBy, setSortBy] = useState('newest');
   const [showSortDropdown, setShowSortDropdown] = useState(false);
+
+  const fetchWorks = async () => {
+    setIsLoading(true);
+    setError(null);
+
+    try {
+      const response = await fetch('/api/works', {
+        method: 'GET',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+      });
+
+      if (!response.ok) {
+        throw new Error(`Failed to fetch works: ${response.status}`);
+      }
+
+      const data = await response.json();
+      // 转换格式适配前端期望的字段
+      const formattedWorks = (data.works as Array<Record<string, unknown>>).map((work) => ({
+        id: work.id as string,
+        image: work.resultUrl as string,
+        templateName: work.templateName as string,
+        templateSlug: work.templateSlug as string,
+        generationType: work.generationType as string,
+        status: work.status as string,
+        createdAt: work.createdAt as string,
+        credits: typeof work.credits === 'number' ? work.credits : 1,
+        isFavorited: typeof work.isFavorited === 'boolean' ? work.isFavorited : false,
+        styleName: typeof work.styleName === 'string' ? work.styleName : (work.generationType === 'trial' ? 'Trial' : 'Full Set'),
+        title: work.templateName as string,
+      }));
+      setWorks(formattedWorks);
+    } catch (err) {
+      console.error('Error fetching works:', err);
+      setError(err instanceof Error ? err.message : 'Unknown error');
+    } finally {
+      setIsLoading(false);
+    }
+  };
+
+  useEffect(() => {
+    fetchWorks();
+  }, []);
 
   // Filter and sort works
   const filteredWorks = useMemo(() => {
@@ -315,11 +411,11 @@ export default function WorksPage() {
     router.push(`/${locale}/works/${id}`);
   };
 
-  const handleRegenerate = (_id: string) => {
+  const handleRegenerate = () => {
     router.push(`/${locale}/generate`);
   };
 
-  const handleDownload = (_id: string) => {
+  const handleDownload = () => {
     // Mock download action
     console.log('Downloading work');
   };
@@ -330,6 +426,10 @@ export default function WorksPage() {
 
   const handleStartCreate = () => {
     router.push(`/${locale}/generate`);
+  };
+
+  const handleRetry = () => {
+    fetchWorks();
   };
 
   const getCurrentSortLabel = () => {
@@ -362,136 +462,143 @@ export default function WorksPage() {
           </p>
         </motion.div>
 
-        {/* Toolbar */}
-        <motion.div
-          initial={{ y: 20, opacity: 0 }}
-          animate={{ y: 0, opacity: 1 }}
-          transition={{ ease: "easeOut", duration: 0.4, delay: 0.1 }}
-          className="mb-8 flex flex-col md:flex-row md:items-center md:justify-between gap-4"
-        >
-          {/* Tabs */}
-          <div className="flex gap-1 overflow-x-auto pb-2 [&::-webkit-scrollbar]:hidden">
-            {tabs.map(tab => (
-              <button
-                key={tab}
-                onClick={() => setActiveTab(tab)}
-                className="px-4 py-2 rounded-lg text-sm font-medium whitespace-nowrap transition-all duration-200"
-                style={{
-                  background: activeTab === tab ? 'rgba(232, 194, 122, 0.12)' : 'transparent',
-                  color: activeTab === tab ? '#E8C27A' : 'rgba(255, 247, 236, 0.65)',
-                  border: activeTab === tab ? '1px solid rgba(232, 194, 122, 0.2)' : '1px solid transparent',
-                }}
-              >
-                {t(`tabs.${tab}`)}
-              </button>
-            ))}
-          </div>
-
-          {/* Search & Sort */}
-          <div className="flex items-center gap-3">
-            {/* Search */}
-            <div className="relative">
-              <Search
-                className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4"
-                style={{ color: 'rgba(255, 247, 236, 0.4)' }}
-              />
-              <input
-                type="text"
-                placeholder={t('search.placeholder')}
-                value={searchQuery}
-                onChange={e => setSearchQuery(e.target.value)}
-                className="w-[200px] md:w-[260px] pl-10 pr-4 py-2 rounded-lg text-sm outline-none transition-all duration-200"
-                style={{
-                  background: 'rgba(255, 247, 236, 0.03)',
-                  border: '1px solid rgba(255, 247, 236, 0.08)',
-                  color: 'rgba(255, 247, 236, 0.9)',
-                }}
-              />
-              {searchQuery && (
+        {/* Toolbar - Only show if not loading and no error */}
+        {!isLoading && !error && works.length > 0 && (
+          <motion.div
+            initial={{ y: 20, opacity: 0 }}
+            animate={{ y: 0, opacity: 1 }}
+            transition={{ ease: "easeOut", duration: 0.4, delay: 0.1 }}
+            className="mb-8 flex flex-col md:flex-row md:items-center md:justify-between gap-4"
+          >
+            {/* Tabs */}
+            <div className="flex gap-1 overflow-x-auto pb-2 [&::-webkit-scrollbar]:hidden">
+              {tabs.map(tab => (
                 <button
-                  onClick={() => setSearchQuery('')}
-                  className="absolute right-3 top-1/2 -translate-y-1/2"
-                >
-                  <X className="w-4 h-4" style={{ color: 'rgba(255, 247, 236, 0.4)' }} />
-                </button>
-              )}
-            </div>
-
-            {/* Sort Dropdown */}
-            <div className="relative">
-              <button
-                onClick={() => setShowSortDropdown(!showSortDropdown)}
-                className="flex items-center gap-2 px-4 py-2 rounded-lg text-sm font-medium transition-all duration-200"
-                style={{
-                  background: 'rgba(255, 247, 236, 0.03)',
-                  border: '1px solid rgba(255, 247, 236, 0.08)',
-                  color: 'rgba(255, 247, 236, 0.75)',
-                }}
-              >
-                <ArrowUpDown className="w-4 h-4" />
-                <span>{getCurrentSortLabel()}</span>
-              </button>
-
-              {showSortDropdown && (
-                <div
-                  className="absolute right-0 top-full mt-2 py-2 rounded-lg z-20 min-w-[160px]"
+                  key={tab}
+                  onClick={() => setActiveTab(tab)}
+                  className="px-4 py-2 rounded-lg text-sm font-medium whitespace-nowrap transition-all duration-200"
                   style={{
-                    background: '#141418',
-                    border: '1px solid rgba(255, 247, 236, 0.08)',
-                    boxShadow: '0 8px 32px rgba(0, 0, 0, 0.4)',
+                    background: activeTab === tab ? 'rgba(232, 194, 122, 0.12)' : 'transparent',
+                    color: activeTab === tab ? '#E8C27A' : 'rgba(255, 247, 236, 0.65)',
+                    border: activeTab === tab ? '1px solid rgba(232, 194, 122, 0.2)' : '1px solid transparent',
                   }}
                 >
-                  {['newest', 'oldest', 'credits', 'style'].map(option => (
-                    <button
-                      key={option}
-                      onClick={() => {
-                        setSortBy(option);
-                        setShowSortDropdown(false);
-                      }}
-                      className="w-full px-4 py-2.5 text-left text-sm transition-all duration-200 hover:bg-white/5"
-                      style={{
-                        color: sortBy === option ? '#E8C27A' : 'rgba(255, 247, 236, 0.7)',
-                      }}
-                    >
-                      {t(`sort.${option}`)}
-                    </button>
-                  ))}
-                </div>
-              )}
+                  {t(`tabs.${tab}`)}
+                </button>
+              ))}
             </div>
-          </div>
-        </motion.div>
 
-        {/* Works Grid or Empty State */}
-        {filteredWorks.length > 0 ? (
-          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-4 md:gap-6">
-            {filteredWorks.map((work) => (
-              <WorkCard
-                key={work.id}
-                work={work}
-                onToggleFavorite={handleToggleFavorite}
-                onViewDetail={handleViewDetail}
-                onRegenerate={handleRegenerate}
-                onDownload={handleDownload}
-                onDelete={handleDelete}
-              />
-            ))}
-          </div>
-        ) : (
-          <EmptyState onStartCreate={handleStartCreate} />
+            {/* Search & Sort */}
+            <div className="flex items-center gap-3">
+              {/* Search */}
+              <div className="relative">
+                <Search
+                  className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4"
+                  style={{ color: 'rgba(255, 247, 236, 0.4)' }}
+                />
+                <input
+                  type="text"
+                  placeholder={t('search.placeholder')}
+                  value={searchQuery}
+                  onChange={e => setSearchQuery(e.target.value)}
+                  className="w-[200px] md:w-[260px] pl-10 pr-4 py-2 rounded-lg text-sm outline-none transition-all duration-200"
+                  style={{
+                    background: 'rgba(255, 247, 236, 0.03)',
+                    border: '1px solid rgba(255, 247, 236, 0.08)',
+                    color: 'rgba(255, 247, 236, 0.9)',
+                  }}
+                />
+                {searchQuery && (
+                  <button
+                    onClick={() => setSearchQuery('')}
+                    className="absolute right-3 top-1/2 -translate-y-1/2"
+                  >
+                    <X className="w-4 h-4" style={{ color: 'rgba(255, 247, 236, 0.4)' }} />
+                  </button>
+                )}
+              </div>
+
+              {/* Sort Dropdown */}
+              <div className="relative">
+                <button
+                  onClick={() => setShowSortDropdown(!showSortDropdown)}
+                  className="flex items-center gap-2 px-4 py-2 rounded-lg text-sm font-medium transition-all duration-200"
+                  style={{
+                    background: 'rgba(255, 247, 236, 0.03)',
+                    border: '1px solid rgba(255, 247, 236, 0.08)',
+                    color: 'rgba(255, 247, 236, 0.75)',
+                  }}
+                >
+                  <ArrowUpDown className="w-4 h-4" />
+                  <span>{getCurrentSortLabel()}</span>
+                </button>
+
+                {showSortDropdown && (
+                  <div
+                    className="absolute right-0 top-full mt-2 py-2 rounded-lg z-20 min-w-[160px]"
+                    style={{
+                      background: '#141418',
+                      border: '1px solid rgba(255, 247, 236, 0.08)',
+                      boxShadow: '0 8px 32px rgba(0, 0, 0, 0.4)',
+                    }}
+                  >
+                    {['newest', 'oldest', 'credits', 'style'].map(option => (
+                      <button
+                        key={option}
+                        onClick={() => {
+                          setSortBy(option);
+                          setShowSortDropdown(false);
+                        }}
+                        className="w-full px-4 py-2.5 text-left text-sm transition-all duration-200 hover:bg-white/5"
+                        style={{
+                          color: sortBy === option ? '#E8C27A' : 'rgba(255, 247, 236, 0.7)',
+                        }}
+                      >
+                        {t(`sort.${option}`)}
+                      </button>
+                    ))}
+                  </div>
+                )}
+              </div>
+            </div>
+          </motion.div>
         )}
 
-        {/* Results Count */}
-        {filteredWorks.length > 0 && (
-          <motion.p
-            initial={{ opacity: 0 }}
-            animate={{ opacity: 1 }}
-            transition={{ delay: 0.5 }}
-            className="mt-8 text-sm text-center"
-            style={{ color: 'rgba(255, 247, 236, 0.4)' }}
-          >
-            {t('info.total', { count: filteredWorks.length })}
-          </motion.p>
+        {/* Content States */}
+        {isLoading ? (
+          <LoadingState />
+        ) : error ? (
+          <ErrorState onRetry={handleRetry} />
+        ) : filteredWorks.length > 0 ? (
+          <>
+            <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-4 md:gap-6">
+              {filteredWorks.map((work, index) => (
+                <div key={work.id} style={{ animationDelay: `${index * 0.05}s` }}>
+                  <WorkCard
+                    work={work}
+                    onToggleFavorite={handleToggleFavorite}
+                    onViewDetail={handleViewDetail}
+                    onRegenerate={handleRegenerate}
+                    onDownload={handleDownload}
+                    onDelete={handleDelete}
+                  />
+                </div>
+              ))}
+            </div>
+
+            {/* Results Count */}
+            <motion.p
+              initial={{ opacity: 0 }}
+              animate={{ opacity: 1 }}
+              transition={{ delay: 0.5 }}
+              className="mt-8 text-sm text-center"
+              style={{ color: 'rgba(255, 247, 236, 0.4)' }}
+            >
+              {t('info.total', { count: filteredWorks.length })}
+            </motion.p>
+          </>
+        ) : (
+          <EmptyState onStartCreate={handleStartCreate} />
         )}
       </div>
     </div>

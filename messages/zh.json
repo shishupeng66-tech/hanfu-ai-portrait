@@ -1527,7 +1527,10 @@
       "total": "共 {count} 张作品"
     },
     "loading": "AI 正在生成...",
-    "failed": "生成失败"
+    "failed": "生成失败",
+    "errorTitle": "加载失败",
+    "errorDescription": "获取作品列表时出现错误，请稍后重试",
+    "retry": "重试"
   },
   "contact": {
     "title": "联系我们",
