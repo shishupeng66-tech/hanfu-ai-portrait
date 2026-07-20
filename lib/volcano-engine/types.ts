@@ -1,4 +1,5 @@
 export interface VolcanoEngineConfig {
+  provider: 'volcengine' | 'byteplus';
   apiKey: string;
   apiUrl: string;
   textModel?: string;

@@ -78,13 +78,12 @@ function logArkRequestDebug({
   responseFormat: string;
 }) {
   console.log("ARK REQUEST DEBUG:", JSON.stringify({
+    provider: volcanoEngineConfig.provider,
     path,
     endpoint,
     model,
     promptLength: prompt.length,
-    imageFieldExists: images.length > 0,
     imageCount: images.length,
-    imagePrefixes: images.map((image) => image.slice(0, 100)),
     imageHosts: images.map(getUrlHost),
     size,
     responseFormat,
